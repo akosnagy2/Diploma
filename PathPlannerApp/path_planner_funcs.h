@@ -8,6 +8,7 @@
 
 using namespace std;
 using namespace boost::numeric;
+using namespace GEOM_FADE2D;
 
 struct Point
 {
@@ -52,22 +53,22 @@ struct Point
 	float y;	// [mm]
 };
 
-struct Position
+struct Config
 {
-	Position()
+	Config()
 	{}
-	Position(float x, float y, float phi)
+	Config(float x, float y, float phi)
 	{
 		p.x = x;
 		p.y = y;
 		this->phi = phi;
 	}
-	Position(Point p, float phi)
+	Config(Point p, float phi)
 	{
 		this->p = p;
 		this->phi = phi;
 	}
-	static float Distance(Position &a, Position &b)
+	static float Distance(Config &a, Config &b)
 	{
 		return Point::Distance(a.p, b.p);
 	}
@@ -142,11 +143,11 @@ public:
 	{
 		envs.push_back(env);
 	}
-	void SetStartPosition(Position pos)
+	void SetStartConfig(Config pos)
 	{
 		robotStart = pos;
 	}
-	void SetGoalPosition(Position pos)
+	void SetGoalConfig(Config pos)
 	{
 		robotGoal = pos;
 	}
@@ -165,23 +166,31 @@ public:
 		//Return max 
 		return (*max_element(shp_y.begin(), shp_y.end()));
 	}
-	int TriangularDecomp(bool visualize);
+	bool PrePlanner();
+	bool RTRPlanner();
+	void DrawPrePath();
 private:
-	bool PathFinder(vector<int> &path);
-	void Triangulate(GEOM_FADE2D::Visualizer2 &vis);
+	bool PathFinder();
+	void Triangulate();
 private:
 	vector<Polygon> envs;
-	vector<GEOM_FADE2D::Triangle2*> tri;
-	GEOM_FADE2D::Fade_2D dt;
 	Polygon field;
 	vector<Triangle> cells;
+
 	ublas::mapped_matrix<int> adjN;	
 	ublas::mapped_matrix<float> roadmap_adj;
-	vector<Position> roadmap_node;
-	vector<Position> prepath;
-	Position robotStart;
-	Position robotGoal;
+	vector<Config> roadmap_node;
+	vector<Config> prepath;
+
+	Config robotStart;
+	Config robotGoal;
 	Polygon robotShape;
 };
+
+
+template<typename T> void printMat(ublas::matrix<T> mat);
+float corrigateAngle(float angle, uint16_t zero_to_2pi);
+bool insideTriangle(Point a, Triangle t);
+Zone2* generateObjectZone(Polygon &obj, Fade_2D &dt);
 
 #endif /* PATH_PLANNER_FUNCS_H_ */

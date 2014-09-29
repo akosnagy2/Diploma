@@ -27,6 +27,12 @@
     <ClCompile Include="path_planner_funcs.cpp">
       <Filter>PathPlanner</Filter>
     </ClCompile>
+    <ClCompile Include="PrePlanner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="RTRPlanner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="path_planner.h">

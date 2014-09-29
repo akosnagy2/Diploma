@@ -84,6 +84,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="path_planner.cpp" />
     <ClCompile Include="path_planner_funcs.cpp" />
+    <ClCompile Include="PrePlanner.cpp" />
+    <ClCompile Include="RTRPlanner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="path_planner.h" />

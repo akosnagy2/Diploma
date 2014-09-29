@@ -36,7 +36,8 @@ int main()
 	rob.AddPoint(Point(3.55f, -1.0f));
 	sc.SetRobotShape(rob);
 
-	sc.TriangularDecomp(true);
+	sc.PrePlanner();
+	sc.DrawPrePath();
 
 	return 0;
 }
