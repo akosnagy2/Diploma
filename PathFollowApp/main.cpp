@@ -136,8 +136,8 @@ int main()
 			PathCtrl_Loop(&pathFollow, &leftV, &rightV);
 			
 			//Info
-			info.values.push_back(pathFollow.distError);
-			info.values.push_back(pathFollow.pathSumDist);				
+			info.values.push_back(pathFollow.trackError);
+			info.values.push_back(pathFollow.trackSumError);				
 			
 			//Robot motors control signals
 			ctrl_out.ctrl_sig.push_back(leftV);

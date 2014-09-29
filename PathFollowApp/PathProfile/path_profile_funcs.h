@@ -8,6 +8,7 @@
 #define EPS 0.001f
 #define sgn(num) ((num < 0.0f) ? -1.0f : 1.0f)
 #define lerp(v0, v1, t) (v0 + (v1 - v0) * t)
+#define TURN_PHI 1000.0f
 
 using namespace boost::numeric::ublas;
 

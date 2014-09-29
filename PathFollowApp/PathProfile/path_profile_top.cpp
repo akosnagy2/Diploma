@@ -717,15 +717,17 @@ void profile_top(std::vector<path_pos> &path, std::vector<path_pos> &resPath)
 	int start = 0;
 	for (int i = 0; i < length; i++)
 	{
-		if ((i == length - 1) || (geoProfile.deltaS[i] <= EPS))
+		//Generate profile for every segment
+		if ((i == length - 1) || (geoProfile.deltaS[i] <= EPS)) 
 		{
 			Profile geoProfileSegment(geoProfile, start, i);
-
 			profile(geoProfileSegment, sampPathSegment, logfile);
 
 			resPath.insert(resPath.end(), sampPathSegment.begin(), sampPathSegment.end());
+
+			//Generate TURN primitve in the end of the segment
 			path_pos p = sampPathSegment.back();
-			p.phi = 1000.0f;
+			p.phi = TURN_PHI;
 			for (int j = 0; j < predictLen; j++)
 				resPath.insert(resPath.end(), p);
 
