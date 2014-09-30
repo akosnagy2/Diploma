@@ -88,8 +88,13 @@
     <ClCompile Include="RTRPlanner.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="Polygon.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="path_planner.h" />
     <ClInclude Include="path_planner_funcs.h" />
+    <ClInclude Include="Tree.h" />
+    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

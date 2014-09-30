@@ -41,5 +41,20 @@
     <ClInclude Include="path_planner_funcs.h">
       <Filter>PathPlanner</Filter>
     </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

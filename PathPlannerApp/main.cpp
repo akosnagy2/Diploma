@@ -6,10 +6,10 @@ int main()
 {
 	Polygon field;
 	field.AddPoint(Point(0.0f, 0.0f));
-	field.AddPoint(Point(32.0f, 0.0f));
-	field.AddPoint(Point(32.0f, 15.0f));
 	field.AddPoint(Point(0.0f, 15.0f));
-	Scene sc("scene.ps");
+	field.AddPoint(Point(32.0f, 15.0f));
+	field.AddPoint(Point(32.0f, 0.0f));
+	Scene sc;
 	sc.AddField(field);
 
 	Polygon env1;
@@ -26,8 +26,8 @@ int main()
 	env2.AddPoint(Point(11.0f, 15.0f));
 	sc.AddEnv(env2);
 
-	sc.SetStartPosition(Position(9.95f, 11.3f, 3.14f/2));
-	sc.SetGoalPosition(Position(22.15f, 0.6f, 3.14f/2));
+	sc.SetStartConfig(Config(9.95f, 11.3f, PI/2));
+	sc.SetGoalConfig(Config(22.15f, 0.6f, PI/2));
 
 	Polygon rob;
 	rob.AddPoint(Point(3.55f, 1.0f));
@@ -38,6 +38,8 @@ int main()
 
 	sc.PrePlanner();
 	sc.DrawPrePath();
+
+	sc.RTRPlanner();
 
 	return 0;
 }

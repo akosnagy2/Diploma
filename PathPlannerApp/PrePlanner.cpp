@@ -7,6 +7,29 @@
 
 using namespace boost::geometry::model;
 
+Zone2* generateObjectZone(Polygon &obj, Fade_2D &dt)
+{
+	vector<Segment2> seg;
+
+	seg.reserve(obj.ps.size());
+
+	//Create FADE2D segments(edges)
+	for (int i = 0; i < (int)(obj.ps.size() - 1); ++i)
+	{
+		Point2 p0(obj.ps[i].x, obj.ps[i].y);
+		Point2 p1(obj.ps[i+1].x, obj.ps[i+1].y);
+		seg.push_back(Segment2(p0, p1));
+	}
+	Point2 p0(obj.ps.back().x, obj.ps.back().y);
+	Point2 p1(obj.ps.front().x, obj.ps.front().y);
+	seg.push_back(Segment2(p0, p1));
+
+	ConstraintGraph2* cstrs = dt.createConstraint(seg, CIS_IGNORE_DELAUNAY);
+	Zone2* zone = dt.createZone(cstrs, ZL_OUTSIDE);
+
+	return zone;
+}
+
 void Scene::DrawPrePath()
 {
 }
@@ -230,8 +253,6 @@ bool Scene::PrePlanner()
 	}
 
 	//Check clearance of edges in the roadmap. If one edge goes too close to an obstacle, remove it from the graph
-	vector<Polygon> obstacles = envs;
-	obstacles.push_back(field);
 	float robotWidth = GetRobotWidth();
 	for (int i = 0; i < (int)roadmap_adj.size1() - 2; i++)
 	{
@@ -244,13 +265,13 @@ bool Scene::PrePlanner()
 
 				segment<d2::point_xy<float>> seg0(p0, p1);			
 
-				for (int k = 0; k < (int)obstacles.size(); k++)
+				for (int k = 0; k < (int)envsx.size(); k++)
 				{
-					int size = obstacles[k].ps.size();
+					int size = envsx[k].ps.size();
 					for (int l = 0; l < size; l++)
 					{
-						d2::point_xy<float> p2(obstacles[k].ps[l].x, obstacles[k].ps[l].y);
-						d2::point_xy<float> p3(obstacles[k].ps[((l + 1) % size)].x, obstacles[k].ps[((l + 1) % size)].y);
+						d2::point_xy<float> p2(envsx[k].ps[l].x, envsx[k].ps[l].y);
+						d2::point_xy<float> p3(envsx[k].ps[((l + 1) % size)].x, envsx[k].ps[((l + 1) % size)].y);
 
 						segment<d2::point_xy<float>> seg1(p2, p3);						
 
@@ -281,7 +302,7 @@ bool Scene::PrePlanner()
 		float next_seg_angle = atan2f((*(it+1)).p.y - (*(it)).p.y, (*(it+1)).p.x - (*(it)).p.x);
 		float prev_seg_angle = atan2f((*(it)).p.y - (*(it-1)).p.y, (*(it)).p.x - (*(it-1)).p.x);
 		
-		if ((abs(corrigateAngle(next_seg_angle - prev_seg_angle, 0))) > numeric_limits<float>::epsilon())
+		if ((abs(corrigateAngle(next_seg_angle - prev_seg_angle))) > numeric_limits<float>::epsilon())
 		{
 			(*it).phi = next_seg_angle;
 			++it;
