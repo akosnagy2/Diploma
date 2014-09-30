@@ -28324,3 +28324,597 @@ Profile Check: right wheel tangent acceleration error in 243. point.
 Profile Check: right wheel acceleration error in 243. point.
 Sampled profile: profile checked, duration: 4000 us.
 Time parameterized path generation ended 2014-Sep-29 12:19:54
+Time parameterized path generation started 2014-Sep-29 14:30:28
+Robot parameters:
+Robot wheel base: 254 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 34002 us.
+Geometric profile: profile created, duration: 17001 us.
+Geometric profile: profile checked, duration: 1000 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 248
+Sampled profile: velocity interpolation, duration: 4999 us.
+Sampled profile: distance calculation, duration: 1000 us.
+Sampled profile: path points generation, duration: 999 us.
+Sampled profile: curvature, acceleration estimation, duration: 7000 us.
+Sampled profile: path end point correction, duration: 0 us.
+Profile Check: right wheel tangent acceleration error in 14. point.
+Profile Check: right wheel acceleration error in 14. point.
+Profile Check: right wheel tangent acceleration error in 15. point.
+Profile Check: right wheel acceleration error in 15. point.
+Profile Check: left wheel tangent acceleration error in 19. point.
+Profile Check: left wheel acceleration error in 19. point.
+Profile Check: right wheel tangent acceleration error in 21. point.
+Profile Check: right wheel acceleration error in 21. point.
+Profile Check: right wheel acceleration error in 55. point.
+Profile Check: right wheel acceleration error in 57. point.
+Profile Check: right wheel acceleration error in 58. point.
+Profile Check: right wheel acceleration error in 59. point.
+Profile Check: right wheel acceleration error in 60. point.
+Profile Check: right wheel acceleration error in 61. point.
+Profile Check: right wheel acceleration error in 62. point.
+Profile Check: right wheel tangent acceleration error in 63. point.
+Profile Check: right wheel acceleration error in 63. point.
+Profile Check: right wheel acceleration error in 64. point.
+Profile Check: right wheel acceleration error in 65. point.
+Profile Check: right wheel acceleration error in 66. point.
+Profile Check: right wheel acceleration error in 67. point.
+Profile Check: right wheel acceleration error in 69. point.
+Profile Check: right wheel acceleration error in 70. point.
+Profile Check: right wheel acceleration error in 71. point.
+Profile Check: right wheel acceleration error in 72. point.
+Profile Check: right wheel tangent acceleration error in 99. point.
+Profile Check: right wheel acceleration error in 99. point.
+Profile Check: right wheel tangent acceleration error in 100. point.
+Profile Check: right wheel acceleration error in 100. point.
+Profile Check: right wheel tangent acceleration error in 101. point.
+Profile Check: right wheel acceleration error in 101. point.
+Profile Check: right wheel tangent acceleration error in 102. point.
+Profile Check: right wheel acceleration error in 102. point.
+Profile Check: right wheel tangent acceleration error in 107. point.
+Profile Check: right wheel acceleration error in 107. point.
+Profile Check: right wheel tangent acceleration error in 109. point.
+Profile Check: right wheel acceleration error in 109. point.
+Profile Check: left wheel acceleration error in 127. point.
+Profile Check: left wheel acceleration error in 128. point.
+Profile Check: left wheel acceleration error in 129. point.
+Profile Check: left wheel acceleration error in 130. point.
+Profile Check: left wheel tangent acceleration error in 131. point.
+Profile Check: left wheel acceleration error in 131. point.
+Profile Check: left wheel acceleration error in 132. point.
+Profile Check: left wheel acceleration error in 133. point.
+Profile Check: left wheel tangent acceleration error in 134. point.
+Profile Check: left wheel acceleration error in 134. point.
+Profile Check: left wheel acceleration error in 135. point.
+Profile Check: left wheel acceleration error in 136. point.
+Profile Check: left wheel acceleration error in 137. point.
+Profile Check: left wheel acceleration error in 138. point.
+Profile Check: left wheel acceleration error in 139. point.
+Profile Check: left wheel acceleration error in 140. point.
+Profile Check: left wheel acceleration error in 141. point.
+Profile Check: left wheel acceleration error in 143. point.
+Profile Check: left wheel acceleration error in 144. point.
+Profile Check: left wheel acceleration error in 145. point.
+Profile Check: left wheel acceleration error in 146. point.
+Profile Check: left wheel acceleration error in 147. point.
+Profile Check: left wheel acceleration error in 163. point.
+Profile Check: left wheel acceleration error in 167. point.
+Profile Check: left wheel tangent acceleration error in 171. point.
+Profile Check: left wheel acceleration error in 171. point.
+Profile Check: left wheel tangent acceleration error in 172. point.
+Profile Check: left wheel acceleration error in 172. point.
+Profile Check: right wheel tangent acceleration error in 174. point.
+Profile Check: right wheel acceleration error in 174. point.
+Profile Check: right wheel tangent acceleration error in 177. point.
+Profile Check: right wheel acceleration error in 177. point.
+Profile Check: right wheel tangent acceleration error in 178. point.
+Profile Check: right wheel acceleration error in 178. point.
+Profile Check: left wheel tangent acceleration error in 179. point.
+Profile Check: right wheel tangent acceleration error in 179. point.
+Profile Check: left wheel acceleration error in 179. point.
+Profile Check: right wheel acceleration error in 179. point.
+Profile Check: right wheel acceleration error in 202. point.
+Profile Check: right wheel acceleration error in 203. point.
+Profile Check: right wheel acceleration error in 205. point.
+Profile Check: right wheel acceleration error in 208. point.
+Profile Check: right wheel acceleration error in 209. point.
+Profile Check: right wheel acceleration error in 210. point.
+Profile Check: right wheel acceleration error in 211. point.
+Profile Check: right wheel acceleration error in 212. point.
+Profile Check: right wheel acceleration error in 213. point.
+Profile Check: right wheel acceleration error in 214. point.
+Profile Check: right wheel acceleration error in 215. point.
+Profile Check: right wheel acceleration error in 216. point.
+Profile Check: right wheel acceleration error in 217. point.
+Profile Check: right wheel tangent acceleration error in 218. point.
+Profile Check: right wheel acceleration error in 218. point.
+Profile Check: left wheel tangent acceleration error in 220. point.
+Profile Check: left wheel acceleration error in 220. point.
+Profile Check: left wheel tangent acceleration error in 224. point.
+Profile Check: left wheel acceleration error in 224. point.
+Sampled profile: profile checked, duration: 5000 us.
+Time parameterized path generation ended 2014-Sep-29 14:30:28
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 32001 us.
+Geometric profile: profile created, duration: 18001 us.
+Profile Check: right wheel tangent acceleration error in 97. point.
+Profile Check: right wheel acceleration error in 97. point.
+Profile Check: left wheel acceleration error in 111. point.
+Profile Check: left wheel tangent acceleration error in 232. point.
+Profile Check: left wheel acceleration error in 232. point.
+Geometric profile: profile checked, duration: 1999 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 263
+Sampled profile: velocity interpolation, duration: 5999 us.
+Sampled profile: distance calculation, duration: 0 us.
+Sampled profile: path points generation, duration: 999 us.
+Sampled profile: curvature, acceleration estimation, duration: 6000 us.
+Sampled profile: path end point correction, duration: 0 us.
+Profile Check: left wheel tangent acceleration error in 9. point.
+Profile Check: left wheel acceleration error in 9. point.
+Profile Check: left wheel tangent acceleration error in 13. point.
+Profile Check: left wheel acceleration error in 13. point.
+Profile Check: left wheel tangent acceleration error in 29. point.
+Profile Check: left wheel acceleration error in 29. point.
+Profile Check: left wheel tangent acceleration error in 30. point.
+Profile Check: left wheel acceleration error in 30. point.
+Profile Check: left wheel tangent acceleration error in 32. point.
+Profile Check: left wheel acceleration error in 32. point.
+Profile Check: left wheel tangent acceleration error in 33. point.
+Profile Check: left wheel acceleration error in 33. point.
+Profile Check: left wheel tangent acceleration error in 34. point.
+Profile Check: left wheel acceleration error in 34. point.
+Profile Check: left wheel tangent acceleration error in 35. point.
+Profile Check: left wheel acceleration error in 35. point.
+Profile Check: left wheel tangent acceleration error in 36. point.
+Profile Check: left wheel acceleration error in 36. point.
+Profile Check: left wheel tangent acceleration error in 37. point.
+Profile Check: left wheel acceleration error in 37. point.
+Profile Check: left wheel tangent acceleration error in 38. point.
+Profile Check: left wheel acceleration error in 38. point.
+Profile Check: right wheel acceleration error in 38. point.
+Profile Check: left wheel tangent acceleration error in 39. point.
+Profile Check: right wheel tangent acceleration error in 39. point.
+Profile Check: left wheel acceleration error in 39. point.
+Profile Check: right wheel acceleration error in 39. point.
+Profile Check: left wheel tangent acceleration error in 40. point.
+Profile Check: right wheel tangent acceleration error in 40. point.
+Profile Check: left wheel acceleration error in 40. point.
+Profile Check: right wheel acceleration error in 40. point.
+Profile Check: left wheel acceleration error in 41. point.
+Profile Check: left wheel tangent acceleration error in 42. point.
+Profile Check: right wheel tangent acceleration error in 42. point.
+Profile Check: left wheel acceleration error in 42. point.
+Profile Check: right wheel acceleration error in 42. point.
+Profile Check: angular velocity error in 43. point.
+Profile Check: left wheel tangent acceleration error in 43. point.
+Profile Check: right wheel tangent acceleration error in 43. point.
+Profile Check: left wheel acceleration error in 43. point.
+Profile Check: right wheel acceleration error in 43. point.
+Profile Check: angular velocity error in 44. point.
+Profile Check: left wheel tangent acceleration error in 44. point.
+Profile Check: right wheel tangent acceleration error in 44. point.
+Profile Check: left wheel acceleration error in 44. point.
+Profile Check: right wheel acceleration error in 44. point.
+Profile Check: angular velocity error in 45. point.
+Profile Check: left wheel tangent acceleration error in 45. point.
+Profile Check: right wheel tangent acceleration error in 45. point.
+Profile Check: left wheel acceleration error in 45. point.
+Profile Check: right wheel acceleration error in 45. point.
+Profile Check: angular velocity error in 46. point.
+Profile Check: left wheel tangent acceleration error in 46. point.
+Profile Check: right wheel tangent acceleration error in 46. point.
+Profile Check: left wheel acceleration error in 46. point.
+Profile Check: right wheel acceleration error in 46. point.
+Profile Check: angular velocity error in 47. point.
+Profile Check: left wheel tangent acceleration error in 47. point.
+Profile Check: right wheel tangent acceleration error in 47. point.
+Profile Check: left wheel acceleration error in 47. point.
+Profile Check: right wheel acceleration error in 47. point.
+Profile Check: left wheel acceleration error in 48. point.
+Profile Check: left wheel acceleration error in 86. point.
+Profile Check: left wheel acceleration error in 87. point.
+Profile Check: left wheel acceleration error in 88. point.
+Profile Check: left wheel tangent acceleration error in 89. point.
+Profile Check: left wheel acceleration error in 89. point.
+Profile Check: left wheel acceleration error in 90. point.
+Profile Check: left wheel acceleration error in 91. point.
+Profile Check: left wheel tangent acceleration error in 92. point.
+Profile Check: left wheel acceleration error in 92. point.
+Profile Check: left wheel acceleration error in 93. point.
+Profile Check: left wheel tangent acceleration error in 94. point.
+Profile Check: left wheel acceleration error in 94. point.
+Profile Check: left wheel tangent acceleration error in 95. point.
+Profile Check: left wheel acceleration error in 95. point.
+Profile Check: left wheel acceleration error in 96. point.
+Profile Check: left wheel tangent acceleration error in 97. point.
+Profile Check: left wheel acceleration error in 97. point.
+Profile Check: left wheel tangent acceleration error in 98. point.
+Profile Check: left wheel acceleration error in 98. point.
+Profile Check: left wheel tangent acceleration error in 99. point.
+Profile Check: left wheel acceleration error in 99. point.
+Profile Check: left wheel tangent acceleration error in 104. point.
+Profile Check: left wheel acceleration error in 104. point.
+Profile Check: right wheel acceleration error in 132. point.
+Profile Check: right wheel tangent acceleration error in 133. point.
+Profile Check: right wheel acceleration error in 133. point.
+Profile Check: right wheel tangent acceleration error in 134. point.
+Profile Check: right wheel acceleration error in 134. point.
+Profile Check: right wheel tangent acceleration error in 135. point.
+Profile Check: right wheel acceleration error in 135. point.
+Profile Check: right wheel tangent acceleration error in 136. point.
+Profile Check: right wheel acceleration error in 136. point.
+Profile Check: right wheel tangent acceleration error in 137. point.
+Profile Check: right wheel acceleration error in 137. point.
+Profile Check: right wheel tangent acceleration error in 139. point.
+Profile Check: right wheel acceleration error in 139. point.
+Profile Check: left wheel tangent acceleration error in 140. point.
+Profile Check: right wheel tangent acceleration error in 140. point.
+Profile Check: left wheel acceleration error in 140. point.
+Profile Check: right wheel acceleration error in 140. point.
+Profile Check: left wheel tangent acceleration error in 141. point.
+Profile Check: right wheel tangent acceleration error in 141. point.
+Profile Check: left wheel acceleration error in 141. point.
+Profile Check: right wheel acceleration error in 141. point.
+Profile Check: right wheel acceleration error in 142. point.
+Profile Check: left wheel tangent acceleration error in 143. point.
+Profile Check: right wheel tangent acceleration error in 143. point.
+Profile Check: left wheel acceleration error in 143. point.
+Profile Check: right wheel acceleration error in 143. point.
+Profile Check: angular velocity error in 144. point.
+Profile Check: left wheel tangent acceleration error in 144. point.
+Profile Check: right wheel tangent acceleration error in 144. point.
+Profile Check: left wheel acceleration error in 144. point.
+Profile Check: right wheel acceleration error in 144. point.
+Profile Check: angular velocity error in 145. point.
+Profile Check: left wheel tangent acceleration error in 145. point.
+Profile Check: right wheel tangent acceleration error in 145. point.
+Profile Check: left wheel acceleration error in 145. point.
+Profile Check: right wheel acceleration error in 145. point.
+Profile Check: angular velocity error in 146. point.
+Profile Check: left wheel tangent acceleration error in 146. point.
+Profile Check: right wheel tangent acceleration error in 146. point.
+Profile Check: left wheel acceleration error in 146. point.
+Profile Check: right wheel acceleration error in 146. point.
+Profile Check: angular velocity error in 147. point.
+Profile Check: left wheel tangent acceleration error in 147. point.
+Profile Check: right wheel tangent acceleration error in 147. point.
+Profile Check: left wheel acceleration error in 147. point.
+Profile Check: right wheel acceleration error in 147. point.
+Profile Check: angular velocity error in 148. point.
+Profile Check: left wheel tangent acceleration error in 148. point.
+Profile Check: right wheel tangent acceleration error in 148. point.
+Profile Check: left wheel acceleration error in 148. point.
+Profile Check: right wheel acceleration error in 148. point.
+Profile Check: angular velocity error in 149. point.
+Profile Check: left wheel tangent acceleration error in 149. point.
+Profile Check: right wheel tangent acceleration error in 149. point.
+Profile Check: left wheel acceleration error in 149. point.
+Profile Check: right wheel acceleration error in 149. point.
+Profile Check: right wheel acceleration error in 164. point.
+Profile Check: right wheel acceleration error in 189. point.
+Profile Check: right wheel acceleration error in 190. point.
+Profile Check: right wheel acceleration error in 191. point.
+Profile Check: right wheel tangent acceleration error in 192. point.
+Profile Check: right wheel acceleration error in 192. point.
+Profile Check: right wheel tangent acceleration error in 193. point.
+Profile Check: right wheel acceleration error in 193. point.
+Profile Check: left wheel tangent acceleration error in 198. point.
+Profile Check: left wheel acceleration error in 198. point.
+Profile Check: right wheel tangent acceleration error in 200. point.
+Profile Check: right wheel acceleration error in 200. point.
+Profile Check: left wheel tangent acceleration error in 203. point.
+Profile Check: left wheel acceleration error in 203. point.
+Profile Check: left wheel tangent acceleration error in 204. point.
+Profile Check: left wheel acceleration error in 204. point.
+Profile Check: left wheel acceleration error in 233. point.
+Profile Check: left wheel acceleration error in 234. point.
+Profile Check: left wheel tangent acceleration error in 239. point.
+Profile Check: left wheel acceleration error in 239. point.
+Profile Check: right wheel tangent acceleration error in 243. point.
+Profile Check: right wheel acceleration error in 243. point.
+Sampled profile: profile checked, duration: 7000 us.
+Time parameterized path generation ended 2014-Sep-29 14:30:28
+Time parameterized path generation started 2014-Sep-29 14:33:28
+Robot parameters:
+Robot wheel base: 254 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 37001 us.
+Geometric profile: profile created, duration: 16000 us.
+Geometric profile: profile checked, duration: 2000 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 248
+Sampled profile: velocity interpolation, duration: 5000 us.
+Sampled profile: distance calculation, duration: 0 us.
+Sampled profile: path points generation, duration: 999 us.
+Sampled profile: curvature, acceleration estimation, duration: 7000 us.
+Sampled profile: path end point correction, duration: 0 us.
+Profile Check: right wheel tangent acceleration error in 14. point.
+Profile Check: right wheel acceleration error in 14. point.
+Profile Check: right wheel tangent acceleration error in 15. point.
+Profile Check: right wheel acceleration error in 15. point.
+Profile Check: left wheel tangent acceleration error in 19. point.
+Profile Check: left wheel acceleration error in 19. point.
+Profile Check: right wheel tangent acceleration error in 21. point.
+Profile Check: right wheel acceleration error in 21. point.
+Profile Check: right wheel acceleration error in 55. point.
+Profile Check: right wheel acceleration error in 57. point.
+Profile Check: right wheel acceleration error in 58. point.
+Profile Check: right wheel acceleration error in 59. point.
+Profile Check: right wheel acceleration error in 60. point.
+Profile Check: right wheel acceleration error in 61. point.
+Profile Check: right wheel acceleration error in 62. point.
+Profile Check: right wheel tangent acceleration error in 63. point.
+Profile Check: right wheel acceleration error in 63. point.
+Profile Check: right wheel acceleration error in 64. point.
+Profile Check: right wheel acceleration error in 65. point.
+Profile Check: right wheel acceleration error in 66. point.
+Profile Check: right wheel acceleration error in 67. point.
+Profile Check: right wheel acceleration error in 69. point.
+Profile Check: right wheel acceleration error in 70. point.
+Profile Check: right wheel acceleration error in 71. point.
+Profile Check: right wheel acceleration error in 72. point.
+Profile Check: right wheel tangent acceleration error in 99. point.
+Profile Check: right wheel acceleration error in 99. point.
+Profile Check: right wheel tangent acceleration error in 100. point.
+Profile Check: right wheel acceleration error in 100. point.
+Profile Check: right wheel tangent acceleration error in 101. point.
+Profile Check: right wheel acceleration error in 101. point.
+Profile Check: right wheel tangent acceleration error in 102. point.
+Profile Check: right wheel acceleration error in 102. point.
+Profile Check: right wheel tangent acceleration error in 107. point.
+Profile Check: right wheel acceleration error in 107. point.
+Profile Check: right wheel tangent acceleration error in 109. point.
+Profile Check: right wheel acceleration error in 109. point.
+Profile Check: left wheel acceleration error in 127. point.
+Profile Check: left wheel acceleration error in 128. point.
+Profile Check: left wheel acceleration error in 129. point.
+Profile Check: left wheel acceleration error in 130. point.
+Profile Check: left wheel tangent acceleration error in 131. point.
+Profile Check: left wheel acceleration error in 131. point.
+Profile Check: left wheel acceleration error in 132. point.
+Profile Check: left wheel acceleration error in 133. point.
+Profile Check: left wheel tangent acceleration error in 134. point.
+Profile Check: left wheel acceleration error in 134. point.
+Profile Check: left wheel acceleration error in 135. point.
+Profile Check: left wheel acceleration error in 136. point.
+Profile Check: left wheel acceleration error in 137. point.
+Profile Check: left wheel acceleration error in 138. point.
+Profile Check: left wheel acceleration error in 139. point.
+Profile Check: left wheel acceleration error in 140. point.
+Profile Check: left wheel acceleration error in 141. point.
+Profile Check: left wheel acceleration error in 143. point.
+Profile Check: left wheel acceleration error in 144. point.
+Profile Check: left wheel acceleration error in 145. point.
+Profile Check: left wheel acceleration error in 146. point.
+Profile Check: left wheel acceleration error in 147. point.
+Profile Check: left wheel acceleration error in 163. point.
+Profile Check: left wheel acceleration error in 167. point.
+Profile Check: left wheel tangent acceleration error in 171. point.
+Profile Check: left wheel acceleration error in 171. point.
+Profile Check: left wheel tangent acceleration error in 172. point.
+Profile Check: left wheel acceleration error in 172. point.
+Profile Check: right wheel tangent acceleration error in 174. point.
+Profile Check: right wheel acceleration error in 174. point.
+Profile Check: right wheel tangent acceleration error in 177. point.
+Profile Check: right wheel acceleration error in 177. point.
+Profile Check: right wheel tangent acceleration error in 178. point.
+Profile Check: right wheel acceleration error in 178. point.
+Profile Check: left wheel tangent acceleration error in 179. point.
+Profile Check: right wheel tangent acceleration error in 179. point.
+Profile Check: left wheel acceleration error in 179. point.
+Profile Check: right wheel acceleration error in 179. point.
+Profile Check: right wheel acceleration error in 202. point.
+Profile Check: right wheel acceleration error in 203. point.
+Profile Check: right wheel acceleration error in 205. point.
+Profile Check: right wheel acceleration error in 208. point.
+Profile Check: right wheel acceleration error in 209. point.
+Profile Check: right wheel acceleration error in 210. point.
+Profile Check: right wheel acceleration error in 211. point.
+Profile Check: right wheel acceleration error in 212. point.
+Profile Check: right wheel acceleration error in 213. point.
+Profile Check: right wheel acceleration error in 214. point.
+Profile Check: right wheel acceleration error in 215. point.
+Profile Check: right wheel acceleration error in 216. point.
+Profile Check: right wheel acceleration error in 217. point.
+Profile Check: right wheel tangent acceleration error in 218. point.
+Profile Check: right wheel acceleration error in 218. point.
+Profile Check: left wheel tangent acceleration error in 220. point.
+Profile Check: left wheel acceleration error in 220. point.
+Profile Check: left wheel tangent acceleration error in 224. point.
+Profile Check: left wheel acceleration error in 224. point.
+Sampled profile: profile checked, duration: 5000 us.
+Time parameterized path generation ended 2014-Sep-29 14:33:28
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 35001 us.
+Geometric profile: profile created, duration: 19001 us.
+Profile Check: right wheel tangent acceleration error in 97. point.
+Profile Check: right wheel acceleration error in 97. point.
+Profile Check: left wheel acceleration error in 111. point.
+Profile Check: left wheel tangent acceleration error in 232. point.
+Profile Check: left wheel acceleration error in 232. point.
+Geometric profile: profile checked, duration: 999 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 263
+Sampled profile: velocity interpolation, duration: 6000 us.
+Sampled profile: distance calculation, duration: 0 us.
+Sampled profile: path points generation, duration: 1999 us.
+Sampled profile: curvature, acceleration estimation, duration: 7000 us.
+Sampled profile: path end point correction, duration: 0 us.
+Profile Check: left wheel tangent acceleration error in 9. point.
+Profile Check: left wheel acceleration error in 9. point.
+Profile Check: left wheel tangent acceleration error in 13. point.
+Profile Check: left wheel acceleration error in 13. point.
+Profile Check: left wheel tangent acceleration error in 29. point.
+Profile Check: left wheel acceleration error in 29. point.
+Profile Check: left wheel tangent acceleration error in 30. point.
+Profile Check: left wheel acceleration error in 30. point.
+Profile Check: left wheel tangent acceleration error in 32. point.
+Profile Check: left wheel acceleration error in 32. point.
+Profile Check: left wheel tangent acceleration error in 33. point.
+Profile Check: left wheel acceleration error in 33. point.
+Profile Check: left wheel tangent acceleration error in 34. point.
+Profile Check: left wheel acceleration error in 34. point.
+Profile Check: left wheel tangent acceleration error in 35. point.
+Profile Check: left wheel acceleration error in 35. point.
+Profile Check: left wheel tangent acceleration error in 36. point.
+Profile Check: left wheel acceleration error in 36. point.
+Profile Check: left wheel tangent acceleration error in 37. point.
+Profile Check: left wheel acceleration error in 37. point.
+Profile Check: left wheel tangent acceleration error in 38. point.
+Profile Check: left wheel acceleration error in 38. point.
+Profile Check: right wheel acceleration error in 38. point.
+Profile Check: left wheel tangent acceleration error in 39. point.
+Profile Check: right wheel tangent acceleration error in 39. point.
+Profile Check: left wheel acceleration error in 39. point.
+Profile Check: right wheel acceleration error in 39. point.
+Profile Check: left wheel tangent acceleration error in 40. point.
+Profile Check: right wheel tangent acceleration error in 40. point.
+Profile Check: left wheel acceleration error in 40. point.
+Profile Check: right wheel acceleration error in 40. point.
+Profile Check: left wheel acceleration error in 41. point.
+Profile Check: left wheel tangent acceleration error in 42. point.
+Profile Check: right wheel tangent acceleration error in 42. point.
+Profile Check: left wheel acceleration error in 42. point.
+Profile Check: right wheel acceleration error in 42. point.
+Profile Check: angular velocity error in 43. point.
+Profile Check: left wheel tangent acceleration error in 43. point.
+Profile Check: right wheel tangent acceleration error in 43. point.
+Profile Check: left wheel acceleration error in 43. point.
+Profile Check: right wheel acceleration error in 43. point.
+Profile Check: angular velocity error in 44. point.
+Profile Check: left wheel tangent acceleration error in 44. point.
+Profile Check: right wheel tangent acceleration error in 44. point.
+Profile Check: left wheel acceleration error in 44. point.
+Profile Check: right wheel acceleration error in 44. point.
+Profile Check: angular velocity error in 45. point.
+Profile Check: left wheel tangent acceleration error in 45. point.
+Profile Check: right wheel tangent acceleration error in 45. point.
+Profile Check: left wheel acceleration error in 45. point.
+Profile Check: right wheel acceleration error in 45. point.
+Profile Check: angular velocity error in 46. point.
+Profile Check: left wheel tangent acceleration error in 46. point.
+Profile Check: right wheel tangent acceleration error in 46. point.
+Profile Check: left wheel acceleration error in 46. point.
+Profile Check: right wheel acceleration error in 46. point.
+Profile Check: angular velocity error in 47. point.
+Profile Check: left wheel tangent acceleration error in 47. point.
+Profile Check: right wheel tangent acceleration error in 47. point.
+Profile Check: left wheel acceleration error in 47. point.
+Profile Check: right wheel acceleration error in 47. point.
+Profile Check: left wheel acceleration error in 48. point.
+Profile Check: left wheel acceleration error in 86. point.
+Profile Check: left wheel acceleration error in 87. point.
+Profile Check: left wheel acceleration error in 88. point.
+Profile Check: left wheel tangent acceleration error in 89. point.
+Profile Check: left wheel acceleration error in 89. point.
+Profile Check: left wheel acceleration error in 90. point.
+Profile Check: left wheel acceleration error in 91. point.
+Profile Check: left wheel tangent acceleration error in 92. point.
+Profile Check: left wheel acceleration error in 92. point.
+Profile Check: left wheel acceleration error in 93. point.
+Profile Check: left wheel tangent acceleration error in 94. point.
+Profile Check: left wheel acceleration error in 94. point.
+Profile Check: left wheel tangent acceleration error in 95. point.
+Profile Check: left wheel acceleration error in 95. point.
+Profile Check: left wheel acceleration error in 96. point.
+Profile Check: left wheel tangent acceleration error in 97. point.
+Profile Check: left wheel acceleration error in 97. point.
+Profile Check: left wheel tangent acceleration error in 98. point.
+Profile Check: left wheel acceleration error in 98. point.
+Profile Check: left wheel tangent acceleration error in 99. point.
+Profile Check: left wheel acceleration error in 99. point.
+Profile Check: left wheel tangent acceleration error in 104. point.
+Profile Check: left wheel acceleration error in 104. point.
+Profile Check: right wheel acceleration error in 132. point.
+Profile Check: right wheel tangent acceleration error in 133. point.
+Profile Check: right wheel acceleration error in 133. point.
+Profile Check: right wheel tangent acceleration error in 134. point.
+Profile Check: right wheel acceleration error in 134. point.
+Profile Check: right wheel tangent acceleration error in 135. point.
+Profile Check: right wheel acceleration error in 135. point.
+Profile Check: right wheel tangent acceleration error in 136. point.
+Profile Check: right wheel acceleration error in 136. point.
+Profile Check: right wheel tangent acceleration error in 137. point.
+Profile Check: right wheel acceleration error in 137. point.
+Profile Check: right wheel tangent acceleration error in 139. point.
+Profile Check: right wheel acceleration error in 139. point.
+Profile Check: left wheel tangent acceleration error in 140. point.
+Profile Check: right wheel tangent acceleration error in 140. point.
+Profile Check: left wheel acceleration error in 140. point.
+Profile Check: right wheel acceleration error in 140. point.
+Profile Check: left wheel tangent acceleration error in 141. point.
+Profile Check: right wheel tangent acceleration error in 141. point.
+Profile Check: left wheel acceleration error in 141. point.
+Profile Check: right wheel acceleration error in 141. point.
+Profile Check: right wheel acceleration error in 142. point.
+Profile Check: left wheel tangent acceleration error in 143. point.
+Profile Check: right wheel tangent acceleration error in 143. point.
+Profile Check: left wheel acceleration error in 143. point.
+Profile Check: right wheel acceleration error in 143. point.
+Profile Check: angular velocity error in 144. point.
+Profile Check: left wheel tangent acceleration error in 144. point.
+Profile Check: right wheel tangent acceleration error in 144. point.
+Profile Check: left wheel acceleration error in 144. point.
+Profile Check: right wheel acceleration error in 144. point.
+Profile Check: angular velocity error in 145. point.
+Profile Check: left wheel tangent acceleration error in 145. point.
+Profile Check: right wheel tangent acceleration error in 145. point.
+Profile Check: left wheel acceleration error in 145. point.
+Profile Check: right wheel acceleration error in 145. point.
+Profile Check: angular velocity error in 146. point.
+Profile Check: left wheel tangent acceleration error in 146. point.
+Profile Check: right wheel tangent acceleration error in 146. point.
+Profile Check: left wheel acceleration error in 146. point.
+Profile Check: right wheel acceleration error in 146. point.
+Profile Check: angular velocity error in 147. point.
+Profile Check: left wheel tangent acceleration error in 147. point.
+Profile Check: right wheel tangent acceleration error in 147. point.
+Profile Check: left wheel acceleration error in 147. point.
+Profile Check: right wheel acceleration error in 147. point.
+Profile Check: angular velocity error in 148. point.
+Profile Check: left wheel tangent acceleration error in 148. point.
+Profile Check: right wheel tangent acceleration error in 148. point.
+Profile Check: left wheel acceleration error in 148. point.
+Profile Check: right wheel acceleration error in 148. point.
+Profile Check: angular velocity error in 149. point.
+Profile Check: left wheel tangent acceleration error in 149. point.
+Profile Check: right wheel tangent acceleration error in 149. point.
+Profile Check: left wheel acceleration error in 149. point.
+Profile Check: right wheel acceleration error in 149. point.
+Profile Check: right wheel acceleration error in 164. point.
+Profile Check: right wheel acceleration error in 189. point.
+Profile Check: right wheel acceleration error in 190. point.
+Profile Check: right wheel acceleration error in 191. point.
+Profile Check: right wheel tangent acceleration error in 192. point.
+Profile Check: right wheel acceleration error in 192. point.
+Profile Check: right wheel tangent acceleration error in 193. point.
+Profile Check: right wheel acceleration error in 193. point.
+Profile Check: left wheel tangent acceleration error in 198. point.
+Profile Check: left wheel acceleration error in 198. point.
+Profile Check: right wheel tangent acceleration error in 200. point.
+Profile Check: right wheel acceleration error in 200. point.
+Profile Check: left wheel tangent acceleration error in 203. point.
+Profile Check: left wheel acceleration error in 203. point.
+Profile Check: left wheel tangent acceleration error in 204. point.
+Profile Check: left wheel acceleration error in 204. point.
+Profile Check: left wheel acceleration error in 233. point.
+Profile Check: left wheel acceleration error in 234. point.
+Profile Check: left wheel tangent acceleration error in 239. point.
+Profile Check: left wheel acceleration error in 239. point.
+Profile Check: right wheel tangent acceleration error in 243. point.
+Profile Check: right wheel acceleration error in 243. point.
+Sampled profile: profile checked, duration: 7000 us.
+Time parameterized path generation ended 2014-Sep-29 14:33:28

@@ -10,6 +10,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#define CAR_LIKE_ROBOT 1
+
 using boost::asio::ip::tcp;
 using namespace std;
 
@@ -21,8 +23,16 @@ typedef struct
 	 float motorMultFactor;
 } motorStruct;
 
+typedef struct
+{
+	float axisDistance;
+	float minimalTurnRadius;
+	float fiMax;
+} carStruct;
+
 motorStruct robotLeftMotor;
 motorStruct robotRightMotor;
+carStruct carData;
 ofstream dFile[6];
 
 boost::system::error_code SetupServer(boost::asio::io_service& io_service, int port, tcp::iostream& s)
@@ -56,6 +66,45 @@ void ForwardPath(CSimpleInConnection& connection, tcp::iostream& s)
 	delete[] receivedData;
 }
 
+int ReceiveForwardPars(CSimpleInConnection& connection, tcp::iostream& path_s, float& dt, motorStruct& motor, carStruct& car, float& wheelDistance, float& wheelDiameter) {
+	int receivedDataLength;
+	PackedMessage pathMsg;
+	char* receivedData = connection.receiveData(receivedDataLength);
+	if (receivedData != NULL)
+	{
+		dt = ((float*)receivedData)[0];
+
+		motor.motorMaxSpeed = ((float*)receivedData)[1];
+		motor.motorMaxAccel = ((float*)receivedData)[2];
+		motor.motorMultFactor = ((float*)receivedData)[3];
+		motor.motorSmoothFactor = ((float*)receivedData)[4];
+
+		pathMsg.values.push_back(((float*)receivedData)[9]);	//PredictLength
+		pathMsg.values.push_back(((float*)receivedData)[10]);	//distPar_P
+		pathMsg.values.push_back(((float*)receivedData)[11]);	//distPar_D
+		pathMsg.values.push_back(((float*)receivedData)[12]);	//oriPar_P
+		pathMsg.values.push_back(((float*)receivedData)[13]);	//oriPar_D
+		wheelDistance = ((float*)receivedData)[14];
+		wheelDiameter = ((float*)receivedData)[15];
+		pathMsg.values.push_back(dt);	//timeStep
+		pathMsg.values.push_back(wheelDistance);	//wheelDistance
+		pathMsg.values.push_back(((float*)receivedData)[16]);	//pathMaxSpeed
+		pathMsg.values.push_back(((float*)receivedData)[17]);	//pathMaxAccel
+		pathMsg.values.push_back(((float*)receivedData)[18]);	//pathMaxTangentAccel
+		pathMsg.values.push_back(((float*)receivedData)[19]);	//pathMaxAngularSpeed
+
+		car.axisDistance = ((float*)receivedData)[20];
+		car.minimalTurnRadius = ((float*)receivedData)[21];
+		car.fiMax = ((float*)receivedData)[22];
+
+		pathMsg.send(path_s);
+
+		delete[] receivedData;
+		return 0;
+	}
+
+	return -1;
+}
 
 int ReceiveForwardPars(CSimpleInConnection& connection,tcp::iostream& path_s, float& dt, motorStruct& leftMotor, motorStruct& rightMotor, float& wheelDistance, float& wheelDiameter)
 {
@@ -234,7 +283,11 @@ int main(int argc,char* argv[])
 		PathMessage path;
 
 		//Receive parameters from V-Rep Client
-		ReceiveForwardPars(connection, path_s, timeStep, robotLeftMotor, robotRightMotor, wheelDistance, wheelDiameter);		
+#if CAR_LIKE_ROBOT
+		ReceiveForwardPars(connection, path_s, timeStep, robotLeftMotor, carData, wheelDistance, wheelDiameter);
+#else
+		ReceiveForwardPars(connection, path_s, timeStep, robotLeftMotor, robotRightMotor, wheelDistance, wheelDiameter);
+#endif
 		
 		//Receive path from V-Rep Client
 		ForwardPath(connection, path_s);
