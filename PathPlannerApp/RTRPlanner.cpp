@@ -26,8 +26,51 @@ void transformRobotShape(Polygon &robotShapeLocal, Polygon &robotShapeWorld, Con
 bool Scene::RTRPlanner()
 {
 	InitRTTrees();
+	Point gp(26.5f, 3.0f);
+	ALCCandidate alc;
+	
+	alc = GetALC(startTree, gp, true);
 
 	return true;
+}
+
+ALCCandidate Scene::GetALC(Tree &tree, Point &GP, bool preferredDir)
+{
+	vector<ALCCandidate> ALCCandidates;
+	ALCCandidates.reserve((int)tree.xtree.size() - 1);
+
+	//Fill ALC candidate list, while taking care of smaller position and angular distance 
+	float minPosDist = numeric_limits<float>::infinity(), minAngDist = numeric_limits<float>::infinity();
+	vector<ALCCandidate>::iterator min;
+	for (vector<TreeElement>::iterator it = tree.xtree.begin() + 1; it != tree.xtree.end(); ++it)
+	{
+		ALCCandidates.push_back(it->ci.PointCIDistance(GP, preferredDir));
+
+		if (ALCCandidates.back().posDist < minPosDist) //Check posDist
+		{
+			minPosDist = ALCCandidates.back().posDist;
+			minAngDist = fabs(ALCCandidates.back().angDist);
+			min = ALCCandidates.end() - 1;
+		}
+		else if (ALCCandidates.back().posDist == minPosDist)
+		{
+			if (fabs(ALCCandidates.back().angDist) < minAngDist) //Check angDist
+			{
+				minPosDist = ALCCandidates.back().posDist;
+				minAngDist = fabs(ALCCandidates.back().angDist);
+				min = ALCCandidates.end() - 1;
+			}
+		}
+	}
+
+	int treeIdx = (min - ALCCandidates.begin()) + 1; //Get position in tree
+
+	if ((min->internalC) || (min->q == tree.xtree[treeIdx].q))
+		min->treeElementIdx = treeIdx;
+	else
+		min->treeElementIdx = tree.xtree[treeIdx].parentIdx;
+
+	return *min;
 }
 
 void Scene::InitRTTrees()

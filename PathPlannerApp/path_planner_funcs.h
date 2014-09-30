@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Point.h"
+
 float corrigateAngle(float angle);
 float directedAngleDist(float thetaStart, float thetaEnd, bool turnDir);
+bool pointProjectToSegment(Point p, Point s1, Point s2, Point &proj);
 
 #include <vector>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <Fade_2D.h>
-#include "Point.h"
 #include "Triangle.h"
 #include "Polygon.h"
 #include "Config.h"
@@ -84,6 +86,7 @@ private:
 	void Triangulate();
 	void TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterval &BackwardMaxTCI);
 	void InitRTTrees();
+	ALCCandidate Scene::GetALC(Tree &tree, Point &GP, bool preferredDir);
 private:
 	vector<Polygon> envs, envsx;
 	Polygon field;

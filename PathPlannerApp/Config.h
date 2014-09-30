@@ -17,6 +17,13 @@ struct Config
 		this->p = p;
 		this->phi = phi;
 	}
+	bool operator==(const Config &b) const
+	{
+		if ((this->p == b.p) && (this->phi == b.phi))
+			return true;
+		else
+			return false;
+	}
 	const Config operator+(const Config &b) const
 	{
 		Config a(this->p + b.p, corrigateAngle(this->phi + b.phi));

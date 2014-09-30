@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math.h>
+
 struct Point
 {
 	Point()
@@ -36,7 +38,7 @@ struct Point
 		Point a(this->x/div, this->y/div);
 		return a;
 	}
-	static float Distance(Point &a, Point &b)
+	static float Distance(const Point &a, const Point &b)
 	{
 		return sqrtf((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 	}
