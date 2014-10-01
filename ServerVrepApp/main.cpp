@@ -353,6 +353,8 @@ int main(int argc,char* argv[])
  			robotPos.y += sin(robotPos.phi) * robotSpeed * timeStep;
 			robotPos.phi += robotAngularSpeed  * timeStep / 2.0f;
 
+			//TODO a végén a pozíciót nekem elõrébb kell rakni a tengelytáv felével
+
 			leftJointPos += leftSpeed*timeStep*2/wheelDiameter;
 			rightJointPos += rightSpeed*timeStep*2/wheelDiameter;
 

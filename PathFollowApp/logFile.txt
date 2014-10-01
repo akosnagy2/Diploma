@@ -28918,3 +28918,171 @@ Profile Check: right wheel tangent acceleration error in 243. point.
 Profile Check: right wheel acceleration error in 243. point.
 Sampled profile: profile checked, duration: 7000 us.
 Time parameterized path generation ended 2014-Sep-29 14:33:28
+Time parameterized path generation started 2014-Oct-01 13:07:47
+Robot parameters:
+Robot wheel base: 265 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 35001 us.
+Geometric profile: profile created, duration: 3001 us.
+Geometric profile: profile checked, duration: 999 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 1424
+Sampled profile: velocity interpolation, duration: 34001 us.
+Sampled profile: distance calculation, duration: 1000 us.
+Sampled profile: path points generation, duration: 6000 us.
+Sampled profile: curvature, acceleration estimation, duration: 33002 us.
+Sampled profile: path end point correction, duration: 2000 us.
+Sampled profile: profile checked, duration: 6000 us.
+Time parameterized path generation ended 2014-Oct-01 13:07:47
+Time parameterized path generation started 2014-Oct-01 13:13:01
+Robot parameters:
+Robot wheel base: 265 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 35002 us.
+Geometric profile: profile created, duration: 3999 us.
+Geometric profile: profile checked, duration: 2000 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 1424
+Sampled profile: velocity interpolation, duration: 29001 us.
+Sampled profile: distance calculation, duration: 999 us.
+Sampled profile: path points generation, duration: 5999 us.
+Sampled profile: curvature, acceleration estimation, duration: 32002 us.
+Sampled profile: path end point correction, duration: 1000 us.
+Sampled profile: profile checked, duration: 7000 us.
+Time parameterized path generation ended 2014-Oct-01 13:13:02
+Time parameterized path generation started 2014-Oct-01 13:14:36
+Robot parameters:
+Robot wheel base: 265 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 35001 us.
+Geometric profile: profile created, duration: 3999 us.
+Geometric profile: profile checked, duration: 2000 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 1424
+Sampled profile: velocity interpolation, duration: 29001 us.
+Sampled profile: distance calculation, duration: 1000 us.
+Sampled profile: path points generation, duration: 6000 us.
+Sampled profile: curvature, acceleration estimation, duration: 33001 us.
+Sampled profile: path end point correction, duration: 2000 us.
+Sampled profile: profile checked, duration: 7000 us.
+Time parameterized path generation ended 2014-Oct-01 13:14:36
+Time parameterized path generation started 2014-Oct-01 13:37:15
+Robot parameters:
+Robot wheel base: 265 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 36001 us.
+Geometric profile: profile created, duration: 2999 us.
+Geometric profile: profile checked, duration: 2000 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 1424
+Sampled profile: velocity interpolation, duration: 30001 us.
+Sampled profile: distance calculation, duration: 1000 us.
+Sampled profile: path points generation, duration: 6000 us.
+Sampled profile: curvature, acceleration estimation, duration: 31001 us.
+Sampled profile: path end point correction, duration: 2000 us.
+Sampled profile: profile checked, duration: 6000 us.
+Time parameterized path generation ended 2014-Oct-01 13:37:15
+Time parameterized path generation started 2014-Oct-01 13:44:43
+Robot parameters:
+Robot wheel base: 265 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 36001 us.
+Geometric profile: profile created, duration: 3000 us.
+Geometric profile: profile checked, duration: 1999 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 1424
+Sampled profile: velocity interpolation, duration: 31001 us.
+Sampled profile: distance calculation, duration: 999 us.
+Sampled profile: path points generation, duration: 5001 us.
+Sampled profile: curvature, acceleration estimation, duration: 32001 us.
+Sampled profile: path end point correction, duration: 999 us.
+Sampled profile: profile checked, duration: 8000 us.
+Time parameterized path generation ended 2014-Oct-01 13:44:44
+Time parameterized path generation started 2014-Oct-01 13:47:24
+Robot parameters:
+Robot wheel base: 265 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 35002 us.
+Geometric profile: profile created, duration: 4000 us.
+Geometric profile: profile checked, duration: 2000 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 1424
+Sampled profile: velocity interpolation, duration: 30001 us.
+Sampled profile: distance calculation, duration: 0 us.
+Sampled profile: path points generation, duration: 5000 us.
+Sampled profile: curvature, acceleration estimation, duration: 32001 us.
+Sampled profile: path end point correction, duration: 1000 us.
+Sampled profile: profile checked, duration: 9001 us.
+Time parameterized path generation ended 2014-Oct-01 13:47:25
+Time parameterized path generation started 2014-Oct-01 13:48:26
+Robot parameters:
+Robot wheel base: 265 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 35001 us.
+Geometric profile: profile created, duration: 2999 us.
+Geometric profile: profile checked, duration: 2000 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 1424
+Sampled profile: velocity interpolation, duration: 29000 us.
+Sampled profile: distance calculation, duration: 1000 us.
+Sampled profile: path points generation, duration: 6000 us.
+Sampled profile: curvature, acceleration estimation, duration: 31001 us.
+Sampled profile: path end point correction, duration: 999 us.
+Sampled profile: profile checked, duration: 6000 us.
+Time parameterized path generation ended 2014-Oct-01 13:48:26
+Time parameterized path generation started 2014-Oct-01 13:52:50
+Robot parameters:
+Robot wheel base: 265 m
+Robot maximum velocity: 350 m/s
+Robot maximum angular velocity: 1.6 1/s
+Robot wheel maximum acceleration: 300 m/s^2
+Robot wheel maximum tangent acceleration: 300 m/s^2
+Geometric profile: 0 points removed, duration: 0 us.
+Geometric profile: curvature estimated, duration: 39002 us.
+Geometric profile: profile created, duration: 3999 us.
+Geometric profile: profile checked, duration: 2000 us.
+Sampled profile generation started.
+Sampled profile: sampling time: 0.05 s
+Sampled profile: path length: 1424
+Sampled profile: velocity interpolation, duration: 30001 us.
+Sampled profile: distance calculation, duration: 1000 us.
+Sampled profile: path points generation, duration: 5000 us.
+Sampled profile: curvature, acceleration estimation, duration: 30001 us.
+Sampled profile: path end point correction, duration: 2000 us.
+Sampled profile: profile checked, duration: 5999 us.
+Time parameterized path generation ended 2014-Oct-01 13:52:50

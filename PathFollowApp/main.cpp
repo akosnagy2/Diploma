@@ -133,6 +133,7 @@ int main()
 
 			//Process path follow
 			pathFollow.robotPos = act_pos;
+			//TODO: ezt kell módosítani, hogy v-t és fi-t adjon vissza
 			PathCtrl_Loop(&pathFollow, &leftV, &rightV);
 			
 			//Info
