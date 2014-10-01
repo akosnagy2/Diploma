@@ -274,7 +274,6 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 	//Tracking error
 	ctrl->trackError = getDistance(ctrl->robotPos, ctrl->path[ctrl->timeIndex]);
 	ctrl->trackSumError += ctrl->trackError;
-;
 
 	switch (ctrl->state)
 	{

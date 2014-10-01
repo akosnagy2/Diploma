@@ -365,7 +365,7 @@ static void correctAccelBackward(Profile &prof, std::vector<float> &Vmax, std::v
 	//Check accel. constraints backward
 	float aL, aR;
 	bool goBack = false;
-	do
+	do  //TODO: változhat autónál, nem kerekekre kell nézni, hanem robotra!!!
 	{
 		aL = (powf(prof.v[i+1],2) - powf(prof.v[i],2)) * powf((1 - robotWheelBase*0.5f*prof.c[i]),2) / (2*deltaSl[i]);
 		aR = (powf(prof.v[i+1],2) - powf(prof.v[i],2)) * powf((1 + robotWheelBase*0.5f*prof.c[i]),2) / (2*deltaSr[i]);
@@ -424,7 +424,7 @@ static void generateVelocityProfile_opt(Profile &prof)
 	{
 		//Set default velocity constraints
 		if (i < length - 2)
-			Vmax[i+1] = min(maxV, maxW/fabs(prof.c[i+1]));
+			Vmax[i+1] = min(maxV, maxW/fabs(prof.c[i+1])); //TODO: változhat autónál!!! *
 
 		//Get travelled distance for the wheels, robot
 		float r, alfa;
@@ -438,18 +438,18 @@ static void generateVelocityProfile_opt(Profile &prof)
 			alfa = acos(1 - 0.5f*powf((prof.deltaS[i]/r),2));
 
 			//DeltaS always positive
-			deltaSl[i] = alfa*fabs((r - robotWheelBase*0.5f));
+			deltaSl[i] = alfa*fabs((r - robotWheelBase*0.5f));	//TODO: szükségtelen autónál!!!
 			deltaSr[i] = alfa*fabs((r + robotWheelBase*0.5f));
 			prof.deltaSc[i] = alfa*fabs(r);
 		}
 		prof.sc[i+1] = prof.sc[i] + prof.deltaSc[i];
 
-		//Centripetal accel. for wheels
-		acpL[i] = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f - prof.c[i]*robotWheelBase*0.5f);
+		//Centripetal accel. for wheels	
+		acpL[i] = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f - prof.c[i]*robotWheelBase*0.5f);	//TODO: inkább a (*)-hoz még egy korlát
 		acpR[i] = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f + prof.c[i]*robotWheelBase*0.5f);
 
 		//Cent. accel. alone exceeds the accel. constraint
-		if (max(fabs(acpL[i]), fabs(acpR[i])) >= maxA)
+		if (max(fabs(acpL[i]), fabs(acpR[i])) >= maxA)	//TODO: szükségtelen autónál!!!
 		{
 			float vmL = numeric_limits<float>::infinity(), vmR = numeric_limits<float>::infinity();
 
@@ -476,7 +476,7 @@ static void generateVelocityProfile_opt(Profile &prof)
 
 		//Calculate wheel accel. based on constraints
 		float ar, al;
-		ar = alimitL * (1 + robotWheelBase*0.5f*prof.c[i]) / (1 - robotWheelBase*0.5f*prof.c[i]);
+		ar = alimitL * (1 + robotWheelBase*0.5f*prof.c[i]) / (1 - robotWheelBase*0.5f*prof.c[i]);	//TODO: szükségtelen autónál!!!
 		al = alimitR * (1 - robotWheelBase*0.5f*prof.c[i]) / (1 + robotWheelBase*0.5f*prof.c[i]);
 		if (fabs(ar) > alimitR)
 			ar = alimitR;
