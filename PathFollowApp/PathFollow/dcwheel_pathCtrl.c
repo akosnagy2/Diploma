@@ -95,12 +95,10 @@ void PathCtrl_SetState(volatile PathCtrlTypedef* ctrl, uint16_t start)
 		//cntrl_timer_stop(ctrl->timer_index);
 
 		ctrl->timeIndex = 0;
-		ctrl->distError = 0.0;
-		ctrl->distPrevError = 0.0;
+		ctrl->trackError = 0.0;
+		ctrl->trackSumError = 0.0;
 		ctrl->robotPrevVel = 0.0;
 		ctrl->robotPrevAngVel = 0.0;
-		ctrl->robotSumDist = 0.0;
-		ctrl->pathSumDist = 0.0;
 	}
 }
 
@@ -222,7 +220,7 @@ static void pathLoop(volatile PathCtrlTypedef* ctrl, uint16_t backward)
 	}
 	//Robot velocity
 	ctrl->robotVel = getDistance(ctrl->path[ctrl->timeIndex], ctrl->path[ctrl->timeIndex + 1]);
-	ctrl->robotVel += ctrl->distError * ctrl->distParP + (ctrl->distError - ctrl->distPrevError) * ctrl->distParD + ctrl->pathSumDist * ctrl->distParI ; //TODO: nem mûködik jól!!!!!!!
+	ctrl->robotVel += ctrl->trackError * ctrl->distParP + ctrl->trackSumError * ctrl->distParI ; //TODO: nem mûködik jól!!!!!!!
 	ctrl->robotVel = 2.0 * ctrl->robotVel/ctrl->sample_s - ctrl->robotPrevVel;
 
 	if (backward)
@@ -274,8 +272,8 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 	}
 
 	//Tracking error
-	ctrl->distError = getDistance(ctrl->robotPos, ctrl->path[ctrl->timeIndex]);
-	ctrl->pathSumDist += ctrl->distError;
+	ctrl->trackError = getDistance(ctrl->robotPos, ctrl->path[ctrl->timeIndex]);
+	ctrl->trackSumError += ctrl->trackError;
 
 	switch (ctrl->state)
 	{
@@ -286,14 +284,14 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 			ctrl->predictLength += 10;
 			count = 10;
 
-			if (ctrl->path[ctrl->timeIndex + 1].phi == 1000.0)
+			if (ctrl->path[ctrl->timeIndex + 1].phi == TURN_PHI)
 				ctrl->state = STATE_TURN;
 			else
 				ctrl->state = STATE_PATHFOLLOW;
 			break;
 
 		case STATE_PATHFOLLOW:
-			if (ctrl->path[ctrl->timeIndex + 2].phi == 1000.0)
+			if (ctrl->path[ctrl->timeIndex + 2].phi == TURN_PHI)
 				ctrl->state = STATE_PRE_STOP;
 
 			//Forward/backward path following
@@ -339,7 +337,6 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 	//SpeedCtrl_SetSetpoint(&LeftSpeedCtrl, v_left);
 
 	ctrl->robotPrevPos = ctrl->robotPos;
-	ctrl->distPrevError = ctrl->distError;
 	ctrl->robotPrevAngVel = ctrl->robotAngVel;
 	ctrl->robotPrevVel = ctrl->robotVel;
 }

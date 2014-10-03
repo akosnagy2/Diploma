@@ -17,6 +17,8 @@ typedef struct{
 */
 #define PositionTypedef Position
 
+#define TURN_PHI 1000.0f
+
 typedef enum {
 	STATE_INIT,
 	STATE_PATHFOLLOW,
@@ -39,10 +41,8 @@ typedef struct{
 	float	 			oriParP;
 	float				oriParD;
 	float				robotWheelDist;
-	float				distError;
-	float				distPrevError;
-	float				robotSumDist;
-	float				pathSumDist;
+	float				trackError;
+	float				trackSumError;
 	float				robotPrevVel;
 	float				robotPrevAngVel;
 	PositionTypedef		robotPos;
