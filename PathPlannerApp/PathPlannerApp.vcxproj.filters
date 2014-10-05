@@ -49,7 +49,7 @@
       <Filter>PathPlanner</Filter>
     </ClCompile>
     <ClCompile Include="ConfigInterval.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PathPlanner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,7 +84,7 @@
       <Filter>PathPlanner</Filter>
     </ClInclude>
     <ClInclude Include="ConfigInterval.h">
-      <Filter>Header Files</Filter>
+      <Filter>PathPlanner</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

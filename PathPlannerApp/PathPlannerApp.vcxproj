@@ -53,13 +53,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\jsoncpp-src-0.6.0-rc2\include;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;C:\BME\Diploma\Libs\Fade2D\Win32;C:\BME\Diploma\jsoncpp-src-0.6.0-rc2\build\vs71\debug\lib_json;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;C:\BME\Diploma\Libs\Fade2D\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>fade2D_vc11_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -72,12 +72,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\jsoncpp-src-0.6.0-rc2\include;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;C:\BME\Diploma\Libs\Fade2D\Win32;C:\BME\Diploma\jsoncpp-src-0.6.0-rc2\build\vs71\debug\lib_json;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>fade2D_vc11_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

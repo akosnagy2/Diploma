@@ -29,8 +29,6 @@ void transformRobotShape(Polygon &robotShapeLocal, Polygon &robotShapeWorld, Con
 	}
 }
 
-
-
 bool Scene::RTRPlanner()
 {
 	InitRTTrees();
@@ -44,6 +42,7 @@ bool Scene::RTRPlanner()
 			break;
 	}
 
+	OptimizePath();
 	return true;
 }
 
@@ -134,7 +133,7 @@ void Scene::InitRTTrees()
 {
 	fixPrePathStartIdx = 0;
 	fixPrePathGoalIdx = 0;
-
+	
 	recentTCIStartIDs.clear();
 	recentTCIGoalIDs.clear();
 
@@ -440,11 +439,11 @@ vector<ConfigInterval> Scene::ObtainPath(int startMergeID, int goalMergeID, Conf
 
 	//1st part of the path: CIs from the start configuration to the newly added intersection point + merging RCI
 	vector<ConfigInterval> path = startTree.PathFromRoot(startTreeNewID);
-	reverse(path.begin(), path.end());
 	path.push_back(mergeRCI);
 
 	//2nd part of the path: CIs from the newly added intersection point to the goal configuration
 	vector<ConfigInterval> path2 = goalTree.PathFromRoot(goalTreeNewID);
+	ReversePath(path2);
 	path.insert(path.end(), path2.begin(), path2.end());
 
 	//Determinate path length
@@ -455,6 +454,19 @@ vector<ConfigInterval> Scene::ObtainPath(int startMergeID, int goalMergeID, Conf
 			pathLength += fabs(it->amount);
 	}
 	return path;
+}
+
+void Scene::ReversePath(vector<ConfigInterval> &path)
+{
+	reverse(path.begin(), path.end());
+
+	for (vector<ConfigInterval>::iterator it = path.begin(); it != path.end(); ++it)
+	{
+		it->amount *= -1;
+		Config t = it->q1;
+		it->q1 = it->q0;
+		it->q0 = t;
+	}
 }
 
 /*
@@ -523,8 +535,9 @@ int Scene::treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &m
 		}
 		else
 		{
-				//TCI -> check mergeability, if possible then break, else put children to the queue
-			if (tciTCIMergeability(TCI, tree.xtree[id].ci, mergingRCI))
+			//TCI -> check mergeability, if possible then break, else put children to the queue
+			Point mergingPoint;
+			if (tciTCIMergeability(TCI, tree.xtree[id].ci, mergingRCI, mergingPoint))
 			{
 				//Merging is possible -> return
 				return id;
@@ -542,12 +555,10 @@ int Scene::treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &m
 	return -1;
 }
 
-bool Scene::tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigInterval &mergingRCI)
+bool Scene::tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigInterval &mergingRCI, Point &mergingPoint)
 {
-	Point intersect;
-
 	//Check if the two TCI-s are intersecting or not
-	if (Line::SegmentSegmentItersection(Line(start.q0.p, start.q1.p), Line(end.q0.p, end.q1.p), intersect))
+	if (Line::SegmentSegmentItersection(Line(start.q0.p, start.q1.p), Line(end.q0.p, end.q1.p), mergingPoint))
 	{
 		//If there is an intersection point then check if an RCI can be added to connect the two TCIs at this point
 		Point localTargetPos;
@@ -557,7 +568,7 @@ bool Scene::tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigI
 		else
 			localTargetPos = end.q0.p; //Backward motion
 
-		Config c(intersect, start.q0.phi);
+		Config c(mergingPoint, start.q0.phi);
 		float angDist = c.PointAngularDistance(localTargetPos, true);
 
 		//Try to connect by the minimal RCI
@@ -594,5 +605,92 @@ Point Scene::GetGuidePoint(bool startPoint)
 	else
 	{
 		return Point(distribution(generator)*fieldXLength, distribution(generator)*fieldYLength);
+	}
+}
+
+void Scene::OptimizePath()
+{
+	//TODO: pathCI is lehet, hogy list kéne hogy legyen
+	//Merging consecutive TCIs in the initial path
+	for (vector<ConfigInterval>::iterator it = pathCI.begin(); it != pathCI.end() - 1; ++it)
+	{
+		if (((it+1)->type == TranslationCI) && (it->type == TranslationCI))
+		{
+			it->q1 = (it+1)->q1;
+			it->amount += (it+1)->amount;
+			it = pathCI.erase(it+1) - 2;
+		}
+	}
+
+	//Extending all TCIs in the path
+	vector<ConfigInterval> pathExt;
+	pathExt.reserve((int)pathCI.size());
+	PathTCIExtension(pathExt);
+
+	//Seeking intersections and simplification possibilities using the extended TCIs
+//	for (int i = 0; i < (int)pathCI.size() - 1; i++)	
+	int i = 0;
+	while (i < (int)pathCI.size() - 2)
+	{
+		i++;
+		int j = (int)pathCI.size() + 1;
+		//for (int j = pathCI.size() - 1; j + 1 > i; j--)	
+		while (j > i)
+		{
+			j--;
+			if ((pathExt[i-1].type == TranslationCI) && (pathExt[j-1].type == TranslationCI) && (j > i + 2))
+			{
+				ConfigInterval mergingRCI;
+				Point mergingPoint;
+				if (tciTCIMergeability(pathExt[i-1], pathExt[j-1], mergingRCI, mergingPoint))
+				{
+					//A TCI can be connected with a later one using an RCI
+					pathCI[i-1].type = TranslationCI;
+					pathCI[i-1].q1 = Config(mergingPoint, mergingRCI.q0.phi);
+					if (fabs(Angle::Corrigate(Point::atan2(pathCI[i-1].q1.p, pathCI[i-1].q0.p) - pathCI[i-1].q0.phi)) < PI*0.5)
+						pathCI[i-1].amount = Point::Distance(pathCI[i-1].q0.p, pathCI[i-1].q1.p);
+					else
+						pathCI[i-1].amount = -Point::Distance(pathCI[i-1].q0.p, pathCI[i-1].q1.p);
+
+					pathCI[i+1-1] = mergingRCI;
+					
+					pathCI[i+2-1].type = TranslationCI;
+					pathCI[i+2-1].q0 = Config(mergingPoint, mergingRCI.q1.phi);
+					pathCI[i+2-1].q1 = pathCI[j-1].q1;
+					if (fabs(Angle::Corrigate(Point::atan2(pathCI[i+2-1].q1.p, pathCI[i+2-1].q0.p) - pathCI[i+2-1].q0.phi)) < PI*0.5)
+						pathCI[i+2-1].amount = Point::Distance(pathCI[i+2-1].q0.p, pathCI[i+2-1].q1.p);
+					else
+						pathCI[i+2-1].amount = -Point::Distance(pathCI[i+2-1].q0.p, pathCI[i+2-1].q1.p);
+					
+					//Throw the no more needed CIs away and break the inner loop
+					pathCI.erase(pathCI.begin() + i + 3-1, pathCI.begin() + j);
+
+					pathExt[i+1-1] = mergingRCI;
+					pathExt.erase(pathExt.begin() + i + 2-1, pathExt.begin() + j - 1);
+
+					break;
+				}
+			}
+		}
+	}
+}
+
+void Scene::PathTCIExtension(vector<ConfigInterval> &pathExt)
+{
+	pathExt = pathCI;
+
+	for (vector<ConfigInterval>::iterator it = pathExt.begin(); it != pathExt.end(); ++it)
+	{
+		if (it->type == TranslationCI)
+		{
+			ConfigInterval forwardMaxTCI, backwardMaxTCI, extendedTCI;
+			TCI_Extension(it->q0, forwardMaxTCI, backwardMaxTCI);
+
+			extendedTCI.type = TranslationCI;
+			extendedTCI.q0 = backwardMaxTCI.q1;
+			extendedTCI.q1 = forwardMaxTCI.q1;
+			extendedTCI.amount = fabs(forwardMaxTCI.amount) + fabs(backwardMaxTCI.amount);
+			(*it) = extendedTCI;
+		}
 	}
 }

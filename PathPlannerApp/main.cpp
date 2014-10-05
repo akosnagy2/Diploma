@@ -1,7 +1,10 @@
 #include "PathPlannerApp\path_planner_funcs.h"
 #include "Polygon.h"
 #include "Scene.h"
+#include <chrono>
+
 using namespace std;
+using namespace std::chrono;
 
 vector<Point> LoadPathFromFile(string filename)
 {
@@ -56,9 +59,14 @@ int main()
 	//sc.PrePlanner();
 	//sc.DrawPrePath();
 
+
 	sc.SetRTRParameters(1000, 0.0f, 1.0f);
 
+	chrono::high_resolution_clock::time_point start, stop;
+	start = high_resolution_clock::now();
 	sc.RTRPlanner();
+	stop = high_resolution_clock::now();
+	cout << duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
 	return 0;
 }

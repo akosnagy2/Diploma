@@ -9,6 +9,8 @@
 #include "Polygon.h"
 #include <vector>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/io.hpp>
 
 using namespace std;
 using namespace boost::numeric;
@@ -106,9 +108,12 @@ private:
 	vector<ConfigInterval> ObtainPath(int startMergeID, int goalMergeID, ConfigInterval mergeRCI, float &pathLength);
 	int circleSegLineSegIntersect(Config qStart, float dTheta, float radius, Line s1, Point res[2]);
 	//tciTCIMergeability - Checks whether the given TCIs can be merged by a single RCI
-	bool tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigInterval &mergingRCI);
+	bool tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigInterval &mergingRCI, Point &mergingPoint);
 	Point GetGuidePoint(bool startPoint);
 	bool TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGoal, vector<int> &recentTCIIDs);
+	void OptimizePath();
+	void PathTCIExtension(vector<ConfigInterval> &pathExt);
+	void ReversePath(vector<ConfigInterval> &path);
 private:
 	vector<Polygon> envs, envsx;
 

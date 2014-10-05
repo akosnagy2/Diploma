@@ -61,6 +61,8 @@ vector<ConfigInterval> Tree::PathFromRoot(int id)
 			path.push_back(xtree[id].ci);
 			id = xtree[id].parentIdx;
 		} while (xtree[id].parentIdx != -1);
+
+		reverse(path.begin(), path.end());
 	}
 	return path;
 }
