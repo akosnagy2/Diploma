@@ -20,23 +20,19 @@ struct Point
 	}
 	const Point operator+(const Point &b) const
 	{
-		Point a(this->x + b.x, this->y + b.y);
-		return a;
+		return Point(this->x + b.x, this->y + b.y);
 	}
 	const Point operator-(const Point &b) const
 	{
-		Point a(this->x - b.x, this->y - b.y);
-		return a;
+		return Point(this->x - b.x, this->y - b.y);;
 	}
 	const Point operator*(const float mul) const
 	{
-		Point a(this->x*mul, this->y*mul);
-		return a;
+		return Point(this->x*mul, this->y*mul);
 	}
 	const Point operator/(const float div) const
 	{
-		Point a(this->x/div, this->y/div);
-		return a;
+		return Point(this->x/div, this->y/div);
 	}
 	static float Distance(const Point &a, const Point &b)
 	{
@@ -46,6 +42,11 @@ struct Point
 	{
 		return a.x*b.x + a.y*b.y;
 	}
+	static float atan2(const Point &a, const Point &b)
+	{
+		return atan2f(a.y - b.y, a.x - b.x);
+	}
+
 	float x;	// [mm]
 	float y;	// [mm]
 };

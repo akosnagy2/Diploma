@@ -33,6 +33,24 @@
     <ClCompile Include="RTRPlanner.cpp">
       <Filter>PathPlanner</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="Angle.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigInterval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="path_planner.h">
@@ -54,6 +72,18 @@
       <Filter>PathPlanner</Filter>
     </ClInclude>
     <ClInclude Include="Tree.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="Angle.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigInterval.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,3 +1,4 @@
+/*
 #include "path_planner_funcs.h"   
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -27,31 +28,7 @@ float corrigateAngle(float angle)
 	return angle;
 }
 
-bool insideTriangle(Point a, Triangle t)
-{
-	//http://www.blackpawn.com/texts/pointinpoly/
-	
-	// Compute vectors        
-	Point v0 = t.p[2] - t.p[0];
-	Point v1 = t.p[1] - t.p[0];
-	Point v2 = a - t.p[0];
-
-	// Compute dot products
-	float dot00 = Point::ScalarProduct(v0, v0);
-	float dot01 = Point::ScalarProduct(v0, v1);
-	float dot02 = Point::ScalarProduct(v0, v2);
-	float dot11 = Point::ScalarProduct(v1, v1);
-	float dot12 = Point::ScalarProduct(v1, v2);
-
-	// Compute barycentric coordinates
-	float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-	float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-	float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-
-	// Check if point is in triangle
-	return ((u >= 0) && (v >= 0) && (u + v < 1));
-}
-
+//TODO: lehetne távolság alapján is, csak gyök nélkül
 inline bool checkPointInSegment(Point p, Point s1, Point s2)
 {
 	if ( (min(s1.x, s2.x) <= p.x) && (min(s1.y, s2.y) <= p.y) && (p.x <= max(s1.x, s2.x)) && (p.y <= max(s1.y, s2.y)) )
@@ -60,13 +37,26 @@ inline bool checkPointInSegment(Point p, Point s1, Point s2)
 		return false;
 }
 
+//Ez is pont-tal menjen, számolja ki a hívó fél
 bool lineSegmentIntersection(Config line, Point s1, Point s2, Point &intersect)
 {
-	float A = sinf(line.phi);
-	float B = cosf(line.phi);
-	float D = s2.y - s1.y;
-	float E = s2.x - s1.x;
+	if (lineLineIntersection(Point(0.0f, 0.0f), Point(cosf(line.phi), sinf(line.phi)), s1, s2, intersect))
+		return checkPointInSegment(intersect, s1, s2);
+}
 
+bool segmentSegmentItersection(Point s1, Point s2, Point s3, Point s4, Point &intersect)
+{
+	if (lineLineIntersection(s1, s2, s3, s4, intersect))
+		return (checkPointInSegment(intersect, s1, s2) && checkPointInSegment(intersect, s3, s4));
+}
+
+bool lineLineIntersection(Point s1, Point s2, Point s3, Point s4, Point &intersect)
+{
+	float A = s2.y - s1.y;
+	float B = s2.x - s1.x;
+	float D = s4.y - s3.y;
+	float E = s4.x - s3.x;
+	
 	float det = A*E - D*B;
 
 	//Intersection point of the two lines
@@ -74,13 +64,12 @@ bool lineSegmentIntersection(Config line, Point s1, Point s2, Point &intersect)
 		return false;
 	else
 	{
-		intersect.x = (E*(A*line.p.x - B*line.p.y) - B*(D*s1.x - E*s1.y)) / det;
-		intersect.y = (A*(E*s1.y - D*s1.x) - D*(B*line.p.y - A*line.p.x)) / det;
+		intersect.x = (E*(A*s1.x - B*s1.y) - B*(D*s3.x - E*s3.y)) / det;
+		intersect.y = (A*(E*s3.y - D*s3.x) - D*(B*s1.y - A*s1.x)) / det;
 
-		return checkPointInSegment(intersect, s1, s2);
+		return true;
 	}
 }
-
 
 
 bool pointProjectToSegment(Point p, Point s1, Point s2, Point &proj)
@@ -111,3 +100,91 @@ float directedAngleDist(float thetaStart, float thetaEnd, bool turnDir)
 
 	return dist;
 }
+
+int circleLineIntersect(Point p1, Point p2, float radius, Point center, Point &res0, Point &res1)
+{
+	float dx, dy, dr, D, disc;
+	int ret;
+	p1 = p1 - center;
+	p2 = p2 - center;
+
+	dx = p2.x - p1.x;
+	dy = p2.y - p1.y;
+	dr = sqrtf(dx*dx + dy*dy);
+	D = p1.x*p2.y - p2.x*p1.y;
+	disc = powf(radius,2)*powf(dr,2) - powf(D,2);
+
+	//No intersection
+	if (disc < 0.0f)
+		return 0;
+	else if (disc == 0.0f)	//Tangent (one intersection)
+	{
+		res0.x = D*dy/powf(dr,2);
+		res0.y = -D*dx/powf(dr,2);
+		res1 = res0;
+		ret = 1;
+	}
+	else   //Two intersection
+	{
+		res0.x = sgn(dy)*dx*sqrtf(disc) + D*dy;
+		res1.x = -res0.x + D*dy;
+		res0.x /= powf(dr,2);
+		res1.x /= powf(dr,2);
+
+		res0.y = fabs(dy)*sqrtf(disc) - D*dx;
+		res1.y = -res0.y - D*dx;
+		res0.y /= powf(dr,2);
+		res1.y /= powf(dr,2);
+
+		ret = 2;
+	}
+
+	res0 = res0 + center;
+	res1 = res1 + center;
+	return ret;
+}
+
+/*
+* Intersection point of a circle segment and a line segment
+*
+*   INPUTS:
+*
+*   qStart	-   Starting configuration [x, y, theta]
+*   dtheta	-   Change in the orientation during traversing the circular
+*               segment (signed, positive means CCW motion)
+*   radius	-   Radius of the circular segment (signed, positive means that
+*               the centerpoint of the circle is on the left side if
+*               looking in direction 'theta' from (x,y)
+*   s1		-   First point of the linesegment
+*   s2		-   Second point of the linesegment
+*
+*   OUTPUT:
+*
+*   res		-	Intersection points
+*	return	-	Number of intersections
+*/
+/*
+int circleSegLineSegIntersect(Config qStart, float dTheta, float radius, Point s1, Point s2, Point res[2])
+{
+	Point center(qStart.p.x - radius*sinf(qStart.phi), qStart.p.y + radius*cosf(qStart.phi));
+
+	if (!circleLineIntersect(s1, s2, fabs(radius), center, res[0], res[1]))
+		return 0; 
+
+	int interNum = 0;
+	float startAngle = corrigateAngle(qStart.phi - sgn(radius)*PI*0.5f);
+
+	for (int i = 0; i < 2; i++)
+	{
+		float checkAngle = Point::atan2(res[i], center) - startAngle;
+
+		if (sgn(checkAngle) != sgn(dTheta))
+			checkAngle = sgn(dTheta)*(2*PI + sgn(dTheta)*checkAngle);
+
+		if ((fabs(dTheta) >= fabs(checkAngle)) && checkPointInSegment(res[i], s1, s2))
+			interNum++;
+	}
+
+	return interNum;
+}
+*/

@@ -81,18 +81,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Angle.cpp" />
+    <ClCompile Include="ConfigInterval.cpp" />
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="path_planner.cpp" />
     <ClCompile Include="path_planner_funcs.cpp" />
     <ClCompile Include="PrePlanner.cpp" />
     <ClCompile Include="RTRPlanner.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Tree.cpp" />
+    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Angle.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="ConfigInterval.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="path_planner.h" />
     <ClInclude Include="path_planner_funcs.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="Triangle.h" />
   </ItemGroup>

@@ -1,16 +1,33 @@
 #include "PathPlannerApp\path_planner_funcs.h"
-
+#include "Polygon.h"
+#include "Scene.h"
 using namespace std;
+
+vector<Point> LoadPathFromFile(string filename)
+{
+	vector<Point> path;
+	string line;
+	ifstream fs(filename);
+	Point pos;
+
+	while (getline(fs,line))
+	{
+		string::size_type sz;
+		{
+			pos.x = stof(line,&sz);
+			pos.y = stof(line.substr(sz));
+			path.push_back(pos);
+		}
+	} 
+
+	return path;
+}
 
 int main()
 {
-	Polygon field;
-	field.AddPoint(Point(0.0f, 0.0f));
-	field.AddPoint(Point(0.0f, 15.0f));
-	field.AddPoint(Point(32.0f, 15.0f));
-	field.AddPoint(Point(32.0f, 0.0f));
 	Scene sc;
-	sc.AddField(field);
+	sc.AddField(32.0f, 15.0f);
+	sc.SetFixPrePath(LoadPathFromFile("RTRPath.txt"));
 
 	Polygon env1;
 	env1.AddPoint(Point(11.0f, 0.0f));
@@ -36,8 +53,10 @@ int main()
 	rob.AddPoint(Point(3.55f, -1.0f));
 	sc.SetRobotShape(rob);
 
-	sc.PrePlanner();
-	sc.DrawPrePath();
+	//sc.PrePlanner();
+	//sc.DrawPrePath();
+
+	sc.SetRTRParameters(1000, 0.0f, 1.0f);
 
 	sc.RTRPlanner();
 

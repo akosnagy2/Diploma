@@ -4,6 +4,8 @@
 #include "boost\geometry\geometry.hpp"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "Scene.h"
+#include "Triangle.h"
 
 using namespace boost::geometry::model;
 
@@ -225,10 +227,10 @@ bool Scene::PrePlanner()
 	int start_index, goal_index;
 	for(vector<Triangle>::iterator it = cells.begin(); it != cells.end(); ++it)
 	{
-		if (insideTriangle(robotStart.p, *it))
+		if (it->PointInside(robotStart.p))
 			start_index = it - cells.begin();
 
-		if (insideTriangle(robotGoal.p, *it))
+		if (it->PointInside(robotGoal.p))
 			goal_index = it - cells.begin();		
 	}
 
@@ -302,7 +304,7 @@ bool Scene::PrePlanner()
 		float next_seg_angle = atan2f((*(it+1)).p.y - (*(it)).p.y, (*(it+1)).p.x - (*(it)).p.x);
 		float prev_seg_angle = atan2f((*(it)).p.y - (*(it-1)).p.y, (*(it)).p.x - (*(it-1)).p.x);
 		
-		if ((abs(corrigateAngle(next_seg_angle - prev_seg_angle))) > numeric_limits<float>::epsilon())
+		if ((abs(Angle::Corrigate(next_seg_angle - prev_seg_angle))) > numeric_limits<float>::epsilon())
 		{
 			(*it).phi = next_seg_angle;
 			++it;
