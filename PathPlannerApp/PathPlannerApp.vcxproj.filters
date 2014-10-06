@@ -16,6 +16,12 @@
     <Filter Include="PathPlanner">
       <UniqueIdentifier>{bebd5074-2357-4cab-b53d-bf664a93d25b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PathProfile">
+      <UniqueIdentifier>{599c8831-1e87-4a8f-8aae-e2ca022952ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PathFollow">
+      <UniqueIdentifier>{8be9ad13-059d-476a-a73a-bbd3c1f71ecc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,6 +57,21 @@
     <ClCompile Include="ConfigInterval.cpp">
       <Filter>PathPlanner</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\TinyObjLoader\tiny_obj_loader.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CtrlMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PackedMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="path_planner.h">
@@ -85,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="ConfigInterval.h">
       <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CtrlMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PackedMessage.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
