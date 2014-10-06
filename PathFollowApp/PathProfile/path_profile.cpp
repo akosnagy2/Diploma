@@ -66,7 +66,7 @@ int Profile::CalcPathDistance()
 	s[0] = 0.0f;
 	for (int i = 0; i < path.size() - 1; i++)
 	{
-		deltaS[i] = sqrtf( powf((path[i+1].x - path[i].x),2) + powf((path[i+1].y - path[i].y),2) );
+		deltaS[i] = sqrtf( powf((path[i+1].p.x - path[i].p.x),2) + powf((path[i+1].p.y - path[i].p.y),2) );
 
 		s[i+1] = s[i] + deltaS[i];
 	}
@@ -214,7 +214,7 @@ int Profile::CalcCurvature()
 	return ERROR_NO_ERROR;
 }
 
-int Profile::AddPoint(path_pos point)
+int Profile::AddPoint(Config point)
 {
 	path.push_back(point);
 	return ERROR_NO_ERROR;
@@ -301,7 +301,7 @@ Profile::Profile(std::string fileName)
 	profileName = fileName;
 }
 
-Profile::Profile(std::vector<path_pos> _path)
+Profile::Profile(std::vector<Config> _path)
 {
 	path = _path;
 }
@@ -310,9 +310,9 @@ Profile::Profile(Profile &prof, int start, int end)
 {
 	if (prof.path.size()) //TODO: ez így undorító...
 		if (end == prof.path.size() - 1) //Endpoint 
-			this->path = std::vector<path_pos>(prof.path.begin() + start,  prof.path.end());
+			this->path = std::vector<Config>(prof.path.begin() + start,  prof.path.end());
 		else
-			this->path = std::vector<path_pos>(prof.path.begin() + start,  prof.path.begin() + end + 1);		
+			this->path = std::vector<Config>(prof.path.begin() + start,  prof.path.begin() + end + 1);		
 	
 	if (prof.deltaS.size())
 		if (end == prof.path.size() - 1) //Endpoint

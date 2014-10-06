@@ -2,31 +2,32 @@
 #define _POS2DMESSAGE__
 
 #include "PackedMessage.h"
-#include "Position.h"
-
+#include "PathPlannerApp\PathPlanner\Config.h"
 #define POS2DMESSAGE_TYPE_CODE "POS2D"
+
+using namespace PathPlanner;
 
 class Pos2dMessage
 {
 public:
-	Position pos;
+	Config pos;
 	int src, subj;
 
 	Pos2dMessage() 
 	{
-		pos.x = 0;
-		pos.y = 0;
+		pos.p.x = 0;
+		pos.p.y = 0;
 		pos.phi = 0;
 		src = 0;
 		subj = 0;
 	}
 
-	Pos2dMessage(Position _pos, int _src, int _subj) : pos(_pos), src(_src), subj(_subj) {};
+	Pos2dMessage(Config _pos, int _src, int _subj) : pos(_pos), src(_src), subj(_subj) {};
 
 	Pos2dMessage(float _x, float _y, float _phi, int _src, int _subj)
 	{
-		this->pos.x = _x;
-		this->pos.y = _y;
+		this->pos.p.x = _x;
+		this->pos.p.y = _y;
 		this->pos.phi = _phi;
 		this->src = _src;
 		this->subj = _subj;

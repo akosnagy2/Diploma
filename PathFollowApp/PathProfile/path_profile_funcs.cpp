@@ -2,7 +2,9 @@
 #include <string>
 #include <fstream>
 
-void curv2D(std::vector<path_pos> &path, std::vector<float> &curv)
+using namespace boost::numeric::ublas;
+
+void curv2D(std::vector<Config> &path, std::vector<float> &curv)
 {
 	//http://www.mathworks.com/matlabcentral/fileexchange/32696-2d-line-curvature-and-normals
 	int length = path.size();
@@ -62,8 +64,8 @@ void curv2D(std::vector<path_pos> &path, std::vector<float> &curv)
 	for (int i = 0; i < length; i++)
 	{
 		//TODO: Na,Nb-ben eltolva kéne tárolni az indexeket
-		Ta[i] = -sqrtf( powf((path[i].x - path[Na[i]-1].x),2) + powf((path[i].y - path[Na[i]-1].y),2));
-		Tb[i] = sqrtf( powf((path[i].x - path[Nb[i]-1].x),2) + powf((path[i].y - path[Nb[i]-1].y),2));
+		Ta[i] = -sqrtf( powf((path[i].p.x - path[Na[i]-1].p.x),2) + powf((path[i].p.y - path[Na[i]-1].p.y),2));
+		Tb[i] = sqrtf( powf((path[i].p.x - path[Nb[i]-1].p.x),2) + powf((path[i].p.y - path[Nb[i]-1].p.y),2));
 	}
 
 	//If no left neighbor use two right neighbors, and the same for right...
@@ -83,13 +85,13 @@ void curv2D(std::vector<path_pos> &path, std::vector<float> &curv)
 	//t=Ta for left vertices, and t=Tb for right vertices,
 	for (int i = 0; i < length; i++)
 	{
-		x(i,0) = path[Na[i]-1].x;
-		x(i,1) = path[i].x;
-		x(i,2) = path[Nb[i]-1].x;
+		x(i,0) = path[Na[i]-1].p.x;
+		x(i,1) = path[i].p.x;
+		x(i,2) = path[Nb[i]-1].p.x;
 
-		y(i,0) = path[Na[i]-1].y;
-		y(i,1) = path[i].y;
-		y(i,2) = path[Nb[i]-1].y;
+		y(i,0) = path[Na[i]-1].p.y;
+		y(i,1) = path[i].p.y;
+		y(i,2) = path[Nb[i]-1].p.y;
 
 		M[i][0] = 1.0f;
 		M[i][1] = -Ta[i];
@@ -163,7 +165,7 @@ int solve2ndOrder(float a, float b, float c, float& res0, float& res1)
 	}
 }
 
-int circleLineIntersect(path_pos p1, path_pos p2, float radius, path_pos center, path_pos& res0, path_pos& res1)
+int circleLineIntersect(Point p1, Point p2, float radius, Point center, Point& res0, Point& res1)
 {
 	float m;
 	float e;
@@ -208,7 +210,7 @@ int circleLineIntersect(path_pos p1, path_pos p2, float radius, path_pos center,
 	return 0;
 }
 
-int circleLineIntersect_opt(path_pos p1, path_pos p2, float radius, path_pos center, path_pos& res0, path_pos& res1)
+int circleLineIntersect_opt(Point p1, Point p2, float radius, Point center, Point& res0, Point& res1)
 {
 	float dx, dy, dr, D, disc;
 	int ret;
@@ -256,11 +258,11 @@ int circleLineIntersect_opt(path_pos p1, path_pos p2, float radius, path_pos cen
 	return ret;
 }
 
-void circleTransform(path_pos p0, path_pos p1, float radius, path_pos &center)
+void circleTransform(Point p0, Point p1, float radius, Point &center)
 {
 	//http://mathforum.org/library/drmath/view/53027.html
 	float q, h;
-	path_pos p3;
+	Point p3;
 
 	p3.x = (p0.x + p1.x)*0.5f;
 	p3.y = (p0.y + p1.y)*0.5f;
@@ -280,11 +282,11 @@ void circleTransform(path_pos p0, path_pos p1, float radius, path_pos &center)
 	}
 }
 
-void circleTransform_opt(path_pos p0, path_pos p1, float radius, path_pos &center)
+void circleTransform_opt(Point p0, Point p1, float radius, Point &center)
 {
 	//http://mathforum.org/library/drmath/view/53027.html
 	float h, q;
-	path_pos p3, c0;
+	Point p3, c0;
 
 	p3.x = (p0.x + p1.x)*0.5f;
 	p3.y = (p0.y + p1.y)*0.5f;
@@ -309,11 +311,11 @@ void circleTransform_opt(path_pos p0, path_pos p1, float radius, path_pos &cente
 	}
 }
 
-int circleCircleIntersect_opt(path_pos center1, path_pos center2, float radius1, float radius2, path_pos& res0, path_pos& res1)
+int circleCircleIntersect_opt(Point center1, Point center2, float radius1, float radius2, Point& res0, Point& res1)
 {
 	//http://paulbourke.net/geometry/circlesphere/
 	float d, k, t1;
-	path_pos diff;
+	Point diff;
 
 	diff.x = center2.x - center1.x;
 	diff.y = center2.y - center1.y;
@@ -339,12 +341,12 @@ int circleCircleIntersect_opt(path_pos center1, path_pos center2, float radius1,
 	return 2;
 }
 
-float getDistance(path_pos &p0, path_pos &p1)
+float getDistance(Point &p0, Point &p1)
 {
 	return sqrtf(powf(p0.x - p1.x,2) + powf(p0.y - p1.y,2));
 }
 
-float getDirection(path_pos &a, path_pos &b)
+float getDirection(Point &a, Point &b)
 {
 	return atan2f((b.y - a.y), (b.x - a.x));
 }
@@ -402,11 +404,11 @@ void ProfileSave(std::string filename, std::vector<float> &t, std::vector<float>
 	file.close();
 }
 
-void ProfileSave(std::string filename, std::vector<path_pos> &path)
+void ProfileSave(std::string filename, std::vector<Config> &path)
 {
 	std::ofstream file;
 	file.open(filename);
 	for (int i = 0; i < path.size(); i++)
-		file << path[i].x << " " << path[i].y << std::endl;
+		file << path[i].p.x << " " << path[i].p.y << std::endl;
 	file.close();
 }

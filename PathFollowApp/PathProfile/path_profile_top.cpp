@@ -26,15 +26,15 @@ float robotWheelBase;
 int predictLen;
 
 static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vector<int> &segment);
-static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, path_pos &result);
-static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, path_pos &result, bool &start, std::vector<int> &segment);
+static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Config &result);
+static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, Config &result, bool &start, std::vector<int> &segment);
 static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::vector<int> &segment);
 static int checkBack_backLimit(Profile &prof, int front_limit, int &back_limit, float &deltaV, float deltaS);
 static int checkBack_frontLimit(Profile &prof, int back_limit, int &front_limit, float &deltaV, float deltaS);
 static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_name, ofstream &log);
 static void checkGeoProfile(Profile &prof, bool saveProfiles, ofstream &log);
 static void checkSampProfile(Profile &prof, bool saveProfiles, ofstream &log);
-static void profile(Profile &geoProfile, std::vector<path_pos> &resPath, std::ofstream &logfile);
+static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofstream &logfile);
 
 
 void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase, int _predictLen)
@@ -165,7 +165,7 @@ static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::ve
 static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vector<int> &segment)
 {
 	int length = sampProf.v.size();
-	path_pos result;
+	Config result;
 	bool start = true;
 	float errorS = 1.0f;
 
@@ -191,20 +191,20 @@ static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vecto
 	}
 
 	//Calculate end points distance error(signed)
-	errorS *= getDistance(sampProf.path.back(), geoProf.path.back());
+	errorS *= getDistance(sampProf.path.back().p, geoProf.path.back().p);
 	return errorS;
 }
 
-static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, path_pos &result)
+static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Config &result)
 {
 	int length = geoProf.path.size();
-	path_pos res0, res1;
+	Config res0, res1;
 	static bool first = true;
 
-	if (circleLineIntersect_opt(sampProf.path[i-1],geoProf.path[length - 1],sampProf.deltaSc[i-1],sampProf.path[i-1],res0,res1)) //Interpolate with line
+	if (circleLineIntersect_opt(sampProf.path[i-1].p,geoProf.path[length - 1].p,sampProf.deltaSc[i-1],sampProf.path[i-1].p,res0.p,res1.p)) //Interpolate with line
 	{
 		//Decide based on distance from segment end point
-		if (getDistance(geoProf.path[length - 1], res0) < getDistance(geoProf.path[length - 1], res1))
+		if (getDistance(geoProf.path[length - 1].p, res0.p) < getDistance(geoProf.path[length - 1].p, res1.p))
 			result = (first) ? res0 : res1;
 		else
 			result = (first) ? res1 : res0;
@@ -213,17 +213,17 @@ static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, pat
 	}
 }
 
-static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, path_pos &result, bool &start, std::vector<int> &segment)
+static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, Config &result, bool &start, std::vector<int> &segment)
 {
 	int length = geoProf.path.size();
-	path_pos res0, res1;
-	path_pos &center = sampProf.path[i-1];
+	Config res0, res1;
+	Point &center = sampProf.path[i-1].p;
 	float rad = sampProf.deltaSc[i-1];
 
 	for (int l = segment[i-1]; l < length - 1; l++)
 	{
-		path_pos &segStart = geoProf.path[l];
-		path_pos &segEnd = geoProf.path[l + 1];
+		Point &segStart = geoProf.path[l].p;
+		Point &segEnd = geoProf.path[l + 1].p;
 
 		//Pathpoint in the next segment
 		if (getDistance(segEnd, center) < (rad - EPS))
@@ -236,12 +236,12 @@ static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, path_po
 
 		if (fabs(geoProf.c[l]) < EPS)	//Interpolate with line
 		{
-			if (circleLineIntersect_opt(segStart,segEnd,rad,center,res0,res1))
+			if (circleLineIntersect_opt(segStart,segEnd,rad,center,res0.p,res1.p))
 			{
 				segment[i] = l;
 
 				//Decide based on distance from segment end point
-				if (getDistance(segEnd, res0) < getDistance(segEnd, res1))
+				if (getDistance(segEnd, res0.p) < getDistance(segEnd, res1.p))
 					result = res0;
 				else
 					result = res1;
@@ -251,7 +251,7 @@ static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, path_po
 		}
 		else //Interpolate with circle
 		{
-			static path_pos segCent; //Segment center point based on curvature
+			static Point segCent; //Segment center point based on curvature
 			static float rangeA, rangeB;
 
 			if (!(l == segment[i-1]) || start) //New segment, calculate range
@@ -270,11 +270,11 @@ static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, path_po
 
 			segment[i] = l;
 
-			if (circleCircleIntersect_opt(center, segCent, rad, fabs(1/geoProf.c[l]), res0, res1))
+			if (circleCircleIntersect_opt(center, segCent, rad, fabs(1/geoProf.c[l]), res0.p, res1.p))
 			{
 				//Results points angle
-				float curT1 = atan2(res0.y - segCent.y, res0.x - segCent.x);
-				float curT2 = atan2(res1.y - segCent.y, res1.x - segCent.x);
+				float curT1 = atan2(res0.p.y - segCent.y, res0.p.x - segCent.x);
+				float curT2 = atan2(res1.p.y - segCent.y, res1.p.x - segCent.x);
 
 				//Decide based on circle arc and range
 				if (fabs(rangeA - rangeB) < M_PI)
@@ -591,7 +591,7 @@ static void checkSampProfile(Profile &prof, bool saveProfiles, ofstream &log)
 //TODO: tolatás, egy helyben fordulás, nem egyenlő távolságú geometriai pályával tesztelni
 //TODO: profile méretet külön tárolni, oo-bá tenni az egészet
 
-static void profile(Profile &geoProfile, std::vector<path_pos> &resPath, std::ofstream &logfile)
+static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofstream &logfile)
 {
 	int geoLength, sampLength;
 	std::chrono::high_resolution_clock::time_point start, stop;
@@ -668,7 +668,7 @@ static void profile(Profile &geoProfile, std::vector<path_pos> &resPath, std::of
 
 	//Check and correct path back
 	start = high_resolution_clock::now();
-	checkBack(geoProfile, sampProfile, errorS, segment);
+	//checkBack(geoProfile, sampProfile, errorS, segment);
 	stop = high_resolution_clock::now();
 	logfile << "Sampled profile: path end point correction, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
@@ -676,15 +676,15 @@ static void profile(Profile &geoProfile, std::vector<path_pos> &resPath, std::of
 	resPath = sampProfile.path;
 
 	//Sampled points orientation
-	if (fabs(getDirection(resPath[0], resPath[1]) - geoProfile.path[0].phi) < EPS)
+	if (fabs(getDirection(resPath[0].p, resPath[1].p) - geoProfile.path[0].phi) < EPS)
 	{
 		for (int i = 0; i < resPath.size() - 1; i++) //Forward direction
-			resPath[i].phi = getDirection(resPath[i], resPath[i + 1]); //[-pi, pi] forward range
+			resPath[i].phi = getDirection(resPath[i].p, resPath[i + 1].p); //[-pi, pi] forward range
 	}
 	else
 	{
 		for (int i = 0; i < resPath.size() - 1; i++) //Backward direction
-			resPath[i].phi = getDirection(resPath[i], resPath[i + 1]) + M_PI*3; //[2*pi, 4*pi] backward range
+			resPath[i].phi = getDirection(resPath[i].p, resPath[i + 1].p) + M_PI*3; //[2*pi, 4*pi] backward range
 	}
 	resPath[resPath.size() - 1].phi = resPath[resPath.size() - 2].phi;
 
@@ -697,10 +697,10 @@ static void profile(Profile &geoProfile, std::vector<path_pos> &resPath, std::of
 	logfile << "Time parameterized path generation ended " << boost::posix_time::second_clock::local_time().date() << " " << boost::posix_time::second_clock::local_time().time_of_day() << endl;
 }
 
-void profile_top(std::vector<path_pos> &path, std::vector<path_pos> &resPath)
+void profile_top(std::vector<Config> &path, std::vector<Config> &resPath)
 {
 	int length = path.size();
-	std::vector<path_pos> sampPathSegment;
+	std::vector<Config> sampPathSegment;
 	std::ofstream logfile("logFile.txt", ios_base::app);
 	logfile << "Time parameterized path generation started " << boost::posix_time::second_clock::local_time().date() << " " << boost::posix_time::second_clock::local_time().time_of_day() << endl;
 
@@ -724,7 +724,7 @@ void profile_top(std::vector<path_pos> &path, std::vector<path_pos> &resPath)
 			profile(geoProfileSegment, sampPathSegment, logfile);
 
 			resPath.insert(resPath.end(), sampPathSegment.begin(), sampPathSegment.end());
-			path_pos p = sampPathSegment.back();
+			Config p = sampPathSegment.back();
 			p.phi = 1000.0f;
 			for (int j = 0; j < predictLen; j++)
 				resPath.insert(resPath.end(), p);

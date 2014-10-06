@@ -8,14 +8,12 @@ extern "C" {
 
 #include "Position.h"
 #include <stdint.h>
-/*
+
 typedef struct{
 	float	x;
 	float	y;
 	float	phi;
 } PositionTypedef;
-*/
-#define PositionTypedef Position
 
 typedef enum {
 	STATE_INIT,

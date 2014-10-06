@@ -2,7 +2,10 @@
 #define PATH_PROFILE_H_
 
 #include <vector>
+#include "PathPlannerApp\PathPlanner\Config.h"
 #include "path_profile_funcs.h"
+
+using namespace PathPlanner;
 
 enum ERROR_CODE
 {
@@ -18,7 +21,7 @@ enum ERROR_CODE
 class Profile
 {
 public:
-	std::vector<path_pos>	path;	 //path coords
+	std::vector<Config>	path;	 //path coords
 	std::vector<float>		deltaS;  //delta distances
 	std::vector<float>		deltaSc; //delta distances on curvature
 	std::vector<float>		s;		 //distances
@@ -32,10 +35,10 @@ public:
 	std::string	profileName;
 
 	Profile(std::string fileName);
-	Profile(std::vector<path_pos> _path);
+	Profile(std::vector<Config> _path);
 	Profile(Profile &prof, int start, int end);
 
-	int AddPoint(path_pos point);
+	int AddPoint(Config point);
 	int AddPoint(float velocity);
 	int SetSampleTime(float sample_s);
 	int SetSampleTime(float sample_s, int _length);

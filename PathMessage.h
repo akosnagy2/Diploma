@@ -2,19 +2,21 @@
 #define _PATHMESSAGE__
 
 #include "PackedMessage.h"
-#include "Position.h"
+#include "PathPlannerApp\PathPlanner\Config.h"
 
 #define PATHMESSAGE_TYPE_CODE "PATH"
+
+using namespace PathPlanner;
 
 class PathMessage
 {
 public:
-	vector<Position> path;
+	std::vector<Config> path;
 
 	PathMessage()
 	{};
 
-	PathMessage(Position* pos, int numOfPos)
+	PathMessage(Config* pos, int numOfPos)
 	{
 		for (int i = 0; i < numOfPos; i++)
 			path.push_back(pos[i]);

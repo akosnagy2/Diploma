@@ -33,7 +33,7 @@ void LoadPathFromFile(string filename)
 {
 	string line;
 	ifstream fs(filename);
-	Position pos;
+	Config pos;
 
 	while (getline(fs,line))
 	{
@@ -42,15 +42,15 @@ void LoadPathFromFile(string filename)
 		{
 			char* temp;
 			temp = strtok((char*)line.c_str(),",");
-			pos.x = stof(temp,&sz);
+			pos.p.x = stof(temp,&sz);
 			temp = strtok(NULL, ",");
-			pos.y = stof(temp,&sz);
+			pos.p.y = stof(temp,&sz);
 			path_geo_msg.path.push_back(pos);
 		}
 		else //Load from .txt
 		{
-			pos.x = stof(line,&sz);
-			pos.y = stof(line.substr(sz));
+			pos.p.x = stof(line,&sz);
+			pos.p.y = stof(line.substr(sz));
 			path_geo_msg.path.push_back(pos);
 		}
 	} 
@@ -104,17 +104,24 @@ int main()
 		path_samp_msg.send(s);
 
 		//Init path follow
+		std::vector<PositionTypedef> path_dsp((int)path_samp_msg.path.size());
+		for (int i = 0; i < (int)path_samp_msg.path.size(); i++)
+		{
+			path_dsp[i].x = path_samp_msg.path[i].p.x;
+			path_dsp[i].y = path_samp_msg.path[i].p.y;
+			path_dsp[i].phi = path_samp_msg.path[i].phi;
+		}
 		PathCtrlTypedef pathFollow;
 		PathCtrl_Init(&pathFollow, 0, 2*pathMaxAccel/wheelDistance,pathMaxAngularSpeed, (timeStep*1000), 0, 0);
 		PathCtrl_SetPars(&pathFollow, distPar_P,distPar_D,oriPar_P,oriPar_D);
-		PathCtrl_SetPath(&pathFollow, path_samp_msg.path._Myfirst, path_samp_msg.path.size());
+		PathCtrl_SetPath(&pathFollow, path_dsp._Myfirst, path_dsp.size());
 		PathCtrl_SetRobotPar(&pathFollow, wheelDistance, predictLength);
 		PathCtrl_SetState(&pathFollow, 1);
 
 		while (s.good())
 		{
 			CtrlMessage ctrl_out;
-			Position act_pos;
+			Config act_pos;
 			Pos2dMessage pos_in;
 			Pos2dMessage rabitPos;
 			PackedMessage info;
@@ -132,7 +139,9 @@ int main()
 				act_pos.phi += (float)(2*M_PI);
 
 			//Process path follow
-			pathFollow.robotPos = act_pos;
+			pathFollow.robotPos.x = act_pos.p.x;
+			pathFollow.robotPos.y = act_pos.p.y;
+			pathFollow.robotPos.phi = act_pos.phi;
 			PathCtrl_Loop(&pathFollow, &leftV, &rightV);
 			
 			//Info

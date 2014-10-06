@@ -23,9 +23,9 @@ int PathMessage::receive(iostream &stream)
 
 		for (Json::Value::iterator it = JSON_msg["Positions"].begin(); it != JSON_msg["Positions"].end(); it++)
 		{
-			Position pos;
-			pos.x = (*it)["x"].asFloat();
-			pos.y = (*it)["y"].asFloat();
+			Config pos;
+			pos.p.x = (*it)["x"].asFloat();
+			pos.p.y = (*it)["y"].asFloat();
 			pos.phi = (*it)["phi"].asFloat();
 
 			this->path.push_back(pos);
@@ -43,12 +43,12 @@ ostream & operator<<(ostream &os, const PathMessage &msg)
 
 	JSON_msg["type"] = PATHMESSAGE_TYPE_CODE;
 
-	for (vector<Position>::const_iterator it = msg.path.begin(); it != msg.path.end(); it++)
+	for (vector<Config>::const_iterator it = msg.path.begin(); it != msg.path.end(); it++)
 	{
 		Json::Value	JSON_pos;
 
-		JSON_pos["x"] = (*it).x;
-		JSON_pos["y"] = (*it).y;
+		JSON_pos["x"] = (*it).p.x;
+		JSON_pos["y"] = (*it).p.y;
 		JSON_pos["phi"] = (*it).phi;
 		JSON_array.append(JSON_pos);
 
