@@ -8,6 +8,10 @@
 
 using namespace std;
 
+namespace PathPlanner
+{
+
+
 struct TreeElement 
 {
 	//Ha kell törölni, akkor inkább külön jelezzük, hogy érvényes-e!!!!!!!!!!!!!!!!!!!
@@ -57,3 +61,5 @@ struct Tree
 
 	vector<TreeElement> xtree;
 };
+
+}

@@ -1,6 +1,8 @@
 #include "Angle.h"
 #include "path_planner_funcs.h"
 
+using namespace PathPlanner;
+
 float Angle::Corrigate(float angle)
 {
 	while (angle > PI)

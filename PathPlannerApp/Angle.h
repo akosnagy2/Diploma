@@ -1,7 +1,12 @@
 #pragma once
 
-struct Angle
+namespace PathPlanner
 {
-	static float Corrigate(float angle);
-	static float DirectedAngleDist(float thetaStart, float thetaEnd, int turnDir);
-};
+
+	struct Angle
+	{
+		static float Corrigate(float angle);
+		static float DirectedAngleDist(float thetaStart, float thetaEnd, int turnDir);
+	};
+
+}

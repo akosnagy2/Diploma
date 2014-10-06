@@ -1,12 +1,18 @@
 #pragma once
 #include "Point.h"
 
-struct Triangle
+namespace PathPlanner
 {
-	Triangle(Point a, Point b, Point c);
-	Triangle();
-	bool EdgeIntersect(Triangle &b, Point &i1, Point &i2);
-	bool PointInside(Point a);
 
-	Point p[3];
-};
+
+	struct Triangle
+	{
+		Triangle(Point a, Point b, Point c);
+		Triangle();
+		bool EdgeIntersect(Triangle &b, Point &i1, Point &i2);
+		bool PointInside(Point a);
+
+		Point p[3];
+	};
+
+}

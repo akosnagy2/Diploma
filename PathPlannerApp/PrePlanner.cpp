@@ -8,6 +8,7 @@
 #include "Triangle.h"
 
 using namespace boost::geometry::model;
+using namespace PathPlanner;
 
 Zone2* generateObjectZone(Polygon &obj, Fade_2D &dt)
 {

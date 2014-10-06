@@ -1,17 +1,25 @@
 #pragma once
 #include <vector>
 #include "Point.h"
+#include "Config.h"
 
 using namespace std;
 
-struct Polygon
+namespace PathPlanner
 {
-	Polygon()
-	{}
-	void AddPoint(Point p)
-	{
-		ps.push_back(p);
-	}
 
-	vector<Point> ps;
-};
+	struct Polygon
+	{
+		Polygon()
+		{}
+		void AddPoint(Point p)
+		{
+			ps.push_back(p);
+		}
+		Polygon TransformToWorld(Config q);
+		Polygon TransformToLocal(Config q);
+
+		vector<Point> ps;
+	};
+
+}

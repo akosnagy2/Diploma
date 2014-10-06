@@ -6,28 +6,8 @@
 #include <queue>
 #include <random>
 
-void transformRobotShape(Polygon &robotShapeLocal, Polygon &robotShapeWorld, Config q)
-{
-	ublas::matrix<float> T = ublas::identity_matrix<float>(3);
-	T(0,0) = cosf(q.phi);
-	T(0,1) = -sinf(q.phi);
-	T(0,2) = q.p.x;
-
-	T(1,0) = sinf(q.phi);
-	T(1,1) = cosf(q.phi);
-	T(1,2) = q.p.y;
-	ublas::vector<float> col(3);
-
-	for (int i = 0; i < (int)robotShapeLocal.ps.size(); i++)
-	{
-		col[0] = robotShapeLocal.ps[i].x;
-		col[1] = robotShapeLocal.ps[i].y;
-		col[2] = 1.0;
-
-		ublas::vector<float> prod = ublas::prod(T, col);
-		robotShapeWorld.AddPoint(Point(prod[0], prod[1]));
-	}
-}
+using namespace PathPlanner;
+using namespace std;
 
 bool Scene::RTRPlanner()
 {
@@ -159,8 +139,7 @@ void Scene::InitRTTrees()
 void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterval &backwardMaxTCI)
 {
 	//Transform the robot polygon to the world frame
-	Polygon robotShapeWorld;
-	transformRobotShape(robotShape, robotShapeWorld, q);
+	Polygon robotShapeWorld = robotShape.TransformToWorld(q);
 	
 	//Traverse on obstacles
 	vector<float> forwardPointDist, backwardPointDist;
@@ -278,8 +257,7 @@ bool Scene::TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, Co
 	dThetaMax = fabs(Angle::DirectedAngleDist(qStart.phi, thetaGoal, turnDir));
 
 	//Transform the robot polygon to the world frame
-	Polygon robotShapeWorld;
-	transformRobotShape(robotShape, robotShapeWorld, qStart);
+	Polygon robotShapeWorld = robotShape.TransformToWorld(qStart);
 
 	//Collision check
 	float dThetaAbs = numeric_limits<float>::infinity();

@@ -3,6 +3,7 @@
 #include <algorithm>
 
 using namespace std;
+using namespace PathPlanner;
 
 float Line::Length()
 {

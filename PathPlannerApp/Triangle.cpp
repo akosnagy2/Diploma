@@ -1,5 +1,7 @@
 #include "Triangle.h"
 
+using namespace PathPlanner;
+
 Triangle::Triangle()
 {}
 

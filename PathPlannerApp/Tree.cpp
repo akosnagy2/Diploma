@@ -1,6 +1,8 @@
 #include "Tree.h"
 #include "Angle.h"
 
+using namespace PathPlanner;
+
 Tree::Tree()
 {}
 

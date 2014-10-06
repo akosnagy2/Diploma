@@ -1,6 +1,9 @@
 #include "ConfigInterval.h"
 #include "path_planner_funcs.h"
 
+using namespace PathPlanner;
+using namespace std;
+
 ALCCandidate ConfigInterval::PointCIDistance(Point &p, bool preferredOrient)
 {
 	if (type == TranslationCI)
