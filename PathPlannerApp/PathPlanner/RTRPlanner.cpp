@@ -590,14 +590,16 @@ void Scene::OptimizePath()
 {
 	//TODO: pathCI is lehet, hogy list kéne hogy legyen
 	//Merging consecutive TCIs in the initial path
-	for (vector<ConfigInterval>::iterator it = pathCI.begin(); it != pathCI.end() - 1; ++it)
+	for (vector<ConfigInterval>::iterator it = pathCI.begin(); it != pathCI.end() - 1; )
 	{
 		if (((it+1)->type == TranslationCI) && (it->type == TranslationCI))
 		{
 			it->q1 = (it+1)->q1;
 			it->amount += (it+1)->amount;
-			it = pathCI.erase(it+1) - 2;
+			it = pathCI.erase(it+1) - 1;
 		}
+		else
+			++it;
 	}
 
 	//Extending all TCIs in the path
@@ -671,4 +673,20 @@ void Scene::PathTCIExtension(vector<ConfigInterval> &pathExt)
 			(*it) = extendedTCI;
 		}
 	}
+}
+
+vector<Config>& Scene::ExtractPath()
+{
+	pathC.push_back(pathCI.front().q0);
+
+	for (vector<ConfigInterval>::iterator it = pathCI.begin(); it != pathCI.end(); ++it)
+	{
+		if (it->type == TranslationCI)
+		{
+			pathC.push_back(Config((it->q0.p + it->q1.p)/2, it->q0.phi));
+		}
+		pathC.push_back(it->q1);
+	}
+
+	return pathC;
 }

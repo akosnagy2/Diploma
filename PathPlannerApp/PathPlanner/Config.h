@@ -35,6 +35,10 @@ namespace PathPlanner
 		{
 			return Config(this->p - b.p, Angle::Corrigate(this->phi - b.phi));
 		}
+		const Config operator/(const float div) const
+		{
+			return Config(this->p/div, this->phi/div);
+		}
 		static float Distance(Config &a, Config &b)
 		{
 			return Point::Distance(a.p, b.p);

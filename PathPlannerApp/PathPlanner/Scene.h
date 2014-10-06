@@ -103,6 +103,7 @@ namespace PathPlanner
 		bool RTRPlanner();
 		void DrawPrePath();
 		bool TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, ConfigInterval &maxRCI);
+		vector<Config>& ExtractPath();
 	private:
 		void RTRIteration(bool start);
 		bool PathFinder();
@@ -150,7 +151,9 @@ namespace PathPlanner
 
 		vector<Point> fixPrePath;
 		int fixPrePathStartIdx, fixPrePathGoalIdx;
+		
 		vector<ConfigInterval> pathCI;
+		vector<Config> pathC;
 	};
 
 }

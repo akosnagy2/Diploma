@@ -27,44 +27,8 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="path_planner.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="path_planner_funcs.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="PrePlanner.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="RTRPlanner.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="Tree.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="Line.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="Angle.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="ConfigInterval.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Libs\TinyObjLoader\tiny_obj_loader.cc">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Config.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="Polygon.cpp">
-      <Filter>PathPlanner</Filter>
     </ClCompile>
     <ClCompile Include="..\CtrlMessage.cpp">
       <Filter>Source Files</Filter>
@@ -72,46 +36,118 @@
     <ClCompile Include="..\PackedMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PathPlanner\Angle.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\Config.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\ConfigInterval.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\Line.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\path_planner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\path_planner_funcs.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\Polygon.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\PrePlanner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\RTRPlanner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\Scene.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\Tree.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\Triangle.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathProfile\path_profile.cpp">
+      <Filter>PathProfile</Filter>
+    </ClCompile>
+    <ClCompile Include="PathProfile\path_profile_funcs.cpp">
+      <Filter>PathProfile</Filter>
+    </ClCompile>
+    <ClCompile Include="PathProfile\path_profile_top.cpp">
+      <Filter>PathProfile</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\dcwheel_pathCtrl.c">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PathMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Pos2dMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="path_planner.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="path_planner_funcs.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Polygon.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Triangle.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Config.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Tree.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Line.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Angle.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="ConfigInterval.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
     <ClInclude Include="..\CtrlMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\PackedMessage.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Angle.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Config.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\ConfigInterval.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Line.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\path_planner.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\path_planner_funcs.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Point.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Polygon.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Scene.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Tree.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Triangle.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathProfile\path_profile.h">
+      <Filter>PathProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="PathProfile\path_profile_funcs.h">
+      <Filter>PathProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="PathProfile\path_profile_top.h">
+      <Filter>PathProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\dcwheel_pathCtrl.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PathMessage.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Pos2dMessage.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
