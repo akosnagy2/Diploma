@@ -26,7 +26,7 @@ float pathMaxTangentAccel = 100.0f;
 float pathMaxAngularSpeed = 1.628f;
 
 
-//TODO: nincs checkBack!!!
+//TODO: nincs checkBack, nincs preplanner, követés saroknál túl közel nézi az orientációt!!!
 
 vector<PathPlanner::Point> LoadPathFromFile(string filename)
 {
@@ -70,10 +70,16 @@ bool ParseObj(string objName, PathPlanner::Scene &scene)
 	for (auto& elem : shapes)
 	{
 		if (elem.name == "Robot")
-			scene.SetRobotShape(ParseObjShape(elem).TransformToLocal(scene.GetStartConfig())); //Load Robot shape -> Transform to Local Frame -> Set in Scene
+			scene.SetRobotShape(ParseObjShape(elem)); //Load Robot shape -> Set in Scene
 		else if (elem.name.find("Obstacle") != string::npos)
 			scene.AddEnv(ParseObjShape(elem)); //Load ObstacleX shape
-		else if (elem.name != "Field") //Do not load field, it was loaded with params
+		else if (elem.name == "StartConfig")
+			scene.SetStartConfig(Config(elem.mesh.positions[0], elem.mesh.positions[1], elem.mesh.positions[2])); //Start Config
+		else if (elem.name == "GoalConfig")
+			scene.SetGoalConfig(Config(elem.mesh.positions[0], elem.mesh.positions[1], elem.mesh.positions[2])); //Goal Config
+		else if (elem.name == "Field") 
+			scene.AddField(elem.mesh.positions[6], elem.mesh.positions[4]); //Load field
+		else
 			ret = false;
 	}
 
@@ -108,12 +114,9 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	pathMaxAngularSpeed = (float)parMsg.values[10];
 	
 	//PathPlanner params
-	sc.AddField((float)parMsg.values[11], (float)parMsg.values[12]);
-	sc.SetStartConfig(PathPlanner::Config((float)parMsg.values[13], (float)parMsg.values[14], (float)parMsg.values[15]));
-	sc.SetGoalConfig(PathPlanner::Config((float)parMsg.values[16], (float)parMsg.values[17], (float)parMsg.values[18]));
-	sc.SetRTRParameters((int)parMsg.values[19], (float)parMsg.values[20], (float)parMsg.values[21]);
+	sc.SetRTRParameters((int)parMsg.values[11], (float)parMsg.values[12], (float)parMsg.values[13]);
 
-	envFileName = "frame" + to_string((int)parMsg.values[22]) + ".obj";
+	envFileName = "frame" + to_string((int)parMsg.values[14]) + ".obj";
 
 	return true;
 }
@@ -123,38 +126,38 @@ PathPlanner::Scene sc;
 int main()
 {
 	chrono::high_resolution_clock::time_point start, stop;
-	string envFileName = "frame1.obj";
+	string envFileName = "frame15.obj";
 
 	//Load params from V-REP via ServerApp
 	tcp::iostream s("127.0.0.1",to_string(168));
-	if (!LoadParams(s, sc, envFileName))
-		return -1;
-
-	/*
-	sc.AddField(32.0f, 15.0f);
-	sc.SetRTRParameters(1000, 0.0f, 1.0f);
-	sc.SetStartConfig(PathPlanner::Config(9.95f, 11.3f, PI/2));
-	sc.SetGoalConfig(PathPlanner::Config(22.15f, 0.6f, PI/2));
-	*/
 	
+	if (s)
+	{
+		cout << "V-REP Mode" << endl;
+		if (!LoadParams(s, sc, envFileName))
+			return -1;
+	}
+	else
+	{
+		cout << "Manual Mode" << endl;
+		sc.SetRTRParameters(1000, 0.0f, 1.0f);
+	}
+	
+	//Debug
 	sc.SetFixPrePath(LoadPathFromFile("RTRPath.txt"));
 	
 	//Set params to scene object
 	ParseObj("..\\Frame\\" + envFileName, sc);
-
-	//TODO: nem pontos robot shape esetén egész más lefolyása van
-	PathPlanner::Polygon rob;
-	rob.AddPoint(PathPlanner::Point(3550.0f, 1000.0f));
-	rob.AddPoint(PathPlanner::Point(-450.0f, 1000.0f));
-	rob.AddPoint(PathPlanner::Point(-450.0f, -1000.0f));
-	rob.AddPoint(PathPlanner::Point(3550.0f, -1000.0f));
-	sc.SetRobotShape(rob); 
 
 	start = high_resolution_clock::now();
 	sc.PrePlanner();
 	sc.RTRPlanner();
 	
 	vector<PathPlanner::Config> &geoPath = sc.ExtractPath();
+	for (auto &elem : geoPath)
+	{
+		elem.phi = PathPlanner::Angle::Corrigate(elem.phi - PI);
+	}
 	PathMessage path_samp_msg;
 	
 	//Calc sampled path

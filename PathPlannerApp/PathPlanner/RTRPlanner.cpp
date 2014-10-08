@@ -156,15 +156,14 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 				Config q0(robotShapeWorld.ps[k],q.phi);
 				Point inter;
 
-				if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
+				//if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
+				if (Line::LineSegmentIntersection(q0, s0, inter))
 				{
-					float alfa = Point::atan2(inter, q0.p);
-
-					if (fabs(Angle::Corrigate(alfa - q0.phi)) < EPS) //Forward collision possibility
+					if (fabs(Angle::Corrigate(Point::atan2(inter, q0.p) - q0.phi)) < 0.01) //Forward collision possibility
 					{
 						forwardPointDist.push_back(Point::Distance(inter, q0.p));
 					}
-					else if (fabs(Angle::Corrigate(-(PI - alfa) - q0.phi)) < EPS) //Backward collision possibility
+					else if (fabs(Angle::Corrigate(Point::atan2(q0.p, inter) - q0.phi)) < 0.01) //Backward collision possibility
 					{
 						backwardPointDist.push_back(Point::Distance(inter, q0.p));
 					}
@@ -175,15 +174,14 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 				s0.b = robotShapeWorld.ps[((k + 1) % rob_size)];
 				q0.p = envsx[i].ps[j];				 
 
-				if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
-				{
-					float alfa = Point::atan2(q0.p, inter);				
-
-					if (fabs(Angle::Corrigate(alfa - q0.phi)) < EPS) //Forward collision possibility
+				//if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
+				if (Line::LineSegmentIntersection(q0, s0, inter))
+				{		
+					if (fabs(Angle::Corrigate(Point::atan2(q0.p, inter) - q0.phi)) < 0.01) //Forward collision possibility
 					{
 						forwardPointDist.push_back(Point::Distance(inter, q0.p));
 					}
-					else if (fabs(Angle::Corrigate(-(PI - alfa) - q0.phi)) < EPS) //Backward collision possibility
+					else if (fabs(Angle::Corrigate(Point::atan2(inter, q0.p) - q0.phi)) < 0.01) //Backward collision possibility
 					{
 						backwardPointDist.push_back(Point::Distance(inter, q0.p));
 					}
@@ -261,7 +259,7 @@ bool Scene::TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, Co
 
 	//Collision check
 	float dThetaAbs = numeric_limits<float>::infinity();
-	float turnAmount;
+	vector<float> turnAmount;
 	for (int i = 0; i < (int)envsx.size(); i++)
 	{
 		int env_size = envsx[i].ps.size();
@@ -275,18 +273,18 @@ bool Scene::TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, Co
 				Point s1(envsx[i].ps[((j + 1) % env_size)]);
 				Point p0(robotShapeWorld.ps[k]);
 
-				turnAmount = maxCollFreeTurnAmountPointVsLineseg(p0, qStart.p, dThetaMax, turnDir, Line(s0, s1));
-				if (turnAmount < dThetaAbs)
-					dThetaAbs = turnAmount;
+				turnAmount.push_back(maxCollFreeTurnAmountPointVsLineseg(p0, qStart.p, dThetaMax, turnDir, Line(s0, s1)));
+				if (turnAmount.back() < dThetaAbs)
+					dThetaAbs = turnAmount.back();
 
 				//Collision check of obstacle cornerpoints with robot polygon edges
 				s0 = robotShapeWorld.ps[k];
 				s1 = robotShapeWorld.ps[((k + 1) % rob_size)];
 				p0 = envsx[i].ps[j];				 
 
-				turnAmount = maxCollFreeTurnAmountPointVsLineseg(p0, qStart.p, dThetaMax, -turnDir, Line(s0, s1));
-				if (turnAmount < dThetaAbs)
-					dThetaAbs = turnAmount;
+				turnAmount.push_back(maxCollFreeTurnAmountPointVsLineseg(p0, qStart.p, dThetaMax, -turnDir, Line(s0, s1)));
+				if (turnAmount.back() < dThetaAbs)
+					dThetaAbs = turnAmount.back();
 			}
 		}
 	}
@@ -470,8 +468,9 @@ int Scene::circleSegLineSegIntersect(Config qStart, float dTheta, float radius, 
 {
 	Point center(qStart.p.x - radius*sinf(qStart.phi), qStart.p.y + radius*cosf(qStart.phi));
 	Point resI[2];
+	Config q1(s1.a, Point::atan2(s1.b, s1.a));
 
-	if (!Line::CircleLineIntersect(s1, fabs(radius), center, resI[0], resI[1]))
+	if (!Line::CircleLineIntersect(q1, fabs(radius), center, resI[0], resI[1]))
 		return 0; 
 
 	int interNum = 0;
@@ -515,7 +514,7 @@ int Scene::treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &m
 		{
 			//TCI -> check mergeability, if possible then break, else put children to the queue
 			Point mergingPoint;
-			if (tciTCIMergeability(TCI, tree.xtree[id].ci, mergingRCI, mergingPoint))
+			if (tciTCIMergeability(tree.xtree[id].ci, TCI, mergingRCI, mergingPoint))
 			{
 				//Merging is possible -> return
 				return id;
@@ -562,9 +561,13 @@ bool Scene::tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigI
 	return false;
 }
 
-Point Scene::GetGuidePoint(bool startPoint)
+//random_device rd;
+//default_random_engine generator(10); //követés rossz, saroknál nagyot kanyarodik
+//default_random_engine generator(11); //gyanus, hogy a tervezés nem tök jó
+default_random_engine generator(16);
+	
+Point Scene::GetGuidePoint(bool startPoint)	
 {
-	default_random_engine generator;
 	uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
 	float r = distribution(generator);
@@ -683,7 +686,8 @@ vector<Config>& Scene::ExtractPath()
 	{
 		if (it->type == TranslationCI)
 		{
-			pathC.push_back(Config((it->q0.p + it->q1.p)/2, it->q0.phi));
+			for (int i = 1; i < 100; i++)
+				pathC.push_back(Config((it->q1.p*i/(100.0f) + it->q0.p*(100.0f - i)/(100.0f)), it->q0.phi));
 		}
 		pathC.push_back(it->q1);
 	}

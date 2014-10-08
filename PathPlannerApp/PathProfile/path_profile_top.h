@@ -11,7 +11,7 @@
 #include <vector>
 #include "path_profile.h"
 
-#define SAVE_PROFILE true
+#define SAVE_PROFILE false
 
 void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase, int _predictLen);
 void profile_top(std::vector<Config> &path, std::vector<Config> &resPath);

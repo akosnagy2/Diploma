@@ -47,10 +47,6 @@ typedef struct
 typedef struct
 {
 	PathFollowParamsTypedef PathFollow;
-	float fieldXMax;
-	float fieldYMax;
-	Config startConfig;
-	Config goalConfig;
 	float iterationMax;
 	float fixPathProb;
 	float roadmapProb;
@@ -252,14 +248,6 @@ void ForwardPathPlannerPars(tcp::iostream &client, PathPlannerParamsTypedef &par
 	pathMsg.values.push_back(p.PathPars.PathMaxAcceleration);	//pathMaxAccel
 	pathMsg.values.push_back(p.PathPars.PathMaxTangentAcceleration);	//pathMaxTangentAccel
 	pathMsg.values.push_back(p.PathPars.PathMaxAngularVelocity);	//pathMaxAngularSpeed
-	pathMsg.values.push_back(pars.fieldXMax);
-	pathMsg.values.push_back(pars.fieldYMax);
-	pathMsg.values.push_back(pars.startConfig.p.x);
-	pathMsg.values.push_back(pars.startConfig.p.y);
-	pathMsg.values.push_back(pars.startConfig.phi);
-	pathMsg.values.push_back(pars.goalConfig.p.x);
-	pathMsg.values.push_back(pars.goalConfig.p.y);
-	pathMsg.values.push_back(pars.goalConfig.phi);
 	pathMsg.values.push_back(pars.iterationMax);
 	pathMsg.values.push_back(pars.fixPathProb);
 	pathMsg.values.push_back(pars.roadmapProb);
@@ -271,17 +259,6 @@ void ForwardPathPlannerPars(tcp::iostream &client, PathPlannerParamsTypedef &par
 void ParsePathPlannerPars(deque<float> &parsIn, PathPlannerParamsTypedef &parsOut)
 {
 	ParsePathFollowPars(parsIn, parsOut.PathFollow);
-
-	parsOut.fieldXMax = parsIn.front(); parsIn.pop_front();
-	parsOut.fieldYMax = parsIn.front(); parsIn.pop_front();
-
-	parsOut.startConfig.p.x = parsIn.front(); parsIn.pop_front();
-	parsOut.startConfig.p.y = parsIn.front(); parsIn.pop_front();
-	parsOut.startConfig.phi = parsIn.front(); parsIn.pop_front();
-
-	parsOut.goalConfig.p.x = parsIn.front(); parsIn.pop_front();
-	parsOut.goalConfig.p.y = parsIn.front(); parsIn.pop_front();
-	parsOut.goalConfig.phi = parsIn.front(); parsIn.pop_front();
 
 	parsOut.iterationMax = parsIn.front(); parsIn.pop_front();
 	parsOut.fixPathProb = parsIn.front(); parsIn.pop_front();
@@ -386,6 +363,7 @@ int PathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tcp::
 	SimulationLoop(serverPars.PathFollow, connection, client, logFile);
 
 	client.close();
+	return 0;
 }
 
 int RobotPilotServer(deque<float> &pars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile)
@@ -400,9 +378,7 @@ int PathFollowServer(deque<float> &pars, CSimpleInConnection &connection, tcp::i
 	int timeIndex = 0;
 	float leftSpeed = 0.0f;
 	float rightSpeed = 0.0f;
-	float robotSpeed;
 	float prevRobotSpeed = 0.0f;
-	float robotAngularSpeed;
 	
 	PathFollowParamsTypedef serverPars;
 	PathMessage path;
@@ -434,6 +410,8 @@ int PathFollowServer(deque<float> &pars, CSimpleInConnection &connection, tcp::i
 	SimulationLoop(serverPars, connection, client, logFile);
 
 	client.close();
+
+	return 0;
 }
 
 int main(int argc,char* argv[])
@@ -485,7 +463,7 @@ int main(int argc,char* argv[])
 		ReceivePars(connection, vrepPars);	
 
 		//Switch App
-		int app = vrepPars.front();
+		int app = (int)vrepPars.front();
 		vrepPars.pop_front();
 		if (app == 2)
 			PathFollowServer(vrepPars, connection, client, logFile);

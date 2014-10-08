@@ -112,6 +112,7 @@ static int checkBack_frontLimit(Profile &prof, int back_limit, int &front_limit,
 
 static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::vector<int> &segment)
 {
+	/*
 	int front_limit, back_limit, front_limit_t;
 	int length = sampProf.path.size();
 	float deltaV;
@@ -146,6 +147,10 @@ static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::ve
 
 	if (!success) //Return when correction failed
 		return;
+	*/
+	int length = sampProf.path.size();
+	int front_limit = length - 2, back_limit = 1;
+	double deltaV = errorS / (sampleT * (length - 2));
 
 	for (int i = back_limit; i != front_limit + 1; i++ )
 	{
@@ -160,6 +165,8 @@ static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::ve
 	{
 		generatePathPoint(geoProf, sampProf, i, sampProf.path[i], start, segment);
 	}
+
+	errorS = getDistance(sampProf.path.back().p, geoProf.path.back().p);
 }
 
 static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vector<int> &segment)
@@ -610,7 +617,8 @@ static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofst
 
 	//Curvature estimation
 	start = high_resolution_clock::now();
-	geoProfile.CalcCurvature();
+	//geoProfile.CalcCurvature();
+	geoProfile.c.assign(geoLength, 0.0f);
 	stop = high_resolution_clock::now();
 	logfile << "Geometric profile: curvature estimated, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
@@ -668,15 +676,18 @@ static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofst
 
 	//Check and correct path back
 	start = high_resolution_clock::now();
-	checkBack(geoProfile, sampProfile, errorS, segment);
+	//checkBack(geoProfile, sampProfile, errorS, segment);
 	stop = high_resolution_clock::now();
 	logfile << "Sampled profile: path end point correction, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
+
+	//sampProfile.CalcVelocity();
 
 	//Set output path
 	resPath = sampProfile.path;
 
 	//Sampled points orientation
-	if (fabs(getDirection(resPath[0].p, resPath[1].p) - geoProfile.path[0].phi) < EPS)
+	float ss = getDirection(resPath[0].p, resPath[1].p);
+	if (fabs(ss - geoProfile.path[0].phi) < 0.1f)
 	{
 		for (int i = 0; i < resPath.size() - 1; i++) //Forward direction
 			resPath[i].phi = getDirection(resPath[i].p, resPath[i + 1].p); //[-pi, pi] forward range
@@ -697,6 +708,31 @@ static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofst
 	logfile << "Time parameterized path generation ended " << boost::posix_time::second_clock::local_time().date() << " " << boost::posix_time::second_clock::local_time().time_of_day() << endl;
 }
 
+void JoinProfiles(std::vector<Profile> profs, Profile &out)
+{
+	out = profs.front();
+
+	for (int j = 1; j < (int)profs.size(); j++)
+	{
+		out.a.insert(out.a.end(), profs[j].a.begin(), profs[j].a.end());
+		out.v.insert(out.v.end(), profs[j].v.begin() + 1, profs[j].v.end());
+		out.c.insert(out.c.end(), profs[j].c.begin() + 1, profs[j].c.end());
+		out.path.insert(out.path.end(), profs[j].path.begin() + 1, profs[j].path.end());
+		out.deltaS.insert(out.deltaS.end(), profs[j].deltaS.begin(), profs[j].deltaS.end());
+		out.deltaSc.insert(out.deltaSc.end(), profs[j].deltaSc.begin(), profs[j].deltaSc.end());
+		out.deltaT.insert(out.deltaT.end(), profs[j].deltaT.begin(), profs[j].deltaT.end());
+
+		for (int i = 1; i < profs[j].t.size(); i++)
+		{
+			float t0 = out.t.back();
+			out.t.push_back(t0 + profs[j].t[i]);
+
+			float sc0 = out.sc.back();
+			out.sc.push_back(sc0 + profs[j].sc[i]);
+		}
+	}
+}
+
 void profile_top(std::vector<Config> &path, std::vector<Config> &resPath)
 {
 	int length = path.size();
@@ -713,6 +749,7 @@ void profile_top(std::vector<Config> &path, std::vector<Config> &resPath)
 
 	Profile geoProfile(path);
 	geoProfile.CalcPathDistance();
+	vector<Profile> geoProfileSegmentVector;
 
 	int start = 0;
 	for (int i = 0; i < length; i++)
@@ -722,6 +759,7 @@ void profile_top(std::vector<Config> &path, std::vector<Config> &resPath)
 			Profile geoProfileSegment(geoProfile, start, i);
 
 			profile(geoProfileSegment, sampPathSegment, logfile);
+			geoProfileSegmentVector.push_back(geoProfileSegment);
 
 			resPath.insert(resPath.end(), sampPathSegment.begin(), sampPathSegment.end());
 			Config p = sampPathSegment.back();
@@ -732,4 +770,8 @@ void profile_top(std::vector<Config> &path, std::vector<Config> &resPath)
 			start = i + 1;
 		}
 	}
+
+	Profile profSum("Sum");
+	JoinProfiles(geoProfileSegmentVector, profSum);
+	checkGeoProfile(profSum, true, logfile);
 }

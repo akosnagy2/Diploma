@@ -44,6 +44,34 @@ bool Line::LineSegmentIntersection(Line l1, Line s1, Point &intersect)
 		return false;
 }
 
+bool Line::LineSegmentIntersection(Config q1, Line s1, Point &intersect)
+{
+	float A = sinf(q1.phi);
+	float B = cosf(q1.phi);
+	float D = s1.b.y - s1.a.y;
+	float E = s1.b.x - s1.a.x;
+
+	if (fabs(A*E - D*B) > 0.0f)
+	{
+		intersect.x = (A*E*q1.p.x - B*E*q1.p.y - D*B*s1.a.x + B*E*s1.a.y) / (A*E - D*B);
+		intersect.y = (B*D*q1.p.y - A*D*q1.p.x - E*A*s1.a.y + A*D*s1.a.x) / (B*D - E*A);
+
+		if ((((fabs(intersect.x - s1.a.x) + fabs(intersect.x - s1.b.x))) - fabs(E)) < 0.001)
+		{
+			if ((((fabs(intersect.y - s1.a.y) + fabs(intersect.y - s1.b.y))) - fabs(D)) < 0.001)
+			{
+				if ( (fabs(intersect.x - s1.a.x) > 0.001) || (fabs(intersect.y - s1.a.y) > 0.001) )
+				{
+					if ( (fabs(intersect.x - s1.b.x) > 0.001) || (fabs(intersect.y - s1.b.y) > 0.001) )
+						return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
 bool Line::LineLineIntersection(Line l1, Line l2, Point &intersect)
 {
 	float A = l1.b.y - l1.a.y;
@@ -106,4 +134,49 @@ int Line::CircleLineIntersect(Line l1, float radius, Point center, Point &res0, 
 	res0 = res0 + center;
 	res1 = res1 + center;
 	return ret;
+}
+
+int Line::CircleLineIntersect(Config q1, float radius, Point center, Point &res0, Point &res1)
+{
+	float v1 = cosf(q1.phi);
+	float v2 = sinf(q1.phi);
+
+	float k = v2*q1.p.x - v1*q1.p.y;
+
+	if (fabs(v2) > 0.0001) ///!!!!!!!!!!!!
+	{
+		float A = v1/v2 * v1/v2 + 1;
+		float B = 2 * (k/v2 - center.x) * (v1/v2) - 2*center.y;
+		float C = (k/v2 - center.x)*(k/v2 - center.x) + center.y*center.y - radius*radius;
+
+		if ((B*B - 4*A*C) > 0.0)
+		{
+			res0.y = (-B + sqrtf(B*B - 4*A*C)) / (2*A);
+			res1.y = (-B - sqrtf(B*B - 4*A*C)) / (2*A);
+
+			res0.x = (k + v1*res0.y) / v2;
+			res1.x = (k + v1*res1.y) / v2;
+
+			return 2;
+		}
+	}
+	else
+	{
+		float A = v2/v1 * v2/v1 + 1;
+		float B = -2 * (k/v1 + center.y) * (v2/v1) - 2*center.x;
+		float C = (k/v1 + center.y)*(k/v1 + center.y) + center.x*center.x - radius*radius;
+
+		if ((B*B - 4*A*C) > 0.0)
+		{
+			res0.x = (-B + sqrtf(B*B - 4*A*C)) / (2*A);
+			res1.x = (-B - sqrtf(B*B - 4*A*C)) / (2*A);
+
+			res0.y = (k - v2*res0.y) / (-v1);
+			res1.y = (k - v2*res1.y) / (-v1);
+
+			return 2;
+		}
+	}
+
+	return 0;
 }

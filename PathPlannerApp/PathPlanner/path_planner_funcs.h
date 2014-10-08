@@ -3,7 +3,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define EPS	(1.0f)
+#define EPS	(0.001f)
 #define PI ((float)M_PI)
 
 template <typename T> int sgn(T val) 

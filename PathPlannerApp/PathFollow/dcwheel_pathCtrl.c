@@ -294,7 +294,13 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 
 		case STATE_PATHFOLLOW:
 			if (ctrl->path[ctrl->timeIndex + 2].phi == 1000.0)
-				ctrl->state = STATE_PRE_STOP;
+			{
+				ctrl->state = STATE_PRE_STOP;			
+				ctrl->robotVel = 0.0;
+				ctrl->robotAngVel = 0.0;
+				ctrl->timeIndex++;	
+				break;				
+			}
 
 			//Forward/backward path following
 			if (ctrl->path[ctrl->timeIndex + 1].phi > 1.5f*PI)
@@ -321,7 +327,7 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 			if (turnLoop(ctrl, ctrl->path[ctrl->timeIndex + ctrl->predictLength+1].phi))
 			{ 
 				ctrl->state = STATE_INIT;
-				ctrl->timeIndex += ctrl->predictLength;
+				ctrl->timeIndex += ctrl->predictLength + 1;
 			}
 			break;
 	}
