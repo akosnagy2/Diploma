@@ -7,6 +7,7 @@
 #include "PathMessage.h"
 #include "PathFollow\dcwheel_pathCtrl.h"
 #include "PathProfile\path_profile_top.h"
+#include "CarLikeRobot.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -17,6 +18,8 @@ using namespace std;
 PathMessage path_geo_msg;
 PathMessage path_samp_msg;
 
+CarLikeRobot robotData;
+
 int predictLength = 5;
 float distPar_P = 0.0f;
 float distPar_D = 1.1f;
@@ -24,7 +27,7 @@ float oriPar_P = 0.1f;
 float oriPar_D = 0.15f;
 float timeStep = 0.1f;
 float wheelDistance = 254.0f;
-float pathMaxSpeed = 200.0f;
+float pathMaxSpeed = 500.0f;
 float pathMaxAccel = 100.0f;
 float pathMaxTangentAccel = 100.0f;
 float pathMaxAngularSpeed = 1.628f;
@@ -45,6 +48,8 @@ void LoadPathFromFile(string filename)
 			pos.x = stof(temp,&sz);
 			temp = strtok(NULL, ",");
 			pos.y = stof(temp,&sz);
+			pos.x *= 1000.0f;
+			pos.y *= 1000.0f;
 			path_geo_msg.path.push_back(pos);
 		}
 		else //Load from .txt
@@ -73,7 +78,17 @@ void LoadPathFromTCP(tcp::iostream &s)
 	pathMaxTangentAccel = (float)parMsg.values[9];
 	pathMaxAngularSpeed = (float)parMsg.values[10];
 
+	robotData.setAxisDistance((float)parMsg.values[11]);
+	robotData.setFiMax((float)parMsg.values[12]);
+	robotData.setWheelDistance(wheelDistance);
+
 	path_geo_msg.receive(s);
+
+	//std::ofstream pathfile("path.txt", ios_base::app);
+	//for (int i = 0; i < path_geo_msg.path.size(); i++) {
+	//	pathfile << path_geo_msg.path[i].x << " " << path_geo_msg.path[i].y << endl;
+	//}
+	//pathfile.close();
 }
 
 int main()
@@ -85,7 +100,7 @@ int main()
 			std::cout << "Unable to connect: " << s.error().message() << endl;
 			std::cout << "Try to load path.txt..." << endl;
 
-			LoadPathFromFile("path.txt");
+			LoadPathFromFile("path5.csv");
 		}
 		else //Load from V-REP
 		{
@@ -94,7 +109,11 @@ int main()
 		}
 
 		//Calc sampled path
+#ifndef CAR_LIKE_ROBOT
 		setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance, predictLength);
+#else
+		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep, predictLength);
+#endif
 		profile_top(path_geo_msg.path, path_samp_msg.path);
 		
 		if (!s) //Exit when no V-REP

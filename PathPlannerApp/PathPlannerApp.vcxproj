@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\..\..\Program Files %28x86%29\V-REP3\V-REP_PRO_EDU\</OutDir>
+    <OutDir>C:\Program Files %28x86%29\V-REP3\V-REP_PRO_EDU</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -53,13 +53,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\jsoncpp-src-0.6.0-rc2\include;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\diploma\RobotCommonLib;C:\local\jsoncpp-master\include;C:\local\boost_1_56_0;C:\local\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;C:\BME\Diploma\Libs\Fade2D\Win32;C:\BME\Diploma\jsoncpp-src-0.6.0-rc2\build\vs71\debug\lib_json;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\local\boost_1_56_0\lib32-msvc-12.0;C:\local\Fade2D\Win32;C:\local\jsoncpp-master\makefiles\msvc2010\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>fade2D_vc11_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

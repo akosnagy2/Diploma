@@ -52,14 +52,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\diploma;C:\local\jsoncpp-master\include;C:\local\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\diploma\RobotCommonLib;C:\local\jsoncpp-master\include;C:\local\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\local\jsoncpp-master\makefiles\msvc2010\Debug;C:\local\boost_1_56_0\lib32-msvc-12.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lib_json.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\local\jsoncpp-master\makefiles\msvc2010\Debug;C:\local\boost_1_56_0\lib32-msvc-12.0;D:\diploma\RobotCommonLib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib_json.lib;RobotCommonLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,18 +80,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\CtrlMessage.h" />
-    <ClInclude Include="..\PackedMessage.h" />
-    <ClInclude Include="..\PathMessage.h" />
-    <ClInclude Include="..\Pos2dMessage.h" />
     <ClInclude Include="simpleInConnection.h" />
     <ClInclude Include="simplePorting.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\CtrlMessage.cpp" />
-    <ClCompile Include="..\PackedMessage.cpp" />
-    <ClCompile Include="..\PathMessage.cpp" />
-    <ClCompile Include="..\Pos2dMessage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="simpleInConnection.cpp" />
     <ClCompile Include="simplePorting.cpp" />

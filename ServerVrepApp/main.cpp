@@ -6,6 +6,7 @@
 #include "Pos2dMessage.h"
 #include "PathMessage.h"
 #include "simpleInConnection.h"
+#include "CarLikeRobot.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -23,16 +24,9 @@ typedef struct
 	 float motorMultFactor;
 } motorStruct;
 
-typedef struct
-{
-	float axisDistance;
-	float minimalTurnRadius;
-	float fiMax;
-} carStruct;
-
 motorStruct robotLeftMotor;
 motorStruct robotRightMotor;
-carStruct carData;
+CarLikeRobot carData;
 ofstream dFile[6];
 
 boost::system::error_code SetupServer(boost::asio::io_service& io_service, int port, tcp::iostream& s)
@@ -66,7 +60,7 @@ void ForwardPath(CSimpleInConnection& connection, tcp::iostream& s)
 	delete[] receivedData;
 }
 
-int ReceiveForwardPars(CSimpleInConnection& connection, tcp::iostream& path_s, float& dt, motorStruct& motor, carStruct& car, float& wheelDistance, float& wheelDiameter) {
+int ReceiveForwardPars(CSimpleInConnection& connection, tcp::iostream& path_s, float& dt, motorStruct& motor, CarLikeRobot& car) {
 	int receivedDataLength;
 	PackedMessage pathMsg;
 	char* receivedData = connection.receiveData(receivedDataLength);
@@ -79,24 +73,25 @@ int ReceiveForwardPars(CSimpleInConnection& connection, tcp::iostream& path_s, f
 		motor.motorMultFactor = ((float*)receivedData)[3];
 		motor.motorSmoothFactor = ((float*)receivedData)[4];
 
-		pathMsg.values.push_back(((float*)receivedData)[9]);	//PredictLength
-		pathMsg.values.push_back(((float*)receivedData)[10]);	//distPar_P
-		pathMsg.values.push_back(((float*)receivedData)[11]);	//distPar_D
-		pathMsg.values.push_back(((float*)receivedData)[12]);	//oriPar_P
-		pathMsg.values.push_back(((float*)receivedData)[13]);	//oriPar_D
-		wheelDistance = ((float*)receivedData)[14];
-		wheelDiameter = ((float*)receivedData)[15];
+		pathMsg.values.push_back(((float*)receivedData)[5]);	//PredictLength
+		pathMsg.values.push_back(((float*)receivedData)[6]);	//distPar_P
+		pathMsg.values.push_back(((float*)receivedData)[7]);	//distPar_D
+		pathMsg.values.push_back(((float*)receivedData)[8]);	//oriPar_P
+		pathMsg.values.push_back(((float*)receivedData)[9]);	//oriPar_D
+		car.setWheelDistance(((float*)receivedData)[10]);
+		car.setWheelDiameter(((float*)receivedData)[11]);
 		pathMsg.values.push_back(dt);	//timeStep
-		pathMsg.values.push_back(wheelDistance);	//wheelDistance
-		pathMsg.values.push_back(((float*)receivedData)[16]);	//pathMaxSpeed
-		pathMsg.values.push_back(((float*)receivedData)[17]);	//pathMaxAccel
-		pathMsg.values.push_back(((float*)receivedData)[18]);	//pathMaxTangentAccel
-		pathMsg.values.push_back(((float*)receivedData)[19]);	//pathMaxAngularSpeed
+		pathMsg.values.push_back(car.getWheelDistance());	//wheelDistance
+		pathMsg.values.push_back(((float*)receivedData)[12]);	//pathMaxSpeed
+		pathMsg.values.push_back(((float*)receivedData)[13]);	//pathMaxAccel
+		pathMsg.values.push_back(((float*)receivedData)[14]);	//pathMaxTangentAccel
+		pathMsg.values.push_back(((float*)receivedData)[15]);	//pathMaxAngularSpeed
 
-		car.axisDistance = ((float*)receivedData)[20];
-		car.minimalTurnRadius = ((float*)receivedData)[21];
-		car.fiMax = ((float*)receivedData)[22];
-
+		car.setAxisDistance(((float*)receivedData)[16]);
+		car.setFiMax(((float*)receivedData)[17]);
+		pathMsg.values.push_back(car.getAxisDistance());
+		pathMsg.values.push_back(car.getFiMax());
+		
 		pathMsg.send(path_s);
 
 		delete[] receivedData;
@@ -284,7 +279,7 @@ int main(int argc,char* argv[])
 
 		//Receive parameters from V-Rep Client
 #if CAR_LIKE_ROBOT
-		ReceiveForwardPars(connection, path_s, timeStep, robotLeftMotor, carData, wheelDistance, wheelDiameter);
+		ReceiveForwardPars(connection, path_s, timeStep, robotLeftMotor, carData);
 #else
 		ReceiveForwardPars(connection, path_s, timeStep, robotLeftMotor, robotRightMotor, wheelDistance, wheelDiameter);
 #endif
@@ -320,7 +315,8 @@ int main(int argc,char* argv[])
 			PackedMessage info_msg;
 
 			//Receive robot position from V-Rep Client
-			ReceiveRobotPosition(connection,leftJointPos,rightJointPos,robotPos);
+			if (ReceiveRobotPosition(connection, leftJointPos, rightJointPos, robotPos) == -1)
+				break;
 				
 			//Send robot position to the PathFollow Client
 			pos_msg.pos = robotPos;
