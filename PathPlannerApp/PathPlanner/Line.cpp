@@ -56,13 +56,13 @@ bool Line::LineSegmentIntersection(Config q1, Line s1, Point &intersect)
 		intersect.x = (A*E*q1.p.x - B*E*q1.p.y - D*B*s1.a.x + B*E*s1.a.y) / (A*E - D*B);
 		intersect.y = (B*D*q1.p.y - A*D*q1.p.x - E*A*s1.a.y + A*D*s1.a.x) / (B*D - E*A);
 
-		if ((((fabs(intersect.x - s1.a.x) + fabs(intersect.x - s1.b.x))) - fabs(E)) < 0.001)
+		if ((((fabs(intersect.x - s1.a.x) + fabs(intersect.x - s1.b.x))) - fabs(E)) < EPS)
 		{
-			if ((((fabs(intersect.y - s1.a.y) + fabs(intersect.y - s1.b.y))) - fabs(D)) < 0.001)
+			if ((((fabs(intersect.y - s1.a.y) + fabs(intersect.y - s1.b.y))) - fabs(D)) < EPS)
 			{
-				if ( (fabs(intersect.x - s1.a.x) > 0.001) || (fabs(intersect.y - s1.a.y) > 0.001) )
+				if ( (fabs(intersect.x - s1.a.x) > EPS) || (fabs(intersect.y - s1.a.y) > EPS) )
 				{
-					if ( (fabs(intersect.x - s1.b.x) > 0.001) || (fabs(intersect.y - s1.b.y) > 0.001) )
+					if ( (fabs(intersect.x - s1.b.x) > EPS) || (fabs(intersect.y - s1.b.y) > EPS) )
 						return true;
 				}
 			}
@@ -95,8 +95,11 @@ bool Line::LineLineIntersection(Line l1, Line l2, Point &intersect)
 
 int Line::CircleLineIntersect(Line l1, float radius, Point center, Point &res0, Point &res1)
 {
+	//http://mathworld.wolfram.com/Circle-LineIntersection.html
 	float dx, dy, dr, D, disc;
 	int ret;
+
+	//Transform to (0,0)
 	l1.a = l1.a - center;
 	l1.b = l1.b - center;
 
@@ -104,7 +107,7 @@ int Line::CircleLineIntersect(Line l1, float radius, Point center, Point &res0, 
 	dy = l1.b.y - l1.a.y;
 	dr = sqrtf(dx*dx + dy*dy);
 	D = l1.a.x*l1.b.y - l1.b.x*l1.a.y;
-	disc = powf(radius,2)*powf(dr,2) - powf(D,2);
+	disc = radius*radius*dr*dr - D*D;
 
 	//No intersection
 	if (disc < 0.0f)
@@ -118,32 +121,34 @@ int Line::CircleLineIntersect(Line l1, float radius, Point center, Point &res0, 
 	}
 	else   //Two intersection
 	{
-		res0.x = (int)(dy >= 0)*dx*sqrtf(disc) + D*dy;
-		res1.x = -(int)(dy >= 0)*dx*sqrtf(disc) + D*dy;
-		res0.x /= powf(dr,2);
-		res1.x /= powf(dr,2);
+		res0.x =  D*dy + sgnC(dy)*dx*sqrtf(disc);
+		res1.x =  D*dy - sgnC(dy)*dx*sqrtf(disc);
+		res0.x /= (dr*dr);
+		res1.x /= (dr*dr);
 
-		res0.y = fabs(dy)*sqrtf(disc) - D*dx;
-		res1.y =  -fabs(dy)*sqrtf(disc) - D*dx;
-		res0.y /= powf(dr,2);
-		res1.y /= powf(dr,2);
+		res0.y = -D*dx + fabs(dy)*sqrtf(disc);
+		res1.y = -D*dx - fabs(dy)*sqrtf(disc);
+		res0.y /= (dr*dr);
+		res1.y /= (dr*dr);
 
 		ret = 2;
 	}
 
+	//Transform back to center
 	res0 = res0 + center;
 	res1 = res1 + center;
 	return ret;
 }
 
-int Line::CircleLineIntersect(Config q1, float radius, Point center, Point &res0, Point &res1)
+/*
+int Line::CircleLineIntersect(Line s1, float radius, Point center, Point &res0, Point &res1)
 {
-	float v1 = cosf(q1.phi);
-	float v2 = sinf(q1.phi);
+	float v1 = s1.b.x - s1.a.x;
+	float v2 = s1.b.y - s1.a.y;
 
 	float k = v2*q1.p.x - v1*q1.p.y;
 
-	if (fabs(v2) > 0.0001) ///!!!!!!!!!!!!
+	if (fabs(v2) > EPS)
 	{
 		float A = v1/v2 * v1/v2 + 1;
 		float B = 2 * (k/v2 - center.x) * (v1/v2) - 2*center.y;
@@ -180,3 +185,4 @@ int Line::CircleLineIntersect(Config q1, float radius, Point center, Point &res0
 
 	return 0;
 }
+*/

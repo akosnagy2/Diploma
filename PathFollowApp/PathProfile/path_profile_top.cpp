@@ -6,6 +6,7 @@
 #include <math.h>
 #include <chrono>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include "PathPlannerApp\PathPlanner\Line.h"
 
 using namespace std::chrono;
 using namespace std;
@@ -201,7 +202,7 @@ static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Con
 	Config res0, res1;
 	static bool first = true;
 
-	if (circleLineIntersect_opt(sampProf.path[i-1].p,geoProf.path[length - 1].p,sampProf.deltaSc[i-1],sampProf.path[i-1].p,res0.p,res1.p)) //Interpolate with line
+	if (Line::CircleLineIntersect(Line(sampProf.path[i-1].p, geoProf.path[length - 1].p), sampProf.deltaSc[i-1], sampProf.path[i-1].p, res0.p, res1.p)) //Interpolate with line
 	{
 		//Decide based on distance from segment end point
 		if (getDistance(geoProf.path[length - 1].p, res0.p) < getDistance(geoProf.path[length - 1].p, res1.p))
@@ -236,7 +237,7 @@ static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, Config 
 
 		if (fabs(geoProf.c[l]) < EPS)	//Interpolate with line
 		{
-			if (circleLineIntersect_opt(segStart,segEnd,rad,center,res0.p,res1.p))
+			if (Line::CircleLineIntersect(Line(segStart, segEnd), rad, center, res0.p, res1.p))
 			{
 				segment[i] = l;
 

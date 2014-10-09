@@ -164,7 +164,7 @@ int solve2ndOrder(float a, float b, float c, float& res0, float& res1)
 		return 0;
 	}
 }
-
+/*
 int circleLineIntersect(Point p1, Point p2, float radius, Point center, Point& res0, Point& res1)
 {
 	float m;
@@ -239,12 +239,14 @@ int circleLineIntersect_opt(Point p1, Point p2, float radius, Point center, Poin
 	else   //Two intersection
 	{
 		res0.x = sgn(dy)*dx*sqrtf(disc) + D*dy;
-		res1.x = -res0.x + D*dy;
+		res1.x = -sgn(dy)*dx*sqrtf(disc) + D*dy;
+		//res1.x = -res0.x + D*dy;
 		res0.x /= powf(dr,2);
 		res1.x /= powf(dr,2);
 
 		res0.y = fabs(dy)*sqrtf(disc) - D*dx;
-		res1.y = -res0.y - D*dx;
+		res1.y = -fabs(dy)*sqrtf(disc) - D*dx;
+		//res1.y = -res0.y - D*dx;
 		res0.y /= powf(dr,2);
 		res1.y /= powf(dr,2);
 
@@ -257,6 +259,7 @@ int circleLineIntersect_opt(Point p1, Point p2, float radius, Point center, Poin
 	res1.y += center.y;
 	return ret;
 }
+*/
 
 void circleTransform(Point p0, Point p1, float radius, Point &center)
 {

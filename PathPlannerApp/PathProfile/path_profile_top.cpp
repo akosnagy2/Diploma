@@ -6,6 +6,7 @@
 #include <math.h>
 #include <chrono>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include "PathPlannerApp\PathPlanner\Line.h"
 
 using namespace std::chrono;
 using namespace std;
@@ -34,8 +35,7 @@ static int checkBack_frontLimit(Profile &prof, int back_limit, int &front_limit,
 static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_name, ofstream &log);
 static void checkGeoProfile(Profile &prof, bool saveProfiles, ofstream &log);
 static void checkSampProfile(Profile &prof, bool saveProfiles, ofstream &log);
-static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofstream &logfile);
-
+static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile);
 
 void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase, int _predictLen)
 {
@@ -208,7 +208,8 @@ static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Con
 	Config res0, res1;
 	static bool first = true;
 
-	if (circleLineIntersect_opt(sampProf.path[i-1].p,geoProf.path[length - 1].p,sampProf.deltaSc[i-1],sampProf.path[i-1].p,res0.p,res1.p)) //Interpolate with line
+	if (Line::CircleLineIntersect(Line(sampProf.path[i-1].p, geoProf.path[length - 1].p), sampProf.deltaSc[i-1], sampProf.path[i-1].p, res0.p, res1.p)) //Interpolate with line
+	//if (circleLineIntersect_opt(sampProf.path[i-1].p,geoProf.path[length - 1].p,sampProf.deltaSc[i-1],sampProf.path[i-1].p,res0.p,res1.p)) //Interpolate with line
 	{
 		//Decide based on distance from segment end point
 		if (getDistance(geoProf.path[length - 1].p, res0.p) < getDistance(geoProf.path[length - 1].p, res1.p))
@@ -233,7 +234,7 @@ static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, Config 
 		Point &segEnd = geoProf.path[l + 1].p;
 
 		//Pathpoint in the next segment
-		if (getDistance(segEnd, center) < (rad - EPS))
+		if (getDistance(segEnd, center) < rad)
 		{
 			if (l == length - 2) //No next segment, return
 				return 1;
@@ -241,9 +242,9 @@ static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, Config 
 				continue;
 		}
 
-		if (fabs(geoProf.c[l]) < EPS)	//Interpolate with line
+		if (fabs(geoProf.c[l]) == 0.0)	//Interpolate with line
 		{
-			if (circleLineIntersect_opt(segStart,segEnd,rad,center,res0.p,res1.p))
+			if (Line::CircleLineIntersect(Line(segStart, segEnd), rad, center, res0.p, res1.p))
 			{
 				segment[i] = l;
 
@@ -374,8 +375,10 @@ static void correctAccelBackward(Profile &prof, std::vector<float> &Vmax, std::v
 	bool goBack = false;
 	do
 	{
-		aL = (powf(prof.v[i+1],2) - powf(prof.v[i],2)) * powf((1 - robotWheelBase*0.5f*prof.c[i]),2) / (2*deltaSl[i]);
-		aR = (powf(prof.v[i+1],2) - powf(prof.v[i],2)) * powf((1 + robotWheelBase*0.5f*prof.c[i]),2) / (2*deltaSr[i]);
+		aL = (powf(prof.v[i+1],2) - powf(prof.v[i],2)) / (2*deltaSl[i]);
+		aL *= powf((1 - robotWheelBase*0.5f*prof.c[i]),2);
+		aR = (powf(prof.v[i+1],2) - powf(prof.v[i],2)) / (2*deltaSr[i]);
+		aR *= powf((1 + robotWheelBase*0.5f*prof.c[i]),2); 
 
 		prof.a[i] = (aL + aR)*0.5f;
 
@@ -434,20 +437,26 @@ static void generateVelocityProfile_opt(Profile &prof)
 			Vmax[i+1] = min(maxV, maxW/fabs(prof.c[i+1]));
 
 		//Get travelled distance for the wheels, robot
-		float r, alfa;
-		if (fabs(prof.c[i]) < EPS) //Straight line
+		float alfa;
+		if (fabs(prof.c[i]) <= C_EPS) //Straight line
 		{
 			prof.deltaSc[i] = deltaSl[i] = deltaSr[i] = prof.deltaS[i];
 		}
 		else
 		{
-			r = 1/prof.c[i];
-			alfa = acos(1 - 0.5f*powf((prof.deltaS[i]/r),2));
+			alfa = acos(1 - 0.5f*powf((prof.deltaS[i]*prof.c[i]),2));
 
 			//DeltaS always positive
-			deltaSl[i] = alfa*fabs((r - robotWheelBase*0.5f));
-			deltaSr[i] = alfa*fabs((r + robotWheelBase*0.5f));
-			prof.deltaSc[i] = alfa*fabs(r);
+			if (alfa != 0.0)
+			{
+				deltaSl[i] = alfa*fabs((1/prof.c[i] - robotWheelBase*0.5f));
+				deltaSr[i] = alfa*fabs((1/prof.c[i] + robotWheelBase*0.5f));
+				prof.deltaSc[i] = alfa*fabs(1/prof.c[i]);
+			}
+			else //TODO: néha egyenesnél nem 0 a görbület, de alfa már 0 lesz...
+			{
+				prof.deltaSc[i] = deltaSl[i] = deltaSr[i] = prof.deltaS[i];
+			}
 		}
 		prof.sc[i+1] = prof.sc[i] + prof.deltaSc[i];
 
@@ -598,7 +607,7 @@ static void checkSampProfile(Profile &prof, bool saveProfiles, ofstream &log)
 //TODO: tolatás, egy helyben fordulás, nem egyenlő távolságú geometriai pályával tesztelni
 //TODO: profile méretet külön tárolni, oo-bá tenni az egészet
 
-static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofstream &logfile)
+static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 {
 	int geoLength, sampLength;
 	std::chrono::high_resolution_clock::time_point start, stop;
@@ -609,7 +618,7 @@ static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofst
 
 	//Get path points distance, remove same points
 	start = high_resolution_clock::now();
-	//geoProfile.CalcPathDistance();
+	geoProfile.CalcPathDistance();
 	removeSamePositions(geoProfile);
 	geoLength = geoProfile.path.size();
 	stop = high_resolution_clock::now();
@@ -617,8 +626,8 @@ static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofst
 
 	//Curvature estimation
 	start = high_resolution_clock::now();
-	//geoProfile.CalcCurvature();
-	geoProfile.c.assign(geoLength, 0.0f);
+	if ((int)geoProfile.c.size() == 0)
+		geoProfile.CalcCurvature();
 	stop = high_resolution_clock::now();
 	logfile << "Geometric profile: curvature estimated, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
@@ -682,22 +691,18 @@ static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofst
 
 	//sampProfile.CalcVelocity();
 
-	//Set output path
-	resPath = sampProfile.path;
-
 	//Sampled points orientation
-	float ss = getDirection(resPath[0].p, resPath[1].p);
-	if (fabs(ss - geoProfile.path[0].phi) < 0.1f)
+	if (dir)
 	{
-		for (int i = 0; i < resPath.size() - 1; i++) //Forward direction
-			resPath[i].phi = getDirection(resPath[i].p, resPath[i + 1].p); //[-pi, pi] forward range
+		for (int i = 0; i < sampProfile.path.size() - 1; i++) //Forward direction
+			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p); //[-pi, pi] forward range
 	}
 	else
 	{
-		for (int i = 0; i < resPath.size() - 1; i++) //Backward direction
-			resPath[i].phi = getDirection(resPath[i].p, resPath[i + 1].p) + M_PI*3; //[2*pi, 4*pi] backward range
+		for (int i = 0; i < sampProfile.path.size() - 1; i++) //Backward direction
+			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p) + M_PI*3; //[2*pi, 4*pi] backward range
 	}
-	resPath[resPath.size() - 1].phi = resPath[resPath.size() - 2].phi;
+	sampProfile.path[sampProfile.path.size() - 1].phi = sampProfile.path[sampProfile.path.size() - 2].phi;
 
 	//Check and save profiles
 	start = high_resolution_clock::now();
@@ -706,9 +711,11 @@ static void profile(Profile &geoProfile, std::vector<Config> &resPath, std::ofst
 	logfile << "Sampled profile: profile checked, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
 	logfile << "Time parameterized path generation ended " << boost::posix_time::second_clock::local_time().date() << " " << boost::posix_time::second_clock::local_time().time_of_day() << endl;
+
+	return sampProfile;
 }
 
-void JoinProfiles(std::vector<Profile> profs, Profile &out)
+void JoinProfiles(std::vector<Profile> &profs, Profile &out)
 {
 	out = profs.front();
 
@@ -722,24 +729,20 @@ void JoinProfiles(std::vector<Profile> profs, Profile &out)
 		out.deltaSc.insert(out.deltaSc.end(), profs[j].deltaSc.begin(), profs[j].deltaSc.end());
 		out.deltaT.insert(out.deltaT.end(), profs[j].deltaT.begin(), profs[j].deltaT.end());
 
+		float t0 = out.t.back();
+		float sc0 = out.sc.back();
 		for (int i = 1; i < profs[j].t.size(); i++)
 		{
-			float t0 = out.t.back();
-			out.t.push_back(t0 + profs[j].t[i]);
-
-			float sc0 = out.sc.back();
+			out.t.push_back(t0 + profs[j].t[i]);			
 			out.sc.push_back(sc0 + profs[j].sc[i]);
 		}
 	}
 }
 
-void profile_top(std::vector<Config> &path, std::vector<Config> &resPath)
+void profile_top(std::vector<PathSegment> &path, std::vector<Config> &resPath)
 {
-	int length = path.size();
-	std::vector<Config> sampPathSegment;
 	std::ofstream logfile("logFile.txt", ios_base::app);
 	logfile << "Time parameterized path generation started " << boost::posix_time::second_clock::local_time().date() << " " << boost::posix_time::second_clock::local_time().time_of_day() << endl;
-
 	logfile << "Robot parameters:" << endl;
 	logfile << "Robot wheel base: " << robotWheelBase << " m" << endl;
 	logfile << "Robot maximum velocity: " << maxV << " m/s" << endl;
@@ -747,31 +750,30 @@ void profile_top(std::vector<Config> &path, std::vector<Config> &resPath)
 	logfile << "Robot wheel maximum acceleration: " << maxA << " m/s^2" << endl;
 	logfile << "Robot wheel maximum tangent acceleration: " << maxAt << " m/s^2" << endl;
 
-	Profile geoProfile(path);
-	geoProfile.CalcPathDistance();
-	vector<Profile> geoProfileSegmentVector;
-
-	int start = 0;
-	for (int i = 0; i < length; i++)
+	vector<Profile> geoProfiles;
+	vector<Profile> sampProfiles;
+	for (auto p : path)
 	{
-		if ((i == length - 1) || (geoProfile.deltaS[i] <= EPS))
-		{
-			Profile geoProfileSegment(geoProfile, start, i);
+		Profile geoProfileSegment(p.path);
+		geoProfileSegment.c = p.curvature;
 
-			profile(geoProfileSegment, sampPathSegment, logfile);
-			geoProfileSegmentVector.push_back(geoProfileSegment);
+		Profile &sampProfileSegment = profile(geoProfileSegment, p.direction, logfile);
+		
+		geoProfiles.push_back(geoProfileSegment);
+		sampProfiles.push_back(sampProfileSegment);
 
-			resPath.insert(resPath.end(), sampPathSegment.begin(), sampPathSegment.end());
-			Config p = sampPathSegment.back();
-			p.phi = 1000.0f;
-			for (int j = 0; j < predictLen; j++)
-				resPath.insert(resPath.end(), p);
-
-			start = i + 1;
-		}
+		resPath.insert(resPath.end(), sampProfileSegment.path.begin(), sampProfileSegment.path.end());
+		Config p = sampProfileSegment.path.back();
+		p.phi = 1000.0f;
+		for (int j = 0; j < predictLen; j++)
+			resPath.insert(resPath.end(), p);
 	}
 
-	Profile profSum("Sum");
-	JoinProfiles(geoProfileSegmentVector, profSum);
-	checkGeoProfile(profSum, true, logfile);
+	Profile geoSum("Geometric");
+	JoinProfiles(geoProfiles, geoSum);
+	checkGeoProfile(geoSum, true, logfile);
+
+	Profile sampSum("Sampled");
+	JoinProfiles(sampProfiles, sampSum);
+	checkSampProfile(sampSum, true, logfile);
 }

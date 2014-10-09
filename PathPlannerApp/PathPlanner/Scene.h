@@ -7,10 +7,12 @@
 #include "ConfigInterval.h"
 #include "Point.h"
 #include "Polygon.h"
+#include "PathPlannerApp\PathSegment.h"
 #include <vector>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <random>
 
 using namespace std;
 using namespace boost::numeric;
@@ -18,7 +20,6 @@ using namespace GEOM_FADE2D;
 
 namespace PathPlanner
 {
-
 	class Scene
 	{
 	public:
@@ -27,40 +28,26 @@ namespace PathPlanner
 		}
 		~Scene()
 		{
-
 		}
-		void AddField(float xMax, float yMax)
+		void AddField(float xMax, float yMax);
+		void AddEnv(Polygon env);
+		vector<Polygon>& GetEnv()
 		{
-			fieldXLength = xMax;
-			fieldYLength = yMax;
-
-			//Create field
-			field.AddPoint(Point(0.0f, 0.0f));
-			field.AddPoint(Point(0.0f, yMax));
-			field.AddPoint(Point(xMax, yMax));
-			field.AddPoint(Point(xMax, 0.0f));
-
-			//Create extended env, when env is available
-			if (envs.size())
-			{
-				envsx = envs;		
-				envsx.push_back(field);
-			}
+			return envs;
 		}
-		void AddEnv(Polygon env)
+		float GetFieldXLength()
 		{
-			envs.push_back(env);
-
-			//Create extended env, when field is available
-			envsx = envs;
-			if (field.ps.size())
-				envsx.push_back(field);
+			return fieldXLength;
+		}
+		float GetFieldYLength()
+		{
+			return fieldYLength;
 		}
 		void SetStartConfig(Config pos)
 		{
 			robotStart = pos;
 		}
-		Config GetStartConfig()
+		Config& GetStartConfig()
 		{
 			return robotStart;
 		}
@@ -68,27 +55,17 @@ namespace PathPlanner
 		{
 			robotGoal = pos;
 		}
+		Config& GetGoalConfig()
+		{
+			return robotGoal;
+		}
 		void SetRobotShape(Polygon shp)
 		{
-			robotShape = shp;
-		
+			robotShape = shp;		
 		}
-		float GetRobotWidth()
+		Polygon& GetRobotShape()
 		{
-			vector<float> shp_y;
-
-			//Get local frame y abs values
-			for (int i = 0; i < (int)robotShape.ps.size(); i++)
-				shp_y.push_back(fabs(robotShape.ps[i].y));
-
-			//Return max 
-			return (*max_element(shp_y.begin(), shp_y.end()));
-		}
-		void SetRTRParameters(int _maxIteration, float _fixPathProbability, float _roadmapProbability)
-		{
-			maxIteration = _maxIteration;
-			fixPathProbability = _fixPathProbability;
-			roadmapProbability = _roadmapProbability;
+			return robotShape;
 		}
 		void SetFixPrePath(vector<Point> &fPath)
 		{
@@ -99,11 +76,20 @@ namespace PathPlanner
 			for (vector<Config>::iterator it = fPath.begin(); it != fPath.end(); ++it)
 				fixPrePath.push_back(it->p);
 		}
+		vector<PathSegment>& GetCCSPath()
+		{
+			return pathC;
+		}
+		float GetRobotWidth();
+		void SetRTRParameters(int _maxIteration, float _fixPathProbability, float _roadmapProbability, int randSeed);
+		void CCSPlanner();
 		bool PrePlanner();
 		bool RTRPlanner();
 		void DrawPrePath();
 		bool TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, ConfigInterval &maxRCI);
-		vector<Config>& ExtractPath();
+		vector<Config> Scene::ExtractPath(int interpolate);
+		void DrawScene(int iteration);
+		void DrawPath();
 	private:
 		void RTRIteration(bool start);
 		bool PathFinder();
@@ -115,7 +101,7 @@ namespace PathPlanner
 		int treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &mergingRCI);
 		float maxCollFreeTurnAmountPointVsLineseg(Point p, Point center, float dThetaMax, int turnDir, Line s1);
 		vector<ConfigInterval> ObtainPath(int startMergeID, int goalMergeID, ConfigInterval mergeRCI, float &pathLength);
-		int circleSegLineSegIntersect(Config qStart, float dTheta, float radius, Line s1, Point res[2]);
+		int circleSegLineSegIntersect(Point center, float angleStart, float dTheta, float radius, Line s1, Point res[2]);
 		//tciTCIMergeability - Checks whether the given TCIs can be merged by a single RCI
 		bool tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigInterval &mergingRCI, Point &mergingPoint);
 		Point GetGuidePoint(bool startPoint);
@@ -137,7 +123,7 @@ namespace PathPlanner
 
 		Config robotStart;
 		Config robotGoal;
-		Polygon robotShape;
+		public:Polygon robotShape;
 
 		Tree startTree;
 		Tree goalTree;
@@ -151,9 +137,12 @@ namespace PathPlanner
 
 		vector<Point> fixPrePath;
 		int fixPrePathStartIdx, fixPrePathGoalIdx;
-		
+
+		default_random_engine generator;
+		random_device rd;
+
 		vector<ConfigInterval> pathCI;
-		vector<Config> pathC;
+		vector<PathSegment> pathC;
 	};
 
 }

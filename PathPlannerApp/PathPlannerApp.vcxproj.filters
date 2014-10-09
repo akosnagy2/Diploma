@@ -22,6 +22,15 @@
     <Filter Include="PathFollow">
       <UniqueIdentifier>{8be9ad13-059d-476a-a73a-bbd3c1f71ecc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CCS">
+      <UniqueIdentifier>{8e821a86-3961-41c0-9a6a-41408d6c8105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCS\geometry">
+      <UniqueIdentifier>{caf5773f-a1ef-4077-aa52-36fe8a379efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCS\planner">
+      <UniqueIdentifier>{64d15057-efc9-4003-b821-8497870d91f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,9 +55,6 @@
       <Filter>PathPlanner</Filter>
     </ClCompile>
     <ClCompile Include="PathPlanner\Line.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="PathPlanner\path_planner.cpp">
       <Filter>PathPlanner</Filter>
     </ClCompile>
     <ClCompile Include="PathPlanner\path_planner_funcs.cpp">
@@ -90,6 +96,72 @@
     <ClCompile Include="..\Pos2dMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CCS\geometry\Arc.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Circle.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Configuration.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Line.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Path.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Point.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Rectangle.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Segment.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Shape.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Triangle.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\geometry\Vector.cpp">
+      <Filter>CCS\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\AlternativePlanner.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\ARMBuilder.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\CCS.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\Environment.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\LocalPlanner.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\misc.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\OccupancyGrid.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\Planner.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\Preplanner.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\Robot.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
+    <ClCompile Include="CCS\planner\Scene.cpp">
+      <Filter>CCS\planner</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CtrlMessage.h">
@@ -108,9 +180,6 @@
       <Filter>PathPlanner</Filter>
     </ClInclude>
     <ClInclude Include="PathPlanner\Line.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="PathPlanner\path_planner.h">
       <Filter>PathPlanner</Filter>
     </ClInclude>
     <ClInclude Include="PathPlanner\path_planner_funcs.h">
@@ -147,6 +216,75 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Pos2dMessage.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Arc.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Circle.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Configuration.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Line.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Path.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Point.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Rectangle.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Segment.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Shape.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Triangle.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\geometry\Vector.h">
+      <Filter>CCS\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\AlternativePlanner.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\ARMBuilder.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\CCS.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\Environment.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\LocalPlanner.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\misc.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\OccupancyGrid.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\Planner.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\Preplanner.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\Robot.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="CCS\planner\Scene.h">
+      <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathSegment.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

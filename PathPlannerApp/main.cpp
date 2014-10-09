@@ -114,9 +114,9 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	pathMaxAngularSpeed = (float)parMsg.values[10];
 	
 	//PathPlanner params
-	sc.SetRTRParameters((int)parMsg.values[11], (float)parMsg.values[12], (float)parMsg.values[13]);
+	sc.SetRTRParameters((int)parMsg.values[11], (float)parMsg.values[12], (float)parMsg.values[13], (float)parMsg.values[14]);
 
-	envFileName = "frame" + to_string((int)parMsg.values[14]) + ".obj";
+	envFileName = "frame" + to_string((int)parMsg.values[15]) + ".obj";
 
 	return true;
 }
@@ -126,7 +126,7 @@ PathPlanner::Scene sc;
 int main()
 {
 	chrono::high_resolution_clock::time_point start, stop;
-	string envFileName = "frame15.obj";
+	string envFileName;
 
 	//Load params from V-REP via ServerApp
 	tcp::iostream s("127.0.0.1",to_string(168));
@@ -140,7 +140,9 @@ int main()
 	else
 	{
 		cout << "Manual Mode" << endl;
-		sc.SetRTRParameters(1000, 0.0f, 1.0f);
+		envFileName = "frame115.obj";
+		//sc.SetRTRParameters(1000, 0.0f, 0.0f, 56); //HIBAS
+		sc.SetRTRParameters(1000, 0.0f, 0.0f, 69);
 	}
 	
 	//Debug
@@ -152,21 +154,17 @@ int main()
 	start = high_resolution_clock::now();
 	sc.PrePlanner();
 	sc.RTRPlanner();
-	
-	vector<PathPlanner::Config> &geoPath = sc.ExtractPath();
-	for (auto &elem : geoPath)
-	{
-		elem.phi = PathPlanner::Angle::Corrigate(elem.phi - PI);
-	}
+	sc.CCSPlanner();
+	stop = high_resolution_clock::now();
+	cout << duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
+
+	vector<PathPlanner::PathSegment> &geoPath = sc.GetCCSPath();
 	PathMessage path_samp_msg;
 	
 	//Calc sampled path
 	setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance, predictLength);
 	profile_top(geoPath, path_samp_msg.path);	
 	path_samp_msg.send(s);
-
-	stop = high_resolution_clock::now();
-	cout << duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
 	//Init path follow
 	vector<PositionTypedef> path_dsp((int)path_samp_msg.path.size());
@@ -183,7 +181,6 @@ int main()
 	PathCtrl_SetRobotPar(&pathFollow, wheelDistance, predictLength);
 	PathCtrl_SetState(&pathFollow, 1);
 
-
 	while (s.good())
 	{
 		CtrlMessage ctrl_out;
@@ -192,7 +189,11 @@ int main()
 		Pos2dMessage rabitPos;
 		PackedMessage info;
 		float leftV = 0,rightV = 0;
-			
+		
+		//Stop when pathfollow disable
+		if (pathFollow.enable == 0)
+			break;
+
 		//Receive robot position
 		pos_in.receive(s);
 		act_pos = pos_in.pos;

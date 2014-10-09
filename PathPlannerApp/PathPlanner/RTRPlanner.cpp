@@ -4,10 +4,72 @@
 #include "Line.h"
 #include "path_planner_funcs.h"
 #include <queue>
-#include <random>
 
 using namespace PathPlanner;
 using namespace std;
+
+void DrawPolygon(Polygon &poly, Visualizer2 &vis, Color col)
+{
+	vector<Point2> ps(poly.ps.size());
+	for (int i = 0; i < poly.ps.size(); i++)
+	{
+		ps[i].set(poly.ps[i].x, poly.ps[i].y);
+	}
+
+	for (int i = 0; i < poly.ps.size() - 1; i++)
+	{
+		vis.addObject(Segment2(ps[i], ps[i+1]), col);
+	}
+	vis.addObject(Segment2(ps.front(), ps.back()), col);
+}
+
+void DrawCI(ConfigInterval &ci, Visualizer2 &vis, Color col)
+{
+	if (ci.type == TranslationCI)
+	{
+		vis.addObject(Segment2(Point2(ci.q0.p.x, ci.q0.p.y), Point2(ci.q1.p.x, ci.q1.p.y)), col);
+	}
+}
+
+void Scene::DrawPath()
+{
+	Visualizer2 vis("path.ps");
+	
+	//Draw field
+	DrawPolygon(field, vis, Color(0.0, 0.0, 1.0, 2.0));
+
+	//Draw obstacles
+	for (auto &elem : envs)
+		DrawPolygon(elem, vis, Color(0.0, 0.0, 1.0, 1.0));
+
+	for (auto &elem : pathCI)
+		DrawCI(elem, vis, Color(0.0, 0.0, 0.0, 4.0)); 
+
+	vis.writeFile();
+}
+
+
+void Scene::DrawScene(int iteration)
+{
+	Visualizer2 vis("scene" + to_string(iteration) + ".ps");
+
+	//Draw field
+	DrawPolygon(field, vis, Color(0.0, 0.0, 1.0, 2.0));
+
+	//Draw obstacles
+	for (auto &elem : envs)
+		DrawPolygon(elem, vis, Color(0.0, 0.0, 1.0, 1.0));
+
+	//Draw start tree TCIs
+	for (auto &elem : startTree.xtree)
+		DrawCI(elem.ci, vis, Color(1.0, 0.0, 0.0, 2.0));
+
+	//Draw goal tree TCIs
+	for (auto &elem : goalTree.xtree)
+		DrawCI(elem.ci, vis, Color(0.0, 1.0, 0.0, 2.0));			
+
+	vis.writeFile();
+}
 
 bool Scene::RTRPlanner()
 {
@@ -18,11 +80,14 @@ bool Scene::RTRPlanner()
 		RTRIteration(true);
 		RTRIteration(false);
 
+		//DrawScene(i);
+
 		if (MergeTreesGetPath())
 			break;
 	}
 
 	OptimizePath();
+	//DrawPath();
 	return true;
 }
 
@@ -140,7 +205,7 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 {
 	//Transform the robot polygon to the world frame
 	Polygon robotShapeWorld = robotShape.TransformToWorld(q);
-	
+
 	//Traverse on obstacles
 	vector<float> forwardPointDist, backwardPointDist;
 	for (int i = 0; i < (int)envsx.size(); i++)
@@ -190,9 +255,16 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 		}
 	}
 
+	//TODO: hibakezelés
 	//Determine the nearest intersection point in forward and backward directions
-	float forwardMinDist = *min_element(forwardPointDist.begin(), forwardPointDist.end());
-	float backwardMinDist = *min_element(backwardPointDist.begin(), backwardPointDist.end());
+
+	float forwardMinDist = 0.0f;
+	if (forwardPointDist.size())
+		forwardMinDist = *min_element(forwardPointDist.begin(), forwardPointDist.end());
+
+	float backwardMinDist = 0.0f;
+	if (backwardPointDist.size())
+		backwardMinDist = *min_element(backwardPointDist.begin(), backwardPointDist.end());
 
 	forwardMinDist = forwardMinDist - min(0.1f*forwardMinDist, EPS);
 	backwardMinDist = backwardMinDist - min(0.1f*backwardMinDist, EPS);
@@ -269,20 +341,19 @@ bool Scene::TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, Co
 			for (int k = 0; k < rob_size; k++) //Traverse on robot's edges
 			{
 				//Collision check of robot polygon cornerpoints with obstacle edges	
-				Point s0(envsx[i].ps[j]);							
-				Point s1(envsx[i].ps[((j + 1) % env_size)]);
+				Line s0(envsx[i].ps[j], envsx[i].ps[((j + 1) % env_size)]);
 				Point p0(robotShapeWorld.ps[k]);
 
-				turnAmount.push_back(maxCollFreeTurnAmountPointVsLineseg(p0, qStart.p, dThetaMax, turnDir, Line(s0, s1)));
+				turnAmount.push_back(maxCollFreeTurnAmountPointVsLineseg(p0, qStart.p, dThetaMax, turnDir, s0));
 				if (turnAmount.back() < dThetaAbs)
 					dThetaAbs = turnAmount.back();
 
 				//Collision check of obstacle cornerpoints with robot polygon edges
-				s0 = robotShapeWorld.ps[k];
-				s1 = robotShapeWorld.ps[((k + 1) % rob_size)];
+				s0.a = robotShapeWorld.ps[k];
+				s0.b = robotShapeWorld.ps[((k + 1) % rob_size)];
 				p0 = envsx[i].ps[j];				 
 
-				turnAmount.push_back(maxCollFreeTurnAmountPointVsLineseg(p0, qStart.p, dThetaMax, -turnDir, Line(s0, s1)));
+				turnAmount.push_back(maxCollFreeTurnAmountPointVsLineseg(p0, qStart.p, dThetaMax, -turnDir, s0));
 				if (turnAmount.back() < dThetaAbs)
 					dThetaAbs = turnAmount.back();
 			}
@@ -312,7 +383,7 @@ float Scene::maxCollFreeTurnAmountPointVsLineseg(Point p, Point center, float dT
 	float radius = sgn(turnDir)*Point::Distance(p, center);
 
 	Point res[2];
-	int ret = circleSegLineSegIntersect(Config(p, startOri), sgn(turnDir)*dThetaMax, radius, s1, res);
+	int ret = circleSegLineSegIntersect(center, startOri, sgn(turnDir)*dThetaMax, radius, s1, res);
 	if (ret == 0) //No collision
 	{
 		return fabs(dThetaMax);
@@ -450,9 +521,10 @@ void Scene::ReversePath(vector<ConfigInterval> &path)
 *
 *   INPUTS:
 *
-*   qStart	-   Starting configuration [x, y, theta]
+*   qStart	-   Starting theta
 *   dtheta	-   Change in the orientation during traversing the circular
 *               segment (signed, positive means CCW motion)
+*	center	-	Center of the circle segment
 *   radius	-   Radius of the circular segment (signed, positive means that
 *               the centerpoint of the circle is on the left side if
 *               looking in direction 'theta' from (x,y)
@@ -464,17 +536,17 @@ void Scene::ReversePath(vector<ConfigInterval> &path)
 *   res		-	Intersection points
 *	return	-	Number of intersections
 */
-int Scene::circleSegLineSegIntersect(Config qStart, float dTheta, float radius, Line s1, Point res[2])
+int Scene::circleSegLineSegIntersect(Point center, float angleStart, float dTheta, float radius, Line s1, Point res[2])
 {
-	Point center(qStart.p.x - radius*sinf(qStart.phi), qStart.p.y + radius*cosf(qStart.phi));
+	//Point center(qStart.p.x - radius*sinf(qStart.phi), qStart.p.y + radius*cosf(qStart.phi));
 	Point resI[2];
-	Config q1(s1.a, Point::atan2(s1.b, s1.a));
+	//Config q1(s1.a, Point::atan2(s1.b, s1.a));
 
-	if (!Line::CircleLineIntersect(q1, fabs(radius), center, resI[0], resI[1]))
+	if (!Line::CircleLineIntersect(s1, fabs(radius), center, resI[0], resI[1]))
 		return 0; 
 
 	int interNum = 0;
-	float startAngle = Angle::Corrigate(qStart.phi - sgn(radius)*PI*0.5f);
+	float startAngle = Angle::Corrigate(angleStart - sgn(radius)*PI*0.5f);
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -561,11 +633,6 @@ bool Scene::tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigI
 	return false;
 }
 
-//random_device rd;
-//default_random_engine generator(10); //követés rossz, saroknál nagyot kanyarodik
-//default_random_engine generator(11); //gyanus, hogy a tervezés nem tök jó
-default_random_engine generator(16);
-	
 Point Scene::GetGuidePoint(bool startPoint)	
 {
 	uniform_real_distribution<float> distribution(0.0f, 1.0f);
@@ -678,16 +745,17 @@ void Scene::PathTCIExtension(vector<ConfigInterval> &pathExt)
 	}
 }
 
-vector<Config>& Scene::ExtractPath()
+vector<Config> Scene::ExtractPath(int interpolate)
 {
+	vector<Config> pathC;
 	pathC.push_back(pathCI.front().q0);
 
 	for (vector<ConfigInterval>::iterator it = pathCI.begin(); it != pathCI.end(); ++it)
 	{
 		if (it->type == TranslationCI)
 		{
-			for (int i = 1; i < 100; i++)
-				pathC.push_back(Config((it->q1.p*i/(100.0f) + it->q0.p*(100.0f - i)/(100.0f)), it->q0.phi));
+			for (int i = 1; i < interpolate; i++)
+				pathC.push_back(Config((it->q1.p*i/((float)interpolate) + it->q0.p*((float)interpolate - i)/((float)interpolate)), it->q0.phi));
 		}
 		pathC.push_back(it->q1);
 	}

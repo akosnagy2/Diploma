@@ -45,6 +45,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\..\..\..\Program Files %28x86%29\V-REP3\V-REP_PRO_EDU\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -53,8 +54,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\TinyObjLoader;C:\BME\Diploma\Libs\Fade2D\include_fade2d;C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution\PathPlannerApp\CCS\planner;C:\BME\Diploma\Src\RobotSolution\PathPlannerApp\CCS\geometry;C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\TinyObjLoader;C:\BME\Diploma\Libs\Fade2D\include_fade2d;C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -72,7 +74,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\jsoncpp-src-0.6.0-rc2\include;C:\BME\Diploma\Libs\TinyObjLoader;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution\PathPlannerApp\CCS\planner;C:\BME\Diploma\Src\RobotSolution\PathPlannerApp\CCS\geometry;C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\jsoncpp-src-0.6.0-rc2\include;C:\BME\Diploma\Libs\TinyObjLoader;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -89,13 +92,34 @@
     <ClCompile Include="..\PackedMessage.cpp" />
     <ClCompile Include="..\PathMessage.cpp" />
     <ClCompile Include="..\Pos2dMessage.cpp" />
+    <ClCompile Include="CCS\geometry\Arc.cpp" />
+    <ClCompile Include="CCS\geometry\Circle.cpp" />
+    <ClCompile Include="CCS\geometry\Configuration.cpp" />
+    <ClCompile Include="CCS\geometry\Line.cpp" />
+    <ClCompile Include="CCS\geometry\Path.cpp" />
+    <ClCompile Include="CCS\geometry\Point.cpp" />
+    <ClCompile Include="CCS\geometry\Rectangle.cpp" />
+    <ClCompile Include="CCS\geometry\Segment.cpp" />
+    <ClCompile Include="CCS\geometry\Shape.cpp" />
+    <ClCompile Include="CCS\geometry\Triangle.cpp" />
+    <ClCompile Include="CCS\geometry\Vector.cpp" />
+    <ClCompile Include="CCS\planner\AlternativePlanner.cpp" />
+    <ClCompile Include="CCS\planner\ARMBuilder.cpp" />
+    <ClCompile Include="CCS\planner\CCS.cpp" />
+    <ClCompile Include="CCS\planner\Environment.cpp" />
+    <ClCompile Include="CCS\planner\LocalPlanner.cpp" />
+    <ClCompile Include="CCS\planner\misc.cpp" />
+    <ClCompile Include="CCS\planner\OccupancyGrid.cpp" />
+    <ClCompile Include="CCS\planner\Planner.cpp" />
+    <ClCompile Include="CCS\planner\Preplanner.cpp" />
+    <ClCompile Include="CCS\planner\Robot.cpp" />
+    <ClCompile Include="CCS\planner\Scene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PathFollow\dcwheel_pathCtrl.c" />
     <ClCompile Include="PathPlanner\Angle.cpp" />
     <ClCompile Include="PathPlanner\Config.cpp" />
     <ClCompile Include="PathPlanner\ConfigInterval.cpp" />
     <ClCompile Include="PathPlanner\Line.cpp" />
-    <ClCompile Include="PathPlanner\path_planner.cpp" />
     <ClCompile Include="PathPlanner\path_planner_funcs.cpp" />
     <ClCompile Include="PathPlanner\Polygon.cpp" />
     <ClCompile Include="PathPlanner\PrePlanner.cpp" />
@@ -112,12 +136,33 @@
     <ClInclude Include="..\PackedMessage.h" />
     <ClInclude Include="..\PathMessage.h" />
     <ClInclude Include="..\Pos2dMessage.h" />
+    <ClInclude Include="CCS\geometry\Arc.h" />
+    <ClInclude Include="CCS\geometry\Circle.h" />
+    <ClInclude Include="CCS\geometry\Configuration.h" />
+    <ClInclude Include="CCS\geometry\Line.h" />
+    <ClInclude Include="CCS\geometry\Path.h" />
+    <ClInclude Include="CCS\geometry\Point.h" />
+    <ClInclude Include="CCS\geometry\Rectangle.h" />
+    <ClInclude Include="CCS\geometry\Segment.h" />
+    <ClInclude Include="CCS\geometry\Shape.h" />
+    <ClInclude Include="CCS\geometry\Triangle.h" />
+    <ClInclude Include="CCS\geometry\Vector.h" />
+    <ClInclude Include="CCS\planner\AlternativePlanner.h" />
+    <ClInclude Include="CCS\planner\ARMBuilder.h" />
+    <ClInclude Include="CCS\planner\CCS.h" />
+    <ClInclude Include="CCS\planner\Environment.h" />
+    <ClInclude Include="CCS\planner\LocalPlanner.h" />
+    <ClInclude Include="CCS\planner\misc.h" />
+    <ClInclude Include="CCS\planner\OccupancyGrid.h" />
+    <ClInclude Include="CCS\planner\Planner.h" />
+    <ClInclude Include="CCS\planner\Preplanner.h" />
+    <ClInclude Include="CCS\planner\Robot.h" />
+    <ClInclude Include="CCS\planner\Scene.h" />
     <ClInclude Include="PathFollow\dcwheel_pathCtrl.h" />
     <ClInclude Include="PathPlanner\Angle.h" />
     <ClInclude Include="PathPlanner\Config.h" />
     <ClInclude Include="PathPlanner\ConfigInterval.h" />
     <ClInclude Include="PathPlanner\Line.h" />
-    <ClInclude Include="PathPlanner\path_planner.h" />
     <ClInclude Include="PathPlanner\path_planner_funcs.h" />
     <ClInclude Include="PathPlanner\Point.h" />
     <ClInclude Include="PathPlanner\Polygon.h" />
@@ -127,6 +172,7 @@
     <ClInclude Include="PathProfile\path_profile.h" />
     <ClInclude Include="PathProfile\path_profile_funcs.h" />
     <ClInclude Include="PathProfile\path_profile_top.h" />
+    <ClInclude Include="PathSegment.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

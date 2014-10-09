@@ -17,7 +17,7 @@ namespace PathPlanner
 		static bool LineSegmentIntersection(Config q1, Line s1, Point &intersect);
 		static bool LineLineIntersection(Line l1, Line l2, Point &intersect);
 		static int CircleLineIntersect(Line l1, float radius, Point center, Point &res0, Point &res1);
-		static int CircleLineIntersect(Config q1, float radius, Point center, Point &res0, Point &res1);
+		//static int CircleLineIntersect(Config q1, float radius, Point center, Point &res0, Point &res1);
 
 		Point a;
 		Point b;
