@@ -50,6 +50,7 @@ typedef struct
 	float iterationMax;
 	float fixPathProb;
 	float roadmapProb;
+	float randSeed;
 	float envFile;
 } PathPlannerParamsTypedef;
 
@@ -251,6 +252,7 @@ void ForwardPathPlannerPars(tcp::iostream &client, PathPlannerParamsTypedef &par
 	pathMsg.values.push_back(pars.iterationMax);
 	pathMsg.values.push_back(pars.fixPathProb);
 	pathMsg.values.push_back(pars.roadmapProb);
+	pathMsg.values.push_back(pars.randSeed);
 	pathMsg.values.push_back(pars.envFile);
 
 	pathMsg.send(client);
@@ -263,6 +265,7 @@ void ParsePathPlannerPars(deque<float> &parsIn, PathPlannerParamsTypedef &parsOu
 	parsOut.iterationMax = parsIn.front(); parsIn.pop_front();
 	parsOut.fixPathProb = parsIn.front(); parsIn.pop_front();
 	parsOut.roadmapProb = parsIn.front(); parsIn.pop_front();
+	parsOut.randSeed = parsIn.front(); parsIn.pop_front();
 
 	parsOut.envFile = parsIn.front(); parsIn.pop_front();
 }
@@ -296,9 +299,12 @@ void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &co
 		pos_msg.send(client);
 
 		//Receive result from PathFollow Client
-		ctrl_msg.receive(client);	
-		rabit_msg.receive(client);
-		info_msg.receive(client);
+		if (!ctrl_msg.receive(client))
+			break;
+		if (!rabit_msg.receive(client))
+			break;
+		if (!info_msg.receive(client))
+			break;
 
 		//Apply motor models
 		ModelMotors(leftSpeed, rightSpeed,(float)ctrl_msg.ctrl_sig[0], (float)ctrl_msg.ctrl_sig[1], followPars.LeftMotor, followPars.RightMotor, followPars);
