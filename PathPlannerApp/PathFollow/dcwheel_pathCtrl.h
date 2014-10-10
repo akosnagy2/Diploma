@@ -6,16 +6,20 @@ extern "C" {
 #endif
 
 
-#include "Position.h"
 #include <stdint.h>
-/*
-typedef struct{
+
+typedef struct
+{
 	float	x;
 	float	y;
 	float	phi;
 } PositionTypedef;
-*/
-#define PositionTypedef Position
+
+typedef enum
+{
+	FORWARD,
+	BACKWARD
+} DirectionTypedef;
 
 typedef enum {
 	STATE_INIT,
@@ -24,15 +28,25 @@ typedef enum {
 	STATE_TURN
 } StateTypedef;
 
-typedef struct{
+typedef struct
+{
+	PositionTypedef*    path;
+	uint16_t			path_len;
+	DirectionTypedef	dir;
+} PathSegmentTypedef;
+
+typedef struct
+{
 	//Common
 	float				sample_s;
 	uint16_t			timer_index;
 	uint16_t			enable;
 	void 				(*function)();
 	//PathFollow
-	uint16_t			predictLength;
+	float				predictLength;
+	int16_t				predictSampleLength;
 	uint32_t			timeIndex;
+	uint32_t			segmentIndex;
 	float				distParP;
 	float				distParD;
 	float				distParI;
@@ -52,8 +66,8 @@ typedef struct{
 	float				maxBeta;
 	float				maxW;
 	//Path
-	PositionTypedef*    path;
-	uint16_t			path_len;
+	PathSegmentTypedef* pathSegments;
+	uint16_t			pathSegmentsLen;
 	void				(*pathStop)();
 	StateTypedef		state;
 	uint16_t			brake;
@@ -71,7 +85,7 @@ void PathCtrl_BBXReset(volatile PathCtrlTypedef* ctrl);
 
 void PathCtrl_SetPars(volatile PathCtrlTypedef* ctrl, float distP, float distD, float oriP, float oriD);
 void PathCtrl_SetRobotPar(volatile PathCtrlTypedef* ctrl, float robotWheelDist, float predictLength);
-void PathCtrl_SetPath(volatile PathCtrlTypedef* ctrl, PositionTypedef* path, uint16_t path_len);
+void PathCtrl_SetPathSegments(volatile PathCtrlTypedef* ctrl, PathSegmentTypedef* pathSegments, uint16_t pathSegmentsLength);
 void PathCtrl_SetState(volatile PathCtrlTypedef* ctrl, uint16_t start);
 
 //Loop

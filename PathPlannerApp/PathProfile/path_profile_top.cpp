@@ -27,7 +27,7 @@ float robotWheelBase;
 int predictLen;
 
 static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vector<int> &segment);
-static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Config &result);
+static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Config &result, bool first);
 static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, Config &result, bool &start, std::vector<int> &segment);
 static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::vector<int> &segment);
 static int checkBack_backLimit(Profile &prof, int front_limit, int &back_limit, float &deltaV, float deltaS);
@@ -190,9 +190,11 @@ static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vecto
 	}
 
 	//Generate path points after last geometric point
+	bool first = true;
 	for (; i < length; i++)
 	{
-		generatePathPointEnd(geoProf, sampProf, i, result);
+		generatePathPointEnd(geoProf, sampProf, i, result, first);
+		first = false;
 		sampProf.AddPoint(result);
 		errorS = -1.0f;
 	}
@@ -202,11 +204,10 @@ static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vecto
 	return errorS;
 }
 
-static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Config &result)
+static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Config &result, bool first)
 {
 	int length = geoProf.path.size();
 	Config res0, res1;
-	static bool first = true;
 
 	if (Line::CircleLineIntersect(Line(sampProf.path[i-1].p, geoProf.path[length - 1].p), sampProf.deltaSc[i-1], sampProf.path[i-1].p, res0.p, res1.p)) //Interpolate with line
 	//if (circleLineIntersect_opt(sampProf.path[i-1].p,geoProf.path[length - 1].p,sampProf.deltaSc[i-1],sampProf.path[i-1].p,res0.p,res1.p)) //Interpolate with line
@@ -242,7 +243,7 @@ static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, Config 
 				continue;
 		}
 
-		if (fabs(geoProf.c[l]) == 0.0)	//Interpolate with line
+		if (fabs(geoProf.c[l]) <= C_EPS)	//Interpolate with line
 		{
 			if (Line::CircleLineIntersect(Line(segStart, segEnd), rad, center, res0.p, res1.p))
 			{
@@ -739,9 +740,9 @@ void JoinProfiles(std::vector<Profile> &profs, Profile &out)
 	}
 }
 
-void profile_top(std::vector<PathSegment> &path, std::vector<Config> &resPath)
+void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath)
 {
-	std::ofstream logfile("logFile.txt", ios_base::app);
+	ofstream logfile("logFile.txt", ios_base::app);
 	logfile << "Time parameterized path generation started " << boost::posix_time::second_clock::local_time().date() << " " << boost::posix_time::second_clock::local_time().time_of_day() << endl;
 	logfile << "Robot parameters:" << endl;
 	logfile << "Robot wheel base: " << robotWheelBase << " m" << endl;
@@ -752,21 +753,23 @@ void profile_top(std::vector<PathSegment> &path, std::vector<Config> &resPath)
 
 	vector<Profile> geoProfiles;
 	vector<Profile> sampProfiles;
-	for (auto p : path)
+	for (vector<PathSegment>::iterator it = path.begin(); it != path.end(); ++it)
 	{
-		Profile geoProfileSegment(p.path);
-		geoProfileSegment.c = p.curvature;
+		Profile geoProfileSegment(it->path);
+		geoProfileSegment.c = it->curvature;
 
-		Profile &sampProfileSegment = profile(geoProfileSegment, p.direction, logfile);
+		Profile &sampProfileSegment = profile(geoProfileSegment, it->direction, logfile);
 		
 		geoProfiles.push_back(geoProfileSegment);
 		sampProfiles.push_back(sampProfileSegment);
 
-		resPath.insert(resPath.end(), sampProfileSegment.path.begin(), sampProfileSegment.path.end());
-		Config p = sampProfileSegment.path.back();
-		p.phi = 1000.0f;
-		for (int j = 0; j < predictLen; j++)
-			resPath.insert(resPath.end(), p);
+		PathSegment ps;
+		ps.direction = it->direction;
+		ps.path = sampProfileSegment.path;
+		resultPath.push_back(ps);
+
+		if (it + 1 != path.end())
+			(it+1)->path.front().p = sampProfileSegment.path.back().p;
 	}
 
 	Profile geoSum("Geometric");

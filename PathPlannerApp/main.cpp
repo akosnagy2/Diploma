@@ -13,7 +13,7 @@ using namespace std;
 using namespace std::chrono;
 using boost::asio::ip::tcp;
 
-int predictLength = 5;
+float predictLength = 10.0f;
 float distPar_P = 0.0f;
 float distPar_D = 1.1f;
 float oriPar_P = 0.1f;
@@ -101,7 +101,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	parMsg.receive(s);	
 	
 	//PathProfile, PathFollow params
-	predictLength = (int)parMsg.values[0];
+	predictLength = (float)parMsg.values[0];
 	distPar_P = (float)parMsg.values[1];
 	distPar_D = (float)parMsg.values[2];
 	oriPar_P = (float)parMsg.values[3];
@@ -142,7 +142,7 @@ int main()
 		cout << "Manual Mode" << endl;
 		envFileName = "frame115.obj";
 		//sc.SetRTRParameters(1000, 0.0f, 0.0f, 56); //HIBAS
-		sc.SetRTRParameters(1000, 0.0f, 0.0f, 69);
+		sc.SetRTRParameters(1000, 0.0f, 0.0f, 50);
 	}
 	
 	//Debug
@@ -159,25 +159,44 @@ int main()
 	cout << duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
 	vector<PathPlanner::PathSegment> &geoPath = sc.GetCCSPath();
-	PathMessage path_samp_msg;
+	vector<PathPlanner::PathSegment> sampPath;
+	PathMessage vrepPath;
 	
 	//Calc sampled path
 	setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance, predictLength);
-	profile_top(geoPath, path_samp_msg.path);	
-	path_samp_msg.send(s);
+	profile_top(geoPath, sampPath);	
+	
+	//Send back to V-REP
+	for (auto &e : sampPath)
+		vrepPath.path.insert(vrepPath.path.end(), e.path.begin(), e.path.end()); 
+	vrepPath.send(s);
 
-	//Init path follow
-	vector<PositionTypedef> path_dsp((int)path_samp_msg.path.size());
-	for (int i = 0; i < (int)path_samp_msg.path.size(); i++)
+	//Convert Sampled PathSegments to PathFollow PathSegments
+	vector<vector<PositionTypedef>> path_dsp_points;
+	vector<PathSegmentTypedef> path_dsp;
+	for (auto &ps : sampPath)
 	{
-		path_dsp[i].x = path_samp_msg.path[i].p.x;
-		path_dsp[i].y = path_samp_msg.path[i].p.y;
-		path_dsp[i].phi = path_samp_msg.path[i].phi;
+		vector<PositionTypedef> pathDSP;
+		for (auto &p : ps.path) //All points in a path segment
+		{
+			PositionTypedef pointDSP;
+			pointDSP.x = p.p.x;
+			pointDSP.y = p.p.y;
+			pointDSP.phi = p.phi;
+			pathDSP.push_back(pointDSP);
+		}
+		path_dsp_points.push_back(pathDSP);
+		PathSegmentTypedef segmentDSP;
+		segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
+		segmentDSP.path = path_dsp_points.back()._Myfirst;
+		segmentDSP.path_len = (uint16_t)path_dsp_points.back().size();
+		path_dsp.push_back(segmentDSP);
 	}
+
 	PathCtrlTypedef pathFollow;
 	PathCtrl_Init(&pathFollow, 0, 2*pathMaxAccel/wheelDistance,pathMaxAngularSpeed, (timeStep*1000), 0, 0);
 	PathCtrl_SetPars(&pathFollow, distPar_P,distPar_D,oriPar_P,oriPar_D);
-	PathCtrl_SetPath(&pathFollow, path_dsp._Myfirst, path_dsp.size());
+	PathCtrl_SetPathSegments(&pathFollow, path_dsp._Myfirst, path_dsp.size());
 	PathCtrl_SetRobotPar(&pathFollow, wheelDistance, predictLength);
 	PathCtrl_SetState(&pathFollow, 1);
 
@@ -212,8 +231,8 @@ int main()
 		PathCtrl_Loop(&pathFollow, &leftV, &rightV);
 
 		//Info
-		info.values.push_back(0.0f);
-		info.values.push_back(0.0f);				
+		info.values.push_back(pathFollow.distError);
+		info.values.push_back(pathFollow.predictSampleLength);				
 			
 		//Robot motors control signals
 		ctrl_out.ctrl_sig.push_back(leftV);

@@ -27,7 +27,7 @@ uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, flo
 	ctrl->enable = DISABLE;
 	ctrl->sample_s = ((float)sample_ms) / 1000.0f;
 
-	ctrl->path_len = 0;
+	ctrl->pathSegmentsLen = 0;
 	ctrl->pathStop = pathStopFunction;
 
 	ctrl->maxBeta = maxBeta;
@@ -69,15 +69,15 @@ void PathCtrl_SetPars(volatile PathCtrlTypedef* ctrl, float distP, float distD, 
 	ctrl->oriParD = oriD;
 }
 
-void PathCtrl_SetPath(volatile PathCtrlTypedef* ctrl, PositionTypedef* path, uint16_t path_len)
+void PathCtrl_SetPathSegments(volatile PathCtrlTypedef* ctrl, PathSegmentTypedef* pathSegments, uint16_t pathSegmentsLength)
 {
-	ctrl->path = path;
-	ctrl->path_len = path_len;
+	ctrl->pathSegments = pathSegments;
+	ctrl->pathSegmentsLen = pathSegmentsLength;
 }
 
 void PathCtrl_SetState(volatile PathCtrlTypedef* ctrl, uint16_t start)
 {
-	if (ctrl->path_len == 0) //No path, disable Path Ctrl
+	if (ctrl->pathSegmentsLen == 0) //No path, disable Path Ctrl
 		start = DISABLE; //TODO: inkább return
 
 	ctrl->enable = start;
@@ -95,6 +95,7 @@ void PathCtrl_SetState(volatile PathCtrlTypedef* ctrl, uint16_t start)
 		//cntrl_timer_stop(ctrl->timer_index);
 
 		ctrl->timeIndex = 0;
+		ctrl->segmentIndex = 0;
 		ctrl->distError = 0.0;
 		ctrl->distPrevError = 0.0;
 		ctrl->robotPrevVel = 0.0;
@@ -214,18 +215,68 @@ static uint16_t turnLoop(volatile PathCtrlTypedef* ctrl, float destTheta)
 	return ret;
 }
 
-static void pathLoop(volatile PathCtrlTypedef* ctrl, uint16_t backward)
+static void GetEndPosition(PositionTypedef a, PositionTypedef b, float radius, PositionTypedef center, PositionTypedef *res, PositionTypedef robot)
 {
-	if (backward)
+	//http://mathworld.wolfram.com/Circle-LineIntersection.html
+	float dx, dy, dr, disc, sgn;
+	PositionTypedef r0, r1;
+	int ret;
+
+	//Transform to (0,0)
+	a.x -= center.x;
+	a.y -= center.y;
+
+	dx = -a.x;
+	dy = -a.y;
+	dr = sqrtf(dx*dx + dy*dy);
+
+	//No intersection
+	{
+		sgn = ((dy < 0.0f) ? -1.0f : 1.0f);
+		r0.x =  sgn*dx*radius;
+		r1.x =  -sgn*dx*radius;
+		r0.x /= (dr);
+		r1.x /= (dr);
+
+		r0.y = fabs(dy)*radius;
+		r1.y = -fabs(dy)*radius;
+		r0.y /= (dr);
+		r1.y /= (dr);
+
+		ret = 2;
+	}
+
+	//Transform back to center
+	r0.x += center.x;
+	r0.y += center.y;
+	r1.x += center.x;
+	r1.y += center.y;
+
+	a.x += center.x;
+	a.y += center.y;
+
+	//Decide two intersection
+	if (getDistance(a, r0) > getDistance(a, r1))
+		*res = r0;
+	else
+		*res = r1;
+}
+
+static void pathLoop(volatile PathCtrlTypedef* ctrl)
+{
+	PositionTypedef ref, a, b;
+	float predictionDist;
+	float rad;
+	if (ctrl->pathSegments[ctrl->segmentIndex].dir == BACKWARD)
 	{
 		ctrl->robotPrevVel *= -1.0f;
 	}
 	//Robot velocity
-	ctrl->robotVel = getDistance(ctrl->path[ctrl->timeIndex], ctrl->path[ctrl->timeIndex + 1]);
+	ctrl->robotVel = getDistance(ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->timeIndex], ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->timeIndex + 1]);
 	ctrl->robotVel += ctrl->distError * ctrl->distParP + (ctrl->distError - ctrl->distPrevError) * ctrl->distParD + ctrl->pathSumDist * ctrl->distParI ; //TODO: nem mûködik jól!!!!!!!
 	ctrl->robotVel = 2.0 * ctrl->robotVel/ctrl->sample_s - ctrl->robotPrevVel;
 
-	if (backward)
+	if (ctrl->pathSegments[ctrl->segmentIndex].dir == BACKWARD)
 	{
 		ctrl->robotPos.phi += PI;
 		corrigateAngle((float*)&ctrl->robotPos.phi, 0);
@@ -236,7 +287,21 @@ static void pathLoop(volatile PathCtrlTypedef* ctrl, uint16_t backward)
 		//bbx_print("|n|%d|v|%d\r\n", ctrl->robot_speed_index, (long)(ctrl->robotVel));
 
 	//Robot angular velocity
-	ctrl->robotAngVel = getDirection(ctrl->robotPos, ctrl->path[ctrl->timeIndex + ctrl->predictLength]);
+	predictionDist = getDistance(ctrl->robotPos, ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->timeIndex + ctrl->predictSampleLength]);
+	if (predictionDist < ctrl->predictLength)
+	{
+		a = ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->pathSegments[ctrl->segmentIndex].path_len - 2];
+		b = ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->pathSegments[ctrl->segmentIndex].path_len - 1];
+
+		rad = (ctrl->predictLength - predictionDist);
+		GetEndPosition(a, b, rad, b, &ref, ctrl->robotPos);
+	}
+	else
+	{
+		ref = ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->timeIndex + ctrl->predictSampleLength];
+	}
+	
+	ctrl->robotAngVel = getDirection(ctrl->robotPos, ref);
 	ctrl->robotAngVel -= ctrl->robotPos.phi;
 
 	corrigateAngle((float*)&ctrl->robotAngVel, 0);
@@ -250,7 +315,7 @@ static void pathLoop(volatile PathCtrlTypedef* ctrl, uint16_t backward)
 		ctrl->robotAngVel = -PI;
 
 	ctrl->robotAngVel /= ctrl->sample_s;
-
+	
 	//if (ctrl->robot_angspeed_index)
 		//bbx_print("|n|%d|v|%d\r\n", ctrl->robot_angspeed_index, (long)(ctrl->robotAngVel));
 }
@@ -258,23 +323,18 @@ static void pathLoop(volatile PathCtrlTypedef* ctrl, uint16_t backward)
 void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 {
 	int16_t v_left, v_right;
-	static int16_t count = 0;
 
 	if (ctrl->enable == DISABLE)
 		return;
 
-	//Path ending
-	if((ctrl->timeIndex + ctrl->predictLength) >= (ctrl->path_len - 1))
-	{
-		PathCtrl_SetState(ctrl, DISABLE);
-		*leftV = 0.0f;
-		*rightV = 0.0f;
-		//ctrl->pathStop();
-		return;
-	}
+	//Set predict length 
+	ctrl->predictSampleLength = 1;
+	while (((ctrl->timeIndex + ctrl->predictSampleLength) < ctrl->pathSegments[ctrl->segmentIndex].path_len - 1) && (getDistance(ctrl->robotPos, 
+					   ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->timeIndex + ctrl->predictSampleLength]) < ctrl->predictLength))
+		ctrl->predictSampleLength++;
 
 	//Tracking error
-	ctrl->distError = getDistance(ctrl->robotPos, ctrl->path[ctrl->timeIndex]);
+	ctrl->distError = getDistance(ctrl->robotPos, ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->timeIndex]);
 	ctrl->pathSumDist += ctrl->distError;
 
 	switch (ctrl->state)
@@ -283,37 +343,30 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 			ctrl->robotVel = 0.0;
 			ctrl->robotAngVel = 0.0;
 			ctrl->brake = 0;
-			ctrl->predictLength += 10;
-			count = 10;
-
-			if (ctrl->path[ctrl->timeIndex + 1].phi == 1000.0)
-				ctrl->state = STATE_TURN;
-			else
-				ctrl->state = STATE_PATHFOLLOW;
+			ctrl->state = STATE_PATHFOLLOW;
 			break;
 
 		case STATE_PATHFOLLOW:
-			if (ctrl->path[ctrl->timeIndex + 2].phi == 1000.0)
+			if (ctrl->timeIndex + 1 == ctrl->pathSegments[ctrl->segmentIndex].path_len)
 			{
 				ctrl->state = STATE_PRE_STOP;			
 				ctrl->robotVel = 0.0;
 				ctrl->robotAngVel = 0.0;
-				ctrl->timeIndex++;	
+				ctrl->timeIndex = 0;	
+				ctrl->segmentIndex++;
+				if (ctrl->segmentIndex == ctrl->pathSegmentsLen)
+				{
+					PathCtrl_SetState(ctrl, DISABLE);
+					*leftV = 0.0f;
+					*rightV = 0.0f;
+					//ctrl->pathStop();
+					return;
+				}
 				break;				
 			}
 
-			//Forward/backward path following
-			if (ctrl->path[ctrl->timeIndex + 1].phi > 1.5f*PI)
-				pathLoop(ctrl, 1);
-			else
-				pathLoop(ctrl, 0);
-			
-			//Reset predict length
-			if (count > 0)
-			{
-				count--;
-				ctrl->predictLength--;
-			}
+			//Path following
+			pathLoop(ctrl);
 			ctrl->timeIndex++;			
 			break;
 
@@ -324,10 +377,9 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 			break;
 
 		case STATE_TURN:
-			if (turnLoop(ctrl, ctrl->path[ctrl->timeIndex + ctrl->predictLength+1].phi))
+			if (turnLoop(ctrl, ctrl->pathSegments[ctrl->segmentIndex].path[0].phi))
 			{ 
 				ctrl->state = STATE_INIT;
-				ctrl->timeIndex += ctrl->predictLength + 1;
 			}
 			break;
 	}
