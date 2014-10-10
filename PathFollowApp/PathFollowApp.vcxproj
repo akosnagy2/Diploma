@@ -83,6 +83,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CarLineFollower.cpp" />
+    <ClCompile Include="CarPathController.cpp" />
+    <ClCompile Include="CarSpeedController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PathFollow\dcwheel_pathCtrl.c" />
     <ClCompile Include="PathProfile\path_profile.cpp" />
@@ -90,6 +93,9 @@
     <ClCompile Include="PathProfile\path_profile_top.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CarLineFollower.h" />
+    <ClInclude Include="CarPathController.h" />
+    <ClInclude Include="CarSpeedController.h" />
     <ClInclude Include="pathfollow.h" />
     <ClInclude Include="PathFollow\dcwheel_pathCtrl.h" />
     <ClInclude Include="PathProfile\path_profile.h" />

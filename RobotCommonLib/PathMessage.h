@@ -3,13 +3,14 @@
 
 #include "PackedMessage.h"
 #include "Position.h"
+#include <vector>
 
 #define PATHMESSAGE_TYPE_CODE "PATH"
 
 class PathMessage
 {
 public:
-	vector<Position> path;
+	std::vector<Position> path;
 
 	PathMessage()
 	{};

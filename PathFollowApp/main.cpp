@@ -83,12 +83,6 @@ void LoadPathFromTCP(tcp::iostream &s)
 	robotData.setWheelDistance(wheelDistance);
 
 	path_geo_msg.receive(s);
-
-	//std::ofstream pathfile("path.txt", ios_base::app);
-	//for (int i = 0; i < path_geo_msg.path.size(); i++) {
-	//	pathfile << path_geo_msg.path[i].x << " " << path_geo_msg.path[i].y << endl;
-	//}
-	//pathfile.close();
 }
 
 int main()

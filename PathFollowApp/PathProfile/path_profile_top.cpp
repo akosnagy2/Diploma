@@ -535,7 +535,7 @@ static void generateVelocityProfile_car(Profile &prof)
 			prof.v[i + 1] = Vmax[i + 1];
 
 			//Check accel. constraints backward
-			correctAccelBackward(prof, Vmax, prof.deltaSc, acp, ratioMax, i - 1);
+			correctAccelBackward(prof, Vmax, prof.deltaSc, acp, ratioMax, i);
 		}
 		i++;
 	}

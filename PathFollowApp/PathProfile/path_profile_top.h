@@ -12,7 +12,7 @@
 #include "path_profile.h"
 #include "CarLikeRobot.h"
 
-#define SAVE_PROFILE false
+#define SAVE_PROFILE true
 
 void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase, int _predictLen);
 void setCarLimits(CarLikeRobot* pR, float _maxV, float _maxA, float _maxAt, float _sampleT, float _predictLen);
