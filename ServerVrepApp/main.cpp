@@ -286,6 +286,8 @@ int main(int argc,char* argv[])
 		float robotAngularSpeed;
 		float robotSpeed;
 		float prevRobotSpeed = 0.0f;
+#else
+		bool init = true;
 #endif
 		PathMessage path;
 
@@ -329,15 +331,25 @@ int main(int argc,char* argv[])
 			//Receive robot position from V-Rep Client
 			if (ReceiveRobotPosition(connection, leftJointPos, rightJointPos, robotPos) == -1)
 				break;
+
+#ifdef CAR_LIKE_ROBOT
+			if(init) {
+				init = false;
+				carData.setPosition(robotPos);
+			}
+#endif
 				
 			//Send robot position to the PathFollow Client
 			pos_msg.pos = robotPos;
 			pos_msg.send(path_s);
 
 			//Receive result from PathFollow Client
-			ctrl_msg.receive(path_s);	
-			rabit_msg.receive(path_s);
-			info_msg.receive(path_s);
+			if(!ctrl_msg.receive(path_s))
+				break;	
+			if(!rabit_msg.receive(path_s))
+				break;
+			if(!info_msg.receive(path_s))
+				break;
 
 #ifndef CAR_LIKE_ROBOT
 			//Apply motor models

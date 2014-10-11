@@ -30,6 +30,7 @@ public:
 		this->steervMax = steervMax;
 		this->timeStep = timeStep;
 	}
+	void setPosition(Position pos) { position = pos; }
 
 	/* Model */
 	void modelRobot(float v, float fi);
