@@ -2,13 +2,14 @@
 #define _CTRLMESSAGE__
 
 #include "PackedMessage.h"
+#include <vector>
 
 #define CTRLMESSAGE_TYPE_CODE "CTRL"
 
 class CtrlMessage
 {
 public:
-	vector<double> ctrl_sig;
+	std::vector<double> ctrl_sig;
 	int src, subj;
 
 	CtrlMessage() 

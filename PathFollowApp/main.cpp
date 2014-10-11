@@ -7,7 +7,11 @@
 #include "PathMessage.h"
 #include "PathFollow\dcwheel_pathCtrl.h"
 #include "PathProfile\path_profile_top.h"
+
 #include "CarLikeRobot.h"
+#include "CarLineFollower.h"
+#include "CarPathController.h"
+#include "CarSpeedController.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -25,6 +29,8 @@ float distPar_P = 0.0f;
 float distPar_D = 1.1f;
 float oriPar_P = 0.1f;
 float oriPar_D = 0.15f;
+float lineW0 = 2.0f;
+float lineKsi = 1.0f;
 float timeStep = 0.1f;
 float wheelDistance = 254.0f;
 float pathMaxSpeed = 500.0f;
@@ -69,18 +75,23 @@ void LoadPathFromTCP(tcp::iostream &s)
 	predictLength = (int)parMsg.values[0];
 	distPar_P = (float)parMsg.values[1];
 	distPar_D = (float)parMsg.values[2];
+#ifndef CAR_LIKE_ROBOT
 	oriPar_P = (float)parMsg.values[3];
 	oriPar_D = (float)parMsg.values[4];
+#else
+	lineW0 = (float) parMsg.values[3];
+	lineKsi = (float) parMsg.values[4];
+#endif
 	timeStep = (float)parMsg.values[5];
 	wheelDistance = (float)parMsg.values[6];
 	pathMaxSpeed = (float)parMsg.values[7];
 	pathMaxAccel = (float)parMsg.values[8];
-	pathMaxTangentAccel = (float)parMsg.values[9];
-	pathMaxAngularSpeed = (float)parMsg.values[10];
 
-	robotData.setAxisDistance((float)parMsg.values[11]);
-	robotData.setFiMax((float)parMsg.values[12]);
+#ifdef CAR_LIKE_ROBOT
+	robotData.setAxisDistance((float)parMsg.values[9]);
+	robotData.setFiMax((float)parMsg.values[10]);
 	robotData.setWheelDistance(wheelDistance);
+#endif
 
 	path_geo_msg.receive(s);
 }
@@ -116,6 +127,7 @@ int main()
 		//Send sampled path
 		path_samp_msg.send(s);
 
+#ifndef CAR_LIKE_ROBOT
 		//Init path follow
 		PathCtrlTypedef pathFollow;
 		PathCtrl_Init(&pathFollow, 0, 2*pathMaxAccel/wheelDistance,pathMaxAngularSpeed, (timeStep*1000), 0, 0);
@@ -146,7 +158,6 @@ int main()
 
 			//Process path follow
 			pathFollow.robotPos = act_pos;
-			//TODO: ezt kell módosítani, hogy v-t és fi-t adjon vissza
 			PathCtrl_Loop(&pathFollow, &leftV, &rightV);
 			
 			//Info
@@ -162,8 +173,45 @@ int main()
 
  			ctrl_out.send(s);
 			rabitPos.send(s);
-			info.send(s);			
+			info.send(s);		
 		}
+#else
+		CarLineFollower follower(robotData, lineW0, lineKsi);
+		CarSpeedController speedController(distPar_P, distPar_D, 0.0f, timeStep);
+		CarPathController pathController(path_samp_msg.path, follower, speedController, predictLength);
+		while(s.good()) {
+			CtrlMessage ctrl_out;
+			Position act_pos;
+			Pos2dMessage pos_in;
+			Pos2dMessage rabitPos;
+			PackedMessage info;
+
+			//Receive robot position
+			pos_in.receive(s);
+			act_pos = pos_in.pos;
+
+			//Corrigate phi to [-Pi, Pi] range
+			while(act_pos.phi > (float) M_PI)
+				act_pos.phi -= (float) (2 * M_PI);
+
+			while(act_pos.phi < -(float) M_PI)
+				act_pos.phi += (float) (2 * M_PI);
+
+			pathController.Loop(act_pos);
+
+			info.values.push_back(speedController.getDistError());
+			info.values.push_back(speedController.getSumError());
+
+			ctrl_out.ctrl_sig.push_back(pathController.getV());
+			ctrl_out.ctrl_sig.push_back(pathController.getFi());
+			ctrl_out.src = 1;
+
+			std::cout << "Target speed: " << pathController.getV() << ", angle: " << pathController.getFi() << endl;
+			ctrl_out.send(s);
+			rabitPos.send(s);
+			info.send(s);
+		}
+#endif
 
 		std::cout << "Server closed the connection." << endl;
 	

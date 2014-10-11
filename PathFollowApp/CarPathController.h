@@ -38,5 +38,7 @@ private:
 	int count;
 
 	static float getDistance(Position a, Position b);
+	static float wrapAngle(float phi);
+	static Position getSensorCenter(Position car, Position point);
 };
 

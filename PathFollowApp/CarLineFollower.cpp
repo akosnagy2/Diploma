@@ -3,8 +3,6 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define EPS 0.01f
-
 CarLineFollower::CarLineFollower(CarLikeRobot &robot, float w0, float ksi) :
 robot(robot)
 {
@@ -21,15 +19,17 @@ float CarLineFollower::getFi(float v, float delta, float p, float predictLength)
 {
 	if (v < EPS)
 		v = EPS;
-	float L = robot.getAxisDistance() + predictLength;
+	float L = predictLength;
 	float kDelta = (c*L*L - b*L*v) / (v*v);
 	float kP = -c*L / (v*v);
 
 	float fi = delta * kDelta + p * kP;
+
+	/* Telítés értelmetlen értékekre */
 	if (fi > M_PI - EPS)
 		fi = M_PI - EPS;
 	else if (fi < -M_PI + EPS)
 		fi = -M_PI + EPS;
 		
-	return fi;
+	return atan(robot.getAxisDistance() / L * tan(fi));
 }

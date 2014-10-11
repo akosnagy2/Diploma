@@ -18,6 +18,7 @@ CarSpeedController::~CarSpeedController()
 
 float CarSpeedController::getVelocity(float distError, float nextDist)
 {
+	this->distError = distError + nextDist;
 	sumError += distError;
 	float s = nextDist + P * distError + I * sumError;
 	float v = 2 * s / sampleT - prevVel;

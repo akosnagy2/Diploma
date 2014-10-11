@@ -24,9 +24,12 @@ typedef struct
 	 float motorMultFactor;
 } motorStruct;
 
+#ifndef CAR_LIKE_ROBOT
 motorStruct robotLeftMotor;
 motorStruct robotRightMotor;
+#else
 CarLikeRobot carData;
+#endif
 ofstream dFile[6];
 
 boost::system::error_code SetupServer(boost::asio::io_service& io_service, int port, tcp::iostream& s)
@@ -60,35 +63,36 @@ void ForwardPath(CSimpleInConnection& connection, tcp::iostream& s)
 	delete[] receivedData;
 }
 
-int ReceiveForwardPars(CSimpleInConnection& connection, tcp::iostream& path_s, float& dt, motorStruct& motor, CarLikeRobot& car) {
+int ReceiveForwardPars(CSimpleInConnection& connection, tcp::iostream& path_s, CarLikeRobot& car) {
 	int receivedDataLength;
 	PackedMessage pathMsg;
 	char* receivedData = connection.receiveData(receivedDataLength);
 	if (receivedData != NULL)
 	{
-		dt = ((float*)receivedData)[0];
+		float ts = ((float*)receivedData)[0];
 
-		motor.motorMaxSpeed = ((float*)receivedData)[1];
-		motor.motorMaxAccel = ((float*)receivedData)[2];
-		motor.motorMultFactor = ((float*)receivedData)[3];
-		motor.motorSmoothFactor = ((float*)receivedData)[4];
+		float maxSpeed = ((float*)receivedData)[1];
+		float maxAccel = ((float*)receivedData)[2];
+		float motorMultFactor = ((float*)receivedData)[3];
+		float motorSmoothFactor = ((float*)receivedData)[4];
+		float maxSteerSpeed = ((float*) receivedData)[5];
 
-		pathMsg.values.push_back(((float*)receivedData)[5]);	//PredictLength
-		pathMsg.values.push_back(((float*)receivedData)[6]);	//distPar_P
-		pathMsg.values.push_back(((float*)receivedData)[7]);	//distPar_D
-		pathMsg.values.push_back(((float*)receivedData)[8]);	//oriPar_P
-		pathMsg.values.push_back(((float*)receivedData)[9]);	//oriPar_D
-		car.setWheelDistance(((float*)receivedData)[10]);
-		car.setWheelDiameter(((float*)receivedData)[11]);
-		pathMsg.values.push_back(dt);	//timeStep
-		pathMsg.values.push_back(car.getWheelDistance());	//wheelDistance
-		pathMsg.values.push_back(((float*)receivedData)[12]);	//pathMaxSpeed
-		pathMsg.values.push_back(((float*)receivedData)[13]);	//pathMaxAccel
-		pathMsg.values.push_back(((float*)receivedData)[14]);	//pathMaxTangentAccel
-		pathMsg.values.push_back(((float*)receivedData)[15]);	//pathMaxAngularSpeed
+		car.setParameters(maxAccel, maxSpeed, motorSmoothFactor, motorMultFactor, maxSteerSpeed, ts);
 
-		car.setAxisDistance(((float*)receivedData)[16]);
-		car.setFiMax(((float*)receivedData)[17]);
+		pathMsg.values.push_back(((float*)receivedData)[6]);	//PredictLength
+		pathMsg.values.push_back(((float*)receivedData)[7]);	//distPar_P
+		pathMsg.values.push_back(((float*)receivedData)[8]);	//distPar_D
+		pathMsg.values.push_back(((float*)receivedData)[9]);	//w0
+		pathMsg.values.push_back(((float*)receivedData)[10]);	//ksi
+		car.setWheelDistance(((float*)receivedData)[11]);
+		car.setWheelDiameter(((float*)receivedData)[12]);
+		pathMsg.values.push_back(ts);							//timeStep
+		pathMsg.values.push_back(car.getWheelDistance());		//wheelDistance
+		pathMsg.values.push_back(((float*)receivedData)[13]);	//pathMaxSpeed
+		pathMsg.values.push_back(((float*)receivedData)[14]);	//pathMaxAccel
+
+		car.setAxisDistance(((float*)receivedData)[15]);
+		car.setFiMax(((float*)receivedData)[16]);
 		pathMsg.values.push_back(car.getAxisDistance());
 		pathMsg.values.push_back(car.getFiMax());
 		
@@ -222,6 +226,11 @@ void ModelMotors(float& leftSpeed, float& rightSpeed, float newLeftSpeed, float 
 	dFile[5] << (rightSpeed - prevRightSpeed) / timeStep << endl;
 }
 
+void ModelCar()
+{
+
+}
+
 int main(int argc,char* argv[])
 {
 	int portNb=0;
@@ -266,20 +275,23 @@ int main(int argc,char* argv[])
 	if (connection.connectToClient())
 	{
 		logFile << "Connected with client." << endl;
-		float wheelDiameter = 85.0f;
-		float wheelDistance = 229.2f;
+
+#ifndef CAR_LIKE_ROBOT
 		float timeStep;
 		int timeIndex = 0;
+		float wheelDiameter = 85.0f;
+		float wheelDistance = 229.2f;
 		float leftSpeed = 0.0f;
 		float rightSpeed = 0.0f;
+		float robotAngularSpeed;
 		float robotSpeed;
 		float prevRobotSpeed = 0.0f;
-		float robotAngularSpeed;
+#endif
 		PathMessage path;
 
 		//Receive parameters from V-Rep Client
-#if CAR_LIKE_ROBOT
-		ReceiveForwardPars(connection, path_s, timeStep, robotLeftMotor, carData);
+#ifdef CAR_LIKE_ROBOT
+		ReceiveForwardPars(connection, path_s, carData);
 #else
 		ReceiveForwardPars(connection, path_s, timeStep, robotLeftMotor, robotRightMotor, wheelDistance, wheelDiameter);
 #endif
@@ -327,6 +339,7 @@ int main(int argc,char* argv[])
 			rabit_msg.receive(path_s);
 			info_msg.receive(path_s);
 
+#ifndef CAR_LIKE_ROBOT
 			//Apply motor models
 			ModelMotors(leftSpeed,rightSpeed,(float)ctrl_msg.ctrl_sig[0], (float)ctrl_msg.ctrl_sig[1],robotLeftMotor,robotRightMotor,timeStep);
 
@@ -349,13 +362,17 @@ int main(int argc,char* argv[])
  			robotPos.y += sin(robotPos.phi) * robotSpeed * timeStep;
 			robotPos.phi += robotAngularSpeed  * timeStep / 2.0f;
 
-			//TODO a végén a pozíciót nekem elõrébb kell rakni a tengelytáv felével
-
 			leftJointPos += leftSpeed*timeStep*2/wheelDiameter;
 			rightJointPos += rightSpeed*timeStep*2/wheelDiameter;
 
 			//Send data to V-Rep Client
 			SendRobotData(connection,leftJointPos, rightJointPos, robotPos, rabit_msg.pos, (float)info_msg.values[0], (float)info_msg.values[1]);
+#else
+			float v = (float) ctrl_msg.ctrl_sig[0];
+			float fi = (float) ctrl_msg.ctrl_sig[1];
+			carData.modelRobot(v, fi);
+			SendRobotData(connection, v, fi, carData.getPosition(), rabit_msg.pos, (float) info_msg.values[0], (float) info_msg.values[1]);
+#endif
 		}
 	}
 	else
