@@ -91,6 +91,7 @@ void LoadPathFromTCP(tcp::iostream &s)
 	robotData.setAxisDistance((float)parMsg.values[9]);
 	robotData.setFiMax((float)parMsg.values[10]);
 	robotData.setWheelDistance(wheelDistance);
+
 #endif
 
 	path_geo_msg.receive(s);
@@ -198,6 +199,7 @@ int main()
 				act_pos.phi += (float) (2 * M_PI);
 
 			pathController.Loop(act_pos);
+			rabitPos.pos = pathController.getRabbit();
 
 			info.values.push_back(speedController.getDistError());
 			info.values.push_back(speedController.getSumError());

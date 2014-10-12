@@ -76,6 +76,8 @@ void CarPathController::Loop(Position nextPos)
 				fi *= -1.0f;
 				v *= -1.0f;
 			}
+
+			rabbit = path[index + predict];
 			index++;
 
 			if(count > 0) {

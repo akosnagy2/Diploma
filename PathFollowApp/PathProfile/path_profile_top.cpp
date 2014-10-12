@@ -835,7 +835,7 @@ static void profile(Profile &geoProfile, std::vector<path_pos> &resPath, std::of
 	resPath = sampProfile.path;
 
 	//Sampled points orientation
-	if (fabs(getDirection(resPath[0], resPath[1]) - geoProfile.path[0].phi) < EPS)
+	if (fabs(getDirection(resPath[0], resPath[1]) - geoProfile.path[0].phi) < M_PI_4)
 	{
 		for (int i = 0; i < resPath.size() - 1; i++) //Forward direction
 			resPath[i].phi = getDirection(resPath[i], resPath[i + 1]); //[-pi, pi] forward range

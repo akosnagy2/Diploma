@@ -29,7 +29,7 @@ CarLikeRobot::~CarLikeRobot()
 float CarLikeRobot::getMaxRadiusRatio(float kappa)
 {
 	kappa = abs(kappa);
-	if (kappa < EPS)
+	if (kappa < CAR_EPS)
 		return 1.0f;
 
 	float p = 1 + wheelDistance * 0.5f * kappa;
@@ -75,9 +75,9 @@ void CarLikeRobot::modelRobot(float v, float fi)
 
 Position CarLikeRobot::getPosition()
 {
-	position.phi += 0.5f * robotSpeed * tan(robotSteer) / axisDistance;
-	position.x += robotSpeed * cos(position.phi);
-	position.y += robotSpeed * sin(position.phi);
-	position.phi += 0.5f * robotSpeed * tan(robotSteer) / axisDistance;
+	position.phi += 0.5f * robotSpeed * timeStep * tan(robotSteer) / axisDistance;
+	position.x += robotSpeed * cos(position.phi) * timeStep;
+	position.y += robotSpeed * sin(position.phi) * timeStep;
+	position.phi += 0.5f * robotSpeed * timeStep * tan(robotSteer) / axisDistance;
 	return position;
 }

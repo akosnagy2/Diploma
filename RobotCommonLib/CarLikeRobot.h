@@ -1,6 +1,9 @@
 #pragma once
 #include "Position.h"
-#define EPS 0.0001f
+#define CAR_EPS 0.0001f
+#ifndef EPS
+	#define EPS	0.001f
+#endif
 class CarLikeRobot
 {
 public:

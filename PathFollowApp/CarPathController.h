@@ -23,6 +23,7 @@ public:
 	void Loop(Position nextPos);
 	float getV() { return v; }
 	float getFi() { return fi; }
+	Position getRabbit() { return rabbit; }
 private:
 	std::vector<Position> &path;
 	CarLineFollower &lineFollower;
@@ -31,6 +32,7 @@ private:
 	int index;
 
 	Position pos;
+	Position rabbit;
 	float v;
 	float fi;
 	RobotState state;
