@@ -17,22 +17,24 @@ typedef enum StateEnum {
 class CarPathController
 {
 public:
-	CarPathController(std::vector<Position> &path, CarLineFollower &lf, CarSpeedController &sc, int predict);
+	CarPathController(std::vector<Position> &path, CarLikeRobot &car, CarLineFollower &lf, CarSpeedController &sc, float predict);
 	~CarPathController();
 
 	void Loop(Position nextPos);
 	float getV() { return v; }
 	float getFi() { return fi; }
-	Position getRabbit() { return rabbit; }
+	Position getRabbit() { return frontPath[predictIndex]; }
 private:
 	std::vector<Position> &path;
+	std::vector<Position> frontPath;
 	CarLineFollower &lineFollower;
 	CarSpeedController &speedController;
-	int predict;
+	CarLikeRobot &car;
+	float predict;
 	int index;
+	int predictIndex;
 
 	Position pos;
-	Position rabbit;
 	float v;
 	float fi;
 	RobotState state;
@@ -40,7 +42,6 @@ private:
 	int count;
 
 	static float getDistance(Position a, Position b);
-	static float wrapAngle(float phi);
-	static Position getSensorCenter(Position car, Position point);
+	Position getSensorCenter(Position car);
 };
 

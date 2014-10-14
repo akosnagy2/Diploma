@@ -16,11 +16,14 @@ CarLineFollower::~CarLineFollower()
 
 float CarLineFollower::getFi(float v, float delta, float p, float predictLength)
 {
-	if(v < EPS)
-		v = EPS;
-	float L = predictLength;
-	float kDelta = -0.9721f;//(c*L*L - b*L*v) / (v*v);
-	float kP = -1.1662f;//-c*L / (v*v);
+	if(abs(v) < 100)
+		v = 100;
+
+	v = abs(v * 0.001f);
+
+	float L = predictLength * 0.001f;
+	float kDelta = (c*L*L - b*L*v) / (v*v);//-0.9721f;
+	float kP = -c*L / (v*v);//-1.1662f;
 
 	float fi = delta * kDelta + p / 1000 * kP;
 
@@ -30,6 +33,6 @@ float CarLineFollower::getFi(float v, float delta, float p, float predictLength)
 	else if(fi < -M_PI_2 + EPS)
 		fi = -M_PI_2 + EPS;
 
-	return atan(robot.getAxisDistance() / L * tan(fi));
+	return atan(robot.getAxisDistance() * 0.001f / L * tan(fi));
 	//return fi;
 }

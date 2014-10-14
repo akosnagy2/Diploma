@@ -12,6 +12,7 @@
 #include "CarLineFollower.h"
 #include "CarPathController.h"
 #include "CarSpeedController.h"
+#include "PathShifter.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -24,7 +25,7 @@ PathMessage path_samp_msg;
 
 CarLikeRobot robotData;
 
-int predictLength = 5;
+float predictLength = 5;
 float distPar_P = 0.0f;
 float distPar_D = 1.1f;
 float oriPar_P = 0.1f;
@@ -72,7 +73,7 @@ void LoadPathFromTCP(tcp::iostream &s)
 	PackedMessage parMsg;
 
 	parMsg.receive(s);			
-	predictLength = (int)parMsg.values[0];
+	predictLength = (float)parMsg.values[0];
 	distPar_P = (float)parMsg.values[1];
 	distPar_D = (float)parMsg.values[2];
 #ifndef CAR_LIKE_ROBOT
@@ -179,7 +180,7 @@ int main()
 #else
 		CarLineFollower follower(robotData, lineW0, lineKsi);
 		CarSpeedController speedController(distPar_P, distPar_D, 0.0f, timeStep);
-		CarPathController pathController(path_samp_msg.path, follower, speedController, predictLength);
+		CarPathController pathController(path_samp_msg.path, robotData, follower, speedController, predictLength);
 		while(s.good()) {
 			CtrlMessage ctrl_out;
 			Position act_pos;

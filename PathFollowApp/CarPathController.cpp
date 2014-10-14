@@ -1,17 +1,24 @@
 #include "CarPathController.h"
+#include "PathShifter.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "misc.h"
 
-CarPathController::CarPathController(std::vector<Position> &path, CarLineFollower &lf, CarSpeedController &sc, int predict) :
+CarPathController::CarPathController(std::vector<Position> &path, CarLikeRobot &car, CarLineFollower &lf, CarSpeedController &sc, float predict) :
 path(path),
+car(car),
 predict(predict),
 lineFollower(lf),
 speedController(sc)
 {
 	index = 0;
+	predictIndex = 0;
 	state = init;
 	status = true;
+
+	PathShifter shifter(path, car);
+	frontPath = shifter.getShiftedPath();
 }
 
 
@@ -24,7 +31,7 @@ void CarPathController::Loop(Position nextPos)
 	if(!status)
 		return;
 
-	if(index + predict >= path.size() - 1) {
+	if(index + 3 > path.size()) {
 		status = false;
 		v = 0.0f;
 		fi = 0.0f;
@@ -36,7 +43,7 @@ void CarPathController::Loop(Position nextPos)
 			v = 0.0f;
 			fi = 0.0f;
 			count = 10;
-			predict += count;
+//			predict += count;
 
 			if(path[index + 1].phi == TURN_PHI)
 				state = turn;
@@ -61,23 +68,22 @@ void CarPathController::Loop(Position nextPos)
 			v = speedController.getVelocity(distError, nextDist);
 
 			/* Calculate steer control signal */
-			Position predictPoint = path[index + predict];
-			float delta = nextPos.phi - predictPoint.phi;
 			/* Virtual sensor middile position */
-			Position intersection = getSensorCenter(nextPos, predictPoint);
+			Position intersection = getSensorCenter(nextPos);
+			Position predictPoint = frontPath[predictIndex];
+			float delta = nextPos.phi - predictPoint.phi;
 			float p = getDistance(intersection, predictPoint);
-			if(abs(atan2(predictPoint.y - intersection.y, predictPoint.x - intersection.x)) > M_PI_2) {
+			if(predictPoint.phi - nextPos.phi > 0.0f) {
 				p *= -1.0f;
 			}
 			float predictLength = getDistance(intersection, nextPos);
 			fi = lineFollower.getFi(v, delta, p, predictLength);
 
 			if(reverse) {
-				fi *= -1.0f;
+				//fi *= -1.0f;
 				v *= -1.0f;
 			}
 
-			rabbit = path[index + predict];
 			index++;
 
 			if(count > 0) {
@@ -92,7 +98,7 @@ void CarPathController::Loop(Position nextPos)
 			state = turn;
 			break;
 		case turn:
-			fi = path[index + predict + 1].phi;
+			fi = path[index + 1].phi;
 			index += predict;
 			state = pathFollow;
 			break;
@@ -109,35 +115,32 @@ float CarPathController::getDistance(Position a, Position b)
 	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 }
 
-Position CarPathController::getSensorCenter(Position car, Position point)
+Position CarPathController::getSensorCenter(Position carPosition)
 {
+	predictIndex = index;
+	float dist = predict + car.getAxisDistance();
+	while(getDistance(carPosition, frontPath[predictIndex]) < dist && predictIndex < path.size() - 1)
+		predictIndex++;
 	Position intersection;
-	float teta = wrapAngle(car.phi);
+	Position point = frontPath[predictIndex];
+	float teta = wrapAngle(carPosition.phi);
 	if(abs(abs(teta) - M_PI_2) < EPS) {
-		intersection.x = car.x;
+		intersection.x = carPosition.x;
 		intersection.y = point.y;
 		intersection.phi = signbit(teta) ? M_PI : 0.0f;
 	} else if(abs(teta) < EPS) {
 		intersection.x = point.x;
-		intersection.y = car.y;
+		intersection.y = carPosition.y;
 		intersection.phi = -M_PI_2;
 	} else if(abs(abs(teta) - M_PI) < EPS) {
 		intersection.x = point.x;
-		intersection.y = car.y;
+		intersection.y = carPosition.y;
 		intersection.phi = M_PI_2;
 	} else {
 		float tg = tan(teta);
-		intersection.x = (point.x - tg*car.y + tg*point.y + tg*tg*car.x) / (tg*tg + 1);
-		intersection.y = (car.y - tg*car.x + tg*point.x + tg*tg*point.y) / (tg*tg + 1);
+		intersection.x = (point.x - tg*carPosition.y + tg*point.y + tg*tg*carPosition.x) / (tg*tg + 1);
+		intersection.y = (carPosition.y - tg*carPosition.x + tg*point.x + tg*tg*point.y) / (tg*tg + 1);
 		intersection.phi = atan(-1 / tg);
 	}
 	return intersection;
-}
-
-float CarPathController::wrapAngle(float phi)
-{
-	phi = fmod(phi + M_PI, 2 * M_PI);
-	if(phi < 0)
-		phi += 2 * M_PI;
-	return phi - M_PI;
 }

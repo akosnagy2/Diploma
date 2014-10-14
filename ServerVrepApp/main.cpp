@@ -366,6 +366,8 @@ int main(int argc, char* argv[])
 			//Send data to V-Rep Client
 			SendRobotData(connection,leftJointPos, rightJointPos, robotPos, rabit_msg.pos, (float)info_msg.values[0], (float)info_msg.values[1]);
 #else
+			if(ctrl_msg.ctrl_sig.size() == 0)
+				break;
 			float v = (float) ctrl_msg.ctrl_sig[0];
 			float fi = (float) ctrl_msg.ctrl_sig[1];
 			carData.modelRobot(v, fi);
