@@ -707,11 +707,14 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 	{
 		ProfileSave(profile_name + "_W.txt", prof.t, w);
 		ProfileSave(profile_name + "_V.txt", prof.t, prof.v);
+		prof.a.push_back(0.0f);
 		ProfileSave(profile_name + "_A.txt", prof.t, prof.a);
+#ifndef CAR_LIKE_ROBOT
 		ProfileSave(profile_name + "_A_Left.txt", prof.t, a_left);
 		ProfileSave(profile_name + "_A_Right.txt", prof.t, a_right);
 		ProfileSave(profile_name + "_At_Left.txt", prof.t, at_left);
 		ProfileSave(profile_name + "_At_Right.txt", prof.t, at_right);
+#endif
 		ProfileSave(profile_name + "_Path.txt", prof.path);
 		ProfileSave(profile_name + "_Sc.txt", prof.t, prof.sc);
 		ProfileSave(profile_name + "_S.txt", prof.t, prof.s);

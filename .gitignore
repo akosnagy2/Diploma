@@ -10,3 +10,4 @@ Release
 *.vcxproj
 *.ilk
 *.pdb
+*.filters
