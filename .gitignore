@@ -7,3 +7,4 @@ Release
 *.txt
 *.suo
 *.obj
+!Frame/*.obj
