@@ -16,8 +16,8 @@ CarLineFollower::~CarLineFollower()
 
 float CarLineFollower::getFi(float v, float delta, float p, float predictLength)
 {
-	if(abs(v) < 100)
-		v = 100;
+	if(abs(v) < 20) // TODO ez se igazán jó, inkább a kappa értékeknek kéne fix értéket adni!
+		return 0.0f;
 
 	v = abs(v * 0.001f);
 
@@ -34,5 +34,4 @@ float CarLineFollower::getFi(float v, float delta, float p, float predictLength)
 		fi = -M_PI_2 + EPS;
 
 	return atan(robot.getAxisDistance() * 0.001f / L * tan(fi));
-	//return fi;
 }

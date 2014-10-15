@@ -35,11 +35,11 @@ private:
 	int predictIndex;
 
 	Position pos;
+	Position predictPoint;
 	float v;
 	float fi;
 	RobotState state;
 	bool status;
-	int count;
 
 	static float getDistance(Position a, Position b);
 	Position getSensorCenter(Position car);

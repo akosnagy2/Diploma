@@ -42,8 +42,6 @@ void CarPathController::Loop(Position nextPos)
 		case init:
 			v = 0.0f;
 			fi = 0.0f;
-			count = 10;
-//			predict += count;
 
 			if(path[index + 1].phi == TURN_PHI)
 				state = turn;
@@ -70,7 +68,6 @@ void CarPathController::Loop(Position nextPos)
 			/* Calculate steer control signal */
 			/* Virtual sensor middile position */
 			Position intersection = getSensorCenter(nextPos);
-			Position predictPoint = frontPath[predictIndex];
 			float delta = nextPos.phi - predictPoint.phi;
 			float p = getDistance(intersection, predictPoint);
 			if(predictPoint.phi - nextPos.phi > 0.0f) {
@@ -85,11 +82,6 @@ void CarPathController::Loop(Position nextPos)
 			}
 
 			index++;
-
-			if(count > 0) {
-				count--;
-				predict--;
-			}
 			break;
 		}
 		case preStop:
@@ -122,24 +114,31 @@ Position CarPathController::getSensorCenter(Position carPosition)
 	while(getDistance(carPosition, frontPath[predictIndex]) < dist && predictIndex < path.size() - 1)
 		predictIndex++;
 	Position intersection;
-	Position point = frontPath[predictIndex];
+	if(getDistance(carPosition, frontPath[predictIndex]) < dist && predictIndex == path.size() - 1) {
+		float distError = dist - getDistance(carPosition, frontPath[predictIndex]);
+		predictPoint.x = frontPath[predictIndex].x + cos(frontPath[predictIndex].phi) * distError;
+		predictPoint.y = frontPath[predictIndex].y + sin(frontPath[predictIndex].phi) * distError;
+		predictPoint.phi = frontPath[predictIndex].phi;
+	} else {
+		predictPoint = frontPath[predictIndex];
+	}
 	float teta = wrapAngle(carPosition.phi);
 	if(abs(abs(teta) - M_PI_2) < EPS) {
 		intersection.x = carPosition.x;
-		intersection.y = point.y;
+		intersection.y = predictPoint.y;
 		intersection.phi = signbit(teta) ? M_PI : 0.0f;
 	} else if(abs(teta) < EPS) {
-		intersection.x = point.x;
+		intersection.x = predictPoint.x;
 		intersection.y = carPosition.y;
 		intersection.phi = -M_PI_2;
 	} else if(abs(abs(teta) - M_PI) < EPS) {
-		intersection.x = point.x;
+		intersection.x = predictPoint.x;
 		intersection.y = carPosition.y;
 		intersection.phi = M_PI_2;
 	} else {
 		float tg = tan(teta);
-		intersection.x = (point.x - tg*carPosition.y + tg*point.y + tg*tg*carPosition.x) / (tg*tg + 1);
-		intersection.y = (carPosition.y - tg*carPosition.x + tg*point.x + tg*tg*point.y) / (tg*tg + 1);
+		intersection.x = (predictPoint.x - tg*carPosition.y + tg*predictPoint.y + tg*tg*carPosition.x) / (tg*tg + 1);
+		intersection.y = (carPosition.y - tg*carPosition.x + tg*predictPoint.x + tg*tg*predictPoint.y) / (tg*tg + 1);
 		intersection.phi = atan(-1 / tg);
 	}
 	return intersection;
