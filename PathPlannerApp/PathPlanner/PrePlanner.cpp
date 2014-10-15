@@ -1,11 +1,11 @@
-#include "path_planner_funcs.h"   
+#include "..\Geometry\Common.h"   
 #include "boost\geometry\geometries\segment.hpp"
 #include "boost\geometry\geometries\point_xy.hpp"
 #include "boost\geometry\geometry.hpp"
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "Scene.h"
-#include "Triangle.h"
+#include "..\Geometry\Triangle.h"
 
 using namespace boost::geometry::model;
 using namespace PathPlanner;

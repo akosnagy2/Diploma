@@ -33,6 +33,18 @@
     <ClInclude Include="..\PathMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PathPlannerServer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollowServer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotPilotServer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CtrlMessage.cpp">
@@ -54,6 +66,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\PathMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlannerServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollowServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotPilotServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

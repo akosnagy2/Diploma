@@ -31,6 +31,7 @@ typedef enum {
 typedef struct
 {
 	PositionTypedef*    path;
+	float*				curvature;
 	uint16_t			path_len;
 	DirectionTypedef	dir;
 } PathSegmentTypedef;
@@ -43,15 +44,17 @@ typedef struct
 	uint16_t			enable;
 	void 				(*function)();
 	//PathFollow
-	float				predictLength;
-	int16_t				predictSampleLength;
+	uint16_t			predictLength;
+	uint16_t			predictLengthImpulse;
+	uint16_t			predictIndex;
+	uint16_t			predictCntr;
 	uint32_t			timeIndex;
 	uint32_t			segmentIndex;
 	float				distParP;
-	float				distParD;
 	float				distParI;
 	float	 			oriParP;
 	float				oriParD;
+	float				predictError;
 	float				robotWheelDist;
 	float				distError;
 	float				distPrevError;
@@ -65,6 +68,7 @@ typedef struct
 	float				robotAngVel;
 	float				maxBeta;
 	float				maxW;
+	float				debugData[6];
 	//Path
 	PathSegmentTypedef* pathSegments;
 	uint16_t			pathSegmentsLen;
@@ -83,8 +87,8 @@ uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, flo
 void PathCtrl_BBXInit(volatile PathCtrlTypedef* ctrl, long robot_speed_index, long robot_angspeed_index, long left_speed_index, long right_speed_index);
 void PathCtrl_BBXReset(volatile PathCtrlTypedef* ctrl);
 
-void PathCtrl_SetPars(volatile PathCtrlTypedef* ctrl, float distP, float distD, float oriP, float oriD);
-void PathCtrl_SetRobotPar(volatile PathCtrlTypedef* ctrl, float robotWheelDist, float predictLength);
+void PathCtrl_SetPars(volatile PathCtrlTypedef* ctrl, float distP, float distI, float oriP, float oriD);
+void PathCtrl_SetRobotPar(volatile PathCtrlTypedef* ctrl, float robotWheelDist);
 void PathCtrl_SetPathSegments(volatile PathCtrlTypedef* ctrl, PathSegmentTypedef* pathSegments, uint16_t pathSegmentsLength);
 void PathCtrl_SetState(volatile PathCtrlTypedef* ctrl, uint16_t start);
 

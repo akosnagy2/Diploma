@@ -6,9 +6,9 @@ PackedMessage Pos2dMessage::get()
 
 	msg.src = this->src;
 	msg.subj = this->subj;
-	msg.values.push_back((double)this->pos.p.x);
-	msg.values.push_back((double)this->pos.p.y);
-	msg.values.push_back((double)this->pos.phi);
+	msg.values.push_back((float)this->pos.p.x);
+	msg.values.push_back((float)this->pos.p.y);
+	msg.values.push_back((float)this->pos.phi);
 	//TODO: timestap-et kezelni
 	msg.type = POS2DMESSAGE_TYPE_CODE;
 

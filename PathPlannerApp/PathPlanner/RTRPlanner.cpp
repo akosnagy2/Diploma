@@ -1,8 +1,8 @@
 #include "Scene.h"
-#include "Config.h"
-#include "Point.h"
-#include "Line.h"
-#include "path_planner_funcs.h"
+#include "..\Geometry\Config.h"
+#include "..\Geometry\Point.h"
+#include "..\Geometry\Line.h"
+#include "..\Geometry\Common.h"
 #include <queue>
 
 using namespace PathPlanner;
@@ -11,12 +11,12 @@ using namespace std;
 void DrawPolygon(Polygon &poly, Visualizer2 &vis, Color col)
 {
 	vector<Point2> ps(poly.ps.size());
-	for (int i = 0; i < poly.ps.size(); i++)
+	for (int i = 0; i < (int)poly.ps.size(); i++)
 	{
 		ps[i].set(poly.ps[i].x, poly.ps[i].y);
 	}
 
-	for (int i = 0; i < poly.ps.size() - 1; i++)
+	for (int i = 0; i < (int)poly.ps.size() - 1; i++)
 	{
 		vis.addObject(Segment2(ps[i], ps[i+1]), col);
 	}
@@ -80,14 +80,15 @@ bool Scene::RTRPlanner()
 		RTRIteration(true);
 		RTRIteration(false);
 
-		//DrawScene(i);
+		//if ((i % 100) == 0)
+			DrawScene(i);
 
 		if (MergeTreesGetPath())
 			break;
 	}
 
 	OptimizePath();
-	//DrawPath();
+	DrawPath();
 	return true;
 }
 
@@ -221,8 +222,8 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 				Config q0(robotShapeWorld.ps[k],q.phi);
 				Point inter;
 
-				//if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
-				if (Line::LineSegmentIntersection(q0, s0, inter))
+				if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
+				//if (Line::LineSegmentIntersection(q0, s0, inter))
 				{
 					if (fabs(Angle::Corrigate(Point::atan2(inter, q0.p) - q0.phi)) < 0.01) //Forward collision possibility
 					{
@@ -239,8 +240,8 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 				s0.b = robotShapeWorld.ps[((k + 1) % rob_size)];
 				q0.p = envsx[i].ps[j];				 
 
-				//if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
-				if (Line::LineSegmentIntersection(q0, s0, inter))
+				if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
+				//if (Line::LineSegmentIntersection(q0, s0, inter))
 				{		
 					if (fabs(Angle::Corrigate(Point::atan2(q0.p, inter) - q0.phi)) < 0.01) //Forward collision possibility
 					{
@@ -604,6 +605,7 @@ int Scene::treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &m
 	return -1;
 }
 
+//tciTCIMergeability - Checks whether the given TCIs can be merged by a single RCI
 bool Scene::tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigInterval &mergingRCI, Point &mergingPoint)
 {
 	//Check if the two TCI-s are intersecting or not
@@ -639,11 +641,12 @@ Point Scene::GetGuidePoint(bool startPoint)
 
 	float r = distribution(generator);
 
-	if (r <= fixPathProbability)
+	if (r <= roadmapProbability)
 	{
-		return roadmap_node[static_cast<int>((distribution(generator)*roadmap_node.size()) + 0.5f)].p; //Mivel nincs round az MSVC2012-ben...
+		int t = static_cast<int>((distribution(generator)*(roadmap_node.size() - 1)) + 0.5f); //Mivel nincs round az MSVC2012-ben...
+		return roadmap_node[t].p;
 	}
-	else if (r <= fixPathProbability + roadmapProbability)
+	else if ((r <= fixPathProbability + roadmapProbability) && (fixPrePath.size()))
 	{
 		if (startPoint)
 			return fixPrePath[fixPrePathStartIdx++];
@@ -745,20 +748,41 @@ void Scene::PathTCIExtension(vector<ConfigInterval> &pathExt)
 	}
 }
 
-vector<Config> Scene::ExtractPath(int interpolate)
+void Scene::GenerateRTRPath()
 {
-	vector<Config> pathC;
-	pathC.push_back(pathCI.front().q0);
+	pathC.clear();
+
+	//Start point is RCI
+	if (pathCI.front().type == RotationCI)
+	{
+		PathSegment s;
+		s.direction = (pathCI.front().amount >= 0.0f);
+		s.path.push_back(pathCI.front().q0);
+		s.curvature.push_back(0.0f);
+	}
 
 	for (vector<ConfigInterval>::iterator it = pathCI.begin(); it != pathCI.end(); ++it)
 	{
 		if (it->type == TranslationCI)
 		{
-			for (int i = 1; i < interpolate; i++)
-				pathC.push_back(Config((it->q1.p*i/((float)interpolate) + it->q0.p*((float)interpolate - i)/((float)interpolate)), it->q0.phi));
+			PathSegment s;			
+			s.direction = (it->amount >= 0.0f);
+			int interpolate = (int)(fabs(it->amount)/pathDeltaS);
+			for (int i = 0; i < interpolate+1; i++)
+			{
+				s.path.push_back(Config(((it->q1.p*((float)i) + it->q0.p*((float)interpolate - i))/((float)interpolate)), it->q0.phi));
+				s.curvature.push_back(0.0f);
+			}
+			pathC.push_back(s);
 		}
-		pathC.push_back(it->q1);
 	}
 
-	return pathC;
+	//End point is RCI
+	if (pathCI.back().type == RotationCI)
+	{
+		PathSegment s;
+		s.direction = (pathCI.back().amount >= 0.0f);
+		s.path.push_back(pathCI.back().q1);
+		s.curvature.push_back(0.0f);
+	}
 }

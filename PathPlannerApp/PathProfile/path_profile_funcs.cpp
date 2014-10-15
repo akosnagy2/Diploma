@@ -41,21 +41,21 @@ void curv2D(std::vector<Config> &path, std::vector<float> &curv)
 	}
 	Naa = Na;
 	Nbb = Nb;
-	for (int i = 0; i < checkNa.size(); i++)
+	for (int i = 0; i < (int)checkNa.size(); i++)
 	{
 		Naa[checkNa[i]] = checkNa[i] + 1;
 	}
-	for (int i = 0; i < checkNb.size(); i++)
+	for (int i = 0; i < (int)checkNb.size(); i++)
 	{
 		Nbb[checkNb[i]] = checkNb[i] + 1;
 	}
 
 	//If no left neighbor use two right neighbors, and the same for right...
-	for (int i = 0; i < checkNa.size(); i++)
+	for (int i = 0; i < (int)checkNa.size(); i++)
 	{
 		Na[checkNa[i]] = Nbb[Nbb[checkNa[i]]-1];
 	}
-	for (int i = 0; i < checkNb.size(); i++)
+	for (int i = 0; i < (int)checkNb.size(); i++)
 	{
 		Nb[checkNb[i]] = Naa[Naa[checkNb[i]]-1];
 	}
@@ -69,11 +69,11 @@ void curv2D(std::vector<Config> &path, std::vector<float> &curv)
 	}
 
 	//If no left neighbor use two right neighbors, and the same for right...
-	for (int i = 0; i < checkNa.size(); i++)
+	for (int i = 0; i < (int)checkNa.size(); i++)
 	{
 		Ta[checkNa[i]] = -Ta[checkNa[i]];
 	}
-	for (int i = 0; i < checkNb.size(); i++)
+	for (int i = 0; i < (int)checkNb.size(); i++)
 	{
 		Tb[checkNb[i]] = -Tb[checkNb[i]];
 	}
@@ -124,7 +124,7 @@ void inverse3(boost::multi_array<float,2>& input, boost::multi_array<float,3>& o
 {
 	std::vector<float> detM(input.size());
 
-	for (int i = 0; i < input.size(); i++)
+	for (int i = 0; i < (int)input.size(); i++)
 	{
 		detM[i] = input[i][0] * input[i][4] * input[i][8] - input[i][0] * input[i][7] * input[i][5] - input[i][3] * input[i][1] * input[i][8] + input[i][3] * input[i][7] * input[i][2] + input[i][6] * input[i][1] * input[i][5] - input[i][6] * input[i][4] * input[i][2];
 
@@ -386,7 +386,7 @@ void ProfileSave(std::string filename, std::vector<float> &data)
 {
 	std::ofstream file;
 	file.open(filename);
-	for (int i = 0; i < data.size(); i++)
+	for (int i = 0; i < (int)data.size(); i++)
 		file << data[i] << std::endl;
 	file.close();
 }
@@ -402,7 +402,7 @@ void ProfileSave(std::string filename, std::vector<float> &t, std::vector<float>
 
 	std::ofstream file;
 	file.open(filename);
-	for (int i = 0; i < data.size(); i++)
+	for (int i = 0; i < (int)data.size(); i++)
 		file << t[i] << " " << data[i] << std::endl;
 	file.close();
 }
@@ -411,7 +411,7 @@ void ProfileSave(std::string filename, std::vector<Config> &path)
 {
 	std::ofstream file;
 	file.open(filename);
-	for (int i = 0; i < path.size(); i++)
+	for (int i = 0; i < (int)path.size(); i++)
 		file << path[i].p.x << " " << path[i].p.y << std::endl;
 	file.close();
 }

@@ -88,6 +88,10 @@
     <ClInclude Include="..\PackedMessage.h" />
     <ClInclude Include="..\PathMessage.h" />
     <ClInclude Include="..\Pos2dMessage.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="PathFollowServer.h" />
+    <ClInclude Include="PathPlannerServer.h" />
+    <ClInclude Include="RobotPilotServer.h" />
     <ClInclude Include="simpleInConnection.h" />
     <ClInclude Include="simplePorting.h" />
   </ItemGroup>
@@ -96,7 +100,11 @@
     <ClCompile Include="..\PackedMessage.cpp" />
     <ClCompile Include="..\PathMessage.cpp" />
     <ClCompile Include="..\Pos2dMessage.cpp" />
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PathFollowServer.cpp" />
+    <ClCompile Include="PathPlannerServer.cpp" />
+    <ClCompile Include="RobotPilotServer.cpp" />
     <ClCompile Include="simpleInConnection.cpp" />
     <ClCompile Include="simplePorting.cpp" />
   </ItemGroup>

@@ -15,13 +15,13 @@ public:
 	int				src; 
 	int				dst; 
 	int				subj;
-	vector<double>	values;
+	vector<float>	values;
 	string			type;
 	long long		timestamp;
 	int				binarySize;
 	char*			binaryData;
 
-	PackedMessage(int _src, int _dst, int _subj, vector<double> _values, string _type, long long _timestamp, int _binarySize, char* _binaryData) 
+	PackedMessage(int _src, int _dst, int _subj, vector<float> _values, string _type, long long _timestamp, int _binarySize, char* _binaryData) 
 		: src(_src), dst(_dst), subj(_subj), values(_values) ,type(_type), timestamp(_timestamp), binarySize(_binarySize), binaryData(_binaryData) {};
 	PackedMessage()
 	{

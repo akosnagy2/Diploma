@@ -6,7 +6,7 @@
 #include <math.h>
 #include <chrono>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include "PathPlannerApp\PathPlanner\Line.h"
+#include "..\Geometry\Line.h"
 
 using namespace std::chrono;
 using namespace std;
@@ -112,7 +112,6 @@ static int checkBack_frontLimit(Profile &prof, int back_limit, int &front_limit,
 
 static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::vector<int> &segment)
 {
-	/*
 	int front_limit, back_limit, front_limit_t;
 	int length = sampProf.path.size();
 	float deltaV;
@@ -147,11 +146,11 @@ static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::ve
 
 	if (!success) //Return when correction failed
 		return;
-	*/
+	/*
 	int length = sampProf.path.size();
 	int front_limit = length - 2, back_limit = 1;
 	double deltaV = errorS / (sampleT * (length - 2));
-
+	*/
 	for (int i = back_limit; i != front_limit + 1; i++ )
 	{
 		sampProf.v[i] += deltaV;
@@ -533,7 +532,7 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 	std::vector<float> a_right(prof.v.size());
 
 	float acp_left, acp_right;
-	for (int i = 0; i < prof.v.size() - 1; i++)
+	for (int i = 0; i < (int)prof.v.size() - 1; i++)
 	{
 		//Check angular velocity
 		w[i] = prof.v[i] * prof.c[i];
@@ -612,6 +611,9 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 {
 	int geoLength, sampLength;
 	std::chrono::high_resolution_clock::time_point start, stop;
+
+	if (geoProfile.path.size() == 1)
+		return geoProfile;
 
 	/*
 	 * Geometric profile--------------------------------------------------------------------
@@ -695,13 +697,13 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 	//Sampled points orientation
 	if (dir)
 	{
-		for (int i = 0; i < sampProfile.path.size() - 1; i++) //Forward direction
+		for (int i = 0; i < (int)sampProfile.path.size() - 1; i++) //Forward direction
 			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p); //[-pi, pi] forward range
 	}
 	else
 	{
-		for (int i = 0; i < sampProfile.path.size() - 1; i++) //Backward direction
-			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p) + M_PI*3; //[2*pi, 4*pi] backward range
+		for (int i = 0; i < (int)sampProfile.path.size() - 1; i++) //Backward direction
+			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p) + (float)M_PI; //[2*pi, 4*pi] backward range
 	}
 	sampProfile.path[sampProfile.path.size() - 1].phi = sampProfile.path[sampProfile.path.size() - 2].phi;
 
@@ -732,7 +734,7 @@ void JoinProfiles(std::vector<Profile> &profs, Profile &out)
 
 		float t0 = out.t.back();
 		float sc0 = out.sc.back();
-		for (int i = 1; i < profs[j].t.size(); i++)
+		for (int i = 1; i < (int)profs[j].t.size(); i++)
 		{
 			out.t.push_back(t0 + profs[j].t[i]);			
 			out.sc.push_back(sc0 + profs[j].sc[i]);
@@ -766,10 +768,11 @@ void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath)
 		PathSegment ps;
 		ps.direction = it->direction;
 		ps.path = sampProfileSegment.path;
+		ps.curvature = sampProfileSegment.c;
 		resultPath.push_back(ps);
 
-		if (it + 1 != path.end())
-			(it+1)->path.front().p = sampProfileSegment.path.back().p;
+		//if (it + 1 != path.end())
+		//	(it+1)->path.front().p = sampProfileSegment.path.back().p;
 	}
 
 	Profile geoSum("Geometric");

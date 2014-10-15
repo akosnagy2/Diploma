@@ -175,7 +175,7 @@ configurationList Segment::getPoints(double dr) {
     //double conf = start.orientation;
 	double conf = atan2(end.position.y - start.position.y, end.position.x - start.position.x);
     Point startPoint = start.position;
-    dr *= dir ? 1 : -1;
+    //dr *= dir ? 1 : -1;
     double dx = dr * cos(conf);
     double dy = dr * sin(conf);
     for (int i = 0; fabs(i * dr) < length; i++) {

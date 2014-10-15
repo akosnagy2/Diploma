@@ -15,7 +15,7 @@ int Profile::CalcTime()
 	deltaT.resize(v.size() - 1);
 
 	t[0] = 0.0f;
-	for (int i = 0; i < v.size() - 1; i++)
+	for (int i = 0; i < (int)v.size() - 1; i++)
 	{
 		deltaT[i] = (2 * deltaSc[i]) / (v[i+1] + v[i]);
 
@@ -36,7 +36,7 @@ int Profile::CalcDistanceFromPathDistance()
 
 	//Get travelled distance for robot
 	float alfa, r;
-	for (int i = 0; i < s.size() - 2; i++)
+	for (int i = 0; i < (int)s.size() - 2; i++)
 	{
 		if (fabs(c[i]) < EPS) //Straight line
 		{
@@ -64,7 +64,7 @@ int Profile::CalcPathDistance()
 	deltaS.resize(path.size() - 1);
 
 	s[0] = 0.0f;
-	for (int i = 0; i < path.size() - 1; i++)
+	for (int i = 0; i < (int)path.size() - 1; i++)
 	{
 		deltaS[i] = sqrtf( powf((path[i+1].p.x - path[i].p.x),2) + powf((path[i+1].p.y - path[i].p.y),2) );
 
@@ -86,7 +86,7 @@ int Profile::CalcDistanceFromVelocity()
 	deltaSc.resize(v.size() - 1);
 
 	sc[0] = 0.0f;
-	for (int i = 0; i < v.size() - 1; i++)
+	for (int i = 0; i < (int)v.size() - 1; i++)
 	{
 		deltaSc[i] = (v[i+1] + v[i]) * deltaT[i] / 2.0f;
 
@@ -107,7 +107,7 @@ int Profile::CalcDistanceFromVelocity(int from, int to)
 	sc.resize(v.size());
 	deltaSc.resize(v.size() - 1);
 
-	if (to > v.size() - 1)
+	if (to > (int)v.size() - 1)
 		return ERROR_INVALID_ARGUMENT;
 
 	if ((from < 0) || (from > to))
@@ -139,7 +139,7 @@ int Profile::CalcTangentAcceleration()
 
 	a.resize(v.size() - 1);
 
-	for (int i = 0; i < v.size() - 1; i++)
+	for (int i = 0; i < (int)v.size() - 1; i++)
 	{
 		a[i] = (v[i+1] - v[i])/(deltaT[i]);
 	}
@@ -160,7 +160,7 @@ int Profile::CalcAcceleration()
 
 	a.resize(v.size() - 1);
 
-	for (int i = 0; i < v.size() - 1; i++)
+	for (int i = 0; i < (int)v.size() - 1; i++)
 	{
 		float a_trans = (v[i+1] - v[i])/(deltaT[i]);
 		float a_cent = (powf(v[i],2))/(1/c[i]);
@@ -189,7 +189,7 @@ int Profile::CalcVelocity()
 	v.resize(sc.size());
 
 	v[0] = 0.0f;
-	for (int i = 0; i < sc.size() - 1; i++)
+	for (int i = 0; i < (int)sc.size() - 1; i++)
 	{
 		v[i+1] = 2 * deltaSc[i] / deltaT[i] - v[i];
 	}
@@ -207,7 +207,7 @@ int Profile::CalcCurvature()
 	curv2D(path, c);
 
 	//Corrigate curvature
-	for (int i = 0; i < c.size() - 1; i++)
+	for (int i = 0; i < (int)c.size() - 1; i++)
 		if ((c[i] != 0) && (2*fabs(1/c[i]) <= deltaS[i]))
 			c[i] = 1/(deltaS[i] * 0.5f * sgn(c[i]) * (1 + EPS));
 
@@ -235,7 +235,7 @@ int Profile::SetSampleTime(float sample_s)
 	deltaT.resize(path.size() - 1);
 
 	t[0] = 0.0f;
-	for (int i = 0; i < path.size() - 1; i++)
+	for (int i = 0; i < (int)path.size() - 1; i++)
 	{
 		deltaT[i] = sample_s;
 

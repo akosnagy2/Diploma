@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "PathPlannerApp\PathPlanner\Config.h"
+#include "Geometry\Config.h"
 
 using namespace std;
 

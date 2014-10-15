@@ -2,12 +2,12 @@
 
 #include <Fade_2D.h>
 #include "Tree.h"
-#include "Triangle.h"
-#include "Config.h"
+#include "..\Geometry\Triangle.h"
+#include "..\Geometry\Config.h"
 #include "ConfigInterval.h"
-#include "Point.h"
-#include "Polygon.h"
-#include "PathPlannerApp\PathSegment.h"
+#include "..\Geometry\Point.h"
+#include "..\Geometry\Polygon.h"
+#include "..\..\PathSegment.h"
 #include <vector>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -76,20 +76,49 @@ namespace PathPlanner
 			for (vector<Config>::iterator it = fPath.begin(); it != fPath.end(); ++it)
 				fixPrePath.push_back(it->p);
 		}
-		vector<PathSegment>& GetCCSPath()
+		vector<PathSegment>& GetPath()
 		{
 			return pathC;
 		}
+		vector<ConfigInterval>& GetCIPath()
+		{
+			return pathCI;
+		}
+		void SetPathDeltaS(float ds)
+		{
+			pathDeltaS = ds;
+		}
+		float GetPathDeltaS()
+		{
+			return pathDeltaS;
+		}
+		void SetRobotWheelBase(float wb)
+		{
+			robotWheelBase = wb;
+		}
+		float GetRobotWheelBase()
+		{
+			return robotWheelBase;
+		}
+		void SetRobotMinimumRadius(float r)
+		{
+			robotMinimumRadius = r;
+		}
+		float GetRobotMinimumRadius()
+		{
+			return robotMinimumRadius;
+		}
 		float GetRobotWidth();
 		void SetRTRParameters(int _maxIteration, float _fixPathProbability, float _roadmapProbability, int randSeed);
-		void CCSPlanner();
+		bool CCSPlanner();
 		bool PrePlanner();
 		bool RTRPlanner();
 		void DrawPrePath();
 		bool TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, ConfigInterval &maxRCI);
-		vector<Config> Scene::ExtractPath(int interpolate);
+		void GenerateRTRPath();
 		void DrawScene(int iteration);
 		void DrawPath();
+
 	private:
 		void RTRIteration(bool start);
 		bool PathFinder();
@@ -102,7 +131,6 @@ namespace PathPlanner
 		float maxCollFreeTurnAmountPointVsLineseg(Point p, Point center, float dThetaMax, int turnDir, Line s1);
 		vector<ConfigInterval> ObtainPath(int startMergeID, int goalMergeID, ConfigInterval mergeRCI, float &pathLength);
 		int circleSegLineSegIntersect(Point center, float angleStart, float dTheta, float radius, Line s1, Point res[2]);
-		//tciTCIMergeability - Checks whether the given TCIs can be merged by a single RCI
 		bool tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigInterval &mergingRCI, Point &mergingPoint);
 		Point GetGuidePoint(bool startPoint);
 		bool TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGoal, vector<int> &recentTCIIDs);
@@ -110,21 +138,27 @@ namespace PathPlanner
 		void PathTCIExtension(vector<ConfigInterval> &pathExt);
 		void ReversePath(vector<ConfigInterval> &path);
 	private:
-		vector<Polygon> envs, envsx;
+		vector<Polygon> envs; //Obstacles
+		vector<Polygon> envsx; //Obstacles with field
 
 		Polygon field;
 		float fieldXLength, fieldYLength;
+		
+		//PrePlanner
 		vector<Triangle> cells;
-
 		ublas::mapped_matrix<int> adjN;	
 		ublas::mapped_matrix<float> roadmap_adj;
 		vector<Config> roadmap_node;
 		vector<Config> prepath;
 
+		//Robot
 		Config robotStart;
 		Config robotGoal;
-		public:Polygon robotShape;
+		Polygon robotShape;
+		float robotWheelBase;
+		float robotMinimumRadius;
 
+		//RTR
 		Tree startTree;
 		Tree goalTree;
 
@@ -141,8 +175,10 @@ namespace PathPlanner
 		default_random_engine generator;
 		random_device rd;
 
+		//Path
 		vector<ConfigInterval> pathCI;
 		vector<PathSegment> pathC;
+		float pathDeltaS;
 	};
 
 }

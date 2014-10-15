@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Config.h"
-#include "Point.h"
-#include "Line.h"
+#include "..\Geometry\Config.h"
+#include "..\Geometry\Point.h"
+#include "..\Geometry\Line.h"
 
 namespace PathPlanner
 {

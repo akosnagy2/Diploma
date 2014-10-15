@@ -31,6 +31,9 @@
     <Filter Include="CCS\planner">
       <UniqueIdentifier>{64d15057-efc9-4003-b821-8497870d91f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{ab22b48e-7019-4e97-87f5-1dc81196293f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,22 +48,7 @@
     <ClCompile Include="..\PackedMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PathPlanner\Angle.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="PathPlanner\Config.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
     <ClCompile Include="PathPlanner\ConfigInterval.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="PathPlanner\Line.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="PathPlanner\path_planner_funcs.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="PathPlanner\Polygon.cpp">
       <Filter>PathPlanner</Filter>
     </ClCompile>
     <ClCompile Include="PathPlanner\PrePlanner.cpp">
@@ -73,9 +61,6 @@
       <Filter>PathPlanner</Filter>
     </ClCompile>
     <ClCompile Include="PathPlanner\Tree.cpp">
-      <Filter>PathPlanner</Filter>
-    </ClCompile>
-    <ClCompile Include="PathPlanner\Triangle.cpp">
       <Filter>PathPlanner</Filter>
     </ClCompile>
     <ClCompile Include="PathProfile\path_profile.cpp">
@@ -162,6 +147,24 @@
     <ClCompile Include="CCS\planner\Scene.cpp">
       <Filter>CCS\planner</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry\Angle.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Config.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Line.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Polygon.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Triangle.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\CCSPlanner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CtrlMessage.h">
@@ -170,34 +173,13 @@
     <ClInclude Include="..\PackedMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PathPlanner\Angle.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="PathPlanner\Config.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
     <ClInclude Include="PathPlanner\ConfigInterval.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="PathPlanner\Line.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="PathPlanner\path_planner_funcs.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="PathPlanner\Point.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="PathPlanner\Polygon.h">
       <Filter>PathPlanner</Filter>
     </ClInclude>
     <ClInclude Include="PathPlanner\Scene.h">
       <Filter>PathPlanner</Filter>
     </ClInclude>
     <ClInclude Include="PathPlanner\Tree.h">
-      <Filter>PathPlanner</Filter>
-    </ClInclude>
-    <ClInclude Include="PathPlanner\Triangle.h">
       <Filter>PathPlanner</Filter>
     </ClInclude>
     <ClInclude Include="PathProfile\path_profile.h">
@@ -286,6 +268,30 @@
     </ClInclude>
     <ClInclude Include="PathSegment.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Angle.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Config.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Line.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Point.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Polygon.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Triangle.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Common.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\CCSPlanner.h">
+      <Filter>PathPlanner</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

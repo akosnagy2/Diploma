@@ -8,7 +8,7 @@
 class CtrlMessage
 {
 public:
-	vector<double> ctrl_sig;
+	vector<float> ctrl_sig;
 	int src, subj;
 
 	CtrlMessage() 

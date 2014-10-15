@@ -86,23 +86,34 @@
     <ClCompile Include="..\CtrlMessage.cpp" />
     <ClCompile Include="..\PackedMessage.cpp" />
     <ClCompile Include="..\PathMessage.cpp" />
+    <ClCompile Include="..\PathPlannerApp\Geometry\Angle.cpp" />
+    <ClCompile Include="..\PathPlannerApp\Geometry\Config.cpp" />
+    <ClCompile Include="..\PathPlannerApp\Geometry\Line.cpp" />
+    <ClCompile Include="..\PathPlannerApp\Geometry\Polygon.cpp" />
+    <ClCompile Include="..\PathPlannerApp\Geometry\Triangle.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.c" />
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_funcs.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_top.cpp" />
     <ClCompile Include="..\Pos2dMessage.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PathFollow\dcwheel_pathCtrl.c" />
-    <ClCompile Include="PathProfile\path_profile.cpp" />
-    <ClCompile Include="PathProfile\path_profile_funcs.cpp" />
-    <ClCompile Include="PathProfile\path_profile_top.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\PackedMessage.h" />
     <ClInclude Include="..\PathMessage.h" />
+    <ClInclude Include="..\PathPlannerApp\Geometry\Angle.h" />
+    <ClInclude Include="..\PathPlannerApp\Geometry\Common.h" />
+    <ClInclude Include="..\PathPlannerApp\Geometry\Config.h" />
+    <ClInclude Include="..\PathPlannerApp\Geometry\Line.h" />
+    <ClInclude Include="..\PathPlannerApp\Geometry\Point.h" />
+    <ClInclude Include="..\PathPlannerApp\Geometry\Polygon.h" />
+    <ClInclude Include="..\PathPlannerApp\Geometry\Triangle.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.h" />
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile.h" />
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_funcs.h" />
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_top.h" />
     <ClInclude Include="..\Pos2dMessage.h" />
     <ClInclude Include="..\Position.h" />
-    <ClInclude Include="pathfollow.h" />
-    <ClInclude Include="PathFollow\dcwheel_pathCtrl.h" />
-    <ClInclude Include="PathProfile\path_profile.h" />
-    <ClInclude Include="PathProfile\path_profile_funcs.h" />
-    <ClInclude Include="PathProfile\path_profile_top.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

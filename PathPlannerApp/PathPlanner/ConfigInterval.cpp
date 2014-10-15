@@ -1,5 +1,5 @@
 #include "ConfigInterval.h"
-#include "path_planner_funcs.h"
+#include "..\Geometry\Common.h"
 
 using namespace PathPlanner;
 using namespace std;

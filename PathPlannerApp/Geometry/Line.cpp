@@ -1,5 +1,5 @@
 #include "Line.h"
-#include "path_planner_funcs.h"
+#include "PathPlannerApp\Geometry\Common.h"
 #include <algorithm>
 
 using namespace std;
@@ -139,50 +139,3 @@ int Line::CircleLineIntersect(Line l1, float radius, Point center, Point &res0, 
 	res1 = res1 + center;
 	return ret;
 }
-
-/*
-int Line::CircleLineIntersect(Line s1, float radius, Point center, Point &res0, Point &res1)
-{
-	float v1 = s1.b.x - s1.a.x;
-	float v2 = s1.b.y - s1.a.y;
-
-	float k = v2*q1.p.x - v1*q1.p.y;
-
-	if (fabs(v2) > EPS)
-	{
-		float A = v1/v2 * v1/v2 + 1;
-		float B = 2 * (k/v2 - center.x) * (v1/v2) - 2*center.y;
-		float C = (k/v2 - center.x)*(k/v2 - center.x) + center.y*center.y - radius*radius;
-
-		if ((B*B - 4*A*C) > 0.0)
-		{
-			res0.y = (-B + sqrtf(B*B - 4*A*C)) / (2*A);
-			res1.y = (-B - sqrtf(B*B - 4*A*C)) / (2*A);
-
-			res0.x = (k + v1*res0.y) / v2;
-			res1.x = (k + v1*res1.y) / v2;
-
-			return 2;
-		}
-	}
-	else
-	{
-		float A = v2/v1 * v2/v1 + 1;
-		float B = -2 * (k/v1 + center.y) * (v2/v1) - 2*center.x;
-		float C = (k/v1 + center.y)*(k/v1 + center.y) + center.x*center.x - radius*radius;
-
-		if ((B*B - 4*A*C) > 0.0)
-		{
-			res0.x = (-B + sqrtf(B*B - 4*A*C)) / (2*A);
-			res1.x = (-B - sqrtf(B*B - 4*A*C)) / (2*A);
-
-			res0.y = (k - v2*res0.y) / (-v1);
-			res1.y = (k - v2*res1.y) / (-v1);
-
-			return 2;
-		}
-	}
-
-	return 0;
-}
-*/

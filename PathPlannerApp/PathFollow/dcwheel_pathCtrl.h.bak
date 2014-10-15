@@ -6,14 +6,20 @@ extern "C" {
 #endif
 
 
-#include "Position.h"
 #include <stdint.h>
 
-typedef struct{
+typedef struct
+{
 	float	x;
 	float	y;
 	float	phi;
 } PositionTypedef;
+
+typedef enum
+{
+	FORWARD,
+	BACKWARD
+} DirectionTypedef;
 
 typedef enum {
 	STATE_INIT,
@@ -22,7 +28,16 @@ typedef enum {
 	STATE_TURN
 } StateTypedef;
 
-typedef struct{
+typedef struct
+{
+	PositionTypedef*    path;
+	float*				curvature;
+	uint16_t			path_len;
+	DirectionTypedef	dir;
+} PathSegmentTypedef;
+
+typedef struct
+{
 	//Common
 	float				sample_s;
 	uint16_t			timer_index;
@@ -30,9 +45,12 @@ typedef struct{
 	void 				(*function)();
 	//PathFollow
 	uint16_t			predictLength;
+	uint16_t			predictLengthImpulse;
+	uint16_t			predictIndex;
+	uint16_t			predictCntr;
 	uint32_t			timeIndex;
+	uint32_t			segmentIndex;
 	float				distParP;
-	float				distParD;
 	float				distParI;
 	float	 			oriParP;
 	float				oriParD;
@@ -50,8 +68,8 @@ typedef struct{
 	float				maxBeta;
 	float				maxW;
 	//Path
-	PositionTypedef*    path;
-	uint16_t			path_len;
+	PathSegmentTypedef* pathSegments;
+	uint16_t			pathSegmentsLen;
 	void				(*pathStop)();
 	StateTypedef		state;
 	uint16_t			brake;
@@ -67,9 +85,9 @@ uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, flo
 void PathCtrl_BBXInit(volatile PathCtrlTypedef* ctrl, long robot_speed_index, long robot_angspeed_index, long left_speed_index, long right_speed_index);
 void PathCtrl_BBXReset(volatile PathCtrlTypedef* ctrl);
 
-void PathCtrl_SetPars(volatile PathCtrlTypedef* ctrl, float distP, float distD, float oriP, float oriD);
+void PathCtrl_SetPars(volatile PathCtrlTypedef* ctrl, float distP, float distI, float oriP, float oriD);
 void PathCtrl_SetRobotPar(volatile PathCtrlTypedef* ctrl, float robotWheelDist, float predictLength);
-void PathCtrl_SetPath(volatile PathCtrlTypedef* ctrl, PositionTypedef* path, uint16_t path_len);
+void PathCtrl_SetPathSegments(volatile PathCtrlTypedef* ctrl, PathSegmentTypedef* pathSegments, uint16_t pathSegmentsLength);
 void PathCtrl_SetState(volatile PathCtrlTypedef* ctrl, uint16_t start);
 
 //Loop
