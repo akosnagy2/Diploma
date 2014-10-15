@@ -223,7 +223,7 @@ int main()
 		
 		//Stop when pathfollow disable
 		if (pathFollow.enable == 0)
-			break;
+			break;	
 
 		//Receive robot position
 		pos_in.receive(s);
@@ -243,8 +243,13 @@ int main()
 		PathCtrl_Loop(&pathFollow, &leftV, &rightV);
 
 		//Info
-		info.values.push_back(pathFollow.distError);
-		info.values.push_back(pathFollow.pathSumDist);				
+		info.values.push_back(pathFollow.debugData[0]);
+		info.values.push_back(pathFollow.debugData[1]);			
+		info.values.push_back(pathFollow.debugData[2]);
+		info.values.push_back(pathFollow.debugData[3]);	
+		info.values.push_back(pathFollow.debugData[4]);
+		info.values.push_back(pathFollow.debugData[5]);	
+						
 			
 		//Robot motors control signals
 		ctrl_out.ctrl_sig.push_back(leftV);
@@ -254,6 +259,8 @@ int main()
 		std::cout << "Target speed: " << leftV << ", " << rightV << endl;
 
  		ctrl_out.send(s);
+		rabitPos.pos.p.x = pathFollow.pathSegments[pathFollow.segmentIndex].path[pathFollow.predictIndex].x;
+		rabitPos.pos.p.y = pathFollow.pathSegments[pathFollow.segmentIndex].path[pathFollow.predictIndex].y;
 		rabitPos.send(s);
 		info.send(s);			
 	}

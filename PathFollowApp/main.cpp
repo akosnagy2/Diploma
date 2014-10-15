@@ -184,6 +184,8 @@ int main()
 			std::cout << "Target speed: " << leftV << ", " << rightV << endl;
 
  			ctrl_out.send(s);
+			rabitPos.pos.p.x = pathFollow.pathSegments[pathFollow.segmentIndex].path[pathFollow.predictIndex].x;
+			rabitPos.pos.p.y = pathFollow.pathSegments[pathFollow.segmentIndex].path[pathFollow.predictIndex].y;
 			rabitPos.send(s);
 			info.send(s);			
 		}

@@ -80,7 +80,7 @@ bool Scene::RTRPlanner()
 		RTRIteration(true);
 		RTRIteration(false);
 
-		//if ((i % 100) == 0)
+		if ((i % 100) == 0)
 			DrawScene(i);
 
 		if (MergeTreesGetPath())
