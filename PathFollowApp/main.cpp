@@ -222,7 +222,7 @@ int main()
 			info.send(s);
 		}
 	} else {
-		CarLineFollower follower(robotData, lineW0, lineKsi);
+		CarLineFollower follower(robotData, lineW0, lineKsi, predictLength);
 		CarSpeedController speedController(distPar_P, distPar_D, 0.0f, timeStep);
 		CarPathController pathController(sampPath, robotData, follower, speedController, predictLength);
 		while(s.good()) {

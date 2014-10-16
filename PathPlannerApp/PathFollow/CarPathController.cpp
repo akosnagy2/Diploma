@@ -1,5 +1,6 @@
 #include "CarPathController.h"
 #include "..\PathPlannerApp\PathFollow\PathShifter.h"
+#include "Geometry/Angle.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -13,7 +14,6 @@ lineFollower(lf),
 speedController(sc)
 {
 	index = 0;
-	predictIndex = 0;
 	pathIndex = 0;
 	state = init;
 	status = true;
@@ -33,13 +33,6 @@ void CarPathController::Loop(Config nextPos)
 {
 	if(!status)
 		return;
-
-	//if(index + 3 > paths[pathIndex].path.size()) {
-	//	status = false;
-	//	v = 0.0f;
-	//	fi = 0.0f;
-	//	return;
-	//}
 
 	switch(state) {
 		case init:
@@ -62,7 +55,11 @@ void CarPathController::Loop(Config nextPos)
 				}
 				break;
 			}
-				
+
+			if(!paths[pathIndex].direction) {
+				nextPos.phi = wrapAngle(nextPos.phi + M_PI);
+			}
+
 			/* Calculate speed control signal */
 			float distError = Config::Distance(nextPos, paths[pathIndex].path[index]);
 			float nextDist = Config::Distance(paths[pathIndex].path[index], paths[pathIndex].path[index + 1]);
@@ -71,16 +68,19 @@ void CarPathController::Loop(Config nextPos)
 			/* Calculate steer control signal */
 			/* Virtual sensor middile position */
 			Config intersection = getSensorCenter(nextPos);
-			float delta = nextPos.phi - predictPoint.phi;
+			float delta = wrapAngle(nextPos.phi - predictPoint.phi);
+
 			float p = Config::Distance(intersection, predictPoint);
-			if(predictPoint.phi - nextPos.phi > 0.0f) {
+
+			Config x = Config(predictPoint.p.x + 1000 * cos(predictPoint.phi), predictPoint.p.y + 1000 * sin(predictPoint.phi), predictPoint.phi);
+			if((x.p.x - predictPoint.p.x)*(intersection.p.y - predictPoint.p.y)
+				- (intersection.p.x - predictPoint.p.x)*(x.p.y - predictPoint.p.y) < 0.0f) {
 				p *= -1.0f;
 			}
-			float predictLength = Config::Distance(intersection, nextPos);
-			fi = lineFollower.getFi(v, delta, p, predictLength);
+			fi = lineFollower.getFi(delta, p);
 
 			if(!paths[pathIndex].direction) {
-				//fi *= -1.0f;
+				fi *= -1.0f;
 				v *= -1.0f;
 			}
 
@@ -94,7 +94,6 @@ void CarPathController::Loop(Config nextPos)
 			break;
 		case turn:
 			fi = 0.0f; //TODO valahogy ki kéne számolni hogy hova kell tekerni.
-			index += predict;
 			state = init;
 			break;
 		default:
@@ -107,19 +106,24 @@ void CarPathController::Loop(Config nextPos)
 
 Config CarPathController::getSensorCenter(Config carPosition)
 {
-	predictIndex = index;
-	float dist = predict + car.getAxisDistance();
-	while(Config::Distance(carPosition, frontPath[pathIndex].path[predictIndex]) < dist && predictIndex < paths[pathIndex].path.size() - 1)
-		predictIndex++;
 	Config intersection;
-	if(Config::Distance(carPosition, frontPath[pathIndex].path[predictIndex]) < dist && predictIndex == paths[pathIndex].path.size() - 1) {
-		float distError = dist - Config::Distance(carPosition, frontPath[pathIndex].path[predictIndex]);
-		predictPoint.p.x = frontPath[pathIndex].path[predictIndex].p.x + cos(frontPath[pathIndex].path[predictIndex].phi) * distError;
-		predictPoint.p.y = frontPath[pathIndex].path[predictIndex].p.y + sin(frontPath[pathIndex].path[predictIndex].phi) * distError;
-		predictPoint.phi = frontPath[pathIndex].path[predictIndex].phi;
-	} else {
-		predictPoint = frontPath[pathIndex].path[predictIndex];
+	int predictIndex = index;
+	float dist = predict + car.getAxisDistance();
+	predictPoint = frontPath[pathIndex].path[predictIndex];
+
+	while(predictIndex < paths[pathIndex].path.size() - 1 && Config::Distance(carPosition, predictPoint) < dist) {
+		predictPoint = frontPath[pathIndex].path[++predictIndex];
 	}
+
+	if(predictIndex == paths[pathIndex].path.size() - 1 && Config::Distance(carPosition, predictPoint) < dist) {
+		float distError = dist - Config::Distance(carPosition, frontPath[pathIndex].path[predictIndex]);
+		predictPoint.p.x = predictPoint.p.x + cos(predictPoint.phi) * distError;
+		predictPoint.p.y = predictPoint.p.y + sin(predictPoint.phi) * distError;
+	}
+
+	if(!paths[pathIndex].direction)
+		predictPoint.phi = wrapAngle(predictPoint.phi + M_PI);
+
 	float teta = wrapAngle(carPosition.phi);
 	if(abs(abs(teta) - M_PI_2) < EPS) {
 		intersection.p.x = carPosition.p.x;

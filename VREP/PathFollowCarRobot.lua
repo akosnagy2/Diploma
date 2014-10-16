@@ -38,13 +38,14 @@ function PathFollowSimulationLoop()
 		rabitPos[1] = returnData[6] / 1000
 		rabitPos[2] = returnData[7] / 1000
 		rabitPos[3] = 0.1 -- fix
-
+		
 		simSetGraphUserData(trackGraphHandle, "TrackError", fi) 
 
-		simAuxiliaryConsolePrint(consoleHandle,NULL) 
-		simAuxiliaryConsolePrint(consoleHandle,"Tracking Error: " .. returnData[8] .. "mm\r\n") 
-		simAuxiliaryConsolePrint(consoleHandle,"Tracking Sum Error: " .. returnData[9] .. "mm\r\n") 
-		simAuxiliaryConsolePrint(consoleHandle,"Pos: ".. v .. "Ori" .. fi .. "\r\n") 
+		if(consoleHandle ~= nil) then
+			simAuxiliaryConsolePrint(consoleHandle,NULL) 
+			simAuxiliaryConsolePrint(consoleHandle,"Tracking Error: " .. returnData[8] .. "mm\r\n") 
+			simAuxiliaryConsolePrint(consoleHandle,"Tracking Sum Error: " .. returnData[9] .. "mm\r\n")
+		end
 
 		simSetObjectPosition(objHandle,sim_handle_parent,pos)
 		simSetObjectOrientation(objHandle,sim_handle_parent,ori)
@@ -60,7 +61,7 @@ end
 
 function PathFollowCarRobot()
 	-- Handles
-	consoleHandle=simAuxiliaryConsoleOpen("Console",10,0,NULL,NULL,NULL)
+	--consoleHandle=simAuxiliaryConsoleOpen("Console",10,0,NULL,NULL,NULL)
 
 	objHandle = simGetObjectAssociatedWithScript(sim_handle_self)
 	leftMotor=simGetObjectHandle("BackLeftMotor") -- Handle of the left motor

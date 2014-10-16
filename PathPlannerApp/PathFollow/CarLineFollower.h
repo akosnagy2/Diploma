@@ -3,14 +3,14 @@
 class CarLineFollower
 {
 public:
-	CarLineFollower(CarLikeRobot &robot, float w0, float ksi);
+	CarLineFollower(CarLikeRobot &robot, float w0, float ksi, float predictLength);
 	~CarLineFollower();
 
-	void setPoles();
-	float getFi(float v, float delta, float p, float predictLength);
+	float getFi(float delta, float p);
 private:
 	CarLikeRobot &robot;
-	float b; //karakterisztikus polinom együthatók
-	float c;
+	float L;
+	float kDelta;
+	float kP;
 };
 

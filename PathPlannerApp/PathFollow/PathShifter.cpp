@@ -23,7 +23,7 @@ Config PathShifter::transformPosition(Config &pos)
 {
 	Config newPos;
 	float sinF = sin(pos.phi);
-	float cosF = cos( pos.phi);
+	float cosF = cos(pos.phi);
 	newPos.p.x = (pathSegment.direction ? 1.0f : -1.0f) * car.getAxisDistance() * cosF + pos.p.x;
 	newPos.p.y = (pathSegment.direction ? 1.0f : -1.0f) * car.getAxisDistance() * sinF + pos.p.y;
 	newPos.phi = pos.phi;

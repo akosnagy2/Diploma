@@ -34,7 +34,6 @@ private:
 	float predict;
 	int index;
 	int pathIndex;
-	int predictIndex;
 
 	Config pos;
 	Config predictPoint;
