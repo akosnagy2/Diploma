@@ -21,14 +21,18 @@ int PathMessage::receive(iostream &stream)
 		if (JSON_msg["type"].asString() != PATHMESSAGE_TYPE_CODE)
 			return 0;
 
-		for (Json::Value::iterator it = JSON_msg["Positions"].begin(); it != JSON_msg["Positions"].end(); it++)
+		for (Json::Value::iterator it = JSON_msg["Segments"].begin(); it != JSON_msg["Segments"].end(); it++)
 		{
-			Position pos;
-			pos.x = (*it)["x"].asFloat();
-			pos.y = (*it)["y"].asFloat();
-			pos.phi = (*it)["phi"].asFloat();
+			PathSegment seg;
+			seg.direction = (*it)["Direction"].asBool();
 
-			this->path.push_back(pos);
+			for (Json::Value::iterator it2 = (*it)["Path"].begin(); it2 != (*it)["Path"].end(); it2++)
+			{
+				seg.path.push_back(Config((*it2)["x"].asFloat(), (*it2)["y"].asFloat(), (*it2)["phi"].asFloat()));				
+				seg.curvature.push_back((*it2)["curvature"].asFloat());
+			}
+
+			this->path.push_back(seg);
 		}
 			
 	}
@@ -39,22 +43,32 @@ int PathMessage::receive(iostream &stream)
 ostream & operator<<(ostream &os, const PathMessage &msg)
 {
 	Json::Value	JSON_msg;
-	Json::Value JSON_array;
+	Json::Value JSON_path;
 
 	JSON_msg["type"] = PATHMESSAGE_TYPE_CODE;
 
-	for (vector<Position>::const_iterator it = msg.path.begin(); it != msg.path.end(); it++)
+	for (vector<PathSegment>::const_iterator it = msg.path.begin(); it != msg.path.end(); it++)
 	{
-		Json::Value	JSON_pos;
+		Json::Value	JSON_seg, JSON_seg_path;
+		JSON_seg["Direction"] = it->direction;
 
-		JSON_pos["x"] = (*it).x;
-		JSON_pos["y"] = (*it).y;
-		JSON_pos["phi"] = (*it).phi;
-		JSON_array.append(JSON_pos);
+		for (int i = 0; i < (int)it->path.size(); i++)
+		{
+			Json::Value	JSON_pos;
+			JSON_pos["x"] = it->path[i].p.x;
+			JSON_pos["y"] = it->path[i].p.y;
+			JSON_pos["phi"] = it->path[i].phi;
+			if (it->curvature.size())
+				JSON_pos["curvature"] = it->curvature[i];
 
+			JSON_seg_path.append(JSON_pos);
+		}
+
+		JSON_seg["Path"] = JSON_seg_path;
+		JSON_path.append(JSON_seg);
 	}
 
-	JSON_msg["Positions"] = JSON_array;
+	JSON_msg["Segments"] = JSON_path;
 
 	Json::FastWriter fastWriter;
 	return os << fastWriter.write(JSON_msg);

@@ -1,5 +1,8 @@
 #pragma once
-#include "Position.h"
+
+#include "Geometry/Config.h"
+using namespace PathPlanner;
+
 #define CAR_EPS 0.0001f
 #ifndef EPS
 	#define EPS	0.001f
@@ -16,7 +19,7 @@ public:
 	float getWheelDistance() { return wheelDistance; }
 	float getWheelDiameter() { return wheelDiameter; }
 
-	Position getPosition();
+	Config getPosition();
 
 	/* Setters */
 	void setAxisDistance(float axisD) { axisDistance = axisD; }
@@ -33,10 +36,12 @@ public:
 		this->steervMax = steervMax;
 		this->timeStep = timeStep;
 	}
-	void setPosition(Position pos) { position = pos; }
+	void setPosition(Config pos) { position = pos; }
 
 	/* Model */
 	void modelRobot(float v, float fi);
+	float getModelSpeed() { return robotSpeed; }
+	float getModelSteer() { return robotSteer; }
 
 	/* Calculators */
 	float getMaxRadiusRatio(float kappa);
@@ -62,6 +67,6 @@ private:
 	/* State variables */
 	float robotSpeed;
 	float robotSteer;
-	Position position;
+	Config position;
 };
 

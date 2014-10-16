@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Geometry">
+      <UniqueIdentifier>{305447ac-2d11-43f9-b296-b08067637381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Geometry">
+      <UniqueIdentifier>{b4d0069c-d4bb-4991-bf58-f59ed8494c6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CtrlMessage.cpp">
@@ -30,6 +36,24 @@
     <ClCompile Include="CarLikeRobot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry\Angle.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Config.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Line.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Polygon.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\Triangle.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="misc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CtrlMessage.h">
@@ -44,10 +68,37 @@
     <ClInclude Include="Pos2dMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CarLikeRobot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Angle.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Config.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Common.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Line.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Point.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Polygon.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Triangle.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="PathSegment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CarLikeRobot.h">
+    <ClInclude Include="misc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

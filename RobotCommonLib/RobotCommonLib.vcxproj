@@ -13,6 +13,12 @@
   <ItemGroup>
     <ClCompile Include="CarLikeRobot.cpp" />
     <ClCompile Include="CtrlMessage.cpp" />
+    <ClCompile Include="Geometry\Angle.cpp" />
+    <ClCompile Include="Geometry\Config.cpp" />
+    <ClCompile Include="Geometry\Line.cpp" />
+    <ClCompile Include="Geometry\Polygon.cpp" />
+    <ClCompile Include="Geometry\Triangle.cpp" />
+    <ClCompile Include="misc.cpp" />
     <ClCompile Include="PackedMessage.cpp" />
     <ClCompile Include="PathMessage.cpp" />
     <ClCompile Include="Pos2dMessage.cpp" />
@@ -20,8 +26,17 @@
   <ItemGroup>
     <ClInclude Include="CarLikeRobot.h" />
     <ClInclude Include="CtrlMessage.h" />
+    <ClInclude Include="Geometry\Angle.h" />
+    <ClInclude Include="Geometry\Common.h" />
+    <ClInclude Include="Geometry\Config.h" />
+    <ClInclude Include="Geometry\Line.h" />
+    <ClInclude Include="Geometry\Point.h" />
+    <ClInclude Include="Geometry\Polygon.h" />
+    <ClInclude Include="Geometry\Triangle.h" />
+    <ClInclude Include="misc.h" />
     <ClInclude Include="PackedMessage.h" />
     <ClInclude Include="PathMessage.h" />
+    <ClInclude Include="PathSegment.h" />
     <ClInclude Include="Pos2dMessage.h" />
     <ClInclude Include="Position.h" />
   </ItemGroup>
@@ -63,7 +78,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\local\jsoncpp-master\include;C:\local\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>

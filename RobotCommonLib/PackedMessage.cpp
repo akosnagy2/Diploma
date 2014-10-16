@@ -23,7 +23,7 @@ int PackedMessage::receive(iostream &stream)
 		subj = JSON_msg["subj"].asInt();
 
 		for (Json::Value::iterator it = JSON_msg["values"].begin(); it != JSON_msg["values"].end(); it++)
-			values.push_back((*it).asDouble());
+			values.push_back((*it).asFloat());
 
 		type = JSON_msg["type"].asString();
 		timestamp = JSON_msg["timestap"].asInt64();
@@ -42,7 +42,7 @@ ostream & operator<<(ostream &os, const PackedMessage &msg)
 	JSON_msg["dst"] = msg.dst;
 	JSON_msg["subj"] = msg.subj;
 
-	for (vector<double>::const_iterator it = msg.values.begin(); it != msg.values.end(); it++)
+	for (vector<float>::const_iterator it = msg.values.begin(); it != msg.values.end(); it++)
 		JSON_array.append(*it);
 
 	JSON_msg["values"] = JSON_array;

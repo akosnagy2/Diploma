@@ -82,10 +82,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PathFollow\dcwheel_pathCtrl.c" />
+    <ClCompile Include="PathProfile\path_profile.cpp" />
+    <ClCompile Include="PathProfile\path_profile_funcs.cpp" />
+    <ClCompile Include="PathProfile\path_profile_top.cpp" />
     <ClCompile Include="path_planner.cpp" />
     <ClCompile Include="path_planner_funcs.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PathFollow\dcwheel_pathCtrl.h" />
+    <ClInclude Include="PathProfile\path_profile.h" />
+    <ClInclude Include="PathProfile\path_profile_funcs.h" />
+    <ClInclude Include="PathProfile\path_profile_top.h" />
     <ClInclude Include="path_planner.h" />
     <ClInclude Include="path_planner_funcs.h" />
   </ItemGroup>

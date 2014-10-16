@@ -1,0 +1,48 @@
+#pragma once
+#include <vector>
+#include "CarLikeRobot.h"
+#include "CarLineFollower.h"
+#include "CarSpeedController.h"
+#include "PathSegment.h"
+#include "Geometry/Config.h"
+
+#define TURN_PHI 1000.0f
+
+typedef enum StateEnum {
+	init = 0,
+	pathFollow,
+	preStop,
+	turn
+} RobotState;
+
+class CarPathController
+{
+public:
+	CarPathController(std::vector<PathSegment> &paths, CarLikeRobot &car, CarLineFollower &lf, CarSpeedController &sc, float predict);
+	~CarPathController();
+
+	void Loop(Config nextPos);
+	float getV() { return v; }
+	float getFi() { return fi; }
+	Config getRabbit() { return predictPoint; }
+private:
+	std::vector<PathSegment> &paths;
+	std::vector<PathSegment> frontPath;
+	CarLineFollower &lineFollower;
+	CarSpeedController &speedController;
+	CarLikeRobot &car;
+	float predict;
+	int index;
+	int pathIndex;
+	int predictIndex;
+
+	Config pos;
+	Config predictPoint;
+	float v;
+	float fi;
+	RobotState state;
+	bool status;
+
+	Config getSensorCenter(Config car);
+};
+
