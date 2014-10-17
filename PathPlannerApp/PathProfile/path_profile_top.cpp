@@ -689,7 +689,7 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 				log << "Profile Check: wheels tangent accelerations ratio error in " << i << ". point." << endl;
 		} else {
 			at_left[i] = (prof.v[i + 1] - prof.v[i]) / prof.deltaT[i] * pRobot->getMaxRadiusRatio(prof.c[i]);
-			if(abs(at_left[i]) > (maxAt + EPS) || isnan(at_left[i]))
+			if(abs(at_left[i]) > (maxAt + EPS) || (boost::math::isnan(at_left[i])))
 				log << "Profile Check: tangent acceleration error in " << i << ". point." << endl;
 		}
 
@@ -706,7 +706,7 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 		} else {
 			acp_left = (pow(prof.v[i], 2)*prof.c[i]) * pRobot->getMaxRadiusRatio(prof.c[i]);
 			a_left[i] = sqrt(pow(acp_left, 2) + pow(at_left[i], 2));
-			if((abs(a_left[i]) > (maxA + EPS)) || (isnan(a_left[i])))
+			if((abs(a_left[i]) > (maxA + EPS)) || (boost::math::isnan(at_left[i])))
 				log << "Profile Check: wheel acceleration error in " << i << ". point." << endl;
 		}
 	}

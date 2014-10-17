@@ -188,11 +188,13 @@ int main()
 	ParseObj("..\\Frame\\" + envFileName, sc);
 
 	start = high_resolution_clock::now();
-	//sc.PrePlanner();
+	sc.PrePlanner();
 	sc.RTRPlanner();
-	if (!sc.CCSPlanner())
-	{
+	bool success = sc.CCSPlanner();
+	if(!success && !robotType) {
 		sc.GenerateRTRPath();
+	} else if(!success) {
+		return -1;
 	}
 	stop = high_resolution_clock::now();
 	cout << duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;

@@ -119,6 +119,8 @@ namespace PathPlanner
 		void DrawScene(int iteration);
 		void DrawPath();
 
+		vector<Config> getPrePath() { return prepath; }
+
 	private:
 		void RTRIteration(bool start);
 		bool PathFinder();

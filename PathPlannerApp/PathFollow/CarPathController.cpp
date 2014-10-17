@@ -1,6 +1,7 @@
 #include "CarPathController.h"
 #include "..\PathPlannerApp\PathFollow\PathShifter.h"
 #include "Geometry/Angle.h"
+#include <boost/math/special_functions.hpp>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -128,7 +129,7 @@ Config CarPathController::getSensorCenter(Config carPosition)
 	if(abs(abs(teta) - M_PI_2) < EPS) {
 		intersection.p.x = carPosition.p.x;
 		intersection.p.y = predictPoint.p.y;
-		intersection.phi = signbit(teta) ? M_PI : 0.0f;
+		intersection.phi = boost::math::signbit(teta) ? M_PI : 0.0f;
 	} else if(abs(teta) < EPS) {
 		intersection.p.x = predictPoint.p.x;
 		intersection.p.y = carPosition.p.y;
