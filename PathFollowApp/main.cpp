@@ -130,44 +130,44 @@ int main()
 	}
 
 	//Calc sampled path
-#ifndef CAR_LIKE_ROBOT
-	setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance, predictLength);
-#else
-	setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep, predictLength);
-#endif
+	if(!robotType) {
+		setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance, predictLength);
+	} else {
+		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep, predictLength);
+	}
 	profile_top(geoPath, sampPath, robotType);
 
 	//Send back to V-REP
 	vrepPath.path = sampPath;
 	vrepPath.send(s);
 
-	//Convert Sampled PathSegments to PathFollow PathSegments
-	vector<vector<PositionTypedef>> path_dsp_points;
-	vector<vector<float>> path_dsp_curv;
-	vector<PathSegmentTypedef> path_dsp;
-	for(auto &ps : sampPath) {
-		vector<PositionTypedef> pathDSP;
-		vector<float> curvDSP;
-		for(int i = 0; i < ps.path.size(); i++) //All points in a path segment
-		{
-			PositionTypedef pointDSP;
-			pointDSP.x = ps.path[i].p.x;
-			pointDSP.y = ps.path[i].p.y;
-			pointDSP.phi = ps.path[i].phi;
-			pathDSP.push_back(pointDSP);
-			curvDSP.push_back(ps.curvature[i]);
-		}
-		path_dsp_points.push_back(pathDSP);
-		path_dsp_curv.push_back(curvDSP);
-		PathSegmentTypedef segmentDSP;
-		segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
-		segmentDSP.path = path_dsp_points.back()._Myfirst;
-		segmentDSP.curvature = path_dsp_curv.back()._Myfirst;
-		segmentDSP.path_len = (uint16_t) path_dsp_points.back().size();
-		path_dsp.push_back(segmentDSP);
-	}
-
 	if(!robotType) {
+		//Convert Sampled PathSegments to PathFollow PathSegments
+		vector<vector<PositionTypedef>> path_dsp_points;
+		vector<vector<float>> path_dsp_curv;
+		vector<PathSegmentTypedef> path_dsp;
+		for(auto &ps : sampPath) {
+			vector<PositionTypedef> pathDSP;
+			vector<float> curvDSP;
+			for(int i = 0; i < ps.path.size(); i++) //All points in a path segment
+			{
+				PositionTypedef pointDSP;
+				pointDSP.x = ps.path[i].p.x;
+				pointDSP.y = ps.path[i].p.y;
+				pointDSP.phi = ps.path[i].phi;
+				pathDSP.push_back(pointDSP);
+				curvDSP.push_back(ps.curvature[i]);
+			}
+			path_dsp_points.push_back(pathDSP);
+			path_dsp_curv.push_back(curvDSP);
+			PathSegmentTypedef segmentDSP;
+			segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
+			segmentDSP.path = path_dsp_points.back()._Myfirst;
+			segmentDSP.curvature = path_dsp_curv.back()._Myfirst;
+			segmentDSP.path_len = (uint16_t) path_dsp_points.back().size();
+			path_dsp.push_back(segmentDSP);
+		}
+
 		PathCtrlTypedef pathFollow;
 		PathCtrl_Init(&pathFollow, 0, 2 * pathMaxAccel / wheelDistance, pathMaxAngularSpeed, (timeStep * 1000), 0, 0);
 		PathCtrl_SetPars(&pathFollow, distPar_P, distPar_D, oriPar_P, oriPar_D);

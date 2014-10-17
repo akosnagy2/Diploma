@@ -1,8 +1,8 @@
 #include "Scene.h"
-#include "..\Geometry\Config.h"
-#include "..\Geometry\Point.h"
-#include "..\Geometry\Line.h"
-#include "..\Geometry\Common.h"
+#include "Geometry\Config.h"
+#include "Geometry\Point.h"
+#include "Geometry\Line.h"
+#include "Geometry\Common.h"
 #include <queue>
 
 using namespace PathPlanner;
@@ -81,14 +81,14 @@ bool Scene::RTRPlanner()
 		RTRIteration(false);
 
 		//if ((i % 100) == 0)
-			DrawScene(i);
+		//	DrawScene(i);
 
 		if (MergeTreesGetPath())
 			break;
 	}
 
 	OptimizePath();
-	DrawPath();
+	//DrawPath();
 	return true;
 }
 
