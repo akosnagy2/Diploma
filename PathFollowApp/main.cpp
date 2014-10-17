@@ -14,10 +14,8 @@
 using boost::asio::ip::tcp;
 using namespace std;
 
-float predictLength = 5;
-float predictLengthImpulse = 15;
-float distPar_P = 0.0f;
-float distPar_D = 1.1f;
+float predictDistanceLength = 10;
+float predictSampleLength = 10;
 float oriPar_P = 0.1f;
 float oriPar_D = 0.15f;
 float timeStep = 0.1f;
@@ -59,26 +57,49 @@ void LoadPathFromTCP(tcp::iostream &s, PathMessage &path)
 	PackedMessage parMsg;
 
 	parMsg.receive(s);			
-	predictLength = (int)parMsg.values[0];
-	predictLengthImpulse = (int)parMsg.values[1];
-	distPar_P = (float)parMsg.values[2];
-	distPar_D = (float)parMsg.values[3];
-	oriPar_P = (float)parMsg.values[4];
-	oriPar_D = (float)parMsg.values[5];
-	timeStep = (float)parMsg.values[6];
-	wheelDistance = (float)parMsg.values[7];
-	pathMaxSpeed = (float)parMsg.values[8];
-	pathMaxAccel = (float)parMsg.values[9];
-	pathMaxTangentAccel = (float)parMsg.values[10];
-	pathMaxAngularSpeed = (float)parMsg.values[11];
+	predictSampleLength = (int)parMsg.values[0];
+	predictDistanceLength = (int)parMsg.values[1];
+	oriPar_P = (float)parMsg.values[2];
+	oriPar_D = (float)parMsg.values[3];
+	timeStep = (float)parMsg.values[4];
+	wheelDistance = (float)parMsg.values[5];
+	pathMaxSpeed = (float)parMsg.values[6];
+	pathMaxAccel = (float)parMsg.values[7];
+	pathMaxTangentAccel = (float)parMsg.values[8];
+	pathMaxAngularSpeed = (float)parMsg.values[9];
 
 	path.receive(s);
+}
+
+void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<float>> &path_dsp_vel, vector<vector<PositionTypedef>> &path_dsp_points, vector<PathSegmentTypedef> &path_dsp)
+{
+	int i = 0;
+	for (auto &ps : sampPath)
+	{
+		vector<PositionTypedef> pathDSP;
+		for (int i = 0; i < ps.path.size(); i++) //All points in a path segment
+		{
+			PositionTypedef pointDSP;
+			pointDSP.x = ps.path[i].p.x;
+			pointDSP.y = ps.path[i].p.y;
+			pointDSP.phi = ps.path[i].phi;
+			pathDSP.push_back(pointDSP);
+		}
+		path_dsp_points.push_back(pathDSP);
+		PathSegmentTypedef segmentDSP;
+		segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
+		segmentDSP.path = path_dsp_points.back()._Myfirst;
+		segmentDSP.velocity = path_dsp_vel[i++]._Myfirst;
+		segmentDSP.path_len = (uint16_t)path_dsp_points.back().size();
+		path_dsp.push_back(segmentDSP);
+	}
 }
 
 int main()
 {
 	vector<PathPlanner::PathSegment> geoPath;
 	vector<PathPlanner::PathSegment> sampPath;
+	vector<vector<float>> path_dsp_vel;
 	PathMessage vrepPath;
 	tcp::iostream s("127.0.0.1","168");
 
@@ -99,47 +120,28 @@ int main()
 	}
 
 	//Calc sampled path
-	setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance, predictLength);
-	profile_top(geoPath, sampPath);	
+	if (geoPath.size() == 0)
+		return -1;
+
+	setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance);
+	profile_top(geoPath, sampPath, path_dsp_vel);	
 	
 	//Send back to V-REP
 	vrepPath.path = sampPath;
 	vrepPath.send(s);
 
 	//Convert Sampled PathSegments to PathFollow PathSegments
-	vector<vector<PositionTypedef>> path_dsp_points;
-	vector<vector<float>> path_dsp_curv;
 	vector<PathSegmentTypedef> path_dsp;
-	for (auto &ps : sampPath)
-	{
-		vector<PositionTypedef> pathDSP;
-		vector<float> curvDSP;
-		for (int i = 0; i < ps.path.size(); i++) //All points in a path segment
-		{
-			PositionTypedef pointDSP;
-			pointDSP.x = ps.path[i].p.x;
-			pointDSP.y = ps.path[i].p.y;
-			pointDSP.phi = ps.path[i].phi;
-			pathDSP.push_back(pointDSP);
-			curvDSP.push_back(ps.curvature[i]);
-		}
-		path_dsp_points.push_back(pathDSP);
-		path_dsp_curv.push_back(curvDSP);
-		PathSegmentTypedef segmentDSP;
-		segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
-		segmentDSP.path = path_dsp_points.back()._Myfirst;
-		segmentDSP.curvature = path_dsp_curv.back()._Myfirst;
-		segmentDSP.path_len = (uint16_t)path_dsp_points.back().size();
-		path_dsp.push_back(segmentDSP);
-	}
+	vector<vector<PositionTypedef>> path_dsp_points;
+	ConvertPathToDSPPath(sampPath, path_dsp_vel, path_dsp_points, path_dsp);
 
 	PathCtrlTypedef pathFollow;
 	PathCtrl_Init(&pathFollow, 0, 2*pathMaxAccel/wheelDistance,pathMaxAngularSpeed, (timeStep*1000), 0, 0);
-	PathCtrl_SetPars(&pathFollow, distPar_P,distPar_D,oriPar_P,oriPar_D);
+	PathCtrl_SetPars(&pathFollow, oriPar_P, oriPar_D);
 	PathCtrl_SetPathSegments(&pathFollow, path_dsp._Myfirst, path_dsp.size());
 	PathCtrl_SetRobotPar(&pathFollow, wheelDistance);
-	pathFollow.predictLength = predictLength;
-	pathFollow.predictLengthImpulse = predictLengthImpulse;
+	pathFollow.predictSampleLength = predictSampleLength;
+	pathFollow.predictDistanceLength = predictDistanceLength;
 	PathCtrl_SetState(&pathFollow, 1);
 
 		while (s.good())
@@ -175,12 +177,15 @@ int main()
 			info.values.push_back(pathFollow.debugData[3]);	
 			info.values.push_back(pathFollow.debugData[4]);
 			info.values.push_back(pathFollow.debugData[5]);	
+			info.values.push_back(pathFollow.pathSegments[pathFollow.segmentIndex].path[pathFollow.timeIndex].x);
+			info.values.push_back(pathFollow.pathSegments[pathFollow.segmentIndex].path[pathFollow.timeIndex].y);
 			
 			//Robot motors control signals
 			ctrl_out.ctrl_sig.push_back(leftV);
 			ctrl_out.ctrl_sig.push_back(rightV);
 			ctrl_out.src = 1;
 
+			cout << "Index: " << pathFollow.timeIndex << endl;
 			std::cout << "Target speed: " << leftV << ", " << rightV << endl;
 
  			ctrl_out.send(s);

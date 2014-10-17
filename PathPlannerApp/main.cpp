@@ -13,10 +13,8 @@ using namespace std;
 using namespace std::chrono;
 using boost::asio::ip::tcp;
 
-float predictLength = 5.0f;
-float predictLengthImpulse = 15.0f;
-float distPar_P = 0.0f;
-float distPar_D = 1.1f;
+float predictDistanceLength = 10;
+float predictSampleLength = 10;
 float oriPar_P = 0.1f;
 float oriPar_D = 0.15f;
 float timeStep = 0.1f;
@@ -25,7 +23,6 @@ float pathMaxSpeed = 200.0f;
 float pathMaxAccel = 100.0f;
 float pathMaxTangentAccel = 100.0f;
 float pathMaxAngularSpeed = 1.628f;
-
 
 //TODO: nincs checkBack;
 
@@ -47,6 +44,30 @@ vector<PathPlanner::Point> LoadPathFromFile(string filename)
 	} 
 
 	return path;
+}
+
+void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<float>> &path_dsp_vel, vector<vector<PositionTypedef>> &path_dsp_points, vector<PathSegmentTypedef> &path_dsp)
+{
+	int i = 0;
+	for (auto &ps : sampPath)
+	{
+		vector<PositionTypedef> pathDSP;
+		for (int i = 0; i < ps.path.size(); i++) //All points in a path segment
+		{
+			PositionTypedef pointDSP;
+			pointDSP.x = ps.path[i].p.x;
+			pointDSP.y = ps.path[i].p.y;
+			pointDSP.phi = ps.path[i].phi;
+			pathDSP.push_back(pointDSP);
+		}
+		path_dsp_points.push_back(pathDSP);
+		PathSegmentTypedef segmentDSP;
+		segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
+		segmentDSP.path = path_dsp_points.back()._Myfirst;
+		segmentDSP.velocity = path_dsp_vel[i++]._Myfirst;
+		segmentDSP.path_len = (uint16_t)path_dsp_points.back().size();
+		path_dsp.push_back(segmentDSP);
+	}
 }
 
 PathPlanner::Polygon ParseObjShape(tinyobj::shape_t &shp)
@@ -102,25 +123,23 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	parMsg.receive(s);	
 	
 	//PathProfile, PathFollow params
-	predictLength = (float)parMsg.values[0];
-	predictLengthImpulse = (float)parMsg.values[1];
-	distPar_P = (float)parMsg.values[2];
-	distPar_D = (float)parMsg.values[3];
-	oriPar_P = (float)parMsg.values[4];
-	oriPar_D = (float)parMsg.values[5];
-	timeStep = (float)parMsg.values[6];
-	wheelDistance = (float)parMsg.values[7];
-	pathMaxSpeed = (float)parMsg.values[8];
-	pathMaxAccel = (float)parMsg.values[9];
-	pathMaxTangentAccel = (float)parMsg.values[10];
-	pathMaxAngularSpeed = (float)parMsg.values[11];
+	predictSampleLength = (float)parMsg.values[0];
+	predictDistanceLength = (float)parMsg.values[1];
+	oriPar_P = (float)parMsg.values[2];
+	oriPar_D = (float)parMsg.values[3];
+	timeStep = (float)parMsg.values[4];
+	wheelDistance = (float)parMsg.values[5];
+	pathMaxSpeed = (float)parMsg.values[6];
+	pathMaxAccel = (float)parMsg.values[7];
+	pathMaxTangentAccel = (float)parMsg.values[8];
+	pathMaxAngularSpeed = (float)parMsg.values[9];
 	
 	//PathPlanner params
-	sc.SetRTRParameters((int)parMsg.values[12], (float)parMsg.values[13], (float)parMsg.values[14], (int)parMsg.values[15]);
-	envFileName = "frame" + to_string((int)parMsg.values[16]) + ".obj";
-	sc.SetRobotMinimumRadius((float)parMsg.values[17]);
+	sc.SetRTRParameters((int)parMsg.values[10], (float)parMsg.values[11], (float)parMsg.values[12], (int)parMsg.values[13]);
+	envFileName = "frame" + to_string((int)parMsg.values[14]) + ".obj";
+	sc.SetRobotMinimumRadius((float)parMsg.values[15]);
 	sc.SetRobotWheelBase(wheelDistance);
-	sc.SetPathDeltaS((float)parMsg.values[18]);
+	sc.SetPathDeltaS((float)parMsg.values[16]);
 
 	return true;
 }
@@ -152,7 +171,8 @@ int main()
 	sc.SetFixPrePath(LoadPathFromFile("RTRPath.txt"));
 	
 	//Set params to scene object
-	ParseObj("..\\Frame\\" + envFileName, sc);
+	if (!ParseObj("..\\Frame\\" + envFileName, sc))
+		return -1;
 
 	start = high_resolution_clock::now();
 	sc.PrePlanner();
@@ -166,50 +186,32 @@ int main()
 
 	vector<PathPlanner::PathSegment> &geoPath = sc.GetPath();
 	vector<PathPlanner::PathSegment> sampPath;
+	vector<vector<float>> path_dsp_vel;
 	PathMessage vrepPath;
 	
 	//Calc sampled path
-	setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance, predictLength);
-	profile_top(geoPath, sampPath);	
+	if (geoPath.size() == 0)
+		return -1;
+
+	setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance);
+	profile_top(geoPath, sampPath, path_dsp_vel);	
 	
 	//Send back to V-REP
 	vrepPath.path = sampPath;
 	vrepPath.send(s);
 
 	//Convert Sampled PathSegments to PathFollow PathSegments
-	vector<vector<PositionTypedef>> path_dsp_points;
-	vector<vector<float>> path_dsp_curv;
 	vector<PathSegmentTypedef> path_dsp;
-	for (auto &ps : sampPath)
-	{
-		vector<PositionTypedef> pathDSP;
-		vector<float> curvDSP;
-		for (int i = 0; i < (int)ps.path.size(); i++) //All points in a path segment
-		{
-			PositionTypedef pointDSP;
-			pointDSP.x = ps.path[i].p.x;
-			pointDSP.y = ps.path[i].p.y;
-			pointDSP.phi = ps.path[i].phi;
-			pathDSP.push_back(pointDSP);
-			curvDSP.push_back(ps.curvature[i]);
-		}
-		path_dsp_points.push_back(pathDSP);
-		path_dsp_curv.push_back(curvDSP);
-		PathSegmentTypedef segmentDSP;
-		segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
-		segmentDSP.path = path_dsp_points.back()._Myfirst;
-		segmentDSP.curvature = path_dsp_curv.back()._Myfirst;
-		segmentDSP.path_len = (uint16_t)path_dsp_points.back().size();
-		path_dsp.push_back(segmentDSP);
-	}
+	vector<vector<PositionTypedef>> path_dsp_points;
+	ConvertPathToDSPPath(sampPath, path_dsp_vel, path_dsp_points, path_dsp);
 
 	PathCtrlTypedef pathFollow;
 	PathCtrl_Init(&pathFollow, 0, 2*pathMaxAccel/wheelDistance,pathMaxAngularSpeed, (timeStep*1000), 0, 0);
-	PathCtrl_SetPars(&pathFollow, distPar_P,distPar_D,oriPar_P,oriPar_D);
+	PathCtrl_SetPars(&pathFollow, oriPar_P, oriPar_D);
 	PathCtrl_SetPathSegments(&pathFollow, path_dsp._Myfirst, path_dsp.size());
 	PathCtrl_SetRobotPar(&pathFollow, wheelDistance);
-	pathFollow.predictLength = (uint16_t)predictLength;
-	pathFollow.predictLengthImpulse = (uint16_t)predictLengthImpulse;
+	pathFollow.predictSampleLength = predictSampleLength;
+	pathFollow.predictDistanceLength = predictDistanceLength;
 	PathCtrl_SetState(&pathFollow, 1);
 
 	while (s.good())

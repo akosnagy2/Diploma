@@ -27,7 +27,7 @@ function samplePath(paths, step)
 	for pHandle, pDir in pairs(paths) do
 		table.insert(pathOut, pDir) --path dir
 		print(pDir)
-		table.insert(pathOut, 1/step + 2) --path size	
+		table.insert(pathOut, math.ceil(1/step) + 1) --path size	
 		for i = 0, 1 + step, step do
 			local pos = simGetPositionOnPath(pHandle,i)
 			local ori = simGetOrientationOnPath(pHandle,i)

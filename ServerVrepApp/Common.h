@@ -36,10 +36,8 @@ typedef struct
 	MotorParamsTypedef RightMotor;
 	float WheelDiameter;
 	float WheelBase;
-	float PredictLength;
-	float PredictLengthImpulse;
-	float DistPar_P;
-	float DistPar_D;
+	float PredictSampleLength;
+	float PredictDistanceLength;
 	float OriPar_P;
 	float OriPar_D;
 	PathParamsTypedef PathPars;

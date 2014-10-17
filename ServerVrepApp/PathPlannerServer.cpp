@@ -19,10 +19,8 @@ void ForwardPathPlannerPars(tcp::iostream &client, PathPlannerParamsTypedef &par
 	PackedMessage pathMsg;
 	PathFollowParamsTypedef p = pars.PathFollow;
 
-	pathMsg.values.push_back(p.PredictLength);	//PredictLength
-	pathMsg.values.push_back(p.PredictLengthImpulse);	//PredictLengthImpulse
-	pathMsg.values.push_back(p.DistPar_P);	//distPar_P
-	pathMsg.values.push_back(p.DistPar_D);	//distPar_D
+	pathMsg.values.push_back(p.PredictSampleLength);	//PredictSampleLength
+	pathMsg.values.push_back(p.PredictDistanceLength);	//PredictDistanceLength
 	pathMsg.values.push_back(p.OriPar_P);	//oriPar_P
 	pathMsg.values.push_back(p.OriPar_D);	//oriPar_D
 	pathMsg.values.push_back(p.TimeStep);	//timeStep

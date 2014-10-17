@@ -23,8 +23,6 @@ float maxW;
 float sampleT;
 //Robot wheel base
 float robotWheelBase;
-//Prediction length
-int predictLen;
 
 static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vector<int> &segment);
 static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Config &result, bool first);
@@ -37,7 +35,7 @@ static void checkGeoProfile(Profile &prof, bool saveProfiles, ofstream &log);
 static void checkSampProfile(Profile &prof, bool saveProfiles, ofstream &log);
 static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile);
 
-void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase, int _predictLen)
+void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase)
 {
 	maxV = _maxV;
 	maxA = _maxA;
@@ -45,7 +43,6 @@ void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampl
 	maxW = _maxW;
 	sampleT = _sampleT;
 	robotWheelBase = _robotWheelBase;
-	predictLen = _predictLen;
 }
 
 static int checkBack_backLimit(Profile &prof, int front_limit, int &back_limit, float &deltaV, float deltaS)
@@ -157,7 +154,7 @@ static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::ve
 	}
 
 	//Regenerate midified path
-	sampProf.CalcDistanceFromVelocity(back_limit - 1, length - 1);;
+	sampProf.CalcDistanceFromVelocity(back_limit - 1, length - 1);
 
 	bool start = true;
 	for (int i = back_limit; i < length; i++)
@@ -742,7 +739,7 @@ void JoinProfiles(std::vector<Profile> &profs, Profile &out)
 	}
 }
 
-void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath)
+void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vector<vector<float>> &resultVelocity)
 {
 	ofstream logfile("logFile.txt", ios_base::app);
 	logfile << "Time parameterized path generation started " << boost::posix_time::second_clock::local_time().date() << " " << boost::posix_time::second_clock::local_time().time_of_day() << endl;
@@ -769,6 +766,7 @@ void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath)
 		ps.direction = it->direction;
 		ps.path = sampProfileSegment.path;
 		ps.curvature = sampProfileSegment.c;
+		resultVelocity.push_back(sampProfileSegment.v);
 		resultPath.push_back(ps);
 
 		//if (it + 1 != path.end())
