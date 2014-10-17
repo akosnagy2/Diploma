@@ -53,10 +53,6 @@ int CarPathFollowServer(deque<float> &pars, CSimpleInConnection &connection, tcp
 {
 	cout << "Connected to PathFollow Client." << endl;
 	logFile << "Connected to PathFollow Client." << endl;
-	int timeIndex = 0;
-	float leftSpeed = 0.0f;
-	float rightSpeed = 0.0f;
-	float prevRobotSpeed = 0.0f;
 
 	CarPathFollowParamsTypedef serverPars;
 	PathMessage path;
@@ -89,57 +85,4 @@ int CarPathFollowServer(deque<float> &pars, CSimpleInConnection &connection, tcp
 	client.close();
 
 	return 0;
-}
-
-void CarSimulationLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile)
-{
-	bool init = true;
-	CarLikeRobot car;
-	car.setParameters(followPars.motor.motorMaxAccel, followPars.motor.motorMaxSpeed,
-		followPars.motor.motorSmoothFactor, followPars.motor.motorMultFactor,
-		followPars.MaxSteerSpeed, followPars.TimeStep);
-	car.setAxisDistance(followPars.AxisDistance);
-	car.setFiMax(followPars.FiMax);
-	car.setWheelDiameter(followPars.WheelDiameter);
-	car.setWheelDistance(followPars.WheelDistance);
-
-	// This is the server loop
-	while(true) {
-		float leftJointPos;
-		float rightJointPos;
-		Config robotPos;
-		CtrlMessage ctrl_msg;
-		Pos2dMessage pos_msg;
-		Pos2dMessage rabit_msg;
-		PackedMessage info_msg;
-
-		//Receive robot position from V-Rep Client
-		if(ReceiveRobotPosition(connection, leftJointPos, rightJointPos, robotPos))
-			break;
-
-		if(init) {
-			init = false;
-			car.setPosition(robotPos);
-		}
-
-		//Send robot position to the PathFollow Client
-		pos_msg.pos = robotPos;
-		pos_msg.send(client);
-
-		//Receive result from PathFollow Client
-		if(!ctrl_msg.receive(client))
-			break;
-		if(!rabit_msg.receive(client))
-			break;
-		if(!info_msg.receive(client))
-			break;
-
-		float v = (float) ctrl_msg.ctrl_sig[0];
-		float fi = (float) ctrl_msg.ctrl_sig[1];
-		car.modelRobot(v, fi);
-
-		//Send data to V-Rep Client
-		if(SendRobotData(connection, car.getModelSpeed(), car.getModelSteer(), car.getPosition(), rabit_msg.pos, info_msg.values))
-			break;
-	}
 }

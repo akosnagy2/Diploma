@@ -14,4 +14,3 @@ using namespace std;
 void CarParsePathFollowPars(deque<float> &parsIn, CarPathFollowParamsTypedef &parsOut);
 void CarForwardPathFollowPars(tcp::iostream &client, CarPathFollowParamsTypedef &pars);
 int CarPathFollowServer(deque<float> &pars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile);
-void CarSimulationLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile);

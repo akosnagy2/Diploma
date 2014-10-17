@@ -1,21 +1,18 @@
 function PathPlannerSimulationLoop()
 	while (simGetSimulationState() ~= sim_simulation_advancing_abouttostop) do
-	
-		phiLeft = simGetJointPosition(leftMotor)
-		phiRight = simGetJointPosition(rightMotor)
 
-		-- Get Robot, Rabit Configuration
-		rabitPosition = simGetObjectPosition(rabitHandle,sim_handle_parent)	
-		position = simGetObjectPosition(objHandle,sim_handle_parent)
-		orientation = simGetObjectOrientation(objHandle,sim_handle_parent)		
-		position2 = simGetObjectPosition(dummy,sim_handle_parent)
-		orientation2 = simGetObjectOrientation(dummy,sim_handle_parent)
-		dataOut={phiLeft, phiRight, (position[1] * 1000.0), (position[2] * 1000.0), orientation2[3]}		
-		
-		-- Send the data
+		phiLeft=simGetJointPosition(leftMotor)
+		phiRight=simGetJointPosition(rightMotor)
+
+		position=simGetObjectPosition(objHandle,sim_handle_parent)
+		orientation=simGetObjectOrientation(objHandle,sim_handle_parent) 
+
+		-- Prepare the data to send:
+		local dataOut={phiLeft, phiRight, (position[1] * 1000.0), (position[2] * 1000.0), orientation[3]} --[mm] -> [m]
+		-- Pack the data as a string:
 		dataOut=simPackFloats(dataOut)
+		-- Send the data:
 		writeSocketData(client,dataOut)
-		
 		-- Read the reply from the server:
 		local returnData=readSocketData(client)
 		if (returnData==nil) then
@@ -23,72 +20,69 @@ function PathPlannerSimulationLoop()
 		end
 		-- unpack the received data:
 		returnData=simUnpackFloats(returnData)
-		
-		-- Set Robot Configuration
-		position[1] = returnData[1] / 1000
-		position[2] = returnData[2] / 1000
-		orientation[3] = returnData[3]
-		
-		-- Set Robot Motors Angle
-		lj = returnData[4]
-		rj = returnData[5]
+		pos = {}
+		ori = {}
+		rabitPos = {}
 
-		-- Set Rabit Position
-		rabitPosition[1] = returnData[6] /1000
-		rabitPosition[2] = returnData[7] /1000
+		pos[1] = returnData[1] / 1000.0 --[mm] -> [m]
+		pos[2] = returnData[2] / 1000.0 --[mm] -> [m]
+		pos[3] = position[3] -- fix
 
-		-- Set Dummmy Position
-		position2[1] = returnData[1] / 1000
-		position2[2] = returnData[2] / 1000
+		ori[1] = orientation[1] -- fix
+		ori[2] = orientation[2] -- fix
+		ori[3] = returnData[3]
 
-		orientation2[1] = 0
-		orientation2[2] = 0
-		orientation2[3] = returnData[3]
-					
-		-- Set graph, robot, rabit position
-		simSetGraphUserData(trackGraphHandle, "TrackError", returnData[8]) 
-		simSetGraphUserData(trackGraphHandle, "PredictError", returnData[9]) 
-		simAuxiliaryConsolePrint(consoleHandle,NULL) 
-		simAuxiliaryConsolePrint(consoleHandle,"Tracking Error: " .. returnData[8] .. "mm\r\n") 
-		simAuxiliaryConsolePrint(consoleHandle,"Tracking Sum Error: " .. returnData[9] .. "mm\r\n") 
+		v = returnData[4] / 1000.0
+		fi = returnData[5]
+
+		rabitPos[1] = returnData[6] / 1000
+		rabitPos[2] = returnData[7] / 1000
+		rabitPos[3] = 0.1 -- fix
 		
-		if (dh ~= nil) then
-			simRemoveDrawingObject(dh)	
+		simSetGraphUserData(trackGraphHandle, "TrackError", fi) 
+
+		if(consoleHandle ~= nil) then
+			simAuxiliaryConsolePrint(consoleHandle,NULL) 
+			simAuxiliaryConsolePrint(consoleHandle,"Tracking Error: " .. returnData[8] .. "mm\r\n") 
+			simAuxiliaryConsolePrint(consoleHandle,"Tracking Sum Error: " .. returnData[9] .. "mm\r\n")
 		end
-		--dh = drawLine({returnData[10]/1000, returnData[11]/1000, 0.1}, 					
-		--			  {returnData[12]/1000, returnData[13]/1000, 0.1})
-				 
-		simSetObjectPosition(objHandle,sim_handle_parent,position)
-		simSetObjectOrientation(objHandle,sim_handle_parent,orientation)					
-		simSetObjectPosition(rabitHandle,sim_handle_parent,rabitPosition)			
-		simSetObjectPosition(dummy, sim_handle_parent, position2)
-		simSetObjectOrientation(dummy, sim_handle_parent , orientation2)
-		
-		simSetJointPosition(leftMotor,lj)	
-		simSetJointPosition(rightMotor,rj)						
+
+		simSetObjectPosition(objHandle,sim_handle_parent,pos)
+		simSetObjectOrientation(objHandle,sim_handle_parent,ori)
+
+		setRobotSpeed(v,fi)
+
+		simSetObjectPosition(rabitHandle,sim_handle_parent,rabitPos)
+		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
 		
 		-- Now don't waste time in this loop if the simulation time hasn't changed! This also synchronizes this thread with the main script
 		simSwitchThread() -- This thread will resume just before the main script is called again
 	end
 end
 
-function PathPlannerDiffRobot()
-	objHandle=simGetObjectHandle("diff_robot_ext") -- Handle of the robot
-	start = loadOBJ("D:/diploma2/Diploma/Frame/frame" .. envFile ..  ".obj")
-	dummy = simCreateDummy(0.01)
-	simSetObjectPosition(dummy,sim_handle_parent,{start[1], start[2], 0.002})
-	simSetObjectOrientation(dummy,sim_handle_parent,{0, 0, start[3]})		
+function PathPlannerCarRobot()
+	objHandle=simGetObjectAssociatedWithScript(sim_handle_self) -- Handle of the robot
+	start = loadOBJ(envPath .. "frame" .. envFile ..  "c.obj")
+--	dummy = simCreateDummy(0.01)
+--	simSetObjectPosition(dummy,sim_handle_parent,{start[1], start[2], 0.002})
+--	simSetObjectOrientation(dummy,sim_handle_parent,{0, 0, start[3]})		
 	robotShape = simGetObjectHandle("Robot") -- Handle of the robot shape
-	simSetObjectParent(robotShape, dummy, true)	
+	
 	simSetObjectPosition(objHandle,sim_handle_parent,{start[1], start[2], 0.09})
 	simSetObjectOrientation(objHandle,sim_handle_parent,{0, 0, start[3]})
+	simSetObjectParent(robotShape, objHandle, true)	
 
 	-- Get some handles first
-	leftMotor=simGetObjectHandle("leftWheelJoint") -- Handle of the left motor
-	rightMotor=simGetObjectHandle("rightWheelJoint") -- Handle of the right motor
+	leftMotor=simGetObjectHandle("BackLeftMotor") -- Handle of the left motor
+	rightMotor=simGetObjectHandle("BackRightMotor") -- Handle of the right motor
+	leftSteer=simGetObjectHandle("FrontLeftTurnerJoint") -- Handle of the front left turner joint
+	rightSteer=simGetObjectHandle("FrontRightTurnerJoint") -- Handle of the front right turner joint
+	rabitHandle=simGetObjectHandle("Sphere") -- Handle of the rabit (path position + prediction length)
 	trackGraphHandle=simGetObjectHandle("TrackErrorGraph")
-	consoleHandle=simAuxiliaryConsoleOpen("Console",10,0,NULL,NULL,NULL)
-	rabitHandle=simGetObjectHandle("rabit") -- Handle of the robot
+	--consoleHandle=simAuxiliaryConsoleOpen("Console",10,0,NULL,NULL,NULL)
+	
+	graphHandle = simGetObjectHandle("Graph")
+	simResetGraph(graphHandle)
 	
 	--Turn off dynamic for Robot
 	p=simBoolOr16(simGetModelProperty(objHandle),sim_modelproperty_not_dynamic)
@@ -129,24 +123,20 @@ function PathPlannerDiffRobot()
 								dt,
 								robotMaxSpeed,
 								robotMaxAccel, 
-								robotMultFactorL, 
-								robotSmoothFactor, 	
-								robotMaxSpeed, 
-								robotMaxAccel, 
-								robotMultFactorR, 
-								robotSmoothFactor, 
-								predictLength, 
-								predictLengthImpulse,					
+								robotMultFactor, 
+								robotSmoothFactor,
+								robotSteerSpeed,
+								predictLength,					
 								distPar_P, 
 								distPar_D, 
-								oriPar_P, 
-								oriPar_D, 
+								w0, 
+								ksi, 
 								wheelDistance, 
 								wheelDiameter,
 								pathMaxSpeed,
 								pathMaxAccel,
-								pathMaxTangentAccel,
-								pathMaxAngularSpeed,
+								axisDistance,
+								fiMax,
 								iterationMax,
 								fixPathProb,
 								roadmapProb,

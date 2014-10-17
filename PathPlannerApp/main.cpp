@@ -7,10 +7,13 @@
 #include "PathMessage.h"
 #include "PathProfile\path_profile_top.h"
 #include "Pos2dMessage.h"
+
 #include "PathFollow\dcwheel_pathCtrl.h"
 #include "PathFollow/CarLineFollower.h"
 #include "PathFollow/CarPathController.h"
 #include "PathFollow/CarSpeedController.h"
+
+#include "CarLikeRobot.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -123,6 +126,14 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 		robotData.setAxisDistance((float) parMsg.values[10]);
 		robotData.setFiMax((float) parMsg.values[11]);
 		robotData.setWheelDistance(wheelDistance);
+		sc.SetRobotMinimumRadius(robotData.getAxisDistance() / tan(robotData.getFiMax()));
+
+		//PathPlanner params
+		sc.SetRTRParameters((int) parMsg.values[12], (float) parMsg.values[13], (float) parMsg.values[14], (int) parMsg.values[15]);
+		envFileName = "frame" + to_string((int) parMsg.values[16]) + "c.obj";
+		sc.SetRobotMinimumRadius((float) parMsg.values[17]);
+		sc.SetRobotWheelBase(wheelDistance);
+		sc.SetPathDeltaS((float) parMsg.values[18]);
 	} else {
 		predictLength = (int) parMsg.values[1];
 		predictLengthImpulse = (int) parMsg.values[2];
@@ -136,15 +147,14 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 		pathMaxAccel = (float) parMsg.values[10];
 		pathMaxTangentAccel = (float) parMsg.values[11];
 		pathMaxAngularSpeed = (float) parMsg.values[12];
+
+		//PathPlanner params
+		sc.SetRTRParameters((int) parMsg.values[13], (float) parMsg.values[14], (float) parMsg.values[15], (int) parMsg.values[16]);
+		envFileName = "frame" + to_string((int) parMsg.values[17]) + ".obj";
+		sc.SetRobotMinimumRadius((float) parMsg.values[18]);
+		sc.SetRobotWheelBase(wheelDistance);
+		sc.SetPathDeltaS((float) parMsg.values[19]);
 	}
-
-	//PathPlanner params
-	sc.SetRTRParameters((int)parMsg.values[13], (float)parMsg.values[14], (float)parMsg.values[15], (int)parMsg.values[16]);
-	envFileName = "frame" + to_string((int)parMsg.values[17]) + ".obj";
-	sc.SetRobotMinimumRadius((float)parMsg.values[18]);
-	sc.SetRobotWheelBase(wheelDistance);
-	sc.SetPathDeltaS((float)parMsg.values[19]);
-
 	return true;
 }
 

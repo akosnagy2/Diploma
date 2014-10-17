@@ -74,8 +74,21 @@ typedef struct
 	float ds;
 } PathPlannerParamsTypedef;
 
+typedef struct
+{
+	CarPathFollowParamsTypedef PathFollow;
+	float iterationMax;
+	float fixPathProb;
+	float roadmapProb;
+	float randSeed;
+	float envFile;
+	float rMin;
+	float ds;
+} CarPathPlannerParamsTypedef;
+
 
 void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile);
+void CarSimulationLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile);
 bool ReceivePars(CSimpleInConnection& connection, deque<float> &pars);
 void ForwardPath(CSimpleInConnection& connection, tcp::iostream& s);
 int ReceiveRobotPosition(CSimpleInConnection& connection,float& leftJointPos, float& rightJointPos, Config& robotPos);

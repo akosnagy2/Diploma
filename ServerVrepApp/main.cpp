@@ -10,6 +10,7 @@
 #include "PathPlannerServer.h"
 #include "RobotPilotServer.h"
 #include "CarPathFollowServer.h"
+#include "CarPathPlannerServer.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -23,6 +24,7 @@ typedef enum
 	DifferentialPathPlanner = 4,
 	DifferentialRobotPilot = 8,
 	CarPathFollow = 16,
+	CarPathPlanner = 32,
 } AppTypedef;
 
 boost::system::error_code SetupServer(boost::asio::io_service& io_service, int port, tcp::iostream& s)
@@ -88,6 +90,9 @@ int main(int argc, char* argv[])
 				break;
 			case CarPathFollow:
 				CarPathFollowServer(vrepPars, connection, client, logFile);
+				break;
+			case CarPathPlanner:
+				CarPathPlannerServer(vrepPars, connection, client, logFile);
 				break;
 			default:
 				break;

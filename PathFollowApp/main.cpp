@@ -25,8 +25,8 @@ PathMessage path_samp_msg;
 CarLikeRobot robotData;
 static bool robotType = false;
 
-float predictLength = 5;
-float predictLengthImpulse = 15;
+float predictLength = 5.0f;
+float predictLengthImpulse = 15.0f;
 float distPar_P = 0.0f;
 float distPar_D = 1.1f;
 float oriPar_P = 0.1f;
