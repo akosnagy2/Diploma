@@ -53,14 +53,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\include;C:\BME\Diploma\Libs\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution\RobotCommonLib;C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\include;C:\BME\Diploma\Libs\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\build\vs71\debug\lib_json;C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>json_vc71_libmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\BME\Diploma\Src\RobotSolution\Debug;C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RobotCommonLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,10 +84,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\CtrlMessage.h" />
-    <ClInclude Include="..\PackedMessage.h" />
-    <ClInclude Include="..\PathMessage.h" />
-    <ClInclude Include="..\Pos2dMessage.h" />
+    <ClInclude Include="CarPathFollowServer.h" />
+    <ClInclude Include="CarPathPlannerServer.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="PathFollowServer.h" />
     <ClInclude Include="PathPlannerServer.h" />
@@ -96,10 +94,8 @@
     <ClInclude Include="simplePorting.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\CtrlMessage.cpp" />
-    <ClCompile Include="..\PackedMessage.cpp" />
-    <ClCompile Include="..\PathMessage.cpp" />
-    <ClCompile Include="..\Pos2dMessage.cpp" />
+    <ClCompile Include="CarPathFollowServer.cpp" />
+    <ClCompile Include="CarPathPlannerServer.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PathFollowServer.cpp" />

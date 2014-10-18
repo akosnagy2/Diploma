@@ -4,10 +4,13 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/multi_array.hpp>
-#include "..\Geometry\Config.h"
+#include "Geometry\Config.h"
 
 #define C_EPS 0.001f
-#define EPS 0.001f
+#ifndef EPS
+	#define EPS 0.001f
+#endif
+
 #define sgn(num) ((num < 0.0f) ? -1.0f : 1.0f)
 #define lerp(v0, v1, t) (v0 + (v1 - v0) * t)
 

@@ -19,21 +19,9 @@
     <Filter Include="PathFollow">
       <UniqueIdentifier>{851cd02f-5e4d-443a-9a7d-53ef603d1580}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Geometry">
-      <UniqueIdentifier>{60cba0d3-6bd8-43eb-b7a3-292e56caa73b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CtrlMessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PackedMessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Pos2dMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\PathMessage.cpp">
@@ -51,35 +39,8 @@
     <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_top.cpp">
       <Filter>PathProfile</Filter>
     </ClCompile>
-    <ClCompile Include="..\PathPlannerApp\Geometry\Angle.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PathPlannerApp\Geometry\Config.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PathPlannerApp\Geometry\Line.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PathPlannerApp\Geometry\Polygon.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PathPlannerApp\Geometry\Triangle.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\PathMessage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Position.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Pos2dMessage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PackedMessage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.h">
       <Filter>PathFollow</Filter>
     </ClInclude>
@@ -91,27 +52,6 @@
     </ClInclude>
     <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_top.h">
       <Filter>PathProfile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathPlannerApp\Geometry\Angle.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathPlannerApp\Geometry\Common.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathPlannerApp\Geometry\Config.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathPlannerApp\Geometry\Line.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathPlannerApp\Geometry\Point.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathPlannerApp\Geometry\Polygon.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathPlannerApp\Geometry\Triangle.h">
-      <Filter>Geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 #define PATH_PROFILE_H_
 
 #include <vector>
-#include "..\Geometry\Config.h"
+#include "Geometry\Config.h"
 #include "path_profile_funcs.h"
 
 using namespace PathPlanner;

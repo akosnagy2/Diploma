@@ -2,12 +2,12 @@
 
 #include <Fade_2D.h>
 #include "Tree.h"
-#include "..\Geometry\Triangle.h"
-#include "..\Geometry\Config.h"
+#include "Geometry\Triangle.h"
+#include "Geometry\Config.h"
 #include "ConfigInterval.h"
-#include "..\Geometry\Point.h"
-#include "..\Geometry\Polygon.h"
-#include "..\..\PathSegment.h"
+#include "Geometry\Point.h"
+#include "Geometry\Polygon.h"
+#include "PathSegment.h"
 #include <vector>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -119,6 +119,11 @@ namespace PathPlanner
 		void DrawScene(int iteration);
 		void DrawPath();
 
+<<<<<<< HEAD
+=======
+		vector<Config> getPrePath() { return prepath; }
+
+>>>>>>> origin/car-like-robot
 	private:
 		void RTRIteration(bool start);
 		bool PathFinder();

@@ -8,4 +8,9 @@ Release
 *.suo
 *.obj
 *.ps
-!Frame/*.obj
+*.exe
+*.vcxproj
+*.ilk
+*.pdb
+*.filters
+*.sln

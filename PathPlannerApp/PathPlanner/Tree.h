@@ -1,9 +1,9 @@
 #pragma once
 
-#include "..\Geometry\Config.h"
+#include "Geometry\Config.h"
 #include "ConfigInterval.h"
-#include "..\Geometry\Line.h"
-#include "..\Geometry\Common.h"
+#include "Geometry\Line.h"
+#include "Geometry\Common.h"
 #include <vector>
 
 using namespace std;

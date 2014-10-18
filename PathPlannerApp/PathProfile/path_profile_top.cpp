@@ -6,7 +6,7 @@
 #include <math.h>
 #include <chrono>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include "..\Geometry\Line.h"
+#include "Geometry\Line.h"
 
 using namespace std::chrono;
 using namespace std;
@@ -24,6 +24,9 @@ float sampleT;
 //Robot wheel base
 float robotWheelBase;
 
+CarLikeRobot* pRobot = NULL;
+bool robotType = false;
+
 static float generateSampledPath(Profile &geoProf, Profile &sampProf, std::vector<int> &segment);
 static void generatePathPointEnd(Profile &geoProf, Profile &sampProf, int i, Config &result, bool first);
 static int generatePathPoint(Profile &geoProf, Profile &sampProf, int i, Config &result, bool &start, std::vector<int> &segment);
@@ -34,6 +37,16 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 static void checkGeoProfile(Profile &prof, bool saveProfiles, ofstream &log);
 static void checkSampProfile(Profile &prof, bool saveProfiles, ofstream &log);
 static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile);
+
+void setCarLimits(CarLikeRobot* pR, float _maxV, float _maxA, float _maxAt, float _sampleT)
+{
+	maxV = _maxV;
+	maxA = _maxA;
+	maxAt = _maxAt;
+	sampleT = _sampleT;
+	pRobot = pR;
+	maxW = maxV * tan(pR->getFiMax()) / pR->getAxisDistance();
+}
 
 void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase)
 {
@@ -365,6 +378,53 @@ static float GetVmax(Profile &prof, std::vector<float> &deltaS, int i, bool left
 	return min(vmax, vmax2);
 }
 
+static float GetVmax(float nextv, float deltaS, float kappa, float ratio)
+{
+	float a, b, c, res0, res1;
+
+	//Solve eq. for maximum velocity
+	a = powf(ratio, 2) / (powf(2 * deltaS, 2)) + powf((kappa * ratio), 2);
+	b = -(2.0f*powf(nextv, 2)*powf(ratio, 2)) / (powf(2 * deltaS, 2));
+	c = -powf(maxA, 2) + (powf(nextv, 4)*powf(ratio, 2)) / (powf(2 * deltaS, 2));
+
+	//Solution always exists, not necessary to check
+	solve2ndOrder(a, b, c, res0, res1);
+	if(res0 >= 0.0f)
+		res0 = sqrtf(res0);
+	else
+		res0 = 0.0f;
+
+	if(res1 >= 0.0f)
+		res1 = sqrtf(res1);
+	else
+		res1 = 0.0f;
+
+	//Solution based on maxA
+	return max(res0, res1);
+}
+
+static void correctAccelBackward(Profile &prof, std::vector<float> &Vmax, std::vector<float> &deltaSc, std::vector<float> &acp, std::vector<float> &ratioMax, int i)
+{
+	bool goBack = false;
+	do
+	{
+		float At = (powf(prof.v[i + 1], 2) - powf(prof.v[i], 2)) / (2 * deltaSc[i]);
+		//Check wheels accel. constraints
+		float v;
+		if(abs(At * ratioMax[i]) >= sqrt(maxA * maxA - acp[i] * acp[i])) {
+			v = GetVmax(prof.v[i + 1], deltaSc[i], prof.c[i], ratioMax[i]);
+			Vmax[i] = min(v * (1 - EPS), Vmax[i]);
+			prof.v[i] = Vmax[i];
+			acp[i] = abs(v * v * prof.c[i] * ratioMax[i]);
+			prof.a[i] = (powf(prof.v[i + 1], 2) - powf(prof.v[i], 2)) / (2 * deltaSc[i]);
+			i--;
+			goBack = true;
+		} else
+			goBack = false;
+
+	} while(goBack && i >= 0);
+}
+
 static void correctAccelBackward(Profile &prof, std::vector<float> &Vmax, std::vector<float> &deltaSl, std::vector<float> &deltaSr, std::vector<float> &acpL, std::vector<float> &acpR, int i)
 {
 	//Check accel. constraints backward
@@ -406,6 +466,78 @@ static void correctAccelBackward(Profile &prof, std::vector<float> &Vmax, std::v
 		}
 
 	} while (goBack);
+}
+
+static void generateVelocityProfile_car(Profile &prof)
+{
+	int length = prof.path.size();
+	std::vector<float> acp(length);
+	std::vector<float> Vmax(length);
+	std::vector<float> ratioMax(length);
+
+	prof.v.resize(length);
+	prof.a.resize(length - 1);
+	prof.deltaSc.resize(length - 1);
+	prof.sc.resize(length);
+
+	//Set default velocity constraint for endpoints
+	Vmax[0] = 0.0f;
+	Vmax[length - 1] = 0.0f;
+	prof.v[0] = 0.0f;
+
+	int i = 0;
+	while(i != length - 1) {
+		//Set default velocity constraints
+		if(i < length - 2)
+			Vmax[i + 1] = maxV;
+
+		//Get travelled distance for the wheels, robot
+		if(fabs(prof.c[i]) < EPS) //Straight line
+		{
+			prof.deltaSc[i] = prof.deltaS[i];
+		} else {
+			float r = 1 / prof.c[i];
+			float alfa;
+			alfa = acos(1 - 0.5f*powf((prof.deltaS[i] / r), 2));
+			prof.deltaSc[i] = alfa*fabs(r);
+		}
+		prof.sc[i + 1] = prof.sc[i] + prof.deltaSc[i];
+
+		//Centripetal accel. for wheels	
+		ratioMax[i] = pRobot->getMaxRadiusRatio(prof.c[i]);
+		acp[i] = abs(prof.v[i] * prof.v[i] * prof.c[i] * ratioMax[i]);
+
+		//Cent. accel. alone exceeds the accel. constraint
+		if(acp[i] >= maxA) {
+			acp[i] = maxA;
+			float vWheelMax = sqrt(maxA / abs(prof.c[i]) * ratioMax[i]);
+			Vmax[i] = min((vWheelMax / ratioMax[i]) * (1 - EPS), maxV);
+			prof.v[i] = Vmax[i];
+
+			// Set tangential acceleration to zero
+			prof.a[i] = 0.0f;
+
+			//Check accel. constraints backward
+			correctAccelBackward(prof, Vmax, prof.deltaSc, acp, ratioMax, i - 1);
+		} else {
+			// Set robot tangential acceleration
+			float atWheel = sqrt(maxA * maxA - acp[i] * acp[i]);
+			prof.a[i] = atWheel / ratioMax[i];
+		}
+
+
+		//Set robot velocity
+		prof.v[i + 1] = sqrt(prof.v[i] * prof.v[i] + 2 * prof.a[i] * prof.deltaSc[i]);
+
+		//Check robot velocity constraint
+		if(prof.v[i + 1] > Vmax[i + 1]) {
+			prof.v[i + 1] = Vmax[i + 1];
+
+			//Check accel. constraints backward
+			correctAccelBackward(prof, Vmax, prof.deltaSc, acp, ratioMax, i);
+		}
+		i++;
+	}
 }
 
 static void generateVelocityProfile_opt(Profile &prof)
@@ -531,45 +663,62 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 	float acp_left, acp_right;
 	for (int i = 0; i < (int)prof.v.size() - 1; i++)
 	{
-		//Check angular velocity
-		w[i] = prof.v[i] * prof.c[i];
-		if ((fabs(w[i]) > (maxW + EPS)) || (boost::math::isnan(w[i])))
-			log << "Profile Check: angular velocity error in " << i << ". point." << endl;
-
+		if(!robotType) {
+			//Check angular velocity
+			w[i] = prof.v[i] * prof.c[i];
+			if((fabs(w[i]) >(maxW + EPS)) || (boost::math::isnan(w[i])))
+				log << "Profile Check: angular velocity error in " << i << ". point." << endl;
+		}
 		//Check robot velocity
 		if ((fabs(prof.v[i]) > (maxV + EPS)) || (boost::math::isnan(prof.v[i])))
 			log << "Profile Check: robot velocity error in " << i << ". point." << endl;
 
-		//Check wheels tangent accel.
-		at_left[i] = (prof.v[i+1] - prof.v[i])*(1.0f - prof.c[i]*robotWheelBase*0.5f)/prof.deltaT[i];
-		at_right[i] = (prof.v[i+1] - prof.v[i])*(1.0f + prof.c[i]*robotWheelBase*0.5f)/prof.deltaT[i];
-		if ((fabs(at_left[i]) > (maxAt + EPS)) || (boost::math::isnan(at_left[i])))
-			log << "Profile Check: left wheel tangent acceleration error in " << i << ". point." << endl;
-		if ((fabs(at_right[i]) > (maxAt + EPS)) || (boost::math::isnan(at_right[i])))
-			log << "Profile Check: right wheel tangent acceleration error in " << i << ". point." << endl;
-		if (fabs((at_right[i]/at_left[i]) - ((1 + robotWheelBase*0.5f*prof.c[i]) / (1 - robotWheelBase*0.5f*prof.c[i]))) > EPS)
-			log << "Profile Check: wheels tangent accelerations ratio error in " << i << ". point." << endl;
+		if(!robotType) {
+			//Check wheels tangent accel.
+			at_left[i] = (prof.v[i + 1] - prof.v[i])*(1.0f - prof.c[i] * robotWheelBase*0.5f) / prof.deltaT[i];
+			at_right[i] = (prof.v[i + 1] - prof.v[i])*(1.0f + prof.c[i] * robotWheelBase*0.5f) / prof.deltaT[i];
+			if((fabs(at_left[i]) > (maxAt + EPS)) || (boost::math::isnan(at_left[i])))
+				log << "Profile Check: left wheel tangent acceleration error in " << i << ". point." << endl;
+			if((fabs(at_right[i]) > (maxAt + EPS)) || (boost::math::isnan(at_right[i])))
+				log << "Profile Check: right wheel tangent acceleration error in " << i << ". point." << endl;
+			if(fabs((at_right[i] / at_left[i]) - ((1 + robotWheelBase*0.5f*prof.c[i]) / (1 - robotWheelBase*0.5f*prof.c[i]))) > EPS)
+				log << "Profile Check: wheels tangent accelerations ratio error in " << i << ". point." << endl;
+		} else {
+			at_left[i] = (prof.v[i + 1] - prof.v[i]) / prof.deltaT[i] * pRobot->getMaxRadiusRatio(prof.c[i]);
+			if(abs(at_left[i]) > (maxAt + EPS) || (boost::math::isnan(at_left[i])))
+				log << "Profile Check: tangent acceleration error in " << i << ". point." << endl;
+		}
 
-		//Check wheels accel.
-		acp_left = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f - prof.c[i]*robotWheelBase*0.5f);
-		a_left[i] = sqrtf(powf(acp_left,2) + powf(at_left[i],2));
-		acp_right = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f + prof.c[i]*robotWheelBase*0.5f);
-		a_right[i] = sqrtf(powf(acp_right,2) + powf(at_right[i],2));
-		if ((fabs(a_left[i]) > (maxA + EPS)) || (boost::math::isnan(a_left[i])))
-			log << "Profile Check: left wheel acceleration error in " << i << ". point." << endl;
-		if ((fabs(a_right[i]) > (maxA + EPS)) || (boost::math::isnan(a_right[i])))
-			log << "Profile Check: right wheel acceleration error in " << i << ". point." << endl;
+		if(!robotType) {
+			//Check wheels accel.
+			acp_left = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f - prof.c[i] * robotWheelBase*0.5f);
+			a_left[i] = sqrtf(powf(acp_left, 2) + powf(at_left[i], 2));
+			acp_right = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f + prof.c[i] * robotWheelBase*0.5f);
+			a_right[i] = sqrtf(powf(acp_right, 2) + powf(at_right[i], 2));
+			if((fabs(a_left[i]) > (maxA + EPS)) || (boost::math::isnan(a_left[i])))
+				log << "Profile Check: left wheel acceleration error in " << i << ". point." << endl;
+			if((fabs(a_right[i]) > (maxA + EPS)) || (boost::math::isnan(a_right[i])))
+				log << "Profile Check: right wheel acceleration error in " << i << ". point." << endl;
+		} else {
+			acp_left = (pow(prof.v[i], 2)*prof.c[i]) * pRobot->getMaxRadiusRatio(prof.c[i]);
+			a_left[i] = sqrt(pow(acp_left, 2) + pow(at_left[i], 2));
+			if((abs(a_left[i]) > (maxA + EPS)) || (boost::math::isnan(at_left[i])))
+				log << "Profile Check: wheel acceleration error in " << i << ". point." << endl;
+		}
 	}
 
 	if (saveProfiles)
 	{
 		ProfileSave(profile_name + "_W.txt",prof.t, w);
 		ProfileSave(profile_name + "_V.txt",prof.t, prof.v);
+		prof.a.push_back(0.0f);
 		ProfileSave(profile_name + "_A.txt",prof.t, prof.a);
-		ProfileSave(profile_name + "_A_Left.txt",prof.t, a_left);
-		ProfileSave(profile_name + "_A_Right.txt",prof.t, a_right);
-		ProfileSave(profile_name + "_At_Left.txt",prof.t, at_left);
-		ProfileSave(profile_name + "_At_Right.txt",prof.t, at_right);
+		if(!robotType) {
+			ProfileSave(profile_name + "_A_Left.txt", prof.t, a_left);
+			ProfileSave(profile_name + "_A_Right.txt", prof.t, a_right);
+			ProfileSave(profile_name + "_At_Left.txt", prof.t, at_left);
+			ProfileSave(profile_name + "_At_Right.txt", prof.t, at_right);
+		}
 		ProfileSave(profile_name + "_Path.txt",prof.path);
 		ProfileSave(profile_name + "_Sc.txt",prof.t,prof.sc);
 		ProfileSave(profile_name + "_S.txt",prof.t,prof.s);
@@ -633,7 +782,11 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 
 	//Velocity profile generation
 	start = high_resolution_clock::now();
-	generateVelocityProfile_opt(geoProfile);
+	if(!robotType) {
+		generateVelocityProfile_opt(geoProfile);
+	} else {
+		generateVelocityProfile_car(geoProfile);
+	}
 	geoProfile.CalcTime();
 	stop = high_resolution_clock::now();
 	logfile << "Geometric profile: profile created, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
@@ -739,8 +892,10 @@ void JoinProfiles(std::vector<Profile> &profs, Profile &out)
 	}
 }
 
-void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vector<vector<float>> &resultVelocity)
+
+void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vector<vector<float>> &resultVelocity, bool rType)
 {
+	robotType = rType;
 	ofstream logfile("logFile.txt", ios_base::app);
 	logfile << "Time parameterized path generation started " << boost::posix_time::second_clock::local_time().date() << " " << boost::posix_time::second_clock::local_time().time_of_day() << endl;
 	logfile << "Robot parameters:" << endl;
@@ -767,6 +922,7 @@ void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vec
 		ps.path = sampProfileSegment.path;
 		ps.curvature = sampProfileSegment.c;
 		resultVelocity.push_back(sampProfileSegment.v);
+
 		resultPath.push_back(ps);
 
 		//if (it + 1 != path.end())

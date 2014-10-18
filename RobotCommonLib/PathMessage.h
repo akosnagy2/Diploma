@@ -2,7 +2,7 @@
 #define _PATHMESSAGE__
 
 #include "PackedMessage.h"
-#include "PathPlannerApp\PathSegment.h"
+#include "PathSegment.h"
 
 #define PATHMESSAGE_TYPE_CODE "PATH"
 

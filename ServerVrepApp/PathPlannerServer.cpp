@@ -19,6 +19,7 @@ void ForwardPathPlannerPars(tcp::iostream &client, PathPlannerParamsTypedef &par
 	PackedMessage pathMsg;
 	PathFollowParamsTypedef p = pars.PathFollow;
 
+	pathMsg.values.push_back(0.0f); // robot type = differential
 	pathMsg.values.push_back(p.PredictSampleLength);	//PredictSampleLength
 	pathMsg.values.push_back(p.PredictDistanceLength);	//PredictDistanceLength
 	pathMsg.values.push_back(p.OriPar_P);	//oriPar_P

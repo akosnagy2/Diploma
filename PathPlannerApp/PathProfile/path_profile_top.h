@@ -11,11 +11,13 @@
 #include <vector>
 #include <deque>
 #include "path_profile.h"
-#include "PathPlannerApp\PathSegment.h"
+#include "PathSegment.h"
+#include "CarLikeRobot.h"
 
 #define SAVE_PROFILE false
 
+void setCarLimits(CarLikeRobot* pR, float _maxV, float _maxA, float _maxAt, float _sampleT);
 void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase);
-void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vector<vector<float>> &resultVelocity);
+void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vector<vector<float>> &resultVelocity, bool rType);
 
 #endif /* PATH_PROFILE_TOP_H_ */

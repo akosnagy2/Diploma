@@ -7,16 +7,37 @@
 #include "PathMessage.h"
 #include "PathProfile\path_profile_top.h"
 #include "Pos2dMessage.h"
+<<<<<<< HEAD
 #include "PathPlannerApp\PathFollow\dcwheel_pathCtrl.h"
+=======
+
+#include "PathFollow\dcwheel_pathCtrl.h"
+#include "PathFollow/CarLineFollower.h"
+#include "PathFollow/CarPathController.h"
+#include "PathFollow/CarSpeedController.h"
+
+#include "CarLikeRobot.h"
+>>>>>>> origin/car-like-robot
 
 using namespace std;
 using namespace std::chrono;
 using boost::asio::ip::tcp;
 
+<<<<<<< HEAD
 float predictDistanceLength = 10;
 float predictSampleLength = 10;
 float oriPar_P = 0.1f;
 float oriPar_D = 0.15f;
+=======
+float predictLength = 5.0f;
+float predictLengthImpulse = 15.0f;
+float distPar_P = 0.0f;
+float distPar_D = 1.1f;
+float oriPar_P = 0.1f;
+float oriPar_D = 0.15f;
+float lineW0 = 2.0f;
+float lineKsi = 1.0f;
+>>>>>>> origin/car-like-robot
 float timeStep = 0.1f;
 float wheelDistance = 254.0f;
 float pathMaxSpeed = 200.0f;
@@ -24,6 +45,12 @@ float pathMaxAccel = 100.0f;
 float pathMaxTangentAccel = 100.0f;
 float pathMaxAngularSpeed = 1.628f;
 
+<<<<<<< HEAD
+=======
+CarLikeRobot robotData;
+static bool robotType = false;
+
+>>>>>>> origin/car-like-robot
 //TODO: nincs checkBack;
 
 vector<PathPlanner::Point> LoadPathFromFile(string filename)
@@ -46,6 +73,7 @@ vector<PathPlanner::Point> LoadPathFromFile(string filename)
 	return path;
 }
 
+<<<<<<< HEAD
 void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<float>> &path_dsp_vel, vector<vector<PositionTypedef>> &path_dsp_points, vector<PathSegmentTypedef> &path_dsp)
 {
 	int i = 0;
@@ -70,6 +98,8 @@ void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<float>> &
 	}
 }
 
+=======
+>>>>>>> origin/car-like-robot
 PathPlanner::Polygon ParseObjShape(tinyobj::shape_t &shp)
 {
 	PathPlanner::Polygon poly;
@@ -123,6 +153,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	parMsg.receive(s);	
 	
 	//PathProfile, PathFollow params
+<<<<<<< HEAD
 	predictSampleLength = (float)parMsg.values[0];
 	predictDistanceLength = (float)parMsg.values[1];
 	oriPar_P = (float)parMsg.values[2];
@@ -141,6 +172,51 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	sc.SetRobotWheelBase(wheelDistance);
 	sc.SetPathDeltaS((float)parMsg.values[16]);
 
+=======
+	robotType = ((float) parMsg.values[0]) > 0.0f;
+	if(robotType) {
+		predictLength = (int) parMsg.values[1];
+		distPar_P = (float) parMsg.values[2];
+		distPar_D = (float) parMsg.values[3];
+		lineW0 = (float) parMsg.values[4];
+		lineKsi = (float) parMsg.values[5];
+		timeStep = (float) parMsg.values[6];
+		wheelDistance = (float) parMsg.values[7];
+		pathMaxSpeed = (float) parMsg.values[8];
+		pathMaxAccel = (float) parMsg.values[9];
+		robotData.setAxisDistance((float) parMsg.values[10]);
+		robotData.setFiMax((float) parMsg.values[11]);
+		robotData.setWheelDistance(wheelDistance);
+		sc.SetRobotMinimumRadius(robotData.getAxisDistance() / tan(robotData.getFiMax()));
+
+		//PathPlanner params
+		sc.SetRTRParameters((int) parMsg.values[12], (float) parMsg.values[13], (float) parMsg.values[14], (int) parMsg.values[15]);
+		envFileName = "frame" + to_string((int) parMsg.values[16]) + "c.obj";
+		sc.SetRobotMinimumRadius((float) parMsg.values[17]);
+		sc.SetRobotWheelBase(wheelDistance);
+		sc.SetPathDeltaS((float) parMsg.values[18]);
+	} else {
+		predictLength = (int) parMsg.values[1];
+		predictLengthImpulse = (int) parMsg.values[2];
+		distPar_P = (float) parMsg.values[3];
+		distPar_D = (float) parMsg.values[4];
+		oriPar_P = (float) parMsg.values[5];
+		oriPar_D = (float) parMsg.values[6];
+		timeStep = (float) parMsg.values[7];
+		wheelDistance = (float) parMsg.values[8];
+		pathMaxSpeed = (float) parMsg.values[9];
+		pathMaxAccel = (float) parMsg.values[10];
+		pathMaxTangentAccel = (float) parMsg.values[11];
+		pathMaxAngularSpeed = (float) parMsg.values[12];
+
+		//PathPlanner params
+		sc.SetRTRParameters((int) parMsg.values[13], (float) parMsg.values[14], (float) parMsg.values[15], (int) parMsg.values[16]);
+		envFileName = "frame" + to_string((int) parMsg.values[17]) + ".obj";
+		sc.SetRobotMinimumRadius((float) parMsg.values[18]);
+		sc.SetRobotWheelBase(wheelDistance);
+		sc.SetPathDeltaS((float) parMsg.values[19]);
+	}
+>>>>>>> origin/car-like-robot
 	return true;
 }
 
@@ -171,21 +247,34 @@ int main()
 	sc.SetFixPrePath(LoadPathFromFile("RTRPath.txt"));
 	
 	//Set params to scene object
+<<<<<<< HEAD
 	if (!ParseObj("..\\Frame\\" + envFileName, sc))
 		return -1;
+=======
+	ParseObj("..\\Frame\\" + envFileName, sc);
+>>>>>>> origin/car-like-robot
 
 	start = high_resolution_clock::now();
 	sc.PrePlanner();
 	sc.RTRPlanner();
+<<<<<<< HEAD
 	if (!sc.CCSPlanner())
 	{
 		sc.GenerateRTRPath();
+=======
+	bool success = sc.CCSPlanner();
+	if(!success && !robotType) {
+		sc.GenerateRTRPath();
+	} else if(!success) {
+		return -1;
+>>>>>>> origin/car-like-robot
 	}
 	stop = high_resolution_clock::now();
 	cout << duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
 	vector<PathPlanner::PathSegment> &geoPath = sc.GetPath();
 	vector<PathPlanner::PathSegment> sampPath;
+<<<<<<< HEAD
 	vector<vector<float>> path_dsp_vel;
 	PathMessage vrepPath;
 	
@@ -195,11 +284,23 @@ int main()
 
 	setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance);
 	profile_top(geoPath, sampPath, path_dsp_vel);	
+=======
+	PathMessage vrepPath;
+	
+	//Calc sampled path
+	if(!robotType) {
+		setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance, predictLength);
+	} else {
+		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep, predictLength);
+	}
+	profile_top(geoPath, sampPath, robotType);	
+>>>>>>> origin/car-like-robot
 	
 	//Send back to V-REP
 	vrepPath.path = sampPath;
 	vrepPath.send(s);
 
+<<<<<<< HEAD
 	//Convert Sampled PathSegments to PathFollow PathSegments
 	vector<PathSegmentTypedef> path_dsp;
 	vector<vector<PositionTypedef>> path_dsp_points;
@@ -265,6 +366,125 @@ int main()
 		rabitPos.pos.p.y = pathFollow.pathSegments[pathFollow.segmentIndex].path[pathFollow.predictIndex].y;
 		rabitPos.send(s);
 		info.send(s);			
+=======
+	if(!robotType) {
+		//Convert Sampled PathSegments to PathFollow PathSegments
+		vector<vector<PositionTypedef>> path_dsp_points;
+		vector<vector<float>> path_dsp_curv;
+		vector<PathSegmentTypedef> path_dsp;
+		for(auto &ps : sampPath) {
+			vector<PositionTypedef> pathDSP;
+			vector<float> curvDSP;
+			for(int i = 0; i < (int) ps.path.size(); i++) //All points in a path segment
+			{
+				PositionTypedef pointDSP;
+				pointDSP.x = ps.path[i].p.x;
+				pointDSP.y = ps.path[i].p.y;
+				pointDSP.phi = ps.path[i].phi;
+				pathDSP.push_back(pointDSP);
+				curvDSP.push_back(ps.curvature[i]);
+			}
+			path_dsp_points.push_back(pathDSP);
+			path_dsp_curv.push_back(curvDSP);
+			PathSegmentTypedef segmentDSP;
+			segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
+			segmentDSP.path = path_dsp_points.back()._Myfirst;
+			segmentDSP.curvature = path_dsp_curv.back()._Myfirst;
+			segmentDSP.path_len = (uint16_t) path_dsp_points.back().size();
+			path_dsp.push_back(segmentDSP);
+		}
+
+		PathCtrlTypedef pathFollow;
+		PathCtrl_Init(&pathFollow, 0, 2 * pathMaxAccel / wheelDistance, pathMaxAngularSpeed, (timeStep * 1000), 0, 0);
+		PathCtrl_SetPars(&pathFollow, distPar_P, distPar_D, oriPar_P, oriPar_D);
+		PathCtrl_SetPathSegments(&pathFollow, path_dsp._Myfirst, path_dsp.size());
+		PathCtrl_SetRobotPar(&pathFollow, wheelDistance);
+		pathFollow.predictLength = (uint16_t) predictLength;
+		pathFollow.predictLengthImpulse = (uint16_t) predictLengthImpulse;
+		PathCtrl_SetState(&pathFollow, 1);
+
+		while(s.good()) {
+			CtrlMessage ctrl_out;
+			Config act_pos;
+			Pos2dMessage pos_in;
+			Pos2dMessage rabitPos;
+			PackedMessage info;
+			float leftV = 0, rightV = 0;
+
+			//Stop when pathfollow disable
+			if(pathFollow.enable == 0)
+				break;
+
+			//Receive robot position
+			pos_in.receive(s);
+			act_pos = pos_in.pos;
+
+			//Corrigate phi to [-Pi, Pi] range
+			while(act_pos.phi > (float) M_PI)
+				act_pos.phi -= (float) (2 * M_PI);
+
+			while(act_pos.phi < -(float) M_PI)
+				act_pos.phi += (float) (2 * M_PI);
+
+			//Process path follow
+			pathFollow.robotPos.x = act_pos.p.x;
+			pathFollow.robotPos.y = act_pos.p.y;
+			pathFollow.robotPos.phi = act_pos.phi;
+			PathCtrl_Loop(&pathFollow, &leftV, &rightV);
+
+			//Info
+			info.values.push_back(pathFollow.distError);
+			info.values.push_back(pathFollow.pathSumDist);
+
+			//Robot motors control signals
+			ctrl_out.ctrl_sig.push_back(leftV);
+			ctrl_out.ctrl_sig.push_back(rightV);
+			ctrl_out.src = 1;
+
+			std::cout << "Target speed: " << leftV << ", " << rightV << endl;
+
+			ctrl_out.send(s);
+			rabitPos.send(s);
+			info.send(s);
+		}
+	} else {
+		CarLineFollower follower(robotData, lineW0, lineKsi, predictLength);
+		CarSpeedController speedController(distPar_P, distPar_D, 0.0f, timeStep);
+		CarPathController pathController(sampPath, robotData, follower, speedController, predictLength);
+		while(s.good()) {
+			CtrlMessage ctrl_out;
+			Config act_pos;
+			Pos2dMessage pos_in;
+			Pos2dMessage rabitPos;
+			PackedMessage info;
+
+			//Receive robot position
+			pos_in.receive(s);
+			act_pos = pos_in.pos;
+
+			//Corrigate phi to [-Pi, Pi] range
+			while(act_pos.phi > (float) M_PI)
+				act_pos.phi -= (float) (2 * M_PI);
+
+			while(act_pos.phi < -(float) M_PI)
+				act_pos.phi += (float) (2 * M_PI);
+
+			pathController.Loop(act_pos);
+			rabitPos.pos = pathController.getRabbit();
+
+			info.values.push_back(speedController.getDistError());
+			info.values.push_back(speedController.getSumError());
+
+			ctrl_out.ctrl_sig.push_back(pathController.getV());
+			ctrl_out.ctrl_sig.push_back(pathController.getFi());
+			ctrl_out.src = 1;
+
+			std::cout << "Target speed: " << pathController.getV() << ", angle: " << pathController.getFi() << endl;
+			ctrl_out.send(s);
+			rabitPos.send(s);
+			info.send(s);
+		}
+>>>>>>> origin/car-like-robot
 	}
 
 	return 0;

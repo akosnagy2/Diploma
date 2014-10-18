@@ -15,22 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CtrlMessage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PackedMessage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Pos2dMessage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="simpleInConnection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="simplePorting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PathPlannerServer.h">
@@ -45,17 +33,14 @@
     <ClInclude Include="Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CarPathFollowServer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CarPathPlannerServer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\CtrlMessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PackedMessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Pos2dMessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +48,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="simplePorting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PathMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PathPlannerServer.cpp">
@@ -78,6 +60,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CarPathFollowServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CarPathPlannerServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

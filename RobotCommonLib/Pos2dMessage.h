@@ -2,7 +2,7 @@
 #define _POS2DMESSAGE__
 
 #include "PackedMessage.h"
-#include "PathPlannerApp\Geometry\Config.h"
+#include "Geometry\Config.h"
 #define POS2DMESSAGE_TYPE_CODE "POS2D"
 
 using namespace PathPlanner;

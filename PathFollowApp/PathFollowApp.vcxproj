@@ -53,14 +53,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\include;C:\BME\Diploma\Libs\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution\RobotCommonLib;C:\BME\Diploma\Libs\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\build\vs71\debug\lib_json;C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>json_vc71_libmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\BME\Diploma\Src\RobotSolution\Debug;C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RobotCommonLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,37 +83,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\CtrlMessage.cpp" />
-    <ClCompile Include="..\PackedMessage.cpp" />
     <ClCompile Include="..\PathMessage.cpp" />
-    <ClCompile Include="..\PathPlannerApp\Geometry\Angle.cpp" />
-    <ClCompile Include="..\PathPlannerApp\Geometry\Config.cpp" />
-    <ClCompile Include="..\PathPlannerApp\Geometry\Line.cpp" />
-    <ClCompile Include="..\PathPlannerApp\Geometry\Polygon.cpp" />
-    <ClCompile Include="..\PathPlannerApp\Geometry\Triangle.cpp" />
     <ClCompile Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.c" />
     <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile.cpp" />
     <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_funcs.cpp" />
     <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_top.cpp" />
-    <ClCompile Include="..\Pos2dMessage.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\PackedMessage.h" />
-    <ClInclude Include="..\PathMessage.h" />
-    <ClInclude Include="..\PathPlannerApp\Geometry\Angle.h" />
-    <ClInclude Include="..\PathPlannerApp\Geometry\Common.h" />
-    <ClInclude Include="..\PathPlannerApp\Geometry\Config.h" />
-    <ClInclude Include="..\PathPlannerApp\Geometry\Line.h" />
-    <ClInclude Include="..\PathPlannerApp\Geometry\Point.h" />
-    <ClInclude Include="..\PathPlannerApp\Geometry\Polygon.h" />
-    <ClInclude Include="..\PathPlannerApp\Geometry\Triangle.h" />
     <ClInclude Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.h" />
     <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile.h" />
     <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_funcs.h" />
     <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_top.h" />
-    <ClInclude Include="..\Pos2dMessage.h" />
-    <ClInclude Include="..\Position.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
