@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="PathPlanner">
+      <UniqueIdentifier>{bebd5074-2357-4cab-b53d-bf664a93d25b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PathFollow">
+      <UniqueIdentifier>{06d7c2e8-9c77-4d0a-bcb0-0ce689d61dca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PathProfile">
+      <UniqueIdentifier>{223278bb-32a6-43a8-89f2-3d814a9640fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CCS">
+      <UniqueIdentifier>{5aab4f38-9812-4c43-a4cd-656a2ffa37ac}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathProfile\path_profile.cpp">
+      <Filter>PathProfile</Filter>
+    </ClCompile>
+    <ClCompile Include="PathProfile\path_profile_funcs.cpp">
+      <Filter>PathProfile</Filter>
+    </ClCompile>
+    <ClCompile Include="PathProfile\path_profile_top.cpp">
+      <Filter>PathProfile</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\dcwheel_pathCtrl.c">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\ConfigInterval.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\CCSPlanner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\PrePlanner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\RTRPlanner.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\Scene.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanner\Tree.cpp">
+      <Filter>PathPlanner</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\CarLineFollower.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\CarPathController.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\CarSpeedController.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\PathShifter.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="tiny_obj_loader.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PathProfile\path_profile.h">
+      <Filter>PathProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="PathProfile\path_profile_funcs.h">
+      <Filter>PathProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="PathProfile\path_profile_top.h">
+      <Filter>PathProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\dcwheel_pathCtrl.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\ConfigInterval.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\CCSPlanner.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Scene.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanner\Tree.h">
+      <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\CarLineFollower.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\CarPathController.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\CarSpeedController.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\PathShifter.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

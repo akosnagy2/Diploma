@@ -7,8 +7,5 @@ Release
 *.txt
 *.suo
 *.exe
-*.vcxproj
 *.ilk
 *.pdb
-*.filters
-*.sln
