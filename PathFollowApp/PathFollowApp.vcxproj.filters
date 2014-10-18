@@ -39,6 +39,18 @@
     <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_top.cpp">
       <Filter>PathProfile</Filter>
     </ClCompile>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarLineFollower.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarPathController.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarSpeedController.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\PathShifter.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.h">
@@ -52,6 +64,18 @@
     </ClInclude>
     <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_top.h">
       <Filter>PathProfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarLineFollower.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarPathController.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarSpeedController.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\PathShifter.h">
+      <Filter>PathFollow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

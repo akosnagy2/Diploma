@@ -84,14 +84,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\PathMessage.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarLineFollower.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarPathController.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarSpeedController.cpp" />
     <ClCompile Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.c" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\PathShifter.cpp" />
     <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile.cpp" />
     <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_funcs.cpp" />
     <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_top.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarLineFollower.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarPathController.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarSpeedController.h" />
     <ClInclude Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\PathShifter.h" />
     <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile.h" />
     <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_funcs.h" />
     <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_top.h" />

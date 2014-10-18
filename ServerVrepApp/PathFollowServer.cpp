@@ -33,6 +33,7 @@ void ForwardPathFollowPars(tcp::iostream &client, PathFollowParamsTypedef &pars)
 {
 	PackedMessage pathMsg;
 
+	pathMsg.values.push_back(0.0f);		
 	pathMsg.values.push_back(pars.PredictSampleLength);	//PredictSampleLength
 	pathMsg.values.push_back(pars.PredictDistanceLength);	//PredictDistanceLength
 	pathMsg.values.push_back(pars.OriPar_P);	//oriPar_P
