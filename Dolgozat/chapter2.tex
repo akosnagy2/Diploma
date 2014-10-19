@@ -1,10 +1,21 @@
 %----------------------------------------------------------------------------
-\chapter{Az RTR algoritmus - 10 oldal NA}
+\chapter{Az RTR algoritmus}
 %----------------------------------------------------------------------------
+Az RTR (Rotate-Translate-Rotate) algoritmust Kiss Domokos dolgozta ki. A mi feladatunk az algoritmus implementálása volt C++ nyelven, majd az algoritmus tesztelése szimulációs környezetben és valós roboton.
+
+\par
+Az algoritmus az irodalomból ismert RRT algoritmuson alapszik, ezért ennek a bemutatásával kezdjük a fejezetet.
 
 %----------------------------------------------------------------------------
-\section{RRT algoritmus - 1 oldal}
+\section{RRT algoritmus}
 %----------------------------------------------------------------------------
+Az RRT (Rapidly Exploring Random Trees) algoritmus lényege, hogy a kezdeti konfigurációból egy konfiguráció-fát épít addig, amíg a fa nem tartalmazza a cél konfigurációt is. Ezután a kívánt utat a kezdeti konfigurációból a cél konfigurációba már könnyedén megkaphatjuk. 
+
+\par
+A fa építés úgy kezdõdik, hogy véletlen konfigurációkat veszünk a környezetbõl $q_{rand}$. Ezt hívják mintavételezési szakasznak. Ezután meghatározzuk, hogy a fában melyik konfiguráció van a legközelebb a mintavételezett konfigurációhoz $q_{near}$. Ez a csúcspont-választó szakasz. Elõfordulhat, hogy nemcsak a fa csúcspontjában található konfigurációkat adjuk vissza, mint $q_{near}$, hanem a fa csúcspontjai közötti élek egy köztes konfigurációját.
+
+\par
+A következõ lépésben megpróbáljuk a $q_{rand}$ és a $q_{near}$ konfigurációkat interpolálással összekötni. Itt több variációja is létezik az RRT-nek. Elõfordul, hogy csak egy bizonyos fix $\Delta q$ értékkel közelítünk $q_{rand}$ felé $q_{near}$ konfigurációból.
 
 %----------------------------------------------------------------------------
 \section{RTR algoritmus - 6 oldal}

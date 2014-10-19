@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{Domi}
+Kiss Domokos.
+\newblock {\em Autonóm robot fejlesztése az Eurobot 2007 versenyre,
+  Diplomamunka}.
+\newblock BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék, 2007.
+
+\bibitem{Curv2D}
+Dirk-Jan Kroon.
+\newblock 2d line curvature and normals.
+\newblock
+  \url{http://www.mathworks.com/matlabcentral/fileexchange/32696-2d-line-curvature-and-normals/content/LineCurvature2D.m}.
+
+\bibitem{Sprunk}
+Christoph Sprunk.
+\newblock {\em Planning Motion Trajectories for Mobile Robots Using Splines}.
+\newblock Albert-Ludwigs-Universitat Freiburg, 2008.
+
+\end{thebibliography}
