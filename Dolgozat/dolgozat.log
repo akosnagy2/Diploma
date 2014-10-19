@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  19 OCT 2014 04:14
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  19 OCT 2014 17:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -412,8 +412,11 @@ Package hyperref Info: Option `unicode' set `false' on input line 77.
 Package hyperref Info: Option `pdfnewwindow' set `true' on input line 77.
 Package hyperref Info: Option `colorlinks' set `true' on input line 77.
 (./dolgozat.aux (./titlepage.aux) (./abstract.aux) (./chapter1.aux)
-(./chapter2.aux) (./chapter3.aux) (./chapter4.aux) (./chapter5.aux)
-(./chapter6.aux))
+(./chapter2.aux
+
+LaTeX Warning: Label `fig:RRT' multiply defined.
+
+) (./chapter3.aux) (./chapter4.aux) (./chapter5.aux) (./chapter6.aux))
 \openout1 = `dolgozat.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 148.
@@ -430,7 +433,8 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 148.
 LaTeX Font Info:    ... okay on input line 148.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 148.
 LaTeX Font Info:    ... okay on input line 148.
- (c:/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
+
+(c:/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count128
 \scratchdimen=\dimen140
@@ -496,7 +500,7 @@ LaTeX Info: Redefining \mit on input line 587.
 \openout2 = `titlepage.aux'.
 
  (./titlepage.tex
-<figures/BMElogo.png, id=164, 975.645pt x 273.02pt>
+<figures/BMElogo.png, id=168, 975.645pt x 273.02pt>
 File: figures/BMElogo.png Graphic file (type png)
  <use figures/BMElogo.png>
 Package pdftex.def Info: figures/BMElogo.png used on input line 6.
@@ -520,7 +524,7 @@ go.png>])
 e{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.33 ...alyoz\'as - 2 oldal}{27}{subsection.5.1.2}
+l.33 ...alyoz\'as - 2 oldal}{30}{subsection.5.1.1}
                                                    [1
 
 
@@ -553,11 +557,36 @@ pdfTeX warning: pdflatex.exe: pop empty color page stack 0
 
  (./chapter2.tex
 2. fejezet.
-) [8
+<figures/RRT.png, id=255, 989.19562pt x 325.215pt>
+File: figures/RRT.png Graphic file (type png)
+ <use figures/RRT.png>
+Package pdftex.def Info: figures/RRT.png used on input line 16.
+(pdftex.def)             Requested size: 369.88582pt x 121.603pt.
+
+[8
 
 
 
-]
+ <./figures/RRT.png (PNG copy)>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 39.
+
+(c:/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 39.
+ [9]
+<figures/rci_gp.png, id=273, 1121.3895pt x 490.2315pt>
+File: figures/rci_gp.png Graphic file (type png)
+
+<use figures/rci_gp.png>
+Package pdftex.def Info: figures/rci_gp.png used on input line 75.
+(pdftex.def)             Requested size: 369.88582pt x 161.70209pt.
+ [10]
+
+LaTeX Warning: Reference `fig:rci_gp' on page 11 undefined on input line 81.
+
+) [11 <./figures/rci_gp.png>]
 \openout2 = `chapter3.aux'.
 
  (./chapter3.tex
@@ -574,7 +603,7 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 2.
 
-[9
+[12
 
 
 
@@ -591,7 +620,7 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 40.
 
-) [10] [11]
+) [13] [14]
 \openout2 = `chapter4.aux'.
 
  (./chapter4.tex
@@ -600,22 +629,22 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 2.
 
-<figures/path.pdf, id=267, 1446.40375pt x 708.6475pt>
+<figures/path.pdf, id=298, 1446.40375pt x 708.6475pt>
 File: figures/path.pdf Graphic file (type pdf)
  <use figures/path.pdf>
 Package pdftex.def Info: figures/path.pdf used on input line 11.
 (pdftex.def)             Requested size: 369.88582pt x 181.21634pt.
 
-[12
+[15
 
 
 
- <./figures/path.pdf>] [13]
+ <./figures/path.pdf>] [16]
 
-LaTeX Warning: Reference `fig:velocityProfileModel' on page 14 undefined on inp
+LaTeX Warning: Reference `fig:velocityProfileModel' on page 17 undefined on inp
 ut line 74.
 
-[14]
+[17]
 Overfull \hbox (10.07559pt too wide) in paragraph at lines 101--102
 []\T1/cmr/m/n/10.95 A ke-re-kek ma-xi-má-lis ere-d® gyor-su-lá-sát a ma-xi-má-l
 is ta-pa-dá-si súr-ló-dá-si együtt-ha-tó ($\OML/cmm/m/it/10.95 ^^V[]$\T1/cmr/m/
@@ -623,51 +652,51 @@ n/10.95 )
  []
 
 
-LaTeX Warning: Reference `fig:velocityProfileModel' on page 15 undefined on inp
+LaTeX Warning: Reference `fig:velocityProfileModel' on page 18 undefined on inp
 ut line 109.
 
-[15] [16] [17]
+[18] [19] [20]
 Overfull \hbox (35.20181pt too wide) in paragraph at lines 219--219
 [] 
  []
 
-[18] <figures/geo_sampl.pdf, id=361, 1446.40375pt x 708.6475pt>
+[21] <figures/geo_sampl.pdf, id=388, 1446.40375pt x 708.6475pt>
 File: figures/geo_sampl.pdf Graphic file (type pdf)
 
 <use figures/geo_sampl.pdf>
 Package pdftex.def Info: figures/geo_sampl.pdf used on input line 294.
 (pdftex.def)             Requested size: 426.79134pt x 209.10327pt.
- [19]
-<figures/circle_circle.png, id=372, 462.7689pt x 317.0244pt>
+ [22]
+<figures/circle_circle.png, id=399, 462.7689pt x 317.0244pt>
 File: figures/circle_circle.png Graphic file (type png)
 
 <use figures/circle_circle.png>
 Package pdftex.def Info: figures/circle_circle.png used on input line 317.
 (pdftex.def)             Requested size: 369.88582pt x 253.40218pt.
- [20 <./figures/geo_sampl.pdf>] [21 <./figures/circle_circle.png>] <figures/bac
-k_check.pdf, id=402, 1446.40375pt x 708.6475pt>
+ [23 <./figures/geo_sampl.pdf>] [24 <./figures/circle_circle.png>] <figures/bac
+k_check.pdf, id=430, 1446.40375pt x 708.6475pt>
 File: figures/back_check.pdf Graphic file (type pdf)
 
 <use figures/back_check.pdf>
 Package pdftex.def Info: figures/back_check.pdf used on input line 365.
 (pdftex.def)             Requested size: 426.79134pt x 209.10327pt.
- [22 <./figures/back_check.pdf>]
-<figures/back_check2.pdf, id=415, 1446.40375pt x 726.715pt>
+ [25 <./figures/back_check.pdf>]
+<figures/back_check2.pdf, id=443, 1446.40375pt x 726.715pt>
 File: figures/back_check2.pdf Graphic file (type pdf)
 
 <use figures/back_check2.pdf>
 Package pdftex.def Info: figures/back_check2.pdf used on input line 381.
 (pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
- [23 <./figures/back_check2.pdf>]
+ [26 <./figures/back_check2.pdf>]
 
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 399.
 
 
-LaTeX Warning: Reference `fig:carLikeRobotModel' on page 24 undefined on input 
+LaTeX Warning: Reference `fig:carLikeRobotModel' on page 27 undefined on input 
 line 414.
 
-[24] [25]) [26]
+[27] [28]) [29]
 \openout2 = `chapter5.aux'.
 
  (./chapter5.tex
@@ -684,7 +713,7 @@ Package hyperref Warning: Glyph not defined in PD1 encoding,
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 23.
 
-) [27
+) [30
 
 
 
@@ -693,7 +722,7 @@ Package hyperref Warning: Glyph not defined in PD1 encoding,
 
  (./chapter6.tex
 6. fejezet.
-[28
+[31
 
 
 
@@ -703,14 +732,14 @@ Package hyperref Warning: Glyph not defined in PD1 encoding,
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 22.
 
-) [29
+) [32
 
 ] (./dolgozat.bbl
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 13.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 18.
  (c:/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-Underfull \hbox (badness 10000) in paragraph at lines 10--14
+Underfull \hbox (badness 10000) in paragraph at lines 15--19
 \T1/cmtt/m/n/10.95 matlabcentral / fileexchange / 32696-[]2d-[]line-[]curvature
 -[]and-[]normals / content /
  []
@@ -721,7 +750,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 10--14
 
  
 AED: lastpage setting LastPage
-[30
+[33
 
 
 ]
@@ -733,18 +762,21 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 178.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 178.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 178.
 Package rerunfilecheck Info: File `dolgozat.out' has not changed.
-(rerunfilecheck)             Checksum: 1C119C57F7043D5033B5F43B1EEFF849;3010.
+(rerunfilecheck)             Checksum: 5376B7B8383356C589BEF203701635D7;3064.
 
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 178.
  ) 
 Here is how much of TeX's memory you used:
- 10935 strings out of 493308
- 163687 string characters out of 6141367
- 275516 words of memory out of 5000000
- 14028 multiletter control sequences out of 15000+600000
+ 10977 strings out of 493308
+ 164346 string characters out of 6141367
+ 275766 words of memory out of 5000000
+ 14057 multiletter control sequences out of 15000+600000
  36278 words of font info for 100 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  36i,13n,39p,1014b,569s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -768,10 +800,10 @@ xlive/2013/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb><c:/texlive/2013
 t/fonts/type1/public/cm-super/sfti0900.pfb><c:/texlive/2013/texmf-dist/fonts/ty
 pe1/public/cm-super/sfti1095.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public
 /cm-super/sftt1095.pfb>
-Output written on dolgozat.pdf (31 pages, 532787 bytes).
+Output written on dolgozat.pdf (34 pages, 751231 bytes).
 PDF statistics:
- 573 PDF objects out of 1000 (max. 8388607)
- 502 compressed objects within 6 object streams
- 125 named destinations out of 1000 (max. 500000)
- 351 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 601 PDF objects out of 1000 (max. 8388607)
+ 524 compressed objects within 6 object streams
+ 133 named destinations out of 1000 (max. 500000)
+ 369 words of extra memory for PDF output out of 10000 (max. 10000000)
 

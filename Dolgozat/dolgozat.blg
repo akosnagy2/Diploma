@@ -11,44 +11,46 @@ A level-1 auxiliary file: chapter5.aux
 A level-1 auxiliary file: chapter6.aux
 The style file: plain.bst
 Database file #1: mybib.bib
-You've used 3 entries,
+Warning--empty publisher in DomiRTR
+You've used 5 entries,
             2118 wiz_defined-function locations,
-            522 strings with 4539 characters,
-and the built_in function-call counts, 654 in all, are:
-= -- 57
-> -- 21
+            533 strings with 4759 characters,
+and the built_in function-call counts, 1087 in all, are:
+= -- 94
+> -- 35
 < -- 0
-+ -- 9
-- -- 6
-* -- 23
-:= -- 119
-add.period$ -- 9
-call.type$ -- 3
-change.case$ -- 10
++ -- 16
+- -- 10
+* -- 41
+:= -- 194
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 16
 chr.to.int$ -- 0
-cite$ -- 3
-duplicate$ -- 31
-empty$ -- 67
-format.name$ -- 6
-if$ -- 138
+cite$ -- 6
+duplicate$ -- 55
+empty$ -- 111
+format.name$ -- 10
+if$ -- 229
 int.to.chr$ -- 0
-int.to.str$ -- 3
-missing$ -- 4
-newline$ -- 18
-num.names$ -- 6
-pop$ -- 24
+int.to.str$ -- 5
+missing$ -- 8
+newline$ -- 28
+num.names$ -- 10
+pop$ -- 41
 preamble$ -- 1
-purify$ -- 9
+purify$ -- 15
 quote$ -- 0
-skip$ -- 20
+skip$ -- 32
 stack$ -- 0
-substring$ -- 15
-swap$ -- 3
+substring$ -- 26
+swap$ -- 5
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 8
-warning$ -- 0
-while$ -- 6
-width$ -- 4
-write$ -- 31
+type$ -- 12
+warning$ -- 1
+while$ -- 10
+width$ -- 6
+write$ -- 50
+(There was 1 warning)

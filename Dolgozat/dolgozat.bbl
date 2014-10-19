@@ -6,11 +6,21 @@ Kiss Domokos.
   Diplomamunka}.
 \newblock BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék, 2007.
 
+\bibitem{DomiRTR}
+Domokos Kiss.
+\newblock {\em The RTR Path Planner for Differential Drive Robots}.
+\newblock 2014.
+
 \bibitem{Curv2D}
 Dirk-Jan Kroon.
 \newblock 2d line curvature and normals.
 \newblock
   \url{http://www.mathworks.com/matlabcentral/fileexchange/32696-2d-line-curvature-and-normals/content/LineCurvature2D.m}.
+
+\bibitem{LaValle}
+Steven~M. LaValle.
+\newblock {\em Rapidly-exploring random trees: A new tool for path planning}.
+\newblock Computer Science Dept., Iowa State University, 1998.
 
 \bibitem{Sprunk}
 Christoph Sprunk.
