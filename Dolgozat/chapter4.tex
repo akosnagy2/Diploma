@@ -101,17 +101,17 @@ v^{max}_{r} &= v^{max} + \frac{W\cdot\omega^{max}}{2}
 A kerekek maximális eredõ gyorsulását a maximális tapadási súrlódási együttható ($\mu_{tap_{max}}$) határozza meg, amelynél a robot kerekei még nem csúsznak meg. A maximális gyorsulás és a tapadási együttható között a következõ egyszerû összefüggés áll fent:
 
 \begin{align}\label{eq:mu}
-a_{max} &=\mu_{tap_{max}} \cdot g
+a_{max} &=\mu_{tap_{max}} \cdot g,
 \end{align}
-,ahol $g$ a nehézségi gyorsulás
+ahol $g$ a nehézségi gyorsulás
 
 \par
 Írjuk fel \aref{fig:velocityProfileModel}. ábra alapján a robot kerekeire ható erõket:
 
 \begin{align}\label{eq:velocityProfileF}
-\sum{F(k)}=m  \cdot a(k) = m \cdot \sqrt{a_{c}(k)^2 + a_{t}(k)^2} \leq m  \cdot g  \cdot \mu_{tap_{max}} 
+\sum{F(k)}=m  \cdot a(k) = m \cdot \sqrt{a_{c}(k)^2 + a_{t}(k)^2} \leq m  \cdot g  \cdot \mu_{tap_{max}},
 \end{align}
-,ahol $m$ a robot kerekének tömege, $F(k)$ a robot kerekeire ható eredõ erõ a pálya $k$-adik pontjában, $a_{c}(k)$ a kerék centripetális gyorsulása, $a_{t}(k)$ a kerék tangenciális gyorsulása
+ahol $m$ a robot kerekének tömege, $F(k)$ a robot kerekeire ható eredõ erõ a pálya $k$-adik pontjában, $a_{c}(k)$ a kerék centripetális gyorsulása, $a_{t}(k)$ a kerék tangenciális gyorsulása
 
 \par
 \Aref{eq:velocityProfileF}. egyenletben azzal a feltevéssel élünk, hogy a robot kerekei és a talaj között a tapadási súrlódási együttható állandó és nem függ az erõ irányától. Az általunk használt differenciális robotnál ez a közelítés megengedhetõ, mivel a gumikerekek homogénnek tekinthetõk. Ha barázdákat tartalmaznának, akkor már nagyobb eltérést okozna ez a közelítés. 
@@ -162,9 +162,9 @@ Eddig a két kerék gyorsulást teljesen függetlenül tárgyaltuk, azonban mindkét gy
 {a_{l}}_{t}(k)& = \beta(k) \cdot (r(k) - \frac{W}{2}) \\
 {a_{r}}_{t}(k)& = \beta(k) \cdot (r(k) + \frac{W}{2}) \\
 \label{eq:ar/al2}
-\frac{{a_{l}}_{t}(k)}{{a_{r}}_{t}(k)} &= \frac{r(k) - \frac{W}{2}}{r(k) + \frac{W}{2}} = \frac{p_l(k)}{p_r(k)}
+\frac{{a_{l}}_{t}(k)}{{a_{r}}_{t}(k)} &= \frac{r(k) - \frac{W}{2}}{r(k) + \frac{W}{2}} = \frac{p_l(k)}{p_r(k)},
 \end{align}
-, ahol $\beta(k)$ a robot szöggyorsulása, $r(k)$ a pálya görbületi sugara a robot középpontjához viszonyítva.
+ahol $\beta(k)$ a robot szöggyorsulása, $r(k)$ a pálya görbületi sugara a robot középpontjához viszonyítva.
 
 \par
 \Aref{eq:ar/al2}. és \aref{eq:alr}. egyenletek alapján 2-2 lehetséges kerék gyorsulást tudunk számolni. Ezek közül azt a gyorsulás párt fogjuk választani, amelyiknek egyik eleme sem sérti \aref{eq:alr}. egyenletek által meghatározott korlátokat. 
@@ -282,9 +282,9 @@ Most pedig meghatározzuk a mintavételezett pálya pontjaiban a sebességet. Ezt a 
 
 \begin{align}\label{eq:pathInterVel}
 v^{s}(k)& = v^{g}(j) + v^{g}(j+1) \cdot it(k) \\
-it(k)& = \frac{t^{s}(k) - t^{g}(j)}{t^{g}(j+1) - t^{g}(j)}
+it(k)& = \frac{t^{s}(k) - t^{g}(j)}{t^{g}(j+1) - t^{g}(j)},
 \end{align}
-,ahol $j$ jelöli a legkisebb indexet amelyre teljesül, hogy $t^{s}(k) < t^{g}(j)$
+ahol $j$ jelöli a legkisebb indexet amelyre teljesül, hogy $t^{s}(k) < t^{g}(j)$
 
 \par
 A lineáris interpoláció miatt teljesül az a feltétel, hogy két pont között állandó gyorsulással mozogjon a robot.
@@ -406,9 +406,12 @@ Az autószerû robot modellje a következõ.
 \begin{align}\label{eq:carLikeRobot}
 \dot{x} &= v \cos \theta \\ \notag
 \dot{y} &= v \sin \theta \\ \notag
-\dot{\theta} &= \frac {v} {L} \tan \phi
+\dot{\theta} &= \frac {v} {L} \tan \phi,
 \end{align}
-Ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, melyet a robot referenciapontjának nevezünk. Könnyen belátható, hogy az egyes kerekek sebességkülönbsége a megtett utak különbségébõl adódik, mely arányos az egyes kerekekhez tartozó elfordulási sugárral, így elegendõ felírnunk ezeket a sugarakat, illetve ezek arányát. \Aref{fig:carLikeRobotModel}. ábrán látható hogy egy ilyen robot esetén ezek a sugarak hogyan származtathatók.
+ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, melyet a robot referenciapontjának nevezünk. 
+
+\par
+Könnyen belátható, hogy az egyes kerekek sebességkülönbsége a megtett utak különbségébõl adódik, mely arányos az egyes kerekekhez tartozó elfordulási sugárral, így elegendõ felírnunk ezeket a sugarakat, illetve ezek arányát. \Aref{fig:carLikeRobotModel}. ábrán látható hogy egy ilyen robot esetén ezek a sugarak hogyan származtathatók.
 
 \par
 \Aref{eq:carLikeRobot} harmadik egyenletébõl könnyen adódik, hogy a referenciapont által bejárt kör sugara
@@ -418,9 +421,9 @@ Ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a
 alapján számolható, innen a hátsó kerekek által bejárt kör sugara a következõképpen adódik:
 \begin{align}\label{eq:carLikeRearRadiuses}
 \rho_{rl} &= \rho - \frac{d}{2} \\ \notag
-\rho_{rr} &= \rho + \frac{d}{2}
+\rho_{rr} &= \rho + \frac{d}{2},
 \end{align}
-Ahol a $d$ az egy tengelyen található kerekek távolsága. (Bár \aref{eq:carRadius} alapján a sugár lehet negatív, de a profilozás során ezt nem használjuk ki. A továbbiakban az egyenleteket mindig pozitív sugárra írjuk fel, de ezt késõbb részletezett okok miatt nem használjuk ki.)
+ahol a $d$ az egy tengelyen található kerekek távolsága. (Bár \aref{eq:carRadius} alapján a sugár lehet negatív, de a profilozás során ezt nem használjuk ki. A továbbiakban az egyenleteket mindig pozitív sugárra írjuk fel, de ezt késõbb részletezett okok miatt nem használjuk ki.)
 
 \par
 Ahhoz hogy fordulás közben ne csússzanak meg oldal irányba az elsõ kerekek, a két oldali keréknek különbözõ szögben kell állnia. Ezt nevezzük Ackermann hajtásnak. Ez a különbség ugyan csak a különbözõ fordulókörrel áll összefüggésben, és a következõképpen számolható a kormányszögbõl:
@@ -461,9 +464,12 @@ A sebességprofil meghatározása teljesen analóg módon történik az eddig látottakk
 \par
 A profil visszaterjesztés ugyancsak hasonlóan mûködik, mint a differenciális robot esetén, egyetlen apró kivétel, hogy \aref{eq:at} egyenletet ebben az esetben csak a legnagyobb sugáron mozgó kerékre írjuk fel. Másik változás, hogy a megtett utat is a sugarak arányából származtatjuk, így a következõ egyenlet adódik:
 \begin{align}\label{eq:carAt}
-a_{t}(k) = \frac{v(k+1)^2 - v(k)^2}{2 \cdot \Delta s(k)} = \frac{v(k+1)^2 - v(k)^2}{2\cdot\Delta s(k)} \cdot p(k)
+a_{t}(k) = \frac{v(k+1)^2 - v(k)^2}{2 \cdot \Delta s(k)} = \frac{v(k+1)^2 - v(k)^2}{2\cdot\Delta s(k)} \cdot p(k),
 \end{align}
-Ahol $p(k)$ a maximális sugáron mozgó kerék és a referencia pont sugarának aránya. Innen átrendezve, és kifejezve $v^c(k)$-t, a következõt kapjuk:
+ahol $p(k)$ a maximális sugáron mozgó kerék és a referencia pont sugarának aránya. 
+
+\par
+Innen átrendezve, és kifejezve $v^c(k)$-t, a következõt kapjuk:
 \begin{align} \label{eq:carBackacp2}
 d(k) &= \frac{p(k)^2}{4 \cdot \Delta s(k)^2} + c(k) \cdot p(k)^2	 \\
 e(k) &= -\frac{2 \cdot v(k+1)^2 \cdot p(k)^2} {4 \cdot \Delta s(k)^2} \notag\\
