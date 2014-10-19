@@ -10,34 +10,40 @@
 \select@language {magyar} \contentsline {subsection}{\numberline {2.2.1}Mintav\'etelez\'es}{10}{subsection.2.2.1}
 \select@language {magyar} \contentsline {subsection}{\numberline {2.2.2}Csom\'opont-kiv\'alaszt\'as}{10}{subsection.2.2.2}
 \select@language {magyar} \contentsline {subsection}{\numberline {2.2.3}Kiterjeszt\'es}{11}{subsection.2.2.3}
-\select@language {magyar} \contentsline {subsection}{\numberline {2.2.4}\'Utvonal meghat\'aroz\'asa, optimaliz\'al\'as - 1 oldal}{11}{subsection.2.2.4}
-\select@language {magyar} \contentsline {section}{\numberline {2.3}Eredm\'enyek - 3 oldal}{11}{section.2.3}
-\select@language {magyar} \contentsline {chapter}{\numberline {3}A C*CS, \relax \mathversion {bold}{$c\overline {c}S$} algoritmus - 10 oldal CsG}{12}{chapter.3}
-\select@language {magyar} \contentsline {section}{\numberline {3.1}Reeds-Shepp lok\'alis p\'aly\'ak - 1 oldal}{14}{section.3.1}
-\select@language {magyar} \contentsline {section}{\numberline {3.2}C*CS lok\'alis p\'aly\'ak - 6 oldal}{14}{section.3.2}
-\select@language {magyar} \contentsline {subsection}{\numberline {3.2.1}ARM mintav\'etelez\'es - 3 oldal}{14}{subsection.3.2.1}
-\select@language {magyar} \contentsline {section}{\numberline {3.3}\relax \mathversion {bold}{$c\overline {c}S$} - 3 oldal}{14}{section.3.3}
-\select@language {magyar} \contentsline {chapter}{\numberline {4}P\'alya id\H oparam\'eterez\'ese}{15}{chapter.4}
-\select@language {magyar} \contentsline {section}{\numberline {4.1}Jel\"ol\'esek}{16}{section.4.1}
-\select@language {magyar} \contentsline {section}{\numberline {4.2}Differenci\'alis robotmodell}{17}{section.4.2}
-\select@language {magyar} \contentsline {subsection}{\numberline {4.2.1}Korl\'atoz\'asok}{17}{subsection.4.2.1}
-\select@language {magyar} \contentsline {subsection}{\numberline {4.2.2}Geometriai sebess\'egprofil}{18}{subsection.4.2.2}
-\select@language {magyar} \contentsline {subsubsection}{Profil visszaterjeszt\'es}{20}{section*.7}
-\select@language {magyar} \contentsline {subsection}{\numberline {4.2.3}\'Ujramintav\'etelez\'es}{22}{subsection.4.2.3}
-\select@language {magyar} \contentsline {subsubsection}{Mintav\'etelezett p\'alya v\'egpontja}{24}{section*.10}
-\select@language {magyar} \contentsline {section}{\numberline {4.3}Aut\'oszer\H u robotmodell}{27}{section.4.3}
-\select@language {magyar} \contentsline {subsection}{\numberline {4.3.1}Korl\'atoz\'asok}{28}{subsection.4.3.1}
-\select@language {magyar} \contentsline {subsection}{\numberline {4.3.2}Geometriai sebess\'egprofil}{28}{subsection.4.3.2}
-\select@language {magyar} \contentsline {chapter}{\numberline {5}P\'alyak\"ovet\H o szab\'alyoz\'as - 10 oldal CsG/NA}{30}{chapter.5}
-\select@language {magyar} \contentsline {section}{\numberline {5.1}Differenci\'alis robotmodell - 4 oldal NA}{30}{section.5.1}
-\select@language {magyar} \contentsline {subsection}{\numberline {5.1.1}Sebess\'eg szab\'alyoz\'as - 2 oldal}{30}{subsection.5.1.1}
-\select@language {magyar} \contentsline {subsection}{\numberline {5.1.2}Orient\'aci\'o szab\'alyoz\'as - 2 oldal}{30}{subsection.5.1.2}
-\select@language {magyar} \contentsline {section}{\numberline {5.2}Aut\'oszer\H u robotmodell - 4 oldal CsG}{30}{section.5.2}
-\select@language {magyar} \contentsline {subsection}{\numberline {5.2.1}Virtu\'alis vonalk\"ovez\H o szab\'alyoz\'as - 2 oldal}{30}{subsection.5.2.1}
-\select@language {magyar} \contentsline {chapter}{\numberline {6}Algoritmusok megval\'os\IeC {\'\i }t\'asa - 4 oldal CsG/NA}{31}{chapter.6}
-\select@language {magyar} \contentsline {section}{\numberline {6.1}Szimul\'aci\'o}{31}{section.6.1}
-\select@language {magyar} \contentsline {section}{\numberline {6.2}Val\'os robotok}{31}{section.6.2}
-\select@language {magyar} \contentsline {chapter}{\numberline {7}\"Osszegz\'es - 1 oldal CsG/NA}{32}{chapter.7}
-\select@language {magyar} \contentsline {section}{\numberline {7.1}\'Ert\'ekel\'es}{32}{section.7.1}
-\select@language {magyar} \contentsline {section}{\numberline {7.2}J\"ov\H obeli fejleszt\'esek}{32}{section.7.2}
-\select@language {magyar} \contentsline {chapter}{Irodalomjegyz\'ek}{33}{chapter*.13}
+\select@language {magyar} \contentsline {subsubsection}{\"Utk\"oz\'esdetekt\'al\'as transzl\'aci\'os kiterjeszt\'es eset\'en}{11}{section*.7}
+\select@language {magyar} \contentsline {subsubsection}{\"Utk\"oz\'esdetekt\'al\'as forgat\'as eset\'en}{12}{section*.9}
+\select@language {magyar} \contentsline {subsection}{\numberline {2.2.4}\'Utvonal meghat\'aroz\'asa, optimaliz\'al\'asa}{12}{subsection.2.2.4}
+\select@language {magyar} \contentsline {section}{\numberline {2.3}Eredm\'enyek}{13}{section.2.3}
+\select@language {magyar} \contentsline {chapter}{\numberline {3}A C*CS, \relax \mathversion {bold}{$c\overline {c}S$} algoritmus}{14}{chapter.3}
+\select@language {magyar} \contentsline {section}{\numberline {3.1}Reeds-Shepp lok\'alis p\'aly\'ak}{14}{section.3.1}
+\select@language {magyar} \contentsline {section}{\numberline {3.2}C*CS lok\'alis p\'aly\'ak}{14}{section.3.2}
+\select@language {magyar} \contentsline {section}{\numberline {3.3}C*CS approxim\'aci\'os m\'odszer}{15}{section.3.3}
+\select@language {magyar} \contentsline {subsection}{\numberline {3.3.1}Glob\'alis tervez\H o}{15}{subsection.3.3.1}
+\select@language {magyar} \contentsline {subsection}{\numberline {3.3.2}Lok\'alis tervez\H o}{16}{subsection.3.3.2}
+\select@language {magyar} \contentsline {subsubsection}{ARM}{16}{section*.10}
+\select@language {magyar} \contentsline {subsubsection}{CS}{17}{section*.11}
+\select@language {magyar} \contentsline {section}{\numberline {3.4}\relax \mathversion {bold}{$c\overline {c}S$}}{17}{section.3.4}
+\select@language {magyar} \contentsline {chapter}{\numberline {4}P\'alya id\H oparam\'eterez\'ese}{18}{chapter.4}
+\select@language {magyar} \contentsline {section}{\numberline {4.1}Jel\"ol\'esek}{19}{section.4.1}
+\select@language {magyar} \contentsline {section}{\numberline {4.2}Differenci\'alis robotmodell}{20}{section.4.2}
+\select@language {magyar} \contentsline {subsection}{\numberline {4.2.1}Korl\'atoz\'asok}{20}{subsection.4.2.1}
+\select@language {magyar} \contentsline {subsection}{\numberline {4.2.2}Geometriai sebess\'egprofil}{21}{subsection.4.2.2}
+\select@language {magyar} \contentsline {subsubsection}{Profil visszaterjeszt\'es}{23}{section*.13}
+\select@language {magyar} \contentsline {subsection}{\numberline {4.2.3}\'Ujramintav\'etelez\'es}{25}{subsection.4.2.3}
+\select@language {magyar} \contentsline {subsubsection}{Mintav\'etelezett p\'alya v\'egpontja}{27}{section*.16}
+\select@language {magyar} \contentsline {section}{\numberline {4.3}Aut\'oszer\H u robotmodell}{30}{section.4.3}
+\select@language {magyar} \contentsline {subsection}{\numberline {4.3.1}Korl\'atoz\'asok}{31}{subsection.4.3.1}
+\select@language {magyar} \contentsline {subsection}{\numberline {4.3.2}Geometriai sebess\'egprofil}{31}{subsection.4.3.2}
+\select@language {magyar} \contentsline {chapter}{\numberline {5}P\'alyak\"ovet\H o szab\'alyoz\'as - 10 oldal CsG/NA}{33}{chapter.5}
+\select@language {magyar} \contentsline {section}{\numberline {5.1}Differenci\'alis robotmodell - 4 oldal NA}{33}{section.5.1}
+\select@language {magyar} \contentsline {subsection}{\numberline {5.1.1}Sebess\'eg szab\'alyoz\'as - 2 oldal}{33}{subsection.5.1.1}
+\select@language {magyar} \contentsline {subsection}{\numberline {5.1.2}Orient\'aci\'o szab\'alyoz\'as - 2 oldal}{33}{subsection.5.1.2}
+\select@language {magyar} \contentsline {section}{\numberline {5.2}Aut\'oszer\H u robotmodell - 4 oldal CsG}{33}{section.5.2}
+\select@language {magyar} \contentsline {subsection}{\numberline {5.2.1}Virtu\'alis vonalk\"ovez\H o szab\'alyoz\'as - 2 oldal}{33}{subsection.5.2.1}
+\select@language {magyar} \contentsline {chapter}{\numberline {6}Algoritmusok megval\'os\IeC {\'\i }t\'asa - 4 oldal CsG/NA}{34}{chapter.6}
+\select@language {magyar} \contentsline {section}{\numberline {6.1}Szimul\'aci\'o}{34}{section.6.1}
+\select@language {magyar} \contentsline {section}{\numberline {6.2}Val\'os robotok}{34}{section.6.2}
+\select@language {magyar} \contentsline {chapter}{\numberline {7}\"Osszegz\'es - 1 oldal CsG/NA}{35}{chapter.7}
+\select@language {magyar} \contentsline {section}{\numberline {7.1}\'Ert\'ekel\'es}{35}{section.7.1}
+\select@language {magyar} \contentsline {section}{\numberline {7.2}J\"ov\H obeli fejleszt\'esek}{35}{section.7.2}
+\select@language {magyar} \contentsline {chapter}{Irodalomjegyz\'ek}{36}{chapter*.19}
