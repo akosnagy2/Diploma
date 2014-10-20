@@ -18,7 +18,70 @@
 %----------------------------------------------------------------------------
 \section{Autószerû robotmodell - 4 oldal CsG}
 %----------------------------------------------------------------------------
+Ahogy láttuk a differenciális robot esetén, a pályakövetés problémáját szétbontottuk a pályába kódolt sebesség szabályozására, és orientáció szabályozásra. Az autószerû robotok esetén is hasonló módon járhatunk el. Mégis van néhány lényeges különbség a két robottípus közt. Míg a differenciális robot esetén a két kerék sebességével, addig az autószerû robot esetén a robot referencia pontjának tangenciális sebességével és a kormányszöggel tudunk beavatkozni.
+
+\par
+Ez az alsóbb szabályzási szinteken az következõ különbségeket jelenti: A differenciális robot esetén a szabályozó a pályából meghatározott sebesség és szögsebesség alapjelet szétválasztja keréksebességekre, mivel itt ez képzi a szabályozás beavatkozó jelét. Az autószerû robot esetén nincs szükség a szétválasztásra, a sebességet közvetlenül átadjuk az alsóbb szintû sebesség szabályozásnak, a kiszámított kormányszöget, pedig már a beavatkozó szervnek adjuk vissza.
 
 %----------------------------------------------------------------------------
 \subsection{Virtuális vonalkövezõ szabályozás - 2 oldal}
 %----------------------------------------------------------------------------
+A fentiekbõl látható, hogy a felsõbb szinten lévõ sebesség szabályozás módosítására nincs szükség, teljesen megegyezõ módon mûködhet mindkét robot esetén. Az orientáció szabályozás esetén már jelentõs különbségek mutatkoznak. Egy autószerû robot esetén nem hasznos a szögsebesség kiadása, mivel a beavatkozó jelünk a kormányszög. Természetesen a két mennyiség származtatható egymásból így ez nem jelentene akkora problémát.
+
+\par
+Az orientáció szabályzás alapötlete a differenciális robotnál, egy predikciós távolság meghatározása volt, mely alapján számítunk egy szöghibát, majd ebbõl szögsebesség beavatkozó jelet. Ezt a módszer nagyon hasonló a RobonAUT versenyen is látott vonalkövetõ autók szabályozására, azzal az elõnnyel, hogy itt sokkal pontosabban ismert a "vonal" helye és orientációja.
+
+Az elõre tekintés miatt a mi célunk, hogy az autó eleje kövesse a vonalat, így \aref{eq:carLikeRobot} egyenleteit egy kicsit módosítanunk kell. Elsõ körben induljunk ki abból, hogy a virtuális szenzorunk az elsõ tengelynél található. \Aref{fig:carLikeRobotModel} ábrán alapján a következõkre jutunk:
+
+\begin{align}\label{eq:carLikeRobotMod}
+\dot{x} &= v \frac{\cos (\theta + \phi)}{\cos \phi} \notag \\
+\dot{y} &= v \frac{\sin(\theta + \phi)}{\cos \phi} \notag \\
+\dot{\theta} &= v \frac{\tan \phi}{L}
+\end{align}
+
+ahol, a jelölések megegyeznek \aref{eq:carLikeRobot} esetén használtakkal. Most vizsgáljuk meg, hogyan függ egy párhuzamos egyenes távolsága, a robot mozgásától:
+
+\begin{align}\label{eq:parallelLine}
+\dot{p} = -v \cdot \tan \phi
+\end{align}
+
+ahol, $p$ a virtuális szenzorunk közepének, és vonalnak az elõjeles távolsága. A képletbõl az is leolvasható, hogy pozitív kormányszög esetén az elõjeles távolság negatív irányba mozdul el. Most vizsgáljuk meg az autóhoz képest ferde vonal hatását:
+
+\begin{align}\label{eq:crossLine}
+\dot{p} = v \cdot \tan \delta
+\end{align}
+
+ahol, $\delta$ az autó haladásának egyenese, és a vonal egyenese által bezárt szög. Az eddigiek alapján felírhatjuk a $\delta$ és $p$ változását:
+
+\begin{align}\label{eq:deltaAndp}
+\dot{\delta} &= -v \frac{\tan \phi}{L} \nolabel \\
+\dot{p} = v \cdot \tan \delta - v \cdot \tan \phi - v \cdot \frac{p}{L} \tan \delta \tan \phi
+\end{align}
+
+Fontos megjegyezzük, hogy a rendszerünk nem lineáris, így a szuperpozíció se érvényes rá!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
