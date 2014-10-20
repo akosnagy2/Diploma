@@ -9,48 +9,60 @@ A level-1 auxiliary file: chapter3.aux
 A level-1 auxiliary file: chapter4.aux
 A level-1 auxiliary file: chapter5.aux
 A level-1 auxiliary file: chapter6.aux
-The style file: plain.bst
+The style file: huplain.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: mybib.bib
+Warning--I didn't find a database entry for "CCSTopologicalProp"
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
 Warning--empty publisher in DomiRTR
-You've used 5 entries,
-            2118 wiz_defined-function locations,
-            533 strings with 4759 characters,
-and the built_in function-call counts, 1087 in all, are:
-= -- 94
-> -- 35
+You've used 6 entries,
+            4991 wiz_defined-function locations,
+            1162 strings with 12304 characters,
+and the built_in function-call counts, 11945 in all, are:
+= -- 2156
+> -- 53
 < -- 0
-+ -- 16
-- -- 10
-* -- 41
-:= -- 194
-add.period$ -- 15
-call.type$ -- 5
-change.case$ -- 16
++ -- 840
+- -- 30
+* -- 208
+:= -- 501
+add.period$ -- 14
+call.type$ -- 6
+change.case$ -- 22
 chr.to.int$ -- 0
-cite$ -- 6
-duplicate$ -- 55
-empty$ -- 111
-format.name$ -- 10
-if$ -- 229
+cite$ -- 7
+duplicate$ -- 1736
+empty$ -- 276
+format.name$ -- 16
+if$ -- 2473
 int.to.chr$ -- 0
-int.to.str$ -- 5
-missing$ -- 8
-newline$ -- 28
-num.names$ -- 10
-pop$ -- 41
+int.to.str$ -- 6
+missing$ -- 15
+newline$ -- 127
+num.names$ -- 12
+pop$ -- 449
 preamble$ -- 1
-purify$ -- 15
-quote$ -- 0
-skip$ -- 32
+purify$ -- 20
+quote$ -- 22
+skip$ -- 105
 stack$ -- 0
-substring$ -- 26
-swap$ -- 5
+substring$ -- 1318
+swap$ -- 1291
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 12
+type$ -- 20
 warning$ -- 1
-while$ -- 10
-width$ -- 6
-write$ -- 50
-(There was 1 warning)
+while$ -- 60
+width$ -- 7
+write$ -- 153
+(There were 2 warnings)
