@@ -170,13 +170,43 @@ ahol, $\delta$ az autó haladásának egyenese, és a vonal egyenese által bezárt sz
 \dot{p} &= v \cdot \tan \delta - v \cdot \tan \phi - v \cdot \frac{p}{L} \tan \delta \tan \phi
 \end{align}
 
-Fontos megjegyezzük, hogy a rendszerünk nem lineáris, így a szuperpozíció se érvényes rá!
+Fontos megjegyezzük, hogy a rendszerünk nem lineáris, így a szuperpozíció se érvényes rá, innen az $\dot{p}$ esetén az utolsó tag. A szabályzó tervezés során nekünk egy lineáris rendszerre van szükségünk, így a fenti egyenletet linearizálni kell. Mivel az a célunk, hogy a robot a vonalon helyezkedjen el, és azzal párhuzamosan, így a munkapont, amely körül szeretnénk a linearizálást elvégezni a $p = 0$, $\phi = 0$ és a $\delta = 0$. Így a következõ egyenletekkel számolhatunk:
 
+\begin{align}\label{eq:linearizedModel}
+\dot{\delta} &= - \frac{v}{L} \phi \notag \\
+\dot{p} &= v(\delta - \phi - 0)
+\end{align}
 
+A linearizálás egyszerû, mert a tangens 0 környezetében jól közelíthetõ az argumentumával. Látható, hogy a $\dot{p}$ esetén az utolsó tagot elhanyagoljuk, mivel a két kis szög szorzata annyira kis számot eredményez, hogy az elhagyható. Ha ezt kicsit más formában írjuk fel, rögtön megkapjuk a linearizált rendszer állapotteres leírását:
 
+\begin{align}\label{eq:stateSpace}
+x &= [\delta \quad p]^{T} \\ \notag
+\dot{x} &= \begin{bmatrix}
+0 & 0 \\
+v & 0
+\end{bmatrix}x + \begin{bmatrix}
+-v/L \\
+-v
+\end{bmatrix} \phi \\ \notag
+p &= [0 \quad 1]x + 0 \cdot \phi
+\end{align}
 
+Egy valós vonalkövetõ autóval ellentétben, mi igen pontosan meg tudjuk határozni a rendszer állapotváltozóit így célszerû közvetlenül ezek visszacsatolása, így szabadon megválaszthatóak a visszacsatolt rendszer pólusai. Ezt érdemes úgy megtenni, hogy minimálisra csökkentsük a túllendülést. Ha a rendszer válaszát kéttárolós lengõtaggal közelítjük, akkor annak átviteli függvénye a következõ:
 
+\begin{align}\label{eq:kettarolosLengo}
+W(s) = \frac{\omega_{0}^{2}}{\omega_{0}^{2} + 2\xi\omega_{0}s+s^{2}}
+\end{align}
 
+ahonnan a pólusok:
+
+\begin{align}\label{eq:polusok}
+s_{1,2} = -\omega_{0}\xi \pm j\omega_{0}\sqrt{1-\xi^{2}}
+\end{align}
+
+ahol $\omega_{0}$ a rendszer csillapítatlan sajátfrekvenciája és $\xi$ a csillapítási tényezõ. Ha túllendülés mentes rendszert szeretnénk, akkor a $\xi = 1$ kell válasszuk. Az $\omega_{0}$ megválasztása a kívánt beállási idõtõl függ.
+
+\par
+Az algoritmust úgy készítettük el, hogy az inicializálási fázisban a kívánt pólusoknak megfelelõen, az Ackermann-képlet segítségével kiszámítja az erõsítési tényezõket, és késõbb ezt használja fel a szabályzási fázisban. Az eredmények azt mutatták, hogy az így készült szabályozóval a szimulációban a robot trajektóriája a kanyarokat levágta. Ez az eredmény egyáltalán nem meglepõ, mivel a szabályozást úgy írtuk fel, hogy az autó eleje kövesse a pályát, de a pályatervezés során mi a robot referencia pontjának pályáját terveztük meg. Szerencsére ezt egyszerûen orvosolhatjuk, ha a mintavételezett pálya minden pontját eltoljuk az autó hosszával.
 
 
 
