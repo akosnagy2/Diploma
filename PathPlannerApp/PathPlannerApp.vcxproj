@@ -53,13 +53,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\diploma\RobotCommonLib;C:\local\boost_1_56_0;C:\local\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\diploma\RobotCommonLib;D:\local\boost_1_56_0;D:\local\Fade2D\include_fade2d;D:\diploma\PathPlannerApp\CCS\geometry;D:\diploma\PathPlannerApp\CCS\planner;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\local\boost_1_56_0\lib32-msvc-11.0;C:\local\Fade2D\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\local\boost_1_56_0\lib32-msvc-11.0;D:\local\Fade2D\Win32;D:\diploma\RobotCommonLib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>fade2D_vc11_Debug.lib;RobotCommonLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -81,6 +82,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CCS\geometry\Arc.cpp" />
+    <ClCompile Include="CCS\geometry\Circle.cpp" />
+    <ClCompile Include="CCS\geometry\Configuration.cpp" />
+    <ClCompile Include="CCS\geometry\Line.cpp" />
+    <ClCompile Include="CCS\geometry\Path.cpp" />
+    <ClCompile Include="CCS\geometry\Point.cpp" />
+    <ClCompile Include="CCS\geometry\Rectangle.cpp" />
+    <ClCompile Include="CCS\geometry\Segment.cpp" />
+    <ClCompile Include="CCS\geometry\Shape.cpp" />
+    <ClCompile Include="CCS\geometry\Triangle.cpp" />
+    <ClCompile Include="CCS\geometry\Vector.cpp" />
+    <ClCompile Include="CCS\planner\AlternativePlanner.cpp" />
+    <ClCompile Include="CCS\planner\ARMBuilder.cpp" />
+    <ClCompile Include="CCS\planner\CCS.cpp" />
+    <ClCompile Include="CCS\planner\Environment.cpp" />
+    <ClCompile Include="CCS\planner\LocalPlanner.cpp" />
+    <ClCompile Include="CCS\planner\OccupancyGrid.cpp" />
+    <ClCompile Include="CCS\planner\Preplanner.cpp" />
+    <ClCompile Include="CCS\planner\Robot.cpp" />
+    <ClCompile Include="CCS\planner\Scene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PathFollow\CarLineFollower.cpp" />
     <ClCompile Include="PathFollow\CarPathController.cpp" />
@@ -99,6 +120,26 @@
     <ClCompile Include="tiny_obj_loader.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CCS\geometry\Arc.h" />
+    <ClInclude Include="CCS\geometry\Circle.h" />
+    <ClInclude Include="CCS\geometry\Configuration.h" />
+    <ClInclude Include="CCS\geometry\Line.h" />
+    <ClInclude Include="CCS\geometry\Path.h" />
+    <ClInclude Include="CCS\geometry\Point.h" />
+    <ClInclude Include="CCS\geometry\Rectangle.h" />
+    <ClInclude Include="CCS\geometry\Segment.h" />
+    <ClInclude Include="CCS\geometry\Shape.h" />
+    <ClInclude Include="CCS\geometry\Triangle.h" />
+    <ClInclude Include="CCS\geometry\Vector.h" />
+    <ClInclude Include="CCS\planner\AlternativePlanner.h" />
+    <ClInclude Include="CCS\planner\ARMBuilder.h" />
+    <ClInclude Include="CCS\planner\CCS.h" />
+    <ClInclude Include="CCS\planner\Environment.h" />
+    <ClInclude Include="CCS\planner\LocalPlanner.h" />
+    <ClInclude Include="CCS\planner\OccupancyGrid.h" />
+    <ClInclude Include="CCS\planner\Preplanner.h" />
+    <ClInclude Include="CCS\planner\Robot.h" />
+    <ClInclude Include="CCS\planner\Scene.h" />
     <ClInclude Include="PathFollow\CarLineFollower.h" />
     <ClInclude Include="PathFollow\CarPathController.h" />
     <ClInclude Include="PathFollow\CarSpeedController.h" />

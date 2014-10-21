@@ -222,8 +222,8 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 				Config q0(robotShapeWorld.ps[k],q.phi);
 				Point inter;
 
-				if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
-				//if (Line::LineSegmentIntersection(q0, s0, inter))
+				//if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
+				if (Line::LineSegmentIntersection(q0, s0, inter))
 				{
 					if (fabs(Angle::Corrigate(Point::atan2(inter, q0.p) - q0.phi)) < 0.01) //Forward collision possibility
 					{
@@ -240,8 +240,8 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 				s0.b = robotShapeWorld.ps[((k + 1) % rob_size)];
 				q0.p = envsx[i].ps[j];				 
 
-				if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
-				//if (Line::LineSegmentIntersection(q0, s0, inter))
+				//if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
+				if (Line::LineSegmentIntersection(q0, s0, inter))
 				{		
 					if (fabs(Angle::Corrigate(Point::atan2(q0.p, inter) - q0.phi)) < 0.01) //Forward collision possibility
 					{

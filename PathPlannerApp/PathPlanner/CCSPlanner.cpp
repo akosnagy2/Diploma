@@ -67,7 +67,7 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 	config.push_back(Configuration(s.GetCIPath().back().q1.p.x, s.GetCIPath().back().q1.p.y, s.GetCIPath().back().q1.phi));
 
 	Scene sc(env, robot);
-    sc.setReversePenalty(1);
+    sc.setReversePenalty(10.0);
     sc.setDx(50);
     sc.setDy(50);
     OccupancyGrid oG(sc);
