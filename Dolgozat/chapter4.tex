@@ -420,10 +420,17 @@ Az autószerû robot modellje a következõ.
 ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, melyet a robot referenciapontjának nevezünk. 
 
 \par
-Könnyen belátható, hogy az egyes kerekek sebességkülönbsége a megtett utak különbségébõl adódik, mely arányos az egyes kerekekhez tartozó elfordulási sugárral, így elegendõ felírnunk ezeket a sugarakat, illetve ezek arányát. \Aref{fig:carLikeRobotModel}. ábrán látható hogy egy ilyen robot esetén ezek a sugarak hogyan származtathatók.
+Könnyen belátható, hogy az egyes kerekek sebességkülönbsége a megtett utak különbségébõl adódik, mely arányos az egyes kerekekhez tartozó elfordulási sugárral, így elegendõ felírnunk ezeket a sugarakat, illetve ezek arányát. \Aref{fig:carLikeRobotModel}. ábrán látható, hogy egy ilyen robot esetén kerékpár modellt feltételezve ezek a sugarak hogyan származtathatók.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=70mm, keepaspectratio]{figures/carLikeRobot.png}
+\caption{Autószerû robot modellje.} 
+\label{fig:carLikeRobotModel}
+\end{figure}
 
 \par
-\Aref{eq:carLikeRobot} harmadik egyenletébõl könnyen adódik, hogy a referenciapont által bejárt kör sugara
+\eqref{carLikeRobot} harmadik egyenletébõl könnyen adódik, hogy a referenciapont által bejárt kör sugara
 \begin{align}\label{eq:carRadius}
 \rho = \frac{L}{\tan \phi}
 \end{align}
@@ -432,7 +439,7 @@ alapján számolható, innen a hátsó kerekek által bejárt kör sugara a következõkép
 \rho_{rl} &= \rho - \frac{d}{2} \\ \notag
 \rho_{rr} &= \rho + \frac{d}{2},
 \end{align}
-ahol a $d$ az egy tengelyen található kerekek távolsága. (Bár \aref{eq:carRadius} alapján a sugár lehet negatív, de a profilozás során ezt nem használjuk ki. A továbbiakban az egyenleteket mindig pozitív sugárra írjuk fel, de ezt késõbb részletezett okok miatt nem használjuk ki.)
+ahol a $d$ az egy tengelyen található kerekek távolsága. (Bár \eqref{carRadius} alapján a sugár lehet negatív, de a profilozás során ezt nem használjuk ki, ezért a továbbiakban az egyenleteket is mindig pozitív sugárra írjuk fel.)
 
 \par
 Ahhoz hogy fordulás közben ne csússzanak meg oldal irányba az elsõ kerekek, a két oldali keréknek különbözõ szögben kell állnia. Ezt nevezzük Ackermann hajtásnak. Ez a különbség ugyan csak a különbözõ fordulókörrel áll összefüggésben, és a következõképpen számolható a kormányszögbõl:
@@ -440,7 +447,7 @@ Ahhoz hogy fordulás közben ne csússzanak meg oldal irányba az elsõ kerekek, a ké
 \phi_{r} &= \arctan \left( \frac{L}{\rho - \frac{d}{2}} \right) \\ \notag
 \phi_{l} &= \arctan \left( \frac{L}{\rho + \frac{d}{2}} \right)
 \end{align}
-Az is könnyen belátható, hogy az elsõ kerekek a hátsó párjukhoz képest a kerékhez tartozó kormányszög koszinuszával fordítottan arányos, ebbõl számítható az elsõ kerekek fordulási sugara:
+Ezek a kormányszögek befolyásolják az elsõ kerekek fordulási sugarát is, amit a következõképpen tesznek:
 \begin{align}\label{eq:carLikeFrontRadiuses}
 \rho_{fl} &= \frac{\rho - \frac{d}{2}}{\cos \phi_{l}} \\ \notag
 \rho_{fr} &= \frac{\rho + \frac{d}{2}}{\cos \phi_{r}}
@@ -457,13 +464,13 @@ v^{max}& : \text{A robot pályamenti sebesség korlátja}\\
 \end{align}
 
 \par
-A differenciális robotnál használt $\omega^{max}$ helyett itt $\phi^{max}$ szerepel, mivel ez egy fizikai korlátja az autónak, de ez szükség esetén egyszerûen átszámítható a maximális sebesség ismeretében. A gyorsulások közül csak a $a^{max}$ jelent igazi korlátozást, mivel egy egyenes pályán haladva a centripetális gyorsulás értéke nulla, így ebben az esetben ez megegyezik a tangenciális gyorsulással. Körpálya esetén pedig \aref{eq:velocityProfileF} alapján származtatható.
+A differenciális robotnál használt $\omega^{max}$ helyett itt $\phi^{max}$ szerepel, mivel ez egy fizikai korlátja az autónak, de ez szükség esetén egyszerûen átszámítható a maximális sebesség ismeretében. A gyorsulások közül csak a $a^{max}$ jelent igazi korlátozást, mivel egy egyenes pályán haladva a centripetális gyorsulás értéke nulla, így ebben az esetben ez megegyezik a tangenciális gyorsulással. Körpálya esetén pedig \eqref{velocityProfileF} alapján származtatható.
 
 \par
-Jelentõs különbség, hogy ebben az esetben nem határozzuk meg a maximális sebességet minden kerékre, mivel ez nagyon elbonyolítaná a számításokat, de szerencsére erre nincs is szükség. Mivel a különbözõ keréksebességek a sugarak arányiból számíthatók, így nekünk elegendõ mindig csak a legnagyobb sugárral számolni. Ez \aref{eq:carLikeRearRadiuses} és \aref{eq:carLikeFrontRadiuses} egyenletek alapján látható hogy pozitív sugár esetén a bal, míg negatív esetén a jobb oldali elsõ kerék esetén teljesül. Az algoritmus során, pontosan ezért mi csak a sugár abszolút értékével számolunk.
+Jelentõs különbség, hogy ebben az esetben nem határozzuk meg a maximális sebességet minden kerékre, mivel ez nagyon elbonyolítaná a számításokat, de szerencsére erre nincs is szükség. Mivel a különbözõ keréksebességek a sugarak arányiból számíthatók, így nekünk elegendõ mindig csak a legnagyobb sugárral számolni. Ez \eqref{carLikeRearRadiuses} és \eqref{carLikeFrontRadiuses} egyenletek alapján látható hogy pozitív sugár esetén a bal, míg negatív esetén a jobb oldali elsõ kerék esetén a legnagyobb. Az algoritmus során, ezért mi csak a sugár abszolút értékével számolunk.
 
 \par
-Az autószerû robot esetén is azzal a feltételezéssel élünk, hogy a kerekek tapadási tényezõje irányfüggetlen, bár ez a feltételezés egy rendes autónál már nem feltétlen állja meg a helyét, de az általunk használt robotautó kerekei esetén ez igen jó közelítést mutat.
+Az autószerû robot esetén is azzal a feltételezéssel élünk, hogy a kerekek tapadási tényezõje irányfüggetlen, bár ez a feltételezés egy valós autónál már nem feltétlen állja meg a helyét, de az általunk használt robotautó kerekei esetén ez igen jó közelítést mutat.
 
 %----------------------------------------------------------------------------
 \subsection{Geometriai sebességprofil}

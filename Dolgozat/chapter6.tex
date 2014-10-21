@@ -5,6 +5,10 @@
 %----------------------------------------------------------------------------
 \section{Szimuláció}
 %----------------------------------------------------------------------------
+A robotok mozgásának szimulálására a V-REP robotszimulációs programot használtuk. A program a Coppelia Robotics terméke, oktatási célból ingyenesen letölthetõ és használható. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
+
+\par
+Több módon is kiegészíthetõ a program mûködése. Mi a megoldásunkban egy szerver programot hoztunk létre, mely kommunikál a V-REP egy lua szkriptjével, majd a kapott üzenet alapján mozgatja a szimulált robotot. A szimuláció indulásakor a szkript elküldi a szimuláció módját, és a hozzá tartozó paramétereket. A fejlesztés során próbáltuk  a szimulációt a robot típusától függetlenné tenni, így a szimuláció módja mondja megy a szervernek, hogy milyen kliens kapcsolatra várjon.
 
 %----------------------------------------------------------------------------
 \section{Valós robotok}
