@@ -50,15 +50,7 @@ Fontos megjegyezni, hogy a $\Delta{s}(k)$ távolságot úgy kell értelmezni, hogy a
 \section{Differenciális robotmodell}
 %----------------------------------------------------------------------------
 
-Ebben a részben az idõparaméterezést differenciális robotmodellhez készítjük el. A differenciális meghajtása a következõ két kinematikai egyenlettel írható le \cite{Domi}:
-
-\begin{align}\label{eq:diffRobot}
-v(k) &= \frac{v_{r}(k)+v_{l}(k)}{2} \\ \notag
-\omega(k) &= \frac{v_{r}(k)-v_{l}(k)}{W},
-\end{align}
-ahol $W$ a robot kerekei közti távolság.
-
-\Aref{eq:diffRobot}. egyenletet átírhatjuk úgy, hogy a kerekek sebességeit fejezzük ki akár a szögsebesség, akár a pálya adott görbülete alapján:
+Mivel a fejezetben késõbb még többször szükség lesz rá \Aref{eq:diffRobot}. egyenletet írjuk át úgy, hogy a kerekek sebességeit fejezzük ki akár a szögsebesség, akár a pálya adott görbülete alapján:
 
 \begin{align}\label{eq:diffRobotWheel}
 v_{l}(k) &= v(k) - \frac{W\cdot\omega(k)}{2} = v(k) \cdot p_l(k) \\ \notag
@@ -409,25 +401,6 @@ Szintén fontos megjegyezni, hogy mivel a tárgyalt három hatás elsõsorban negatív
 %----------------------------------------------------------------------------
 
 Ebben a részben áttekintjük a különbségeket az idõparaméterezésben, ha autószerû robotmodellt alkalmazunk. A lényeges különbségek a modellben és a korlátozásokban mutatkoznak. Ezek csak a geometriai sebességprofil alkotásakor mutatkoznak meg, a további lépések teljesen megegyeznek a fentebb részletezettel.
-
-\par
-Az autószerû robot modellje a következõ.
-\begin{align}\label{eq:carLikeRobot}
-\dot{x} &= v \cos \theta \\ \notag
-\dot{y} &= v \sin \theta \\ \notag
-\dot{\theta} &= \frac {v} {L} \tan \phi,
-\end{align}
-ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, melyet a robot referenciapontjának nevezünk. 
-
-\par
-Könnyen belátható, hogy az egyes kerekek sebességkülönbsége a megtett utak különbségébõl adódik, mely arányos az egyes kerekekhez tartozó elfordulási sugárral, így elegendõ felírnunk ezeket a sugarakat, illetve ezek arányát. \Aref{fig:carLikeRobotModel}. ábrán látható, hogy egy ilyen robot esetén kerékpár modellt feltételezve ezek a sugarak hogyan származtathatók.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=70mm, keepaspectratio]{figures/carLikeRobot.png}
-\caption{Autószerû robot modellje.} 
-\label{fig:carLikeRobotModel}
-\end{figure}
 
 \par
 \eqref{carLikeRobot} harmadik egyenletébõl könnyen adódik, hogy a referenciapont által bejárt kör sugara
