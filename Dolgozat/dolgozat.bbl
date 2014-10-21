@@ -99,6 +99,11 @@ Kiss Domokos:
   Diplomamunka}.
 \bibNewBlock 2007, BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék.
 
+\bibitem{Bezi}
+Bézi István:
+\bibNewBlock {\em Robotirányítás rendszertechnikája 3. fejezet}.
+\bibNewBlock 2013.
+
 \bibitem{DomiRTR}
 Domokos Kiss:
 \bibNewBlock {\em The RTR Path Planner for Differential Drive Robots}.

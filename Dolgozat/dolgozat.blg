@@ -23,46 +23,47 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty publisher in Bezi
 Warning--empty publisher in DomiRTR
-You've used 6 entries,
+You've used 7 entries,
             4991 wiz_defined-function locations,
-            1162 strings with 12304 characters,
-and the built_in function-call counts, 11945 in all, are:
-= -- 2156
-> -- 53
+            1167 strings with 12371 characters,
+and the built_in function-call counts, 13611 in all, are:
+= -- 2458
+> -- 60
 < -- 0
-+ -- 840
-- -- 30
-* -- 208
-:= -- 501
-add.period$ -- 14
-call.type$ -- 6
-change.case$ -- 22
++ -- 956
+- -- 34
+* -- 232
+:= -- 576
+add.period$ -- 16
+call.type$ -- 7
+change.case$ -- 25
 chr.to.int$ -- 0
-cite$ -- 7
-duplicate$ -- 1736
-empty$ -- 276
-format.name$ -- 16
-if$ -- 2473
+cite$ -- 9
+duplicate$ -- 1980
+empty$ -- 322
+format.name$ -- 18
+if$ -- 2827
 int.to.chr$ -- 0
-int.to.str$ -- 6
-missing$ -- 15
-newline$ -- 127
-num.names$ -- 12
-pop$ -- 449
+int.to.str$ -- 7
+missing$ -- 18
+newline$ -- 132
+num.names$ -- 14
+pop$ -- 514
 preamble$ -- 1
-purify$ -- 20
+purify$ -- 23
 quote$ -- 22
-skip$ -- 105
+skip$ -- 122
 stack$ -- 0
-substring$ -- 1318
-swap$ -- 1291
+substring$ -- 1503
+swap$ -- 1471
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 20
-warning$ -- 1
-while$ -- 60
-width$ -- 7
-write$ -- 153
-(There were 2 warnings)
+type$ -- 23
+warning$ -- 2
+while$ -- 69
+width$ -- 8
+write$ -- 162
+(There were 3 warnings)
