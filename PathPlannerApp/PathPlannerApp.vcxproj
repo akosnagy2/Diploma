@@ -54,15 +54,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution\PathPlannerApp\CCS\planner;C:\BME\Diploma\Src\RobotSolution\PathPlannerApp\CCS\geometry;C:\BME\Diploma\Src\RobotSolution;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\TinyObjLoader;C:\BME\Diploma\Libs\Fade2D\include_fade2d;C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\BME\Diploma\Src\RobotSolution\RobotCommonLib;C:\BME\Diploma\Src\RobotSolution\PathPlannerApp\CCS\planner;C:\BME\Diploma\Src\RobotSolution\PathPlannerApp\CCS\geometry;C:\BME\Diploma\Libs\boost_1_56_0;C:\BME\Diploma\Libs\TinyObjLoader;C:\BME\Diploma\Libs\Fade2D\include_fade2d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\BME\Diploma\Libs\jsoncpp-src-0.6.0-rc2\build\vs71\debug\lib_json;C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;C:\BME\Diploma\Libs\Fade2D\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>fade2D_vc11_Debug.lib;json_vc71_libmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\BME\Diploma\Src\RobotSolution\Debug;C:\BME\Diploma\Libs\boost_1_56_0\lib32-msvc-11.0;C:\BME\Diploma\Libs\Fade2D\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>fade2D_vc11_Debug.lib;RobotCommonLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -114,11 +114,6 @@
     <ClCompile Include="CCS\planner\Preplanner.cpp" />
     <ClCompile Include="CCS\planner\Robot.cpp" />
     <ClCompile Include="CCS\planner\Scene.cpp" />
-    <ClCompile Include="Geometry\Angle.cpp" />
-    <ClCompile Include="Geometry\Config.cpp" />
-    <ClCompile Include="Geometry\Line.cpp" />
-    <ClCompile Include="Geometry\Polygon.cpp" />
-    <ClCompile Include="Geometry\Triangle.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PathFollow\dcwheel_pathCtrl.c" />
     <ClCompile Include="PathPlanner\CCSPlanner.cpp" />
@@ -158,13 +153,6 @@
     <ClInclude Include="CCS\planner\Preplanner.h" />
     <ClInclude Include="CCS\planner\Robot.h" />
     <ClInclude Include="CCS\planner\Scene.h" />
-    <ClInclude Include="Geometry\Angle.h" />
-    <ClInclude Include="Geometry\Common.h" />
-    <ClInclude Include="Geometry\Config.h" />
-    <ClInclude Include="Geometry\Line.h" />
-    <ClInclude Include="Geometry\Point.h" />
-    <ClInclude Include="Geometry\Polygon.h" />
-    <ClInclude Include="Geometry\Triangle.h" />
     <ClInclude Include="PathFollow\dcwheel_pathCtrl.h" />
     <ClInclude Include="PathPlanner\CCSPlanner.h" />
     <ClInclude Include="PathPlanner\ConfigInterval.h" />

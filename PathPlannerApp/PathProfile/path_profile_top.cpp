@@ -359,7 +359,7 @@ static float GetVmax(Profile &prof, std::vector<float> &deltaS, int i, bool left
 	c = -powf(maxA,2) + (powf(prof.v[i+1],4)*powf(p,4))/(powf(2*deltaS[i],2));
 
 	//Solution always exists, not necessary to check
-	solve2ndOrder(a,b,c,res0,res1);
+	solve2ndOrder(a,b,c,res0,res1);+
 	if (res0 >= 0.0f)
 		res0 = sqrtf(res0);
 	else
