@@ -1,14 +1,55 @@
 %----------------------------------------------------------------------------
-\chapter{Pályatervezés elmélete - 5 oldal CsG/NA}
+\chapter{Bevezetés}
 %----------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------
-\section{Megoldandó feladat}
+\section{Problémafelvetés}
+%----------------------------------------------------------------------------
+A helyváltoztatásra képes, úgynevezett mobil robotok esetében gyakran elõforduló probléma, hogy robotnak a feladata végrehajtásához el kell jutnia egy adott célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb amikor a robot környezetében akadályok is találhatóak. 
+
+\par
+A mi célunk a pályatervezési módszerek bemutatása, néhány módszer implementálása és tesztelése szimulátorban és valós robotokon is. A pályatervezéshez szorosan kapcsoló téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
+
+%----------------------------------------------------------------------------
+\section{Pályatervezés elmélete}
+%----------------------------------------------------------------------------
+Az elmúlt idõszakban a pályatervezéssel kapcsolatban igen sok kutatás foglalkozott \cite{Latombe}. Ahhoz, hogy ezeket az algoritmusokat ismertessük, be kell vezetnünk néhány alapvetõ fogalmat. 
+
+%----------------------------------------------------------------------------
+\subsection{Alapvetõ fogalmak}
+%----------------------------------------------------------------------------
+A pályatervezés során a robot pillanatnyi állapotát a \emph{konfigurációjával} írhatjuk le. Síkban mozgó robotok esetében a konfiguráció a következõket tartalmazza \cite{Springer}:
+
+\begin{align}
+q &= (x,y,\theta),
+\end{align}
+ahol $q$ a robot konfigurációja, $x,y$ határozza meg a robot pozícióját a síkon és $\theta$ határozza meg a robot orientációját.
+
+Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér} adja meg, amit $C$-vel jelölünk. A konfigurációs tér azon halmazát, amely esetében a robot a környezetben található akadályokkal nem ütközik, \emph{szabad (konfigurációs) térnek} nevezünk ($C_{free}$). E halmaz komplementere azokat a konfigurációkat tartalmazza, amelyek esetén a robot ütközne az akadályokkal ($C_{obs} = C \backslash C_{obs}$).
+
+\par
+A korlátozások ismerete alapvetõ fontosságú a pályatervezés és mozgásirányítás során. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). %TODO így jó?
+
+\par
+A mi dolgozatunkban kinematikai korlátozásokkal fogunk foglalkozni.
+
+\par
+Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni. Autónál emiatt nem olyan egyszerû a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Az anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciál egyenlettel írható le, amely nem integrálható.
+
+\par
+Az általunk vizsgált két robot típus, az \emph{autószerû robotok} és a \emph{differenciális robotok} is anholonom rendszerek. Viszont léteznek olyan robotok, amelyek nem rendelkeznek anholonom korlátozásokkal (holonom rendszerek), ilyenek például az omnidirekcionális robotok. Egy omnidirekcionális robot képes a tér bármely irányába elmozdulni.
+
+%----------------------------------------------------------------------------
+\subsubsection{Robotmodellek}
 %----------------------------------------------------------------------------
 
 
 %----------------------------------------------------------------------------
-\section{Lokális módszerek}
+\subsection{Osztályozás}
+%----------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------
+\subsubsection{Lokális módszerek}
 %----------------------------------------------------------------------------
 A topológiai feltétel definíciója:
 
@@ -20,5 +61,5 @@ d_{\mathcal{C}}(q_{0},q_{1}) < \eta \rightarrow d_{\mathcal{C}}\left(q_{0}, Stee
 \end{align}
 
 %----------------------------------------------------------------------------
-\section{Globális módszerek}
+\subsubsection{Globális módszerek}
 %----------------------------------------------------------------------------

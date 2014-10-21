@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  21 OCT 2014 03:45
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  21 OCT 2014 15:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -442,8 +442,11 @@ Package hyperref Info: Option `unicode' set `false' on input line 79.
 Package hyperref Info: Option `pdfnewwindow' set `true' on input line 79.
 Package hyperref Info: Option `colorlinks' set `true' on input line 79.
 (./dolgozat.aux (./titlepage.aux) (./abstract.aux) (./chapter1.aux)
-(./chapter2.aux) (./chapter3.aux) (./chapter4.aux) (./chapter5.aux)
-(./chapter6.aux))
+(./chapter3.aux
+
+LaTeX Warning: Label `fig:infCCS' multiply defined.
+
+) (./chapter2.aux) (./chapter4.aux) (./chapter5.aux) (./chapter6.aux))
 \openout1 = `dolgozat.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 150.
@@ -460,7 +463,8 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 150.
 LaTeX Font Info:    ... okay on input line 150.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 150.
 LaTeX Font Info:    ... okay on input line 150.
- (c:/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
+
+(c:/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count132
 \scratchdimen=\dimen149
@@ -526,7 +530,7 @@ LaTeX Info: Redefining \mit on input line 587.
 \openout2 = `titlepage.aux'.
 
  (./titlepage.tex
-<figures/BMElogo.png, id=188, 975.645pt x 273.02pt>
+<figures/BMElogo.png, id=192, 975.645pt x 273.02pt>
 File: figures/BMElogo.png Graphic file (type png)
  <use figures/BMElogo.png>
 Package pdftex.def Info: figures/BMElogo.png used on input line 6.
@@ -550,7 +554,7 @@ go.png>])
 e{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.35 ...t\'oszer\H u robotmodell}{41}{section.4.3}
+l.37 ...amintav\'etelez\'es}{33}{subsection.4.2.3}
                                                    [1
 
 
@@ -574,72 +578,29 @@ pdfTeX warning: pdflatex.exe: pop empty color page stack 0
 
  (./chapter1.tex
 1. fejezet.
-) [7
+
+LaTeX Warning: Citation `Latombe' on page 7 undefined on input line 16.
+
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 19.
+
+
+LaTeX Warning: Citation `Springer' on page 7 undefined on input line 21.
+
+[7
 
 
 
 ]
-\openout2 = `chapter2.aux'.
 
- (./chapter2.tex
-2. fejezet.
-<figures/RRT.png, id=286, 989.19562pt x 325.215pt>
-File: figures/RRT.png Graphic file (type png)
- <use figures/RRT.png>
-Package pdftex.def Info: figures/RRT.png used on input line 20.
-(pdftex.def)             Requested size: 369.88582pt x 121.603pt.
+LaTeX Warning: Citation `Springer' on page 8 undefined on input line 31.
 
-[8
-
-
-
- <./figures/RRT.png (PNG copy)>]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 46.
-
-(c:/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 46.
- [9]
-<figures/tci_gp.png, id=301, 920.238pt x 281.1303pt>
-File: figures/tci_gp.png Graphic file (type png)
- <use figures/tci_gp.png>
-Package pdftex.def Info: figures/tci_gp.png used on input line 79.
-(pdftex.def)             Requested size: 369.88582pt x 112.9992pt.
-
-[10] <figures/rci_gp.png, id=308, 1284.7197pt x 577.1964pt>
-File: figures/rci_gp.png Graphic file (type png)
-
-<use figures/rci_gp.png>
-Package pdftex.def Info: figures/rci_gp.png used on input line 89.
-(pdftex.def)             Requested size: 369.88582pt x 166.18488pt.
- [11 <./figures/tci_gp.png> <./figures/rci_gp.png>]
-<figures/tci_coll2.png, id=320, 645.1302pt x 391.7034pt>
-File: figures/tci_coll2.png Graphic file (type png)
-
-<use figures/tci_coll2.png>
-Package pdftex.def Info: figures/tci_coll2.png used on input line 124.
-(pdftex.def)             Requested size: 369.88582pt x 224.5822pt.
- [12] [13 <./figures/tci_coll2.png>]
-<figures/rtr_path.pdf, id=340, 868.24374pt x 658.46pt>
-File: figures/rtr_path.pdf Graphic file (type pdf)
-
-<use figures/rtr_path.pdf>
-Package pdftex.def Info: figures/rtr_path.pdf used on input line 165.
-(pdftex.def)             Requested size: 341.43306pt x 258.93845pt.
- [14]
-<figures/rtr_path2.pdf, id=347, 772.8875pt x 677.53125pt>
-File: figures/rtr_path2.pdf Graphic file (type pdf)
-
-<use figures/rtr_path2.pdf>
-Package pdftex.def Info: figures/rtr_path2.pdf used on input line 175.
-(pdftex.def)             Requested size: 312.9803pt x 274.36763pt.
- [15 <./figures/rtr_path.pdf> <./figures/rtr_path2.pdf>]) [16]
+) [8]
 \openout2 = `chapter3.aux'.
 
  (./chapter3.tex
-3. fejezet.
+2. fejezet.
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 2.
@@ -652,57 +613,140 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 2.
 
-[17
+<figures/reeds_shepp.png, id=298, 619.31375pt x 244.915pt>
+File: figures/reeds_shepp.png Graphic file (type png)
+
+<use figures/reeds_shepp.png>
+Package pdftex.def Info: figures/reeds_shepp.png used on input line 14.
+(pdftex.def)             Requested size: 369.88582pt x 146.28117pt.
+
+
+LaTeX Warning: Citation `ReedsShepp' on page 9 undefined on input line 20.
+
+[9
 
 
 
-]
+ <./figures/reeds_shepp.png>]
 
-LaTeX Warning: Citation `CCSTopologicalProp' on page 18 undefined on input line
- 27.
+LaTeX Warning: Citation `CCSTopologicalProp' on page 10 undefined on input line
+ 34.
 
 
 Package hyperref Warning: Glyph not defined in PD1 encoding,
-(hyperref)                removing `\H' on input line 38.
+(hyperref)                removing `\H' on input line 45.
 
-[18]
+[10] <figures/ccs_prepath.png, id=318, 1277.52281pt x 601.4972pt>
+File: figures/ccs_prepath.png Graphic file (type png)
+
+<use figures/ccs_prepath.png>
+Package pdftex.def Info: figures/ccs_prepath.png used on input line 54.
+(pdftex.def)             Requested size: 369.88582pt x 174.15437pt.
+
 
 Package hyperref Warning: Glyph not defined in PD1 encoding,
-(hyperref)                removing `\H' on input line 47.
+(hyperref)                removing `\H' on input line 62.
 
+[11 <./figures/ccs_prepath.png>]
+<figures/CCS.pdf, id=328, 250.60326pt x 238.55826pt>
+File: figures/CCS.pdf Graphic file (type pdf)
+ <use figures/CCS.pdf>
+Package pdftex.def Info: figures/CCS.pdf used on input line 76.
+(pdftex.def)             Requested size: 213.39566pt x 203.14311pt.
 
-LaTeX Warning: Reference `fig:ARM' on page 19 undefined on input line 57.
+[12 <./figures/CCS.pdf>]
+<figures/ccs_middle.png, id=375, 1276.01718pt x 601.4972pt>
+File: figures/ccs_middle.png Graphic file (type png)
 
-[19]
+<use figures/ccs_middle.png>
+Package pdftex.def Info: figures/ccs_middle.png used on input line 91.
+(pdftex.def)             Requested size: 369.88582pt x 174.3563pt.
+
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 74.
+(hyperref)                removing `math shift' on input line 103.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@@overline' on input line 74.
+(hyperref)                removing `\@@overline' on input line 103.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 74.
+(hyperref)                removing `math shift' on input line 103.
+
+[13 <./figures/ccs_middle.png>]
+
+LaTeX Warning: Citation `CCSTopologicalProp' on page 14 undefined on input line
+ 108.
+
+<figures/cc_S.png, id=382, 409.53pt x 172.0026pt>
+File: figures/cc_S.png Graphic file (type png)
+ <use figures/cc_S.png>
+Package pdftex.def Info: figures/cc_S.png used on input line 112.
+(pdftex.def)             Requested size: 369.88582pt x 155.36255pt.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 123.
 
 
-LaTeX Warning: Citation `CCSTopologicalProp' on page 20 undefined on input line
- 79.
-
-
-LaTeX Warning: Reference `fig:ccS' on page 20 undefined on input line 79.
-
-[20]
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 87.
- (c:/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
+(c:/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-) [21]
+) [14 <./figures/cc_S.png>]) [15]
+\openout2 = `chapter2.aux'.
 
-LaTeX Warning: Reference `fig:globalisPalyaHatasa' on page 22 undefined on inpu
-t line 99.
+ (./chapter2.tex
+3. fejezet.
+<figures/RRT.png, id=398, 989.19562pt x 325.215pt>
+File: figures/RRT.png Graphic file (type png)
+ <use figures/RRT.png>
+Package pdftex.def Info: figures/RRT.png used on input line 20.
+(pdftex.def)             Requested size: 369.88582pt x 121.603pt.
 
-) [22]
+[16
+
+
+
+ <./figures/RRT.png (PNG copy)>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 46.
+
+(c:/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 46.
+ [17]
+<figures/tci_gp.png, id=410, 920.238pt x 281.1303pt>
+File: figures/tci_gp.png Graphic file (type png)
+ <use figures/tci_gp.png>
+Package pdftex.def Info: figures/tci_gp.png used on input line 79.
+(pdftex.def)             Requested size: 369.88582pt x 112.9992pt.
+
+[18] <figures/rci_gp.png, id=417, 1284.7197pt x 577.1964pt>
+File: figures/rci_gp.png Graphic file (type png)
+
+<use figures/rci_gp.png>
+Package pdftex.def Info: figures/rci_gp.png used on input line 89.
+(pdftex.def)             Requested size: 369.88582pt x 166.18488pt.
+ [19 <./figures/tci_gp.png> <./figures/rci_gp.png>]
+<figures/tci_coll2.png, id=428, 645.1302pt x 391.7034pt>
+File: figures/tci_coll2.png Graphic file (type png)
+
+<use figures/tci_coll2.png>
+Package pdftex.def Info: figures/tci_coll2.png used on input line 124.
+(pdftex.def)             Requested size: 369.88582pt x 224.5822pt.
+ [20] [21 <./figures/tci_coll2.png>]
+<figures/rtr_path.pdf, id=446, 868.24374pt x 658.46pt>
+File: figures/rtr_path.pdf Graphic file (type pdf)
+
+<use figures/rtr_path.pdf>
+Package pdftex.def Info: figures/rtr_path.pdf used on input line 165.
+(pdftex.def)             Requested size: 341.43306pt x 258.93845pt.
+ [22]
+<figures/rtr_path2.pdf, id=453, 772.8875pt x 677.53125pt>
+File: figures/rtr_path2.pdf Graphic file (type pdf)
+
+<use figures/rtr_path2.pdf>
+Package pdftex.def Info: figures/rtr_path2.pdf used on input line 175.
+(pdftex.def)             Requested size: 312.9803pt x 274.36763pt.
+ [23 <./figures/rtr_path.pdf> <./figures/rtr_path2.pdf>]) [24]
 \openout2 = `chapter4.aux'.
 
  (./chapter4.tex
@@ -711,72 +755,72 @@ t line 99.
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 2.
 
-<figures/path.pdf, id=394, 1446.40375pt x 708.6475pt>
+<figures/path.pdf, id=468, 1446.40375pt x 708.6475pt>
 File: figures/path.pdf Graphic file (type pdf)
  <use figures/path.pdf>
 Package pdftex.def Info: figures/path.pdf used on input line 11.
 (pdftex.def)             Requested size: 369.88582pt x 181.21634pt.
 
-[23
+[25
 
 
 
- <./figures/path.pdf>] [24]
-<figures/robot.png, id=420, 396.0396pt x 234.3957pt>
+ <./figures/path.pdf>] [26]
+<figures/robot.png, id=494, 396.0396pt x 234.3957pt>
 File: figures/robot.png Graphic file (type png)
  <use figures/robot.png>
 Package pdftex.def Info: figures/robot.png used on input line 77.
 (pdftex.def)             Requested size: 426.79134pt x 252.59995pt.
 
-[25] [26 <./figures/robot.png>]
+[27] [28 <./figures/robot.png>]
 Overfull \hbox (10.07559pt too wide) in paragraph at lines 110--111
 []\T1/cmr/m/n/10.95 A ke-re-kek ma-xi-má-lis ere-d® gyor-su-lá-sát a ma-xi-má-l
 is ta-pa-dá-si súr-ló-dá-si együtt-ha-tó ($\OML/cmm/m/it/10.95 ^^V[]$\T1/cmr/m/
 n/10.95 )
  []
 
-[27] [28] [29]
+[29] [30] [31]
 Overfull \hbox (35.20181pt too wide) in paragraph at lines 228--228
 [] 
  []
 
-[30] <figures/geo_sampl.pdf, id=493, 1446.40375pt x 708.6475pt>
+[32] <figures/geo_sampl.pdf, id=565, 1446.40375pt x 708.6475pt>
 File: figures/geo_sampl.pdf Graphic file (type pdf)
 
 <use figures/geo_sampl.pdf>
 Package pdftex.def Info: figures/geo_sampl.pdf used on input line 303.
 (pdftex.def)             Requested size: 426.79134pt x 209.10327pt.
- [31]
-<figures/circle_circle.png, id=504, 462.7689pt x 317.0244pt>
+ [33]
+<figures/circle_circle.png, id=576, 462.7689pt x 317.0244pt>
 File: figures/circle_circle.png Graphic file (type png)
 
 <use figures/circle_circle.png>
 Package pdftex.def Info: figures/circle_circle.png used on input line 326.
 (pdftex.def)             Requested size: 369.88582pt x 253.40218pt.
- [32 <./figures/geo_sampl.pdf>] [33 <./figures/circle_circle.png>] <figures/bac
-k_check.pdf, id=533, 1446.40375pt x 708.6475pt>
+ [34 <./figures/geo_sampl.pdf>] [35 <./figures/circle_circle.png>] <figures/bac
+k_check.pdf, id=605, 1446.40375pt x 708.6475pt>
 File: figures/back_check.pdf Graphic file (type pdf)
 
 <use figures/back_check.pdf>
 Package pdftex.def Info: figures/back_check.pdf used on input line 374.
 (pdftex.def)             Requested size: 426.79134pt x 209.10327pt.
- [34 <./figures/back_check.pdf>]
-<figures/back_check2.pdf, id=546, 1446.40375pt x 726.715pt>
+ [36 <./figures/back_check.pdf>]
+<figures/back_check2.pdf, id=619, 1446.40375pt x 726.715pt>
 File: figures/back_check2.pdf Graphic file (type pdf)
 
 <use figures/back_check2.pdf>
 Package pdftex.def Info: figures/back_check2.pdf used on input line 390.
 (pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
- [35 <./figures/back_check2.pdf>]
+ [37 <./figures/back_check2.pdf>]
 
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 408.
 
 
-LaTeX Warning: Reference `fig:carLikeRobotModel' on page 36 undefined on input 
+LaTeX Warning: Reference `fig:carLikeRobotModel' on page 38 undefined on input 
 line 423.
 
-[36] [37]) [38]
+[38] [39]) [40]
 \openout2 = `chapter5.aux'.
 
  (./chapter5.tex
@@ -785,11 +829,11 @@ line 423.
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 2.
 
-[39
+[41
 
 
 
-] [40] <figures/hajtas.pdf, id=607, 747.54282pt x 618.81187pt>
+] [42] <figures/hajtas.pdf, id=679, 747.54282pt x 618.81187pt>
 File: figures/hajtas.pdf Graphic file (type pdf)
 
 <use figures/hajtas.pdf>
@@ -800,7 +844,7 @@ Overfull \hbox (28.45273pt too wide) in paragraph at lines 83--84
  [][] 
  []
 
-[41 <./figures/hajtas.pdf>] [42]
+[43 <./figures/hajtas.pdf>] [44]
 
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 135.
@@ -809,17 +853,17 @@ Package hyperref Warning: Glyph not defined in PD1 encoding,
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 143.
 
-[43]
+[45]
 
-LaTeX Warning: Reference `fig:carLikeRobotModel' on page 44 undefined on input 
+LaTeX Warning: Reference `fig:carLikeRobotModel' on page 46 undefined on input 
 line 150.
 
-[44]) [45]
+[46]) [47]
 \openout2 = `chapter6.aux'.
 
  (./chapter6.tex
 6. fejezet.
-[46
+[48
 
 
 
@@ -829,7 +873,7 @@ line 150.
 Package hyperref Warning: Glyph not defined in PD1 encoding,
 (hyperref)                removing `\H' on input line 22.
 
-) [47
+) [49
 
 ] (./dolgozat.bbl
 Underfull \hbox (badness 2326) in paragraph at lines 113--117
@@ -849,36 +893,36 @@ Underfull \hbox (badness 10000) in paragraph at lines 113--117
 
  
 AED: lastpage setting LastPage
-[48
+[50
 
 
 ]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 181.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 181.
  (./dolgozat.aux (./titlepage.aux) (./abstract.aux) (./chapter1.aux)
-(./chapter2.aux) (./chapter3.aux) (./chapter4.aux) (./chapter5.aux)
+(./chapter3.aux) (./chapter2.aux) (./chapter4.aux) (./chapter5.aux)
 (./chapter6.aux))
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 181.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 181.
 Package rerunfilecheck Info: File `dolgozat.out' has not changed.
-(rerunfilecheck)             Checksum: DF3093AD71DD9F83F632FF7C485F370B;3218.
+(rerunfilecheck)             Checksum: A4E812E4BF2355C99EBD8A52AFB9EBB1;3262.
 
 
 LaTeX Warning: There were undefined references.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 181.
  ) 
 Here is how much of TeX's memory you used:
- 11668 strings out of 493308
- 175884 string characters out of 6141367
- 288662 words of memory out of 5000000
- 14681 multiletter control sequences out of 15000+600000
+ 11709 strings out of 493308
+ 176651 string characters out of 6141367
+ 289041 words of memory out of 5000000
+ 14705 multiletter control sequences out of 15000+600000
  36278 words of font info for 100 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 36i,14n,39p,1066b,575s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,14n,39p,1066b,579s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/texlive/2013/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}<c:/texl
 ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2013/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2013/texmf-dis
@@ -887,25 +931,26 @@ ype1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2013/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmmi8.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmmi9.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib1
 0.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/
-texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/201
-3/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2013/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2013/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmsy8.pfb><c:/texlive/2013/texmf-dist/fonts/type1/publi
-c/cm-super/sfbx1000.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super
-/sfbx1095.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfbx1200.
-pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb><c:/te
-xlive/2013/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb><c:/texlive/2013
-/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb><c:/texlive/2013/texmf-dis
-t/fonts/type1/public/cm-super/sfrm0800.pfb><c:/texlive/2013/texmf-dist/fonts/ty
-pe1/public/cm-super/sfrm0900.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public
-/cm-super/sfrm1095.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/
-sfrm1200.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfti0900.p
-fb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb><c:/tex
-live/2013/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on dolgozat.pdf (49 pages, 1916150 bytes).
+texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/texlive/201
+3/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/2013/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2013/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy8.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/
+sfbx1000.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfbx1095.p
+fb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb><c:/tex
+live/2013/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb><c:/texlive/2013/
+texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb><c:/texlive/2013/texmf-dist
+/fonts/type1/public/cm-super/sfrm0600.pfb><c:/texlive/2013/texmf-dist/fonts/typ
+e1/public/cm-super/sfrm0800.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/
+cm-super/sfrm0900.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/s
+frm1095.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pf
+b><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb><c:/texl
+ive/2013/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb><c:/texlive/2013/t
+exmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
+Output written on dolgozat.pdf (51 pages, 2387993 bytes).
 PDF statistics:
- 844 PDF objects out of 1000 (max. 8388607)
- 735 compressed objects within 8 object streams
- 184 named destinations out of 1000 (max. 500000)
- 439 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 920 PDF objects out of 1000 (max. 8388607)
+ 779 compressed objects within 8 object streams
+ 196 named destinations out of 1000 (max. 500000)
+ 472 words of extra memory for PDF output out of 10000 (max. 10000000)
 
