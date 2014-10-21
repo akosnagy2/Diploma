@@ -63,7 +63,6 @@ uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, flo
 	//Reset
 	PathCtrl_SetState(ctrl, DISABLE);
 
-//return cntrl_timer_set(timer_index,1,sample_ms,function);
 	return 1;
 }
 

@@ -27,9 +27,6 @@
     <Filter Include="CCS\planner">
       <UniqueIdentifier>{64d15057-efc9-4003-b821-8497870d91f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Geometry">
-      <UniqueIdentifier>{ab22b48e-7019-4e97-87f5-1dc81196293f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
@@ -40,12 +37,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Libs\TinyObjLoader\tiny_obj_loader.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CtrlMessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PackedMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PathPlanner\ConfigInterval.cpp">
@@ -74,12 +65,6 @@
     </ClCompile>
     <ClCompile Include="PathFollow\dcwheel_pathCtrl.c">
       <Filter>PathFollow</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PathMessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Pos2dMessage.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CCS\geometry\Arc.cpp">
       <Filter>CCS\geometry</Filter>
@@ -147,32 +132,23 @@
     <ClCompile Include="CCS\planner\Scene.cpp">
       <Filter>CCS\planner</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry\Angle.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry\Config.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry\Line.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry\Polygon.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry\Triangle.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="PathPlanner\CCSPlanner.cpp">
       <Filter>PathPlanner</Filter>
     </ClCompile>
+    <ClCompile Include="PathFollow\CarLineFollower.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\CarPathController.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\CarSpeedController.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollow\PathShifter.cpp">
+      <Filter>PathFollow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CtrlMessage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PackedMessage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PathPlanner\ConfigInterval.h">
       <Filter>PathPlanner</Filter>
     </ClInclude>
@@ -193,12 +169,6 @@
     </ClInclude>
     <ClInclude Include="PathFollow\dcwheel_pathCtrl.h">
       <Filter>PathFollow</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PathMessage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Pos2dMessage.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="CCS\geometry\Arc.h">
       <Filter>CCS\geometry</Filter>
@@ -266,32 +236,23 @@
     <ClInclude Include="CCS\planner\Scene.h">
       <Filter>CCS\planner</Filter>
     </ClInclude>
-    <ClInclude Include="PathSegment.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Angle.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Config.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Line.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Point.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Polygon.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Triangle.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Common.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="PathPlanner\CCSPlanner.h">
       <Filter>PathPlanner</Filter>
+    </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\CarLineFollower.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\CarPathController.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\CarSpeedController.h">
+      <Filter>PathFollow</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollow\PathShifter.h">
+      <Filter>PathFollow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

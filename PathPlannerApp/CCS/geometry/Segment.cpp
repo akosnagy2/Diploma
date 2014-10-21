@@ -1,11 +1,11 @@
 #include "Segment.h"
-
+/*
 <<<<<<< HEAD
 #include <cmath>
 =======
 #define _USE_MATH_DEFINES
 #include <math.h>
->>>>>>> origin/car-like-robot
+>>>>>>> origin/car-like-robot*/
 #include <vector>
 #include <algorithm>
 #include <float.h>

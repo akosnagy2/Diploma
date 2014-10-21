@@ -88,10 +88,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Libs\TinyObjLoader\tiny_obj_loader.cc" />
-    <ClCompile Include="..\CtrlMessage.cpp" />
-    <ClCompile Include="..\PackedMessage.cpp" />
-    <ClCompile Include="..\PathMessage.cpp" />
-    <ClCompile Include="..\Pos2dMessage.cpp" />
     <ClCompile Include="CCS\geometry\Arc.cpp" />
     <ClCompile Include="CCS\geometry\Circle.cpp" />
     <ClCompile Include="CCS\geometry\Configuration.cpp" />
@@ -115,7 +111,11 @@
     <ClCompile Include="CCS\planner\Robot.cpp" />
     <ClCompile Include="CCS\planner\Scene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PathFollow\CarLineFollower.cpp" />
+    <ClCompile Include="PathFollow\CarPathController.cpp" />
+    <ClCompile Include="PathFollow\CarSpeedController.cpp" />
     <ClCompile Include="PathFollow\dcwheel_pathCtrl.c" />
+    <ClCompile Include="PathFollow\PathShifter.cpp" />
     <ClCompile Include="PathPlanner\CCSPlanner.cpp" />
     <ClCompile Include="PathPlanner\ConfigInterval.cpp" />
     <ClCompile Include="PathPlanner\PrePlanner.cpp" />
@@ -127,10 +127,6 @@
     <ClCompile Include="PathProfile\path_profile_top.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CtrlMessage.h" />
-    <ClInclude Include="..\PackedMessage.h" />
-    <ClInclude Include="..\PathMessage.h" />
-    <ClInclude Include="..\Pos2dMessage.h" />
     <ClInclude Include="CCS\geometry\Arc.h" />
     <ClInclude Include="CCS\geometry\Circle.h" />
     <ClInclude Include="CCS\geometry\Configuration.h" />
@@ -153,7 +149,11 @@
     <ClInclude Include="CCS\planner\Preplanner.h" />
     <ClInclude Include="CCS\planner\Robot.h" />
     <ClInclude Include="CCS\planner\Scene.h" />
+    <ClInclude Include="PathFollow\CarLineFollower.h" />
+    <ClInclude Include="PathFollow\CarPathController.h" />
+    <ClInclude Include="PathFollow\CarSpeedController.h" />
     <ClInclude Include="PathFollow\dcwheel_pathCtrl.h" />
+    <ClInclude Include="PathFollow\PathShifter.h" />
     <ClInclude Include="PathPlanner\CCSPlanner.h" />
     <ClInclude Include="PathPlanner\ConfigInterval.h" />
     <ClInclude Include="PathPlanner\Scene.h" />
@@ -161,7 +161,7 @@
     <ClInclude Include="PathProfile\path_profile.h" />
     <ClInclude Include="PathProfile\path_profile_funcs.h" />
     <ClInclude Include="PathProfile\path_profile_top.h" />
-    <ClInclude Include="PathSegment.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

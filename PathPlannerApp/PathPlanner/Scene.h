@@ -118,12 +118,8 @@ namespace PathPlanner
 		void GenerateRTRPath();
 		void DrawScene(int iteration);
 		void DrawPath();
-
-<<<<<<< HEAD
-=======
 		vector<Config> getPrePath() { return prepath; }
 
->>>>>>> origin/car-like-robot
 	private:
 		void RTRIteration(bool start);
 		bool PathFinder();

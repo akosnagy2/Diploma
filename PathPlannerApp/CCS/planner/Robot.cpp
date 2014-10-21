@@ -35,11 +35,7 @@ void Robot::setWheelWidth(double ww) {
 
 /* Works with degree */
 void Robot::setPhiMax(double phi) {
-<<<<<<< HEAD
-    phiMax = wrapAngle(d2r(phi));
-=======
     phiMax = wrapAngle(phi);
->>>>>>> origin/car-like-robot
 }
 
 Configuration& Robot::getStart() {

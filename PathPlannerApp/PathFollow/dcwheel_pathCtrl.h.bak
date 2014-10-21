@@ -58,8 +58,6 @@ typedef struct
 	float				robotWheelDist;
 	float				robotPrevAngVel;
 	PositionTypedef		robotPos;
-	PositionTypedef		shadowRobotPos;
-	uint16_t			robotPosFlag;
 	PositionTypedef		robotPrevPos;
 	float				robotVel;
 	float				robotAngVel;
