@@ -49,15 +49,15 @@ Lehetõségünk van differenciális robotnál is lokális tervezõt alkalmazni két konf
 \end{itemize}
 
 \par
-Ennek a tervezõnek az az elõnye, hogy fa élei egyenes pályák lesznek, így egyszerûen tudjuk meghatározni a köztes konfigurációkat.
+Ennek a tervezõnek az az elõnye, hogy a fa élei egyenes pályák lesznek, így egyszerûen tudjuk meghatározni a köztes konfigurációkat.
 
 \par
-A jelenleg ismertetett módon alkalmazva az RRT algoritmust szûk folyosók esetében igen nehezen találna megoldást az eljárás, abban az esetben is ha mind a kezdeti-, mind a célkonfigurációból növesztünk egy-egy fát. A problémát az okozza, hogy az \emph{összekötés fázisa} gyakran nem ad eredményt és így a fák nem nõnek megfelelõen. Ennek az az oka, hogy a lokális tervezõ használatakor, fal vagy egyéb akadályok közelében az elsõ egy helyben fordulásnál már ütközne a robot. Mivel az összeköttetés fázisa addig tart, amíg nem érjük el $q_{rand}$-ot vagy amíg nem ütközik a robot, így a fa további terjesztése nélkül választunk új $q_{rand}$ értéket. A lokális tervezõ második lépése eredményezné a fa tényleges terjesztését.
+A jelenleg ismertetett módon alkalmazva az RRT algoritmust szûk folyosók esetében rendkívül nehezen találna megoldást az eljárás, abban az esetben is ha mind a kezdeti-, mind a célkonfigurációból növesztünk egy-egy fát. A problémát az okozza, hogy az \emph{összekötés fázisa} gyakran nem ad eredményt ezért a fák nem nõnek megfelelõen. Ennek az az oka, hogy a lokális tervezõ használatakor, fal vagy egyéb akadályok közelében az elsõ egy helyben fordulásnál már ütközne a robot. Mivel az összeköttetés fázisa addig tart, amíg nem érjük el $q_{rand}$-ot vagy amíg nem ütközik a robot, így a fa további terjesztése nélkül választunk új $q_{rand}$ értéket. A lokális tervezõ második lépése eredményezné a fa tényleges terjesztését.
 
 \par
-Az RTR algoritmus felhasználva az RRT eljárás elõnyös tulajdonságait igyekszik az elõbbi problémára egy lehetséges megoldást bemutatni. Mind a kezdeti, mind a célkonfigurációból növeszt egy-egy fát, az összekötõ fázisban a fent ismertetett lokális tervezõt alkalmazza. Az RRT eljárás mind a három fázisa módosításra kerül az RTR tervezõ esetében.
+Az RTR algoritmus felhasználva az RRT eljárás elõnyös tulajdonságait igyekszik az elõbbi problémára egy lehetséges megoldást bemutatni. Mind a kezdeti, mind a célkonfigurációból növeszt egy-egy fát, az összekötõ fázisban a fent ismertetett lokális tervezõt alkalmazza. Az RRT eljárás mindhárom fázisa módosításra kerül az RTR tervezõ esetében.
 
-Az RTR algoritmusnál alkalmazott fa struktúrában, az RRT-hez hasonlóan a csomópontokban konfigurációk találhatóak, az élek pedig transzlációs mozgást (TCI - Translation Configuration Interval) vagy egy helyben fordulást írnak le (Rotational Configuration Interval). Egy adott TCI vagy RCI leírható két konfigurációval és TCI esetén a köztük lévõ távolsággal, míg RCI esetén a köztük lévõ szögtávolsággal. Természetesen RCI esetén a két konfiguráció pozíciója megegyezik, TCI esetén pedig a két konfiguráció iránya egyezik meg. Fontos megjegyezni, hogy mindkét éltípust egzakt módon írjuk le, mintavételezés nélkül.
+Az RTR algoritmusnál alkalmazott fa struktúrában, az RRT-hez hasonlóan a csomópontokban konfigurációk találhatóak, az élek pedig transzlációs mozgást (TCI - Translation Configuration Interval) vagy egy helyben fordulást írnak le (Rotational Configuration Interval). Egy adott TCI vagy RCI leírható két konfigurációval és TCI esetén a köztük lévõ távolsággal, míg RCI esetén a köztük lévõ szögtávolsággal. Természetesen RCI esetén a két konfiguráció pozíciója megegyezik, TCI esetén pedig a két konfiguráció iránya egyezik meg. Fontos megjegyezni, hogy mindkét éltípust egzakt módon írjuk le mintavételezés nélkül.
 
 %----------------------------------------------------------------------------
 \subsection{Mintavételezés}
@@ -72,7 +72,7 @@ A mintavételezést kiegészíthetjük a pálya háromszög cellafelbontásából kapott mi
 %----------------------------------------------------------------------------
 \subsection{Csomópont kiválasztás}
 %----------------------------------------------------------------------------
-Mivel a mintavételezésnél pozíciót használunk nem pedig konfigurációt, így a \emph{csomópont kiválasztás} egyszerûbb lesz. Az eljárás lényege, hogy az adott $p_G$ esetén végigmegyünk a fa élein és meghatározzuk a legkisebb távolságát a $p_G$ pont és az adott él között. TCI él esetében ez távolságot jelent, RCI esetében pedig szögtávolságot. Így minden egyes élnél kapunk egy konfigurációt, amely esetében a távolság a $p_G$-tõl minimális. A kapott konfigurációk közül azt választjuk amelyiknél legkisebb a távolság $p_G$-hez képest, ha így több megoldást is kapunk, akkor pedig azt a konfigurációt választjuk, amelynél a szögtávolság a legkisebb. Így egyértelmûen meghatároztuk $q_{near}$-t.
+Mivel a mintavételezésnél pozíciót használunk és nem konfigurációt, ezért a \emph{csomópont kiválasztás} egyszerûbb lesz. Az eljárás lényege, hogy az adott $p_G$ esetén végigmegyünk a fa élein és meghatározzuk a legkisebb távolságát a $p_G$ pont és az adott él között. TCI él esetében ez távolságot jelent, RCI esetében pedig szögtávolságot. Így minden egyes élnél kapunk egy konfigurációt, amely esetében a távolság a $p_G$-tõl minimális. A kapott konfigurációk közül azt választjuk, amelyiknél legkisebb a távolság $p_G$-hez képest, ha így több megoldást is kapunk, akkor pedig azt a konfigurációt választjuk, amelynél a szögtávolság a legkisebb. Így egyértelmûen meghatároztuk $q_{near}$-t.
 
 \begin{figure}[H]
 \centering
@@ -92,13 +92,13 @@ Egy adott TCI és $p_G$ esetén a legkisebb távolsághoz tartozó konfigurációt a kö
 \end{figure}
 
 \par
-RCI esetén a legkisebb (szög)távolságú konfiguráció kiválasztása \aref{fig:rci_gp}. ábrán látható. Elõször kiszámoljuk a $p_G$ pont és az RCI pozíciójának irányát. Ha a kapott irány az RCI (szög)tartományába beleesik, akkor köztes konfigurációról van szó (bal oldali ábra) és ekkor a legközelebbi konfiguráció az RCI pozíciója és az elõbb kiszámolt orientáció lesz. Abban az esetben mikor a kapott irány nem esik bele az RCI tartományába, akkor az RCI irányban közelebbi konfigurációt választjuk (jobb oldali ábra).
+RCI esetén a legkisebb (szög)távolságú konfiguráció kiválasztása \aref{fig:rci_gp}. ábrán látható. Elõször kiszámoljuk a $p_G$ pont és az RCI pozíciójának irányát. Ha a kapott irány az RCI (szög)tartományába beleesik, akkor köztes konfigurációról van szó (bal oldali ábra) és ekkor a legközelebbi konfiguráció az RCI pozíciója és az elõbb kiszámolt orientáció lesz. Abban az esetben, amikor a kapott irány nem esik bele az RCI tartományába, akkor az RCI irányban közelebbi konfigurációt választjuk (jobb oldali ábra).
 
 %----------------------------------------------------------------------------
 \subsection{Kiterjesztés}
 %----------------------------------------------------------------------------
 
-Az RTR algoritmus ezen fázisa különbözik leginkább az eredeti RRT algoritmustól. Különbség, hogy a transzlációs szakasz esetében nemcsak elõre, hanem hátra is kiterjesztjük a fát. Ezenkívül a kiterjesztés nem $p_G$-ig történik, hanem mindenképpen addig amíg nem ütközik a robot. Ez mindkét irányra érvényes. Fontos megjegyezni, hogy a kiterjesztés során az RTR lokális tervezõ elsõ két elemét használjuk fel (RT), tehát a második forgatást nem hajtjuk végre. 
+Az RTR algoritmus ezen fázisa különbözik leginkább az eredeti RRT algoritmustól. Különbség, hogy a transzlációs szakasz esetében nemcsak elõre, hanem hátra is kiterjesztjük a fát. Ezenkívül a kiterjesztés nem $p_G$-ig történik, hanem mindenképpen addig, amíg nem ütközik a robot. Ez mindkét irányra érvényes. Fontos megjegyezni, hogy a kiterjesztés során az RTR lokális tervezõ elsõ két elemét használjuk fel (RT), tehát a második forgatást nem hajtjuk végre. 
 
 \par
 Lényeges különbség az is, ahogyan a két algoritmus az ütközést kezeli. Az RTR tervezõ esetén ütközés esetén különbséget kell tenni, hogy transzlációs vagy forgatási fázisban történt ütközés. Amennyiben transzlációs fázisban történt ütközés az adott iterációnak vége lesz, hiszen a fát már kiterjesztettük. Ugyanez történne az RRT eljárásnál is.
@@ -111,7 +111,7 @@ Lényeges különbség az is, ahogyan a két algoritmus az ütközést kezeli. Az RTR te
 \end{figure}
 
 \par
-Amennyiben forgatás közben történik ütközés a helyzet bonyolultabb, mivel ilyenkor nem sikerült kiterjeszteni még a fát. Ekkor az ütközési orientációnál elõre és hátra kiterjesztjük a fát. Ezután a célorientációt megpróbáljuk másik körüljárás szerint elérni. Függetlenül, hogy sikerült-e a második forgatással elérni a célkonfigurációt vagy ütközött a robot, ebben az állapotban megint kiterjesztjük a fát elõre és hátra is. Amennyiben ütközés történt megint az ütközési orientációnál alkalmazzuk a kiterjesztést, különben pedig a célkonfiguráció irányában terjesztjük ki a fát. A folyamat \aref{fig:rtr_rci}. ábrán látható.
+Amennyiben forgatás közben történik ütközés a helyzet bonyolultabb, mivel ilyenkor nem sikerült kiterjeszteni még a fát. Ekkor az ütközési orientációnál elõre és hátra terjesztjük ki a fát. Ezután a célorientációt megpróbáljuk másik körüljárás szerint elérni. Függetlenül attól, hogy sikerült-e a második forgatással elérni a célkonfigurációt vagy ütközött a robot, ebben az állapotban megint kiterjesztjük a fát elõre és hátra is. Amennyiben ütközés történt megint az ütközési orientációnál alkalmazzuk a kiterjesztést, különben pedig a célkonfiguráció irányában terjesztjük ki a fát. A folyamat \aref{fig:rtr_rci}. ábrán látható.
 
 \par
 A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a célkonfiguráció felé haladjunk, másrészt pedig, hogy minél nagyobb szabad területet bejárjunk.
@@ -119,7 +119,7 @@ A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a célkonfiguráció f
 %----------------------------------------------------------------------------
 \subsubsection{Ütközésdetektálás transzlációs kiterjesztés esetén}
 %----------------------------------------------------------------------------
-A robot transzlációs kiterjesztése elõre- és hátrafelé is a következõk szerint történik. Minden egyes akadály esetén, beleértve a pályát határoló téglalapot is végigmegyünk a robot alakját leíró polygon összes csúcspontján. Adott csúcspont esetén megvizsgáljuk, hogy a kiterjesztés irányában metszi-e a vizsgált akadály oldalát és ha igen, eltároljuk az ütközésig megtehetõ távolságot. Ezután megvizsgáljuk, hogy az adott akadály csúcspontjai a mozgás során metszik-e a robot éleit és szintén eltároljuk az ütközésig lévõ távolságot. A minimális távolság pedig a letárolt távolságok minimuma lesz. 
+A robot transzlációs kiterjesztése elõre- és hátrafelé is a következõk szerint történik. Minden egyes akadály esetén, beleértve a pályát határoló téglalapot is végigmegyünk a robot alakját leíró polygon összes csúcspontján. Adott csúcspont esetén megvizsgáljuk, hogy a kiterjesztés irányában metszi-e a vizsgált akadály oldalát, és ha igen, akkor eltároljuk az ütközésig megtehetõ távolságot. Ezután megvizsgáljuk, hogy az adott akadály csúcspontjai a mozgás során metszik-e a robot éleit, és szintén eltároljuk az ütközésig lévõ távolságot. A minimális távolság a letárolt távolságok minimuma lesz. 
 
 \par
 A fent leírtaknál minden esetben egy egyenes és egy szakasz metszetét kell kiszámítanunk, majd megvizsgálni, hogy a metszéspont a mozgás irányában található-e. A szakasz a robot vagy az akadály egyik éle, az egyenes pedig az akadály vagy a robot egyik csúcspontja a transzláció irányában. \Aref{fig:tci_coll}. ábra mutatja a kiterjesztést egy adott akadály és a robot között.
@@ -134,7 +134,7 @@ A fent leírtaknál minden esetben egy egyenes és egy szakasz metszetét kell kiszá
 %----------------------------------------------------------------------------
 \subsubsection{Ütközésdetektálás forgatás esetén} \label{sect:rci}
 %----------------------------------------------------------------------------
-A forgatás közbeni ütközésvizsgálat hasonlóképpen történik, mint transzlációnál. Itt is végigmegyünk az összes akadályon és mindegyiknél megvizsgáljuk a robot összes élét és csúcspontját. Itt is két irányban ellenõrzünk, a robot éleit és az akadály csúcspontjait, valamint az akadály éleit és a robot csúcspontjait vizsgáljuk. A kapott szögelfordulások közül pedig a minimális elfordulás felét használjuk fel késõbb.
+A forgatás közbeni ütközésvizsgálat hasonlóképpen történik, mint transzlációnál. Itt is végigmegyünk az összes akadályon és mindegyiknél megvizsgáljuk a robot összes élét és csúcspontját. Itt is két irányban ellenõrzünk, a robot éleit és az akadály csúcspontjait, valamint az akadály éleit és a robot csúcspontjait vizsgáljuk. A kapott szögelfordulások közül a minimális elfordulás felét használjuk fel késõbb.
 
 \par
 Különbséget jelent, hogy itt egy körív és egy szakasz közti metszéspontot kell számolnunk. A szakasz a robot vagy akadály egyik éle. A körívet pedig úgy kapjuk meg, hogy a robot vagy akadály csúcspontját a robot pozíciója körül elforgatjuk az adott forgási szöggel.
@@ -142,7 +142,7 @@ Különbséget jelent, hogy itt egy körív és egy szakasz közti metszéspontot kell s
 %----------------------------------------------------------------------------
 \subsection{Útvonal meghatározása, optimalizálása}
 %----------------------------------------------------------------------------
-Az RTR algoritmus sikeres futásához szükséges, hogy a kezdõ és a célkonfigurációból terjesztett fák kapcsolódjanak egymáshoz. Ezért minden iteráció végén ellenõrizzük, hogy a legutóbb felvett TCI-k és a másik fa között létesíthetõ-e ütközésmentes kapcsolat egy RCI segítségével. Ha ez lehetséges, akkor a metszéspontból vissza kell mennünk a fák kezdõpontjáig és így megkapjuk a keresett útvonalat a kezdõ konfigurációból a célkonfigurációig. A kapott útvonalat egy TCI-ket és RCI-ket tartalmazó listaként képzelhetjük el.
+Az RTR algoritmus sikeres futásához szükséges, hogy a kezdõ és a célkonfigurációból terjesztett fák kapcsolódjanak egymáshoz. Ezért minden iteráció végén ellenõrizzük, hogy a legutóbb felvett TCI-k és a másik fa között létesíthetõ-e ütközésmentes kapcsolat egy RCI segítségével. Ha ez lehetséges, akkor a metszéspontból vissza kell mennünk a fák kezdõpontjáig, és így megkapjuk a keresett útvonalat a kezdõ konfigurációból a célkonfigurációig. A kapott útvonalat egy TCI-ket és RCI-ket tartalmazó listaként képzelhetjük el.
 
 \par
 Egy TCI és egy fa összekapcsolásának vizsgálata során a fát Breadth-First szélességi keresés segítségével járjuk be \cite{BFS}. Az algoritmus egy FIFO szerkezetû tárolót használ, amely kezdetben a fa forrásainak gyerekeit tartalmazza. Ezután kivesszük a tárolóból az elsõ elemet és ha az TCI, akkor megvizsgáljuk, hogy összevonható-e a vizsgált TCI-vel. Ha összevonható, akkor befejeztük a vizsgálatot, ha nem akkor pedig a TCI gyerekeit berakjuk a tárolóba. Ha RCI volt a kivett elem, akkor egyszerûen a gyerekeit berakjuk a tárolóba. Az algoritmust addig futtatjuk, amíg a tároló nem ürül ki vagy nem találtunk összevonható TCI-ket. Abban az esetben ha üres lesz a tároló, a vizsgált TCI és a fa nem vonható össze.
@@ -151,13 +151,13 @@ Egy TCI és egy fa összekapcsolásának vizsgálata során a fát Breadth-First széles
 Azt megállapítani, hogy két TCI összevonható-e egyszerûen eldönthetjük. Fogjuk a két TCI által leírt szakaszokat és megnézzük, hogy van-e metszéspontjuk. Ha nincsen, akkor biztosak lehetünk benne, hogy nem vonhatóak össze. Ha van metszéspontjuk, meg kell vizsgálnunk, hogy a metszéspontból találunk-e egy RCI-t, amely a két szakasz között ütközésmentes mozgást biztosít. Itt ugyanúgy járhatunk el, ahogy a kiterjesztés fázásában tettük \aref{sect:rci}. részben. Ha nem sikerül ütközésmentes forgatást találnunk, ellentétes körüljárás szerint is megpróbálunk RCI-t keresni, ha így sem találunk akkor a két TCI nem összevonható.
 
 \par
-Abban az esetben ha több útvonalat is találnánk a két fa között, akkor azt az útvonalat választjuk amelyik a legkevesebb konfigurációból áll. Ha több ilyen út is van, akkor azok közül a legrövidebb távolságú útvonalat választjuk.
+Abban az esetben ha több útvonalat is találnánk a két fa között, akkor azt az útvonalat választjuk, amelyik a legkevesebb konfigurációból áll. Ha több ilyen út is van, akkor azok közül a legrövidebb távolságú útvonalat választjuk.
 
 \par
-Miután megkaptuk az útvonalat még további optimalizációt végezhetünk el rajta. Az elsõ módszer lényege, hogy az egymás után következõ több TCI-t, egy TCI-vel helyettesítjük. Ezt minden esetben megtehetjük, hiszen ha a TCI-k között nincsen RCI, akkor azok a TCI-k iránya nem változik, egy egyenesen helyezkednek el.
+Miután megkaptuk az útvonalat még további optimalizációt végezhetünk el rajta. Az elsõ módszer lényege, hogy az egymás után következõ több TCI-t, egy TCI-vel helyettesítjük. Ezt minden esetben megtehetjük, hiszen ha a TCI-k között nincsen RCI, akkor azoknak a TCI-k iránya nem változik, egy egyenesen helyezkednek el.
 
 \par
-A második lehetõség, hogy az összes TCI-t a kapott útvonalban kiterjesztjük, majd az így létrehozott kiterjesztett útvonal segítségével optimalizálunk. Felmerülhet, hogy miért van értelme kiterjeszteni a TCI-okat, hiszen ezeket úgy hoztuk létre, hogy nem $p_G$ pozícióig történik a terjesztés, hanem amíg a robot nem ütközik. Azonban a \emph{csomópont kiválasztásnál} köztes konfigurációkat is kiválasztunk és így olyan TCI-k jönnek létre, amelyek nincsenek ütközésig terjesztve. Ezután végigmegyünk a kiterjesztett útvonalon és minden TCI esetében a kiterjesztett pálya végérõl elindulva olyan TCI-kat keresünk, amelyeket össze lehet vonni. Két TCI-ról a fent ismertetett módon döntjük el, hogy összevonhatók-e.  Ezzel a módszerrel a végleges útvonal hossza jelentõsen csökkenthetõ.
+A második lehetõség, hogy az összes TCI-t a kapott útvonalban kiterjesztjük, majd az így létrehozott kiterjesztett útvonal segítségével optimalizálunk. Felmerülhet, hogy miért van értelme kiterjeszteni a TCI-okat, hiszen ezeket úgy hoztuk létre, hogy nem $p_G$ pozícióig történik a terjesztés, hanem amíg a robot nem ütközik. Azonban a \emph{csomópont kiválasztásnál} köztes konfigurációkat is kiválasztunk, és így olyan TCI-k jönnek létre, amelyek nincsenek ütközésig terjesztve. Ezután végigmegyünk a kiterjesztett útvonalon, és minden TCI esetében a kiterjesztett pálya végérõl elindulva olyan TCI-kat keresünk, amelyeket össze lehet vonni. Két TCI-ról a fent ismertetett módon döntjük el, hogy összevonhatók-e.  Ezzel a módszerrel a végleges útvonal hossza jelentõsen csökkenthetõ.
 
 %----------------------------------------------------------------------------
 \section{Eredmények}
@@ -183,7 +183,7 @@ Bonyolultabb környezet esetén felerõsödik a véletlen mintavételezés szerepe, az 
 \end{figure}
 
 \par
-Az algoritmus megvalósítását C++ nyelven végeztük el. Az implementáláshoz rendelkezésünkre állt az RTR tervezõ Matlab környezetben megvalósított programkódja. Az általunk megvalósított natív program legalább két nagyságrenddel gyorsabb futási idõvel rendelkezik a Matlab kódhoz képest. Ez elsõsorban az interpretált Matlab script és a natív C++ kód közti különbséget mutatja. 
+Az algoritmus megvalósítását C++ nyelven végeztük el. Az implementáláshoz rendelkezésünkre állt az RTR tervezõ MATLAB környezetben megvalósított programkódja. Az általunk megvalósított natív program legalább két nagyságrenddel gyorsabb futási idõvel rendelkezik a MATLAB kódhoz képest. Ez elsõsorban az interpretált MATLAB script és a natív C++ kód közti különbséget mutatja. 
 
 \par
-Az implementálás során ahol úgy ítéltük meg módosítottunk az eredeti algoritmuson a rövidebb futási idõ érdekében. Ezek habár csak apróbb változásokat jelentettek, de mivel az érintett programrészek egy iterációban akár többször is lefutnak, így egy bonyolultabb pályán, ahol akár több száz iteráció szükséges jelentõs lehet a javulás. Ilyen apróbb módosítást tettünk a különbözõ geometriai elemek közötti metszetéspont számításánál és az iterációk végén található eljárásban, amely a két fát próbálja összekötni.
+Az implementálás során, ahol úgy ítéltük meg, módosítottunk az eredeti algoritmuson a rövidebb futási idõ érdekében. Ezek habár csak apróbb változásokat jelentettek, de mivel az érintett programrészek egy iterációban akár többször is lefutnak, így egy bonyolultabb pályán, ahol akár több száz iteráció szükséges, jelentõs lehet a javulás. Ilyen apróbb módosítást tettünk a különbözõ geometriai elemek közötti metszetéspont számításánál és az iterációk végén található eljárásban, amely a két fát próbálja összekötni.
