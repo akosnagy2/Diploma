@@ -19,13 +19,13 @@ Az egy helyben fordulásnál nem szabad megsérteni a robot maximális szögsebesség 
 \beta(i) &= \frac { {a_{r}}_t(i) - {a_{l}}_t(i) } {W} \\ \notag
 \beta^{max} &= \frac { {{a_{r}}_t}^{max} + {{a_{l}}_t}^{max} } {W},
 \end{align}
-ahol kihasználtuk, hogy a lassulás korlát abszolutértéke megegyezik a gyorsulás korlát abszolutértékével. Az $i$ index idõpontot jelöl szemben az elõzõ fejezetben használt $k$ indexszel, amely pályaponthoz tartozott.
+ahol kihasználtuk, hogy a lassulás korlát abszolútértéke megegyezik a gyorsulás korlát abszolutértékével. Az $i$ index idõpontot jelöl szemben az elõzõ fejezetben használt $k$ indexszel, amely pályaponthoz tartozott.
 
 \par
-Mielõtt a robot elkezdené a forgást, megvizsgáljuk, hogy melyik körüljárás szerint érdemes fordulni, azt az irányt választjuk amerre kisebb a szögkülönbség.
+Mielõtt a robot elkezdené a forgást, megvizsgáljuk, hogy melyik körüljárás szerint érdemes fordulni, azt az irányt választjuk, amerre kisebb a szögkülönbség.
 
 \par
-Alapvetõen a fordulás a maximális szöggyorsulással történik, ha ez nem sérti a maximális szögsebességre vonatkozó korlátot. Ezenkívül azt szeretnénk, hogy ha a robot a fordulás végén pontosan a kívánt irányba állna, nem lenne szerencsés ha túl fordulna és utána ezt kellene kompenzálnunk. Ezért a legfontosabb kérdés, hogy mikor kell elkezdenünk a szögsebességet csökkenteni, hogy a robot a korlátozás betartása mellett a kívánt irányba álljon.
+Alapvetõen a fordulás a maximális szöggyorsulással történik, ha ez nem sérti a maximális szögsebességre vonatkozó korlátot. Ezenkívül azt szeretnénk, hogy a robot a fordulás végén pontosan a kívánt irányba álljon, nem lenne szerencsés, ha túl fordulna és utána ezt kellene kompenzálnunk. Ezért a legfontosabb kérdés, hogy mikor kell elkezdenünk a szögsebességet csökkenteni, hogy a robot a korlátozás betartása mellett a kívánt irányban álljon meg.
 
 \par
 A kérdés megválaszolásához kövessük végig az alábbi gondolatmenetet. Jelenleg a $i$. idõpontban vagyunk és meghatároztunk egy $\omega (i)$ szögsebességet a korlátoknak megfelelõen. Ekkor a következõ idõpontban a robot iránya:
@@ -73,10 +73,10 @@ Tehát az egy helyben fordulás szögsebesség-idõ profilja alapvetõen trapéz alakú,
 %----------------------------------------------------------------------------
 \subsection{Pályakövetés}
 %----------------------------------------------------------------------------
-A pályakövetés alapja, hogy szétcsatolt sebesség és szögsebesség szabályozást hajtunk végre. A szétcsatolás következménye, hogy egyszerû, lineáris szabályozókat használhatunk a pályakövetés során. A pályakövetés felépítése \aref{fig:Controlling}. ábrán látható.
+A pályakövetés alapja, hogy szétcsatolt sebesség és szögsebesség-szabályozást hajtunk végre. A szétcsatolás következménye, hogy egyszerû, lineáris szabályozókat használhatunk a pályakövetés során. A pályakövetés felépítése \aref{fig:Controlling}. ábrán látható.
 
 \par
-Az egy helyben fordulásnál szögsebesség beavatkozójelet határozunk meg, míg a pályakövetésnél szögsebesség és sebesség beavatkozójelet. Az algoritmus végén ezeket az értékeket átszámoljuk keréksebességekre a \eqref{diffRobotWheel} egyenlet alapján, tehát közvetlenül keréksebességek lesznek a beavatkozójeleink. Ez \aref{fig:Controlling}. ábra középen látható, \emph{Keréksebesség Átalakítás} néven.
+Az egy helyben fordulásnál szögsebesség beavatkozójelet határozunk meg, míg a pályakövetésnél szögsebesség és sebesség beavatkozójelet. Az algoritmus végén ezeket az értékeket átszámoljuk keréksebességekre a \eqref{diffRobotWheel} egyenlet alapján, tehát közvetlenül keréksebességek lesznek a beavatkozójeleink. Ez \aref{fig:Controlling}. ábra középen látható, \emph{Keréksebesség-átalakítás} néven.
 
 \begin{figure}[H]
 \centering
@@ -85,51 +85,59 @@ Az egy helyben fordulásnál szögsebesség beavatkozójelet határozunk meg, míg a pá
 \label{fig:Controlling}
 \end{figure}
 
-\Aref{fig:Controlling}. ábrán látható még két bolygókerék, ezeknek a pozíció visszacsatolás a szerepük. A pozíció visszacsatolás Dead-Reckoning algoritmussal történik, de a jelenlegi dolgozatunknak ez nem témája.
+\Aref{fig:Controlling}. ábrán látható még két szabadonfutó segédkerék, ezeknek a pozíció visszacsatolás a szerepük. A pozíció visszacsatolás odometria segítségével történik, de a jelenlegi dolgozatunknak ez nem témája.
 
 %----------------------------------------------------------------------------
-\subsubsection{Sebesség szabályozás}
+\subsubsection{Sebesség-szabályozás}
 %----------------------------------------------------------------------------
-Alacsony szinten, a keréksebességek szintjén történik a sebességszabályozás. Az általunk használt valós robot két hajtott kerékkel rendelkezik, mindkét kerék esetén egy-egy DC motor gondoskodik a robot mozgatásáról. A DC motorokkal egy tengelyen található egy inkrementális adó, amely biztosítja a sebességszabályozás számára a visszacsatolást. Ahogyan gyakran feszültségvezérelt egyenáramú motorok esetében lenni szokott, mi is PI szabályozókat használunk sebesség szabályozásra.
+Alacsony szinten, a keréksebességek szintjén történik a sebességszabályozás. Az általunk használt valós robot két hajtott kerékkel rendelkezik, mindkét kerék esetén egy-egy DC motor gondoskodik a robot mozgatásáról. A DC motorok tengelyéhez egy-egy inkrementális adó csatlakozik, amely biztosítja a sebességszabályozás számára a visszacsatolást. Ahogyan a feszültségvezérelt egyenáramú motorok esetében gyakran lenni szokott, mi is PI szabályozókat használunk sebesség-szabályozásra.
 
 \par
-A PI szabályozók esetében gyakran elõforduló probléma az elintegrálódás \cite{Bezi}. Az elintegrálódás a rendszerben lévõ korlátozások miatt lép fel, kiküszöbölése történhet többféleképpen szabályozó típustól függõen, a mi esetünkben az integrátor visszaállításával elõzzük meg az elintegrálódást.
+A PI szabályozók esetében gyakran elõforduló probléma az elintegrálódás \cite{Bezi}. Az elintegrálódás a rendszerben lévõ beavatkozószerv telítései miatt lép fel, kiküszöbölése történhet többféleképpen szabályozó típustól függõen, a mi esetünkben az integrátor visszaállításával elõzzük meg az elintegrálódást.
 
 \par
-Az általunk implementált sebesség szabályozók figyelembe veszik a motor nemlinearitását is. Ehhez felvettük mindkét kerék esetén a rendszer karakterisztikáját, tehát, hogy adott vezérlésnél mekkora sebességet ér el a kerék. Ennek a karakterisztikának az inverzét használjuk fel a motor vezérlésénél, így elméletileg a nemlinearitást kiejtettük.
+Az általunk implementált sebességszabályozók figyelembe veszik a motor és az áttételek nemlinearitását is. Ehhez felvettük mindkét kerék esetén a rendszer karakterisztikáját, tehát, hogy adott feszültség mekkora sebességet ér el a kerék. Ennek a karakterisztikának az inverzét beépítettük a rendszer modelljébe, így elméletileg a nemlinearitást kiejtettük.
 
 %----------------------------------------------------------------------------
-\subsubsection{Referencia pont választás}
+\subsubsection{Referenciapont választás}
 %----------------------------------------------------------------------------
-A sebesség szabályozók számára a sebesség alapjelet a pálya biztosítja, hiszen az idõparaméterezés során olyan pálya készült, amely idõben egyenletesen mintavételezett és így a pálya pontok közötti távolságból a robot sebessége kiszámolható. 
+A sebesség-szabályozók számára a sebesség alapjelet a pálya biztosítja, hiszen az idõparaméterezés során olyan pálya készült, amely idõben egyenletesen mintavételezett és így a pályapontok közötti távolságból a robot sebessége kiszámolható. 
 
 \par
-Már csak azt kell eldöntenünk, hogy a pálya melyik pontjához tartozó sebesség alapjelet alkalmazzuk az adott mintavételnél. Ezt hívjuk \emph{referencia pont választásnak}. Az eljárás elsõ közelítésben igen egyszerû, a pálya pontjai közül a robot pozíciójához legközelebbi pálya pontot választjuk referencia pontnak és így már egyértelmûen adódik a sebesség alapjelünk is.
+Már csak azt kell eldöntenünk, hogy a pálya melyik pontjához tartozó sebesség alapjelet alkalmazzuk az adott mintavételnél. Ezt hívjuk \emph{referenciapont választásnak}. Az eljárás elsõ közelítésben igen egyszerû, a pálya pontjai közül a robot pozíciójához legközelebbi pályapontot választjuk referenciapontnak és így már egyértelmûen adódik a sebesség alapjelünk is.
 
 \par
-A fejlesztés egy korai stádiumában felmerült, hogy ezt a referencia pontot nem így határozzuk meg, hanem folyamatosan növeljük minden mintavételkor. Ezzel kvázi elõírtuk, hogy  a robot adott idõpontban a pálya mely pontjában tartózkodjon. Mivel nem biztos, hogy a robot ténylegesen a kívánt pozícióban található, egy külön szabályozó segítéségével korrigáltuk a pályába kódolt sebesség alapjelet, hogy a robot elérje a referencia pontot. 
+A fejlesztés egy korai stádiumában felmerült, hogy ezt a referenciapontot ne így határozzuk meg, hanem folyamatosan léptessük a pálya mentén. Ezzel kvázi elõírtuk, hogy  a robot adott idõpontban a pálya mely pontjában tartózkodjon. Mivel nem biztos, hogy a robot ténylegesen a kívánt pozícióban található, egy külön szabályozó segítéségével korrigáltuk a pályába kódolt sebesség alapjelet, hogy a robot elérje a referenciapontot. 
 
 \par
-Amennyiben nem ideális modellt használtunk, a megoldás nem mûködött, a rendszer instabillá vált. Késõbb beláttuk, hogy a megoldás problémája az volt, hogy egyrészt elõírtuk a robot számára, hogy mekkora sebességgel haladjon a pálya mentén és a referencia ponton keresztül pedig, hogy hol tartózkodjon az adott idõpontban. 
+Amennyiben nem ideális modellt használtunk, a megoldás nem mûködött, a rendszer instabillá vált. Késõbb beláttuk, hogy a megoldás problémája az volt, hogy egyrészt elõírtuk a robot számára, hogy mekkora sebességgel haladjon a pálya mentén és a referenciaponton keresztül pedig, hogy hol tartózkodjon az adott idõpontban. Ez már azért sem lehetséges, mivel, ha a robot a referenciaponthoz képest lemaradásban van (általában ez történik), akkor a sebességalapjel korrekció növelné a sebességet, pedig azt már alapból úgy írtuk elõ, hogy a lehetõ leggyorsabban haladjon a robot a pálya mentén. Tehát az alapjelmódosító szabályozóval arra kényszerítenénk a rendszert, hogy szegje meg a saját korlátozásait.
 
 \par
-A végleges megoldásnál ezzel szemben a referencia pontot alakítjuk a robothoz, nem pedig fordítva. Ez azt jelenti, hogy nem írjuk elõ, hogy a robot a pályát mennyi idõ alatt járja be, csak azt, hogy a pálya adott pontjában mekkora sebességgel avatkozzunk be.
+A végleges megoldásnál ezzel szemben a referenciapontot alakítjuk a robothoz, nem pedig fordítva. Ez azt jelenti, hogy nem írjuk elõ, hogy a robot a pályát mennyi idõ alatt járja be, csak azt, hogy a pálya adott pontjában mekkora sebességgel avatkozzunk be.
 
 \par
-A pályakövetõ algoritmusnál lényeges szempont a futási idõ, mivel valós roboton is mûködnie kell. Ezért a referencia pont meghatározásánál nem megyünk végig a pálya összes pontján. A legközelebbi pont keresését az elõzõ iterációban használt referencia pontnál kezdjük és csak egy bizonyos számú pontot vizsgálunk meg. Ha a robot korlátai megfelelõen lettek beállítva, akkor az egymás utáni referenciapontok között körülbelül egy pálya pont különbségnek kell lennie. Ezért teljesen felesleges a pálya összes pontját megvizsgálnunk.
+A pályakövetõ algoritmusnál lényeges szempont a futási idõ, mivel valós roboton is mûködnie kell. Ezért a referenciapont meghatározásánál nem megyünk végig a pálya összes pontján. A legközelebbi pont keresését az elõzõ iterációban használt referenciapontnál kezdjük és csak egy bizonyos számú pontot vizsgálunk meg. Ha a robot korlátai megfelelõen lettek beállítva, akkor az egymás utáni referenciapontok között körülbelül egy pályapont különbségnek kell lennie. Ezért teljesen felesleges a pálya összes pontját megvizsgálnunk.
 %----------------------------------------------------------------------------
-\subsubsection{Orientáció szabályozás}
+\subsubsection{Orientáció-szabályozás}
 %----------------------------------------------------------------------------
-Az orientáció szabályzás feladata szögsebesség alapjel biztosítása a pályakövetés során. Az orientáció szabályzáshoz felhasználjuk a robot aktuális pozícióját és a pálya egy pontját ($p_{ori}$). A szabályozó alapjelét a robot pozíciója és $p_{ori}$ pont közötti irány és a robot aktuális orientációjának különbsége adja meg. A konkrét orientáció szabályozó egy PD szabályozó. %TODO miért, mert szög -> d/dt -> szögsebesség;?
+Az orientáció szabályozás feladata szögsebesség alapjel biztosítása a pályakövetés során. Az orientáció szabályzáshoz felhasználjuk a robot aktuális pozícióját és a pálya egy pontját ($p_{ori}$). A szabályozó alapjelét a robot pozíciója és $p_{ori}$ pont közötti irány és a robot aktuális orientációjának különbsége adja meg ($\alpha_{ori}$ \aref{fig:oriPD}. ábrán). A konkrét orientáció szabályozó egy PD szabályozó. %TODO miért, mert szög -> d/dt -> szögsebesség;?
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=100mm, keepaspectratio]{figures/oriPD.png}
+\caption{Az orientáció-szabályozás referenciapontja.} 
+\label{fig:oriPD}
+\end{figure}
+
 
 \par
-Fontos kérdés, hogy a pálya mely pontját válasszuk az alapjel számoláshoz. Mindenképp a sebesség szabályozónál használt referencia pontnál távolabbi pontot keresünk, hiszen ez a pont van a robothoz legközelebb és nem akarjuk, hogy az orientáció szabályzás a pályán visszafelé irányítsa a robotot. 
+Fontos kérdés, hogy a pálya mely pontját válasszuk az alapjel számoláshoz. Mindenképp a sebesség-szabályozónál használt referenciapontnál távolabbi pontot keresünk, hiszen ez a pont van a robothoz legközelebb és nem akarjuk, hogy az orientáció szabályzás a pályán visszafelé irányítsa a robotot. 
 
 \par
-Alapvetõen két megközelítést alkalmazhatunk. Egyrészt használhatunk konstans távolságú elõretekintést, ekkor mindig a referencia ponttól egy adott távolságra lévõ pálya pontot használunk az orientáció szabályzáshoz. A másik megközelítésnél pedig konstans idejû elõretekintést alkalmazunk. Ennél a módszernél a referencia ponthoz képest adott mintavétellel elõbbre lévõ pálya pont lesz $p_{ori}$.
+Alapvetõen két megközelítést alkalmazhatunk. Egyrészt használhatunk konstans távolságú elõretekintést, ekkor mindig a referenciaponttól egy adott távolságra lévõ pályapontot használunk az orientáció szabályzáshoz. A másik megközelítésnél pedig konstans idejû elõretekintést alkalmazunk. Ennél a módszernél a referenciaponthoz képest adott mintavétellel elõbbre lévõ pályapont lesz $p_{ori}$.
 
 \par
-Az algoritmust úgy készítettük el, hogy mindkét módszert lehet alkalmazni, akár egyszerre a kettõt is. Ennek azért lehet értelme, mert a konstans távolságú elõretekintéssel elérhetõ, hogy a robothoz ne kerüljön túlságos közel $p_{ori}$, a konstans idejû elõretekintés pedig lehetõvé teszi, hogy egyenes részeken, ahol nagyobb sebességgel mozog a robot távolabb tekintsünk.
+Az algoritmust úgy készítettük el, hogy mindkét módszert lehet alkalmazni, akár egyszerre a kettõt is a következõ módon. A konstans távolságú elõretekintéssel elérhetõ, hogy a robothoz ne kerüljön túlságos közel $p_{ori}$, a konstans idejû elõretekintés pedig lehetõvé teszi, hogy egyenes részeken, ahol nagyobb sebességgel mozog a robot távolabb tekintsünk.
 
 %----------------------------------------------------------------------------
 \section{Autószerû robotmodell}
@@ -137,12 +145,12 @@ Az algoritmust úgy készítettük el, hogy mindkét módszert lehet alkalmazni, akár 
 Ahogy láttuk a differenciális robot esetén, a pályakövetés problémáját szétbontottuk a pályába kódolt sebesség szabályozására, és orientáció szabályozásra. Az autószerû robotok esetén is hasonló módon járhatunk el. Mégis van néhány lényeges különbség a két robottípus közt. Míg a differenciális robot esetén a két kerék sebességével, addig az autószerû robot esetén a robot referencia pontjának tangenciális sebességével és a kormányszöggel tudunk beavatkozni.
 
 \par
-Ez az alsóbb szabályzási szinteken az következõ különbségeket jelenti: A differenciális robot esetén a szabályozó a pályából meghatározott sebesség és szögsebesség alapjelet szétválasztja keréksebességekre, mivel itt ez képzi a szabályozás beavatkozó jelét. Az autószerû robot esetén nincs szükség a szétválasztásra, a sebességet közvetlenül átadjuk az alsóbb szintû sebesség szabályozásnak, a kiszámított kormányszöget, pedig már a beavatkozó szervnek adjuk vissza.
+Ez az alsóbb szabályzási szinteken az következõ különbségeket jelenti: A differenciális robot esetén a szabályozó a pályából meghatározott sebesség és szögsebesség alapjelet szétválasztja keréksebességekre, mivel itt ez képzi a szabályozás beavatkozó jelét. Az autószerû robot esetén nincs szükség a szétválasztásra, a sebességet közvetlenül átadjuk az alsóbb szintû sebesség-szabályozásnak, a kiszámított kormányszöget, pedig már a beavatkozó szervnek adjuk vissza.
 
 %----------------------------------------------------------------------------
 \subsection{Virtuális vonalkövezõ szabályozás}
 %----------------------------------------------------------------------------
-A fentiekbõl látható, hogy a felsõbb szinten lévõ sebesség szabályozás módosítására nincs szükség, teljesen megegyezõ módon mûködhet mindkét robot esetén. Az orientáció szabályozás esetén már jelentõs különbségek mutatkoznak. Egy autószerû robot esetén nem hasznos a szögsebesség kiadása, mivel a beavatkozó jelünk a kormányszög. Természetesen a két mennyiség származtatható egymásból így ez nem jelentene akkora problémát.
+A fentiekbõl látható, hogy a felsõbb szinten lévõ sebesség-szabályozás módosítására nincs szükség, teljesen megegyezõ módon mûködhet mindkét robot esetén. Az orientáció szabályozás esetén már jelentõs különbségek mutatkoznak. Egy autószerû robot esetén nem hasznos a szögsebesség kiadása, mivel a beavatkozó jelünk a kormányszög. Természetesen a két mennyiség származtatható egymásból így ez nem jelentene akkora problémát.
 
 \par
 Az orientáció szabályzás alapötlete a differenciális robotnál, egy predikciós távolság meghatározása volt, mely alapján számítunk egy szöghibát, majd ebbõl szögsebesség beavatkozó jelet. Ezt a módszer nagyon hasonló a RobonAUT versenyen is látott vonalkövetõ autók szabályozására, azzal az elõnnyel, hogy itt sokkal pontosabban ismert a "vonal" helye és orientációja.

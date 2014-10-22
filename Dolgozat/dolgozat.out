@@ -36,11 +36,13 @@
 \BOOKMARK [2][-]{subsection.5.1.2}{P\341lyak\366vet\351s}{section.5.1}% 36
 \BOOKMARK [1][-]{section.5.2}{Aut\363szeru robotmodell}{chapter.5}% 37
 \BOOKMARK [2][-]{subsection.5.2.1}{Virtu\341lis vonalk\366vezo szab\341lyoz\341s}{section.5.2}% 38
-\BOOKMARK [0][-]{chapter.6}{Algoritmusok megval\363s\355t\341sa - 4 oldal CsG/NA}{}% 39
-\BOOKMARK [1][-]{section.6.1}{Szimul\341ci\363}{chapter.6}% 40
-\BOOKMARK [1][-]{section.6.2}{Val\363s robotok}{chapter.6}% 41
-\BOOKMARK [0][-]{chapter.7}{\326sszegz\351s - 1 oldal CsG/NA}{}% 42
-\BOOKMARK [1][-]{section.7.1}{\311rt\351kel\351s}{chapter.7}% 43
-\BOOKMARK [1][-]{section.7.2}{J\366vobeli fejleszt\351sek}{chapter.7}% 44
-\BOOKMARK [0][-]{chapter*.34}{K\366sz\366netnyilv\341n\355t\341s}{}% 45
-\BOOKMARK [0][-]{chapter*.35}{Irodalomjegyz\351k}{}% 46
+\BOOKMARK [0][-]{chapter.6}{Algoritmusok megval\363s\355t\341sa}{}% 39
+\BOOKMARK [1][-]{section.6.1}{Szimul\341ci\363 - V-REP}{chapter.6}% 40
+\BOOKMARK [2][-]{subsection.6.1.1}{Szerver program}{section.6.1}% 41
+\BOOKMARK [2][-]{subsection.6.1.2}{Kliens programok}{section.6.1}% 42
+\BOOKMARK [1][-]{section.6.2}{Val\363s robotok}{chapter.6}% 43
+\BOOKMARK [0][-]{chapter.7}{\326sszegz\351s - 1 oldal CsG/NA}{}% 44
+\BOOKMARK [1][-]{section.7.1}{\311rt\351kel\351s}{chapter.7}% 45
+\BOOKMARK [1][-]{section.7.2}{J\366vobeli fejleszt\351sek}{chapter.7}% 46
+\BOOKMARK [0][-]{chapter*.40}{K\366sz\366netnyilv\341n\355t\341s}{}% 47
+\BOOKMARK [0][-]{chapter*.41}{Irodalomjegyz\351k}{}% 48

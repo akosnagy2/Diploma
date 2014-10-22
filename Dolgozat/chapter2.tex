@@ -11,14 +11,14 @@ Az algoritmus az irodalomból gyakran használt RRT algoritmuson alapszik, ezért e
 %----------------------------------------------------------------------------
 \section{RRT algoritmus}
 %----------------------------------------------------------------------------
-Az RRT (Rapidly Exploring Random Trees) algoritmus lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben \cite{LaValle}. A fa csomópontjaiban konfigurációk találhatóak és a fa terjesztését úgy irányítjuk, hogy a kívánt cél konfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a cél konfigurációba már könnyedén megkaphatjuk.
+Az RRT (Rapidly Exploring Random Trees) algoritmus lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben \cite{LaValle}. A fa csomópontjaiban konfigurációk találhatóak és a fa terjesztését úgy irányítjuk, hogy a kívánt célkonfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a célkonfigurációba már könnyedén megkaphatjuk.
 \par
-Létezik olyan változata az RRT algoritmusnak, ahol nemcsak a kezdeti konfigurációból építünk fát, hanem a cél konfigurációból vagy akár több köztes pontból is.
+Létezik olyan változata az RRT algoritmusnak, ahol nemcsak a kezdeti konfigurációból építünk fát, hanem a célkonfigurációból vagy akár több köztes pontból is.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=130mm, keepaspectratio]{figures/RRT.png}
-\caption{Az RRT algoritmus három különbözõ iterációnál.} 
+\caption{Az RRT algoritmus három különbözõ iterációnál \cite{LaValle}.} 
 \label{fig:RRT}
 \end{figure}
 
@@ -45,7 +45,7 @@ Lehetõségünk van differenciális robotnál is lokális tervezõt alkalmazni két konf
 \begin{itemize}
 \item Egy helyben fordulás a kívánt konfiguráció irányába (R).
 \item Mozgás egyenes pályán a cél pozícióba (T).
-\item Egy helyben fordulás a cél konfiguráció irányába (R).
+\item Egy helyben fordulás a célkonfiguráció irányába (R).
 \end{itemize}
 
 \par
@@ -64,7 +64,7 @@ Az RTR algoritmusnál alkalmazott fa struktúrában, az RRT-hez hasonlóan a csomópo
 %----------------------------------------------------------------------------
 
 \par
-A mintavételezés fázisában különbséget jelent az eredeti RRT algoritmushoz képest, hogy nálunk a $q_{rand}$-nak megfelelõ véletlen minta nem egy konfiguráció lesz, hanem egy pozíció a térben ($p_G$). Ezt a pozíciót tekinthetjük egy folytonos, egy dimenziós konfigurációs listának, amelynek bármelyik eleme megfelelõ cél konfiguráció lehet.
+A mintavételezés fázisában különbséget jelent az eredeti RRT algoritmushoz képest, hogy nálunk a $q_{rand}$-nak megfelelõ véletlen minta nem egy konfiguráció lesz, hanem egy pozíció a térben ($p_G$). Ezt a pozíciót tekinthetjük egy folytonos, egy dimenziós konfigurációs listának, amelynek bármelyik eleme megfelelõ célkonfiguráció lehet.
 
 \par
 A mintavételezést kiegészíthetjük a pálya háromszög cellafelbontásából kapott mintákkal. Ezek a minták az akadályoktól távolabb találhatóak és szûk folyosók esetén is segítenek terjeszteni a fákat. A celladekompozíciót a következõ fejezetben tárgyaljuk.
@@ -103,13 +103,18 @@ Az RTR algoritmus ezen fázisa különbözik leginkább az eredeti RRT algoritmustól.
 \par
 Lényeges különbség az is, ahogyan a két algoritmus az ütközést kezeli. Az RTR tervezõ esetén ütközés esetén különbséget kell tenni, hogy transzlációs vagy forgatási fázisban történt ütközés. Amennyiben transzlációs fázisban történt ütközés az adott iterációnak vége lesz, hiszen a fát már kiterjesztettük. Ugyanez történne az RRT eljárásnál is.
 
-%TODO ábra
+\begin{figure}[H]
+\centering
+\includegraphics[width=120mm, keepaspectratio]{figures/rtr_rci.png}
+\caption{\emph{A kiterjesztés folyamata.}\cite{DomiRTR}} 
+\label{fig:rtr_rci}
+\end{figure}
 
 \par
-Amennyiben forgatás közben történik ütközés a helyzet bonyolultabb, mivel ilyenkor nem sikerült kiterjeszteni még a fát. Ekkor az ütközési orientációnál elõre és hátra kiterjesztjük a fát. Ezután a célorientációt megpróbáljuk másik körüljárás szerint elérni. Függetlenül, hogy sikerült-e a második forgatással elérni a célkonfigurációt vagy ütközött a robot, ebben az állapotban megint kiterjesztjük a fát elõre és hátra is. Amennyiben ütközés történt megint az ütközési orientációnál alkalmazzuk a kiterjesztést, különben pedig a célkonfiguráció irányában terjesztjük ki a fát.
+Amennyiben forgatás közben történik ütközés a helyzet bonyolultabb, mivel ilyenkor nem sikerült kiterjeszteni még a fát. Ekkor az ütközési orientációnál elõre és hátra kiterjesztjük a fát. Ezután a célorientációt megpróbáljuk másik körüljárás szerint elérni. Függetlenül, hogy sikerült-e a második forgatással elérni a célkonfigurációt vagy ütközött a robot, ebben az állapotban megint kiterjesztjük a fát elõre és hátra is. Amennyiben ütközés történt megint az ütközési orientációnál alkalmazzuk a kiterjesztést, különben pedig a célkonfiguráció irányában terjesztjük ki a fát. A folyamat \aref{fig:rtr_rci}. ábrán látható.
 
 \par
-A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a cél konfiguráció felé haladjunk, másrészt pedig, hogy minél nagyobb szabad területet bejárjunk.
+A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a célkonfiguráció felé haladjunk, másrészt pedig, hogy minél nagyobb szabad területet bejárjunk.
 
 %----------------------------------------------------------------------------
 \subsubsection{Ütközésdetektálás transzlációs kiterjesztés esetén}
@@ -137,7 +142,7 @@ Különbséget jelent, hogy itt egy körív és egy szakasz közti metszéspontot kell s
 %----------------------------------------------------------------------------
 \subsection{Útvonal meghatározása, optimalizálása}
 %----------------------------------------------------------------------------
-Az RTR algoritmus sikeres futásához szükséges, hogy a kezdõ és a cél konfigurációból terjesztett fák kapcsolódjanak egymáshoz. Ezért minden iteráció végén ellenõrizzük, hogy a legutóbb felvett TCI-k és a másik fa között létesíthetõ-e ütközésmentes kapcsolat egy RCI segítségével. Ha ez lehetséges, akkor a metszéspontból vissza kell mennünk a fák kezdõpontjáig és így megkapjuk a keresett útvonalat a kezdõ konfigurációból a cél konfigurációig. A kapott útvonalat egy TCI-ket és RCI-ket tartalmazó listaként képzelhetjük el.
+Az RTR algoritmus sikeres futásához szükséges, hogy a kezdõ és a célkonfigurációból terjesztett fák kapcsolódjanak egymáshoz. Ezért minden iteráció végén ellenõrizzük, hogy a legutóbb felvett TCI-k és a másik fa között létesíthetõ-e ütközésmentes kapcsolat egy RCI segítségével. Ha ez lehetséges, akkor a metszéspontból vissza kell mennünk a fák kezdõpontjáig és így megkapjuk a keresett útvonalat a kezdõ konfigurációból a célkonfigurációig. A kapott útvonalat egy TCI-ket és RCI-ket tartalmazó listaként képzelhetjük el.
 
 \par
 Egy TCI és egy fa összekapcsolásának vizsgálata során a fát Breadth-First szélességi keresés segítségével járjuk be \cite{BFS}. Az algoritmus egy FIFO szerkezetû tárolót használ, amely kezdetben a fa forrásainak gyerekeit tartalmazza. Ezután kivesszük a tárolóból az elsõ elemet és ha az TCI, akkor megvizsgáljuk, hogy összevonható-e a vizsgált TCI-vel. Ha összevonható, akkor befejeztük a vizsgálatot, ha nem akkor pedig a TCI gyerekeit berakjuk a tárolóba. Ha RCI volt a kivett elem, akkor egyszerûen a gyerekeit berakjuk a tárolóba. Az algoritmust addig futtatjuk, amíg a tároló nem ürül ki vagy nem találtunk összevonható TCI-ket. Abban az esetben ha üres lesz a tároló, a vizsgált TCI és a fa nem vonható össze.
