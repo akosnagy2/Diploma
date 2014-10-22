@@ -20,12 +20,12 @@ A szakirodalomban nem sok idõparaméterezéssel kapcsolatos munka található. Egy h
 Az idõparaméterezés során nem használjuk ki az elõzõ fejezetekben bemutatott pályatervezõ által tervezett pálya speciális tulajdonságait, a célunk egy olyan algoritmus készítése, amely tetszõleges geometriai pályából képes sebesség információval ellátott, idõben egyenletes mintavételû pályát készíteni. Emiatt nem építhetünk a pályatervezõ által használt geometriai elemekre (körív, egyenes) és ezek speciális tulajdonságaira.
 
 \par
-Az egyik legalapvetõbb tulajdonságuk az lenne, hogy a görbületüket analitikusan ki tudnánk számolni (ami a konkrét elemek esetében ráadásul triviális). Általános esetben azonban nem tudjuk a pálya görbületét analitikusan kiszámolni, így görbület becslést kell alkalmaznunk. A szakirodalomban sok cikket találhatunk görbület becslésrõl, fõleg képfeldolgozással kapcsolatos témákban,azonban dolgozatunknak nem ez a témája. Az algoritmus fejlesztésekor több becslõt is kipróbáltunk, ezeket úgy teszteltük, hogy olyan pályát adtunk meg nekik, amelynek a görbülete analitikusan is számolható, így össze tudtuk hasonlítani az ideális megoldással a becslést. Ez alapján választottunk egy eljárást \cite{Curv2D}.Természetesen abban az esetben, ha a pályatervezõ rendelkezik már a pálya görbületével, az idõparaméterezõ algoritmus azt fogja használni a becslés helyett.
+Az egyik legalapvetõbb tulajdonságuk az lenne, hogy a görbületüket analitikusan ki tudnánk számolni (ami a konkrét elemek esetében ráadásul triviális). Általános esetben azonban nem tudjuk a pálya görbületét analitikusan meghatározni, így görbület becslést kell alkalmaznunk. A szakirodalomban sok cikket találhatunk görbület becslésrõl, fõleg képfeldolgozással kapcsolatos témákban, azonban dolgozatunknak nem ez a témája. Az algoritmus fejlesztésekor több becslõt is kipróbáltunk, ezeket úgy teszteltük, hogy olyan pályát adtunk meg nekik, amelynek a görbülete analitikusan is számolható, így össze tudtuk hasonlítani az ideális megoldással a becslést. Ez alapján választottunk egy eljárást \cite{Curv2D}. Természetesen abban az esetben, ha a pályatervezõ rendelkezik már a pálya görbületével, az idõparaméterezõ algoritmus azt fogja használni a becslés helyett.
 
 %----------------------------------------------------------------------------
 \section{Jelölések}
 %----------------------------------------------------------------------------
-Ebben a fejezetben \aref{eq:pars}. táblázatban megadott jelöléseket fogjuk használni. Azokban az esetekben, ahol fontos megkülönböztetni a geometriai pályát és az (újra)mintavételezett pályát, ott a felsõ indexben található $\mathbf{g}$ betû a geometriai pályát jelöli, az $\mathbf{s}$ betû pedig a mintavételezett pályát. A pálya pontjait 1-tõl számozzuk.
+Ebben a fejezetben \eqref{pars} táblázatban megadott jelöléseket fogjuk használni. Azokban az esetekben, ahol fontos megkülönböztetni a geometriai pályát és az (újra)mintavételezett pályát, ott a felsõ indexben található $\mathbf{g}$ betû a geometriai pályát jelöli, az $\mathbf{s}$ betû pedig a mintavételezett pályát. A pálya pontjait 1-tõl számozzuk.
 
 \begin{align}\label{eq:pars}
 \Delta{t}(k)& : \text{A $k$ és a $k+1$ pontok között eltelt idõ} \notag\\
@@ -218,7 +218,7 @@ d(k) &= \frac{p(k)^4}{4 \cdot \Delta s(k)^2} + c(k) \cdot p(k)^2	 \\
 e(k) &= -\frac{2 \cdot v(k+1)^2 \cdot p(k)^4} {4 \cdot \Delta s(k)^2} \notag\\
 f(k) &= \frac{v(k+1)^4 \cdot p(k)^4}{4 \cdot \Delta s(k)^2} - {a_{max}}^2 \notag \\
 \label{eq:backacp3}
-0 &= v^c(k)^4 \cdot d(k) + v^c(k)^2 \cdot e(k) + f(k)
+0 &= v^e(k)^4 \cdot d(k) + v^e(k)^2 \cdot e(k) + f(k)
 \end{align}
 
 \par
@@ -397,10 +397,10 @@ Szintén fontos megjegyezni, hogy mivel a tárgyalt három hatás elsõsorban negatív
 %----------------------------------------------------------------------------
 \section{Autószerû robotmodell}
 %----------------------------------------------------------------------------
-Ebben a részben áttekintjük a különbségeket az idõparaméterezésben, ha autószerû robotnál szeretnénk a módszert alkalmazni. A lényeges különbségek a modellben és a korlátozásokban mutatkoznak. Ezek csak a geometriai sebességprofil alkotásakor mutatkoznak meg, a további lépések teljesen megegyeznek a fentebb részletezettel.
+Ebben a részben áttekintjük a különbségeket az idõparaméterezésben, ha autószerû robotnál szeretnénk a módszert alkalmazni. A lényeges különbségek a modellben és a korlátozásokban mutatkoznak. Ezek csak a geometriai sebességprofil alkotásakor jönnek elõ, a további lépések teljesen megegyeznek a fentebb részletezettel.
 
 \par
-A korlátozások meghatározásához szükségünk lenne az autó összes kerekének sebességére, de könnyen belátható, hogy az egyes kerekek sebességkülönbsége a megtett utak különbségébõl adódik, mely arányos a hozzájuk tartozó elfordulási sugárral Ezek után elegendõ felírnunk ezeket a sugarakat, illetve ezek arányát. \Aref{fig:carLikeRobotModel}. ábrán látható, hogy egy ilyen robot esetén kerékpár modellt, feltételezve ezek a sugarak hogyan származtathatók.
+A korlátozások meghatározásához szükségünk lenne az autó összes kerekének sebességére, de könnyen belátható, hogy az egyes kerekek sebességkülönbsége a megtett utak különbségébõl adódik, mely arányos a hozzájuk tartozó elfordulási sugárral Ezek után elegendõ felírnunk ezeket a sugarakat, illetve ezek arányát. \Aref{fig:carLikeRobotModel}. ábrán látható, hogy egy ilyen robot esetén kerékpár modellt feltételezve ezek a sugarak hogyan származtathatók.
 
 \par
 \eqref{carLikeRobot} harmadik egyenletébõl könnyen adódik, hogy a referenciapont által bejárt kör sugara
@@ -458,19 +458,19 @@ a_{t}(k) = \frac{v(k+1)^2 - v(k)^2}{2 \cdot \Delta s(k)} = \frac{v(k+1)^2 - v(k)
 ahol $p(k)$ a maximális sugáron mozgó kerék és a referenciapont sugarának aránya. 
 
 \par
-Innen átrendezve és kifejezve $v^c(k)$-t, a következõt kapjuk:
+A differenciális robotnál látott megoldást a \eqref{carAt} egyenlet az alábbiak szerint módosítja:
 \begin{align} \label{eq:carBackacp2}
 d(k) &= \frac{p(k)^2}{4 \cdot \Delta s(k)^2} + c(k) \cdot p(k)^2	 \\
 e(k) &= -\frac{2 \cdot v(k+1)^2 \cdot p(k)^2} {4 \cdot \Delta s(k)^2} \notag\\
 f(k) &= \frac{v(k+1)^4 \cdot p(k)^2}{4 \cdot \Delta s(k)^2} - {a_{max}}^2 \notag \\
 \label{eq:carBackacp3}
-0 &= v^c(k)^4 \cdot d(k) + v^c(k)^2 \cdot e(k) + f(k)
+0 &= v(k)^4 \cdot d(k) + v(k)^2 \cdot e(k) + f(k)
 \end{align}
 Ez a módosítás nem érinti az egyenlet megoldhatóságát, hiszen a két egyenlet ekvivalens, csak a távolság kerékre átszámítása máskor történik meg.
 
 \begin{figure}[H]
 \centering
 \includegraphics[height=50mm, width=130mm]{figures/carProfile.pdf}
-\caption{A pálya és a mintavételezett sebesség profil} 
+\caption{A pálya és a mintavételezett sebességprofil} 
 \label{fig:carPath}
 \end{figure}

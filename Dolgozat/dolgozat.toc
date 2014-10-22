@@ -50,7 +50,7 @@
 \select@language {magyar} \contentsline {section}{\numberline {6.1}Szimul\'aci\'o - V-REP}{52}{section.6.1}
 \select@language {magyar} \contentsline {subsection}{\numberline {6.1.1}Szerver program}{52}{subsection.6.1.1}
 \select@language {magyar} \contentsline {subsection}{\numberline {6.1.2}Kliens programok}{53}{subsection.6.1.2}
-\select@language {magyar} \contentsline {section}{\numberline {6.2}Szimul\'aci\'os eredm\'enyek}{55}{section.6.2}
+\select@language {magyar} \contentsline {section}{\numberline {6.2}Szimul\'aci\'os eredm\'enyek}{54}{section.6.2}
 \select@language {magyar} \contentsline {subsection}{\numberline {6.2.1}Differenci\'alis robot}{55}{subsection.6.2.1}
 \select@language {magyar} \contentsline {subsection}{\numberline {6.2.2}Aut\'oszer\H u robot}{57}{subsection.6.2.2}
 \select@language {magyar} \contentsline {section}{\numberline {6.3}Eredm\'enyek val\'os robotokon}{59}{section.6.3}
