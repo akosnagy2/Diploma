@@ -5,7 +5,7 @@
 %----------------------------------------------------------------------------
 \section{Problémafelvetés}
 %----------------------------------------------------------------------------
-A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy robotnak a feladata végrehajtásához el kell jutnia egy adott célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb amikor a robot környezetében akadályok is találhatóak. 
+A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy adott célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb amikor a robot környezetében akadályok is találhatóak. 
 
 \par
 Célunk azon megközelítések és módszerek áttekintése, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetünk, ezeket szimulátoron és valós robotokon is implementáltuk, illetve teszteltük. A pályatervezéshez szorosan kapcsoló téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
@@ -38,7 +38,7 @@ Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér}
 A korlátozások ismerete alapvetõ fontosságú a pályatervezés és mozgásirányítás során. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál-egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). %TODO így jó?
 
 \par
-A mi dolgozatunkban kinematikai korlátozásokkal fogunk foglalkozni, dinamikai korlátokkal nem.
+Dolgozatunkban kinematikai korlátozásokkal fogunk foglalkozni, dinamikai korlátokkal nem.
 
 \par
 Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, habár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Az anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciál egyenlettel írható le, amely nem integrálható.
@@ -67,14 +67,14 @@ ahol $v$ a robot sebessége, $v_r$ a robot jobb kerekének sebessége, $v_l$ a robo
 Ezt a robot típust gyakran alkalmazzák, mivel egyszerû felépítésû és anholonom mivolta ellenére könnyedén irányítható. Ahogyan az \eqref{diffRobot}. egyenletekbõl is következik a robot képes egy helyben megfordulni, ami sok esetben elõnyös, például párhuzamos parkolás esetén.
 
 \par
-Az általunk vizsgált másik robot típust, az autószerû robotokat mindenki jól ismeri és elterjedtsége megkérdõjelezhetetlen. Az autószerû robot kinematikai leírása a következõ.
+Az általunk vizsgált másik robot típust, az autószerû robotokat mindenki jól ismeri és elterjedtsége megkérdõjelezhetetlen. Az autószerû robot kinematikai leírása a következõ:
 
 \begin{align}\label{eq:carLikeRobot}
 \dot{x} &= v_r \cos \theta \\ \notag
 \dot{y} &= v_r \sin \theta \\ \notag
 \dot{\theta} &= \frac {v_r} {L} \tan \phi,
 \end{align}
-ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, melyet a robot referenciapontjának nevezünk. 
+ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, amelyet a robot referenciapontjának nevezünk. 
 
 \begin{figure}[H]
 \centering
