@@ -126,7 +126,6 @@ Az orientációszabályozás feladata szögsebesség alapjel biztosítása a pályaköveté
 \label{fig:oriPD}
 \end{figure}
 
-
 \par
 Fontos kérdés, hogy a pálya mely pontját válasszuk az alapjelszámoláshoz. Mindenképp a sebességszabályozónál használt referenciapontnál távolabbi pontot keresünk, hiszen ez a pont van a robothoz legközelebb és nem akarjuk, hogy az orientáció szabályzás a pályán visszafelé irányítsa a robotot. 
 
@@ -147,39 +146,32 @@ Ez az alsóbb szabályozási szinteken az következõ különbségeket jelenti: A differ
 %----------------------------------------------------------------------------
 \subsection{Virtuális vonalkövezõ szabályozás}
 %----------------------------------------------------------------------------
-A fentiekbõl látható, hogy a felsõbb szinten lévõ sebességszabályozás módosítására nincs szükség, teljesen megegyezõ módon mûködhet mindkét robot esetén. Az orientációszabályozás esetén már jelentõs különbségek mutatkoznak. Egy autószerû robot esetén nem hasznos a szögsebesség kiadása, mivel a beavatkozó jelünk a kormányszög. Természetesen a két mennyiség származtatható egymásból, így ez nem jelentene akkora problémát.
+A fentiekbõl látható, hogy a felsõbb szinten lévõ sebességszabályozás módosítására nincs szükség, teljesen megegyezõ módon mûködhet mindkét robot esetén. Az orientációszabályozás esetén már jelentõs különbségek mutatkoznak. Egy autószerû robot esetén nem hasznos a szögsebesség kiadása, mivel a beavatkozó jelünk a kormányszög. Természetesen a két mennyiség származtatható egymásból.
 
 \par
-Az orientációszabályozás alapötlete a differenciális robotnál egy predikciós távolság meghatározása volt, mely alapján számítunk egy szöghibát, majd ebbõl szögsebesség beavatkozó jelet. Ezt a módszer nagyon hasonló a RobonAUT versenyen is látott vonalkövetõ autók szabályozására, azzal az elõnnyel, hogy itt sokkal pontosabban ismert a ``vonal'' helye és orientációja.
-
-Az elõretekintés miatt a célunk, hogy az autó eleje kövesse a vonalat, így \aref{eq:carLikeRobot} egyenleteit egy kicsit módosítanunk kell. Elsõ körben induljunk ki abból, hogy a virtuális szenzorunk az elsõ tengelynél található. \Aref{fig:carLikeRobotModel} ábrán alapján a következõkre jutunk:
+Az orientációszabályozás alapötlete a differenciális robotnál egy elõretekintési távolság meghatározása volt, mely alapján számítunk egy szöghibát, majd ebbõl szögsebesség beavatkozó jelet. A vonalkövetõ autók rendszermodelljénél és szabályozásánál azzal a feltételezéssel élünk, hogy az autó elsõ keréktengelye alatt egy keresztirányú, egydimenziós vonalszenzor helyezkedik el. A jelenlegi esetben a pályakövetõ szabályozás elvét egy ehhez hasonló ``virtuális szenzor'' segítségével fogalmazzuk meg. Ez a módszer nagyon hasonló a RobonAUT \cite{RobonAUTszem} versenyen is látott vonalkövetõ autók szabályozására, azzal az elõnnyel, hogy itt sokkal pontosabban ismert a ``vonal'' helye és orientációja. Így módosul \eqref{carLikeRobot} egyenlete:
 
 \begin{align}\label{eq:carLikeRobotMod}
-\dot{x} &= v \frac{\cos (\theta + \phi)}{\cos \phi} \notag \\
-\dot{y} &= v \frac{\sin(\theta + \phi)}{\cos \phi} \notag \\
-\dot{\theta} &= v \frac{\tan \phi}{L}
+\dot{x} &= v_r \frac{\cos (\theta + \phi)}{\cos \phi} \notag \\
+\dot{y} &= v_r \frac{\sin(\theta + \phi)}{\cos \phi} \notag \\
+\dot{\theta} &= v_r \frac{\tan \phi}{L}
 \end{align}
 
-ahol, a jelölések megegyeznek \aref{eq:carLikeRobot} esetén használtakkal. Most vizsgáljuk meg, hogyan függ egy párhuzamos egyenes távolsága a robot mozgásától:
-
-\begin{align}\label{eq:parallelLine}
-\dot{p} = -v \cdot \tan \phi
-\end{align}
-
-ahol, $p$ a virtuális szenzorunk közepének és a vonalnak az elõjeles távolsága. A képletbõl az is leolvasható, hogy pozitív kormányszög esetén az elõjeles távolság negatív irányba mozdul el. Most vizsgáljuk meg az autóhoz képest ferde vonal hatását:
-
-\begin{align}\label{eq:crossLine}
-\dot{p} = v \cdot \tan \delta
-\end{align}
-
-ahol, $\delta$ az autó haladásának egyenese és a vonal egyenese által bezárt szög. Az eddigiek alapján felírhatjuk a $\delta$ és $p$ változását:
+ahol, a jelölések megegyeznek \aref{eq:carLikeRobot} esetén használtakkal, de a továbbiakban a sebességet egyszerûen csak $v$-vel jelöljük. Ezen egyenletek és  \aref{fig:ferdevonal} ábra alapján modellezésével a következõ modellt kapjuk: \cite{RobonAUTszem}
 
 \begin{align}\label{eq:deltaAndp}
 \dot{\delta} &= -v \frac{\tan \phi}{L} \notag \\
 \dot{p} &= v \cdot \tan \delta - v \cdot \tan \phi - v \cdot \frac{p}{L} \tan \delta \tan \phi
 \end{align}
 
-Fontos megjegyeznünk, hogy a rendszerünk nem lineáris, így a szuperpozíció se érvényes rá, innen az $\dot{p}$ esetén az utolsó tag. A szabályzótervezés során nekünk egy lineáris rendszerre van szükségünk, így a fenti egyenletet linearizálni kell. Mivel az a célunk, hogy a robot a vonalon helyezkedjen el, és azzal párhuzamosan, így a munkapont, amely körül szeretnénk a linearizálást elvégezni a $p = 0$, $\phi = 0$ és a $\delta = 0$. Így a következõ egyenletekkel számolhatunk:
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/ferdevonal.png}
+\caption{Ferde vonal és robot modellje \cite{RobonAUTszem}} 
+\label{fig:ferdevonal}
+\end{figure}
+
+Látható, hogy ez a rendszer nem lineáris, de a szabályzótervezés során nekünk egy lineáris rendszerre van szükségünk, így a fenti egyenletet linearizálni kell. Mivel az a célunk, hogy a robot a vonalon helyezkedjen el, és azzal párhuzamosan, így a munkapont, amely körül szeretnénk a linearizálást elvégezni a $p = 0$, $\phi = 0$ és a $\delta = 0$. Így a következõ egyenletekkel számolhatunk:
 
 \begin{align}\label{eq:linearizedModel}
 \dot{\delta} &= - \frac{v}{L} \phi \notag \\
@@ -200,7 +192,7 @@ v & 0
 p &= [0 \quad 1]x + 0 \cdot \phi
 \end{align}
 
-Egy valós vonalkövetõ autóval ellentétben, mi viszonylag pontosan meg tudjuk határozni a rendszer állapotváltozóit így célszerû közvetlenül ezek visszacsatolása, így szabadon megválaszthatóak a visszacsatolt rendszer pólusai. Ezt érdemes úgy megtenni, hogy minimálisra csökkentsük a túllendülést. Ha a rendszer válaszát kéttárolós lengõtaggal közelítjük, akkor annak átviteli függvénye a következõ:
+Egy valós vonalkövetõ autóval ellentétben, mi viszonylag pontosan meg tudjuk határozni a rendszer állapotváltozóit. Így célszerû közvetlenül ezek visszacsatolása, amelynek szabadon megválaszthatóak a visszacsatolt rendszer pólusai. Ezt érdemes úgy megtenni, hogy minimálisra csökkentsük a túllendülést. Ha a rendszer válaszát kéttárolós lengõtaggal közelítjük, akkor annak átviteli függvénye a következõ:
 
 \begin{align}\label{eq:kettarolosLengo}
 W(s) = \frac{\omega_{0}^{2}}{\omega_{0}^{2} + 2\xi\omega_{0}s+s^{2}}
