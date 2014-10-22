@@ -103,15 +103,16 @@ void LoadPathFromTCP(tcp::iostream &s, PathMessage &path)
 
 	robotType = ((float) parMsg.values[0]) > 0.0f;
 	if(robotType) {
-		predictSampleLength = (int) parMsg.values[1];
-		lineW0 = (float) parMsg.values[2];
-		lineKsi = (float) parMsg.values[3];
-		timeStep = (float) parMsg.values[4];
-		wheelDistance = (float) parMsg.values[5];
-		pathMaxSpeed = (float) parMsg.values[6];
-		pathMaxAccel = (float) parMsg.values[7];
-		robotData.setAxisDistance((float) parMsg.values[8]);
-		robotData.setFiMax((float) parMsg.values[9]);
+		predictSampleLength = (float)parMsg.values[1];
+		predictDistanceLength = (float)parMsg.values[2];
+		lineW0 = (float) parMsg.values[4];
+		lineKsi = (float) parMsg.values[5];
+		timeStep = (float) parMsg.values[6];
+		wheelDistance = (float) parMsg.values[7];
+		pathMaxSpeed = (float) parMsg.values[8];
+		pathMaxAccel = (float) parMsg.values[9];
+		robotData.setAxisDistance((float) parMsg.values[10]);
+		robotData.setFiMax((float) parMsg.values[11]);
 		robotData.setWheelDistance(wheelDistance);
 	} else {
 		predictSampleLength = (int)parMsg.values[1];

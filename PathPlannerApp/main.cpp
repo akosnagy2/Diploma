@@ -152,7 +152,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 
 		//PathPlanner params
 		sc.SetRTRParameters((int)parMsg.values[12], (float)parMsg.values[13], (float)parMsg.values[14], (int)parMsg.values[15]);
-		envFileName = "frame" + to_string((int)parMsg.values[16]) + ".obj";
+		envFileName = "frame" + to_string((int)parMsg.values[16]) + "c.obj";
 		sc.SetRobotMinimumRadius((float)parMsg.values[17]);
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS((float)parMsg.values[18]);

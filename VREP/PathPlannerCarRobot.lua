@@ -39,7 +39,7 @@ function PathPlannerSimulationLoop()
 		rabitPos[2] = returnData[7] / 1000
 		rabitPos[3] = 0.1 -- fix
 		
-		simSetGraphUserData(trackGraphHandle, "TrackError", fi) 
+		simSetGraphUserData(trackGraphHandle, "Steering_Angle", fi) 
 
 		if(consoleHandle ~= nil) then
 			simAuxiliaryConsolePrint(consoleHandle,NULL) 
@@ -53,6 +53,8 @@ function PathPlannerSimulationLoop()
 		setRobotSpeed(v,fi)
 
 		simSetObjectPosition(rabitHandle,sim_handle_parent,rabitPos)
+		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
+		
 		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
 		
 		-- Now don't waste time in this loop if the simulation time hasn't changed! This also synchronizes this thread with the main script
@@ -99,6 +101,9 @@ function PathPlannerCarRobot()
 	-- We start the server on a port that is probably not used:
 	local portNb = getPort()
 
+	graphHandle = simGetObjectHandle("Graph")
+	simResetGraph(graphHandle)	
+	
 	-- Start Server
 	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
 
