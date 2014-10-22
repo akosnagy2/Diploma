@@ -3,10 +3,10 @@
 %----------------------------------------------------------------------------
 \chapter{Az RTR algoritmus}
 %----------------------------------------------------------------------------
-Az RTR (Rotate-Translate-Rotate) algoritmust Kiss Domokos dolgozta ki \cite{DomiRTR}. A mi feladatunk az algoritmus implementálása volt C++ nyelven, majd az algoritmus tesztelése szimulációs környezetben és valós roboton.
+Az RTR (Rotate-Translate-Rotate) algoritmust is Kiss Domokos dolgozta ki \cite{DomiRTR}. A mi feladatunk az algoritmus implementálása volt C++ nyelven, majd az algoritmus tesztelése szimulációs környezetben és valós roboton.
 
 \par
-Az algoritmus az irodalomból gyakran használt RRT algoritmuson alapszik, ezért ennek a bemutatásával kezdjük a fejezetet.
+Az RTR eljárás az irodalomból gyakran használt RRT algoritmuson alapszik, ezért ennek a bemutatásával kezdjük a fejezetet.
 
 %----------------------------------------------------------------------------
 \section{RRT algoritmus}
@@ -67,7 +67,7 @@ Az RTR algoritmusnál alkalmazott fa struktúrában, az RRT-hez hasonlóan a csomópo
 A mintavételezés fázisában különbséget jelent az eredeti RRT algoritmushoz képest, hogy nálunk a $q_{rand}$-nak megfelelõ véletlen minta nem egy konfiguráció lesz, hanem egy pozíció a térben ($p_G$). Ezt a pozíciót tekinthetjük egy folytonos, egy dimenziós konfigurációs listának, amelynek bármelyik eleme megfelelõ célkonfiguráció lehet.
 
 \par
-A mintavételezést kiegészíthetjük a pálya háromszög cellafelbontásából kapott mintákkal. Ezek a minták az akadályoktól távolabb találhatóak és szûk folyosók esetén is segítenek terjeszteni a fákat. A celladekompozíciót a következõ fejezetben tárgyaljuk.
+A mintavételezést kiegészíthetjük a pálya háromszög cellafelbontásából kapott mintákkal. Ezek a minták az akadályoktól távolabb találhatóak és szûk folyosók esetén is segítenek terjeszteni a fákat. A celladekompozíciót az elõzõ fejezetben tárgyaltuk.
 
 %----------------------------------------------------------------------------
 \subsection{Csomópont kiválasztás}
@@ -105,7 +105,7 @@ Lényeges különbség az is, ahogyan a két algoritmus az ütközést kezeli. Az RTR te
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=120mm, keepaspectratio]{figures/rtr_rci.png}
+\includegraphics[width=80mm, keepaspectratio]{figures/rtr_rci.png}
 \caption{\emph{A kiterjesztés folyamata.}\cite{DomiRTR}} 
 \label{fig:rtr_rci}
 \end{figure}

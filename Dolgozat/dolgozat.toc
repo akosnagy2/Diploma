@@ -7,7 +7,7 @@
 \select@language {magyar} \contentsline {subsubsection}{Robotmodellek}{8}{section*.5}
 \select@language {magyar} \contentsline {subsection}{\numberline {1.2.2}P\'alyatervez\H ok oszt\'alyoz\'asa}{10}{subsection.1.2.2}
 \select@language {magyar} \contentsline {subsubsection}{Geometriai tervez\'es szerinti csoportos\IeC {\'\i }t\'as}{10}{section*.7}
-\select@language {magyar} \contentsline {subsubsection}{Ir\'any\IeC {\'\i }tott rendszer szerinti csoportos\IeC {\'\i }t\'as}{10}{section*.8}
+\select@language {magyar} \contentsline {subsubsection}{Ir\'any\IeC {\'\i }tott rendszer szerinti csoportos\IeC {\'\i }t\'as}{11}{section*.8}
 \select@language {magyar} \contentsline {chapter}{\numberline {2}A C*CS, \relax \mathversion {bold}{$c\overline {c}S$} algoritmus}{12}{chapter.2}
 \select@language {magyar} \contentsline {section}{\numberline {2.1}Reeds-Shepp lok\'alis p\'aly\'ak}{12}{section.2.1}
 \select@language {magyar} \contentsline {section}{\numberline {2.2}C*CS lok\'alis p\'aly\'ak}{13}{section.2.2}
