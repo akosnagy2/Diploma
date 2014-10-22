@@ -11,13 +11,13 @@ Anholonóm rendszerek irányítása akadályoktól mentes környezetben is egy igen bon
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/reeds_shepp.png}
-\caption{Két lehetséges Reeds-Shepp megoldástípus\cite{ReedsShepp}} 
+\includegraphics[width=130mm, keepaspectratio]{figures/dubins-reeds-shepp.png}
+\caption{Dubins és Reeds-Shepp megoldások \cite{LaValle2}} 
 \label{fig:reeds_shepp}
 \end{figure}
 
 \par
-Az utóbbi típusú robotokat hívjuk Reeds-Shepp autóknak, melyeknél bizonyított, hogy bármely kezdõ- és célkonfiguráció közt, a legrövidebb utat megtalálhatjuk 48 lehetséges megoldás közül, ezekbõl látható kettõ \aref{fig:reeds_shepp} ábrán Ezek a megoldások maximum öt egyenes vagy körív kombinációjából állhatnak, és a pályák maximum két csúcsot tartalmazhatnak, azaz ennyiszer lehet irányt változtatni a végrehajtás közben\cite{ReedsShepp}. A megoldások száma egyéb megkötések árán tovább csökkenthetõ.
+Az utóbbi típusú robotokat hívjuk Reeds-Shepp autóknak, melyeknél bizonyított, hogy bármely kezdõ- és célkonfiguráció közt, a legrövidebb utat megtalálhatjuk 48 lehetséges megoldás közül, ezekbõl látható kettõ \aref{fig:reeds_shepp} ábrán Ezek a megoldások maximum öt egyenes vagy körív kombinációjából állhatnak, és a pályák maximum két csúcsot tartalmazhatnak, azaz ennyiszer lehet irányt változtatni a végrehajtás közben \cite{ReedsShepp}. A megoldások száma egyéb megkötések árán tovább csökkenthetõ.
 
 \par
 Mint látható akadályoktól mentes környezetben találhatunk optimális útvonalat, de ennek hátránya, hogy mindig minimális sugarú pályákat feltételez, mely egy valós esetben nem életszerû, illetve a pályák lehetnek igen bonyolultak is. De ha elvetjük az optimalitás igényét, amit egyébként is meg kell tennünk, ha egy globális tervezõ részeként alkalmazzuk a módszert, akkor a lehetséges megoldásokon jelentõs mértékben egyszerûsíthetünk. 
@@ -56,7 +56,7 @@ Mi erre a célra egy celladekompozíción alapuló algoritmust használtunk. Ez az el
 	\label{fig:ccs_triang}
 \end{figure}
 
-Ennek a megoldásnak az elõnye, hogy a szabad terület közepén alkot pályát, így ha az autó ezt a pályát követi, akkor bármilyen irányú manõverezésre lesz lehetõsége, ha a pálya ezt megengedi. További elõnye hogy ez egy kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Az eljárás egyik fõ hibája, hogy a háromszögelés miatt, csak sokszögekkel leírható akadályokkal képes dolgozni, és még ebben a formájában nem veszi figyelembe az autó kiterjedését. Ezen könnyen lehet segíteni, ha figyelembe vesszük az oldalfelezõ pontok közötti szakaszok távolságát az akadályoktól, és ha a pálya- és az akadályél túl közel vannak egymáshoz, akkor töröljük az élt a gráfból. Sajnos az eljárás negatívumokkal bír, errõl a fejezet végén még szót ejtünk.
+Ennek a megoldásnak az elõnye, hogy a szabad terület közepén alkot pályát, így ha az autó ezt a pályát követi, akkor bármilyen irányú manõverezésre lesz lehetõsége, ha a pálya ezt megengedi. További elõnye hogy ez egy kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Az eljárás egyik fõ hibája, hogy a háromszögelés miatt, csak sokszögekkel leírható akadályokkal képes dolgozni, és még ebben a formájában nem veszi figyelembe az autó kiterjedését. Ezen könnyen lehet segíteni, ha figyelembe vesszük az oldalfelezõ pontok közötti szakaszok távolságát az akadályoktól, és ha a pálya- és az akadályél túl közel vannak egymáshoz, akkor töröljük az élt a gráfból. Sajnos az eljárás negatívumokkal is bír, errõl a fejezet végén még szót ejtünk.
 
 %----------------------------------------------------------------------------
 \subsection{Lokális tervezõ alkalmazása}
@@ -134,7 +134,7 @@ Pontos méréseket nem végeztünk, de nagyságrendileg százszoros gyorsulást sikerül
 A fejlesztés során odafigyeltünk, hogy hol lehetne gyorsítani, módosítani a mûködésen. Ahol ez egyszerûen megvalósítható volt, ott ezeket el is végeztük, de maradtak további fejlesztési lehetõségek is a programban.
 
 \par
-Az esetek nagy többségében a celladekompozíciós eljárással tervezett globális pálya, jó eredménnyel szolgál, de néhány speciális esetben lehetséges, hogy olyan pályával tér vissza, melyet egy autóval képtelenség megoldani. Ilyen eset például két, egymásra merõleges, autó szélességû folyosó, ahol az elfordulásra nincs hely, de ezt a globális tervezõ nem veszi észre. Egy másik problémás eset a párhuzamos parkolás, amely ugyan végrehajtható lenne, de a tervezés során kialakult konfigurációk ezt majdnem lehetetlenné teszik. \footnote{Természetesen a $c\overline{c}S$ segítségével található megoldás, de ez csak elméleti megoldás, a valóságban használhatatlan megoldáshoz vezet.} A következõ fejezetben bemutatunk egy másik globális tervezõt, mely ezeket a problémákat megoldja.
+Az esetek nagy többségében a celladekompozíciós eljárással tervezett globális pálya, jó eredménnyel szolgál, de néhány speciális esetben lehetséges, hogy olyan pályával tér vissza, melyet egy autóval képtelenség megoldani. Ilyen eset például két, egymásra merõleges, autó szélességû folyosó, ahol az elfordulásra nincs hely, de ezt a globális tervezõ nem veszi észre. Egy másik problémás eset a párhuzamos parkolás, ahol bár úgy tûnik végrehajtható lenne, de a globális tervezés során kialakult konfigurációk ezt nem teszik lehetõvé. A következõ fejezetben bemutatunk egy másik globális tervezõt, mely ezeket a problémákat megoldja.
 
 
 
