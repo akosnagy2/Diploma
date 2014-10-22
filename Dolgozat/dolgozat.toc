@@ -50,9 +50,11 @@
 \select@language {magyar} \contentsline {section}{\numberline {6.1}Szimul\'aci\'o - V-REP}{51}{section.6.1}
 \select@language {magyar} \contentsline {subsection}{\numberline {6.1.1}Szerver program}{51}{subsection.6.1.1}
 \select@language {magyar} \contentsline {subsection}{\numberline {6.1.2}Kliens programok}{52}{subsection.6.1.2}
-\select@language {magyar} \contentsline {section}{\numberline {6.2}Val\'os robotok}{53}{section.6.2}
-\select@language {magyar} \contentsline {chapter}{\numberline {7}\"Osszegz\'es - 1 oldal CsG/NA}{54}{chapter.7}
-\select@language {magyar} \contentsline {section}{\numberline {7.1}\'Ert\'ekel\'es}{54}{section.7.1}
-\select@language {magyar} \contentsline {section}{\numberline {7.2}J\"ov\H obeli fejleszt\'esek}{54}{section.7.2}
-\select@language {magyar} \contentsline {chapter}{K\"osz\"onetnyilv\'an\IeC {\'\i }t\'as}{55}{chapter*.40}
-\select@language {magyar} \contentsline {chapter}{Irodalomjegyz\'ek}{56}{chapter*.41}
+\select@language {magyar} \contentsline {section}{\numberline {6.2}Szimul\'aci\'os eredm\'enyek}{54}{section.6.2}
+\select@language {magyar} \contentsline {subsection}{\numberline {6.2.1}Differenci\'alis robot}{54}{subsection.6.2.1}
+\select@language {magyar} \contentsline {subsection}{\numberline {6.2.2}Aut\'oszer\H u robot}{55}{subsection.6.2.2}
+\select@language {magyar} \contentsline {section}{\numberline {6.3}Eredm\'enyek val\'os robotokon}{55}{section.6.3}
+\select@language {magyar} \contentsline {subsection}{\numberline {6.3.1}Differenci\'alis robot}{55}{subsection.6.3.1}
+\select@language {magyar} \contentsline {subsection}{\numberline {6.3.2}Aut\'oszer\H u robot}{57}{subsection.6.3.2}
+\select@language {magyar} \contentsline {chapter}{K\"osz\"onetnyilv\'an\IeC {\'\i }t\'as}{58}{chapter*.46}
+\select@language {magyar} \contentsline {chapter}{Irodalomjegyz\'ek}{59}{chapter*.47}

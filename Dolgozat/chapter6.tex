@@ -42,17 +42,79 @@ Azért választottuk a C++ nyelvet az implementáláshoz, hogy a valós roboton, beág
 E mellet a fejlesztés során igen fontos volt az objektum-orientált szemléletmód, mivel így biztosítható a legjobban a modularitás, és a késõbbi egyszerû fejlesztés, módosítás. Az implementálás során egyéb elõnyös tulajdonságát is ki tudtuk használni, ezek közül a legjelentõsebb az újrafelhasználhatóság volt. A programozás elõrehaladtával a fejlesztés sebessége is nõtt, mivel az elõzõleg elkészített kódrészleteket egyszerûen újra tudtuk használni.
 
 %----------------------------------------------------------------------------
-\section{Valós robotok}
+\section{Szimulációs eredmények}
+%----------------------------------------------------------------------------
+Az általunk ismertetett algoritmusok szimulációs környezetben a várakozásainknak megfelelõen mûködtek. Az eredmények a következõ ábrákon látható. A képek a V-REP szimulátorról készültek, az akadályokat és a pálya határait színes polygonok jelzik, a pályatervezõ által generált pályát kék színnel jelöljük, míg a robot által bejárt pályát sárgával. A képek jobb oldalán található két grafikon, a felsõ grafikon a robot sebességét (piros) és gyorsulását jelenti (sárga), az alsó grafikon a referenciaponttól vett távolságot
+
+%----------------------------------------------------------------------------
+\subsection{Differenciális robot}
+%----------------------------------------------------------------------------
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=120mm, keepaspectratio]{figures/DiffSimPath0.png}
+\caption{Ez a pálya differenciális robot esetében viszonylag egyszerûen teljesíthetõ, mivel a robot képes egy helyben fordulni.} 
+\label{fig:DiffSimRobot1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=120mm, keepaspectratio]{figures/DiffSimPath0RTR.png}
+\caption{Az elõzõ pálya esetében felhasznált RTR tervezõ által generált globális pálya.} 
+\label{fig:DiffSimRobot1RTR}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=120mm, keepaspectratio]{figures/DiffSimPath1.png}
+\caption{} 
+\label{fig:DiffSimRobot2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=120mm, keepaspectratio]{figures/DiffSimPath2.png}
+\caption{} 
+\label{fig:DiffSimRobot2}
+\end{figure}
+
+%----------------------------------------------------------------------------
+\subsection{Autószerû robot}
 %----------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------
-\chapter{Összegzés - 1 oldal CsG/NA}
+\section{Eredmények valós robotokon}
 %----------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------
-\section{Értékelés}
+\subsection{Differenciális robot}
 %----------------------------------------------------------------------------
 
+Az algoritmusokat az Eurobot 2013 nemzetközi robotversenyre elkészített differenciális roboton teszteltük. A robot alsó szintû vezérlése elosztott modulokkal történik, az egyik ilyen modul felelõs a robot mozgatásáért. A modulok CAN buszon kommunikálnak egymással és a robot felsõ szintû vezérlõjével.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=100mm, keepaspectratio]{figures/Eurobot.png}
+\caption{A dolgozatban használt valós differenciális robot.} 
+\label{fig:Eurobot}
+\end{figure}
+
+\par
+A pályakövetõ algoritmust az alsó szintû modulon található DSP jelfeldolgozó processzoron implementáltuk. Míg a pályatervezést és az idõparaméterezést felsõ szintû programban valósítottuk meg. A felsõ szintû vezérlõprogram akár laptopról, akár beágyazott rendszerrõl is futhat. Mindkét esetben TCP/IP kapcsolaton keresztül érjük el a robot alsó szintû moduljait. Az általunk elkészített pályatervezõ és idõparaméterezõ algoritmusokat a vezérlõprogramba illesztettük be.
+
+\par
+A robot felsõ szintû programja képes a V-REP szimulátor felé adatokat küldeni, valamint a V-REP-ben lehetõség van a valós roboton futó algoritmusok beállítására, hangolására, ahogyan szimuláció esetében is. A V-REP-nek a robot pozícióját küldjük el a mozgás során és megtervezett, idõparaméterezett pályát a pályakövetés elõtt.
+
+\par
+A pályakövetõ algoritmus tesztelése valós roboton még folyamatban van, de alapvetõen a szimulátorban kipróbált eljárás valós környezetben is mûködõképes, ahogyan ez \aref{fig:DiffRealPath}. ábrán is látható. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=100mm, keepaspectratio]{figures/DiffRealPath.png}
+\caption{A valós robot által bejárt pálya(sárga) és a robot által megtervezett pálya(kék).} 
+\label{fig:DiffRealPath}
+\end{figure}
+
 %----------------------------------------------------------------------------
-\section{Jövõbeli fejlesztések}
+\subsection{Autószerû robot}
 %----------------------------------------------------------------------------
