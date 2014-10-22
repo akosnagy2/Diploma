@@ -1,14 +1,45 @@
 %----------------------------------------------------------------------------
-\chapter{Algoritmusok megvalósítása - 4 oldal CsG/NA}
+\chapter{Algoritmusok megvalósítása}
 %----------------------------------------------------------------------------
+Ebben a fejezetben az algoritmusok megvalósításáról, és az azokhoz használt eszközökrõl beszélünk. Bemutatjuk a használt szimulációs környezetet, és a köré készült programok mûködését, majd leírjuk az ezekben, és valós robotokon elért eredményeinket.
 
 %----------------------------------------------------------------------------
-\section{Szimuláció}
+\section{Szimuláció - V-REP}
 %----------------------------------------------------------------------------
-A robotok mozgásának szimulálására a V-REP robotszimulációs programot használtuk. A program a Coppelia Robotics terméke, oktatási célból ingyenesen letölthetõ és használható. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
+A robotok mozgásának szimulálására a V-REP robotszimulátort használtuk. A program a Coppelia Robotics terméke\cite{VREP}, oktatási célból ingyenesen letölthetõ és használható. Nagyon széleskörûen használható program, a robotika minden ágában. Tesztelhetõ benne ipari szerelõrobotok mûködés, ahogyan az \aref{fig:vrep} ábrán is látható, felhasználható ilyen robotok programozásának oktatására is, de a mobil robotok területén is kifejezetten praktikus eszköz. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
+
+%----------------------------------------------------------------------------
+\subsection{Szerver program}
+%----------------------------------------------------------------------------
+Több módon is kiegészíthetõ a program mûködése. Mi a megoldásunkban egy szerver programot hoztunk létre, mely kommunikál a V-REP egy lua szkriptjével, majd a kapott üzenet alapján mozgatja a szimulált robotot. A szerver nem csak a szimulátorral áll kapcsolatban, hanem hozzá csatlakozhatnak a különbözõ egyéb algoritmusok, ahogy az \aref{fig:vrepserver} ábrán is látható. A fejlesztés során próbáltuk  a szimulációt a robot típusától függetlenné tenni, ezt a következõképpen valósítottuk meg: A szimuláció indulásakor a lua szkript elküldi a szimuláció módját, és a hozzá tartozó paramétereket. Innen a szerver alkalmazás eldönti milyen paraméterek és egyéb adatok érkezhetnek, illetve, hogy melyik kliensre kell várjon. Ha a kapcsolat létrejött a kliens alkalmazással, akkor az a paramétereknek megfelelõen végzi a feladatát, majd az eredményt a szerver alkalmazáson keresztül elküldi a szimulátornak. Ez a struktúra elsõ ránézésre igen bonyolultnak tûnik, de ez a módszer biztosítja, hogy a szimulátort egyszerûen lecserélhessük egy valós robotra. A szerver mûködése teljes mértékben transzparens, a késõbbiekben ennek mûködését a szimulátor részének vesszük.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=150mm, keepaspectratio]{figures/vrep.png}
+\caption{A V-REP szimulációs program} 
+\label{fig:vrep}
+\end{figure}
+
+%----------------------------------------------------------------------------
+\subsection{Kliens programok}
+%----------------------------------------------------------------------------
+A különbözõ kliens programok más-más paramétereket várnak, ezt biztosítja a szerver alkalmazás. Az idõparaméterezõ és a pályakövetõ szabályozás teszteléséhez készült egy kliens, mely a szimulátortól fogad egy elõre elkészített pályát, majd ezt újramintavételezi. Az így készült pályát visszaküldi a szimulátornak, ami kirajzolja az új pályát, majd elküldi a robot aktuális pozícióját. Innen átveszi átveszi a mûködést a pályakövetõ algoritmus, a kapott pozíciót feldolgozza és ez alapján az elõzõ fejezetben részletezett módon kiszámítja a beavatkozó jeleket, amit visszaküld a szimulátornak. A szimulátor és a pályakövetõ alkalmazás mûködése szinkronizálva van, azaz megvárják egymást a következõ lépéssel.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=150mm, keepaspectratio]{figures/vrepserver.pdf}
+\caption{Az elkészült keretrendszer blokkvázlata} 
+\label{fig:vrepserver}
+\end{figure}
 
 \par
-Több módon is kiegészíthetõ a program mûködése. Mi a megoldásunkban egy szerver programot hoztunk létre, mely kommunikál a V-REP egy lua szkriptjével, majd a kapott üzenet alapján mozgatja a szimulált robotot. A szimuláció indulásakor a szkript elküldi a szimuláció módját, és a hozzá tartozó paramétereket. A fejlesztés során próbáltuk  a szimulációt a robot típusától függetlenné tenni, így a szimuláció módja mondja megy a szervernek, hogy milyen kliens kapcsolatra várjon.
+A másik elkészült kliens alkalmazásunk a pályatervezõ program. Ez nem vár pályára a szimulátortól, csak az elõre meghatározott környezet nevére. Itt kompromisszumot kellett kötnünk, mivel a szimulátor speciális fájlformátumot tud csak kezelni, ezért közös fájlokkal dolgozik a két program, de a pályatervezõ más forrásból is elfogad pályát, így továbbra is lecserélhetõ marad a szimulátor. A pályatervezés után a mûködése teljesen megegyezik a pályakövetõtõ kliensprogramnál leírtakkal, azzal a különbséggel, hogy a pályát itt a tervezõ szolgáltatja.
+
+\par
+Azért választottuk a C++ nyelvet az implementáláshoz, hogy a valós roboton, beágyazott rendszerben is könnyedén használható legyen. A beágyazott környezet miatt igyekeztünk kerülni bármiféle olyan külsõ szoftvercsomag használatát, aminek a használata problémás lehet a valós roboton. 
+
+\par
+E mellet a fejlesztés során igen fontos volt az objektum-orientált szemléletmód, mivel így biztosítható a legjobban a modularitás, és a késõbbi egyszerû fejlesztés, módosítás. Az implementálás során egyéb elõnyös tulajdonságát is ki tudtuk használni, ezek közül a legjelentõsebb az újrafelhasználhatóság volt. A programozás elõrehaladtával a fejlesztés sebessége is nõtt, mivel az elõzõleg elkészített kódrészleteket egyszerûen újra tudtuk használni.
 
 %----------------------------------------------------------------------------
 \section{Valós robotok}
