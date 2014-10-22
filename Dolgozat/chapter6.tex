@@ -1,12 +1,12 @@
 %----------------------------------------------------------------------------
 \chapter{Algoritmusok megvalósítása}
 %----------------------------------------------------------------------------
-Ebben a fejezetben az algoritmusok megvalósításáról, és az azokhoz használt eszközökrõl beszélünk. Bemutatjuk a használt szimulációs környezetet, és a köré készült programok mûködését, majd leírjuk az ezekben, és valós robotokon elért eredményeinket.
+Ebben a fejezetben az algoritmusok megvalósításáról, és az azokhoz használt eszközökrõl beszélünk. Bemutatjuk a használt szimulációs környezetet, és a köré készült programok mûködését, majd leírjuk a szimulátorban és a valós robotokon elért eredményeinket.
 
 %----------------------------------------------------------------------------
 \section{Szimuláció - V-REP}
 %----------------------------------------------------------------------------
-A robotok mozgásának szimulálására a V-REP robotszimulátort használtuk. A program a Coppelia Robotics terméke\cite{VREP}, oktatási célból ingyenesen letölthetõ és használható. Nagyon széleskörûen használható program, a robotika minden ágában. Tesztelhetõ benne ipari szerelõrobotok mûködése, ahogyan az \aref{fig:vrep} ábrán is látható, felhasználható ilyen robotok programozásának oktatására is, de a mobil robotok területén is kifejezetten praktikus eszköz. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
+A robotok mozgásának szimulálására a V-REP robotszimulátort használtuk. A program a Coppelia Robotics terméke\cite{VREP}, oktatási célból ingyenesen letölthetõ és használható. Nagyon széleskörûen használható program a robotika minden ágában. Tesztelhetõ benne ipari szerelõrobotok mûködése, ahogyan az \aref{fig:vrep} ábrán is látható, felhasználható robotok programozásának oktatására is, de a mobil robotok területén is kifejezetten praktikus eszköz. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
 
 %----------------------------------------------------------------------------
 \subsection{Szerver program}
@@ -38,74 +38,88 @@ A másik elkészült kliens alkalmazásunk a pályatervezõ program. Ez nem vár pályár
 \par
 Azért választottuk a C++ nyelvet az implementáláshoz, hogy a valós roboton, beágyazott rendszerben is könnyedén használható legyen. A beágyazott környezet miatt igyekeztünk kerülni bármiféle olyan külsõ szoftvercsomag használatát, aminek a használata problémás lehet a valós roboton. 
 
-\begin{figure}[H]
-\centering
-\includegraphics[height=75mm, keepaspectratio]{figures/frame2vrep.png}
-\caption{Szimuláció mûködés közben. Jobb középen oldalt a sebesség és gyorsulás profil, alatta a kormányszög értéke.} 
-\label{fig:frame2vrep}
-\end{figure}
-
 \par
 E mellet a fejlesztés során igen fontos volt az objektum-orientált szemléletmód, mivel így biztosítható a legjobban a modularitás, és a késõbbi egyszerû fejlesztés, módosítás. Az implementálás során egyéb elõnyös tulajdonságát is ki tudtuk használni, ezek közül a legjelentõsebb az újrafelhasználhatóság volt. A programozás elõrehaladtával a fejlesztés sebessége is nõtt, mivel az elõzõleg elkészített kódrészleteket egyszerûen újra tudtuk használni.
-
-\begin{figure}[H]
-\centering
-\includegraphics[height=50mm, keepaspectratio]{figures/frame3vrep.png}
-\caption{A RTR és C*CS algoritmusok együttes mûködése} 
-\label{fig:frame3vrep}
-\end{figure}
 
 %----------------------------------------------------------------------------
 \section{Szimulációs eredmények}
 %----------------------------------------------------------------------------
-Az általunk ismertetett algoritmusok szimulációs környezetben a várakozásainknak megfelelõen mûködtek. Az eredmények a következõ ábrákon látható. A képek a V-REP szimulátorról készültek, az akadályokat és a pálya határait színes polygonok jelzik, a pályatervezõ által generált pályát kék színnel jelöljük, míg a robot által bejárt pályát sárgával. A képek jobb oldalán található két grafikon, a felsõ grafikon a robot sebességét (piros) és gyorsulását jelenti (sárga), az alsó grafikon a referenciaponttól vett távolságot
-
-
-\par
-Elkészült a hardvere egy robotautónak, melynek elsõdleges célja az ilyen pályatervezési és pályakövetési algoritmusok kipróbálása. A fejlesztés a dolgozat írásának idejében is zajlik, remélhetõleg minél hamarabb kipróbálhatjuk valós környezetben is. A robot fel lett készítve különbözõ szenzoradatok fogadására, ez teszi lehetõvé, hogy a következõ RobonAUT \cite{RobonAUT} versenyen a Safety Car-ként üzemeljen.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=100mm, keepaspectratio]{figures/carReal.jpg}
-\caption{Az elkészült robotautó} 
-\label{fig:carReal}
-\end{figure}
+Az általunk ismertetett algoritmusok szimulációs környezetben a várakozásainknak megfelelõen mûködtek. Az eredmények a következõ ábrákon látható. A képek a V-REP szimulátorról készültek, az akadályokat és a pálya határait színes polygonok jelzik, a pályatervezõ által generált pályát kék színnel jelöljük, míg a robot által bejárt pályát sárgával. A robot alatt található polygon jelzi a tervezés során ténylegesen figyelembe vett robot polygont.
 
 %----------------------------------------------------------------------------
 \subsection{Differenciális robot}
 %----------------------------------------------------------------------------
+A differenciális robot szimulációjánál a képek jobb oldalán található két grafikon. A felsõ grafikon a robot sebességét (piros) és gyorsulását mutatja (sárga), az alsó grafikon a referenciaponttól vett távolságot (piros) és az orientációs referenciaponttól vett távolságot láthatjuk (zöld). A felsõ grafikonon $m/s$ és $m^2/s$ mértékegységben szerepelnek a mennyiségek, míg az alsó grafikonon $mm$-ben.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=120mm, keepaspectratio]{figures/DiffSimPath0.png}
-\caption{Ez a pálya differenciális robot esetében viszonylag egyszerûen teljesíthetõ, mivel a robot képes egy helyben fordulni.} 
-\label{fig:DiffSimRobot1}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=120mm, keepaspectratio]{figures/DiffSimPath0RTR.png}
-\caption{Az elõzõ pálya esetében felhasznált RTR tervezõ által generált globális pálya.} 
+\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath0RTR.png}
+\caption{Ez a pálya differenciális robot esetében viszonylag egyszerûen teljesíthetõ, mivel a robot képes egy helyben fordulni. A pályát az RTR tervezõ generálta.} 
 \label{fig:DiffSimRobot1RTR}
 \end{figure}
 
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=120mm, keepaspectratio]{figures/DiffSimPath1.png}
-\caption{} 
+\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath0.png}
+\caption{Az elõzõ pálya RTR és C*CS tervezõ együttes használatával.} 
+\label{fig:DiffSimRobot1}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath1.png}
+\caption{Itt is szép megoldást eredményezett az RTR és C*CS tervezõk közös használta.} 
 \label{fig:DiffSimRobot2}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=120mm, keepaspectratio]{figures/DiffSimPath2.png}
-\caption{} 
+\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath2.png}
+\caption{Más alakú akadályok sem jelentenek problémát.} 
 \label{fig:DiffSimRobot2}
 \end{figure}
 
 %----------------------------------------------------------------------------
 \subsection{Autószerû robot}
 %----------------------------------------------------------------------------
+A robotautó szimulálásakor jobb oldalt középen a sebesség és a gyorsulás profil látható, alatta pedig a kormányszög értéke. A felsõ grafikon itt is $m/s$ és $m^2/s$ mértékegységben szerepelnek a mennyiségek, míg a kormányszög radiánban. A grafikonok felett az autó elejére szerelt kamera képét látjuk.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/frame2vrep.png}
+\caption{} 
+\label{fig:frame2vrep}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/CarSimPath0.png}
+\caption{} 
+\label{fig:frame2vrep}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/CarSimPath1.png}
+\caption{} 
+\label{fig:frame2vrep}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/CarSimPath2.png}
+\caption{} 
+\label{fig:frame2vrep}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/CarSimPath3.png}
+\caption{} 
+\label{fig:frame2vrep}
+\end{figure}
 
 %----------------------------------------------------------------------------
 \section{Eredmények valós robotokon}
@@ -115,11 +129,11 @@ Elkészült a hardvere egy robotautónak, melynek elsõdleges célja az ilyen pályate
 \subsection{Differenciális robot}
 %----------------------------------------------------------------------------
 
-Az algoritmusokat az Eurobot 2013 nemzetközi robotversenyre elkészített differenciális roboton teszteltük. A robot alsó szintû vezérlése elosztott modulokkal történik, az egyik ilyen modul felelõs a robot mozgatásáért. A modulok CAN buszon kommunikálnak egymással és a robot felsõ szintû vezérlõjével.
+Az algoritmusokat az Eurobot 2013 nemzetközi robotversenyre elkészített differenciális roboton teszteltük. A robot alsó szintû vezérlése elosztott modulokkal történik, az egyik ilyen modul felelõs a robot mozgatásáért. A modulok CAN buszon kommunikálnak egymással.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=100mm, keepaspectratio]{figures/Eurobot.png}
+\includegraphics[width=80mm, keepaspectratio]{figures/Eurobot.png}
 \caption{A dolgozatban használt valós differenciális robot.} 
 \label{fig:Eurobot}
 \end{figure}
@@ -135,7 +149,7 @@ A pályakövetõ algoritmus tesztelése valós roboton még folyamatban van, de alapve
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=100mm, keepaspectratio]{figures/DiffRealPath.png}
+\includegraphics[width=90mm, keepaspectratio]{figures/DiffRealPath.png}
 \caption{A valós robot által bejárt pálya(sárga) és a robot által megtervezett pálya(kék).} 
 \label{fig:DiffRealPath}
 \end{figure}
@@ -143,3 +157,12 @@ A pályakövetõ algoritmus tesztelése valós roboton még folyamatban van, de alapve
 %----------------------------------------------------------------------------
 \subsection{Autószerû robot}
 %----------------------------------------------------------------------------
+
+A robotautó hardverét is elkészítettük. Az autó elsõdleges célja különbözõ pályatervezési és pályakövetési algoritmusok kipróbálása. A fejlesztés a dolgozat írásának idejében is zajlik, remélhetõleg minél hamarabb kipróbálhatjuk valós környezetben is az ismertetett algoritmusokat. A robot fel lett készítve különbözõ szenzoradatok fogadására, ez teszi lehetõvé, hogy a következõ RobonAUT \cite{RobonAUT} versenyen Safety Car-ként üzemeljen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=100mm, keepaspectratio]{figures/carReal.jpg}
+\caption{Az elkészült robotautó} 
+\label{fig:carReal}
+\end{figure}
