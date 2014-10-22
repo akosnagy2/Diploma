@@ -65,7 +65,9 @@ function PathPlannerSimulationLoop()
 		simSetObjectOrientation(dummy, sim_handle_parent , orientation2)
 		
 		simSetJointPosition(leftMotor,lj)	
-		simSetJointPosition(rightMotor,rj)						
+		simSetJointPosition(rightMotor,rj)		
+
+		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
 		
 		-- Now don't waste time in this loop if the simulation time hasn't changed! This also synchronizes this thread with the main script
 		simSwitchThread() -- This thread will resume just before the main script is called again
@@ -105,6 +107,9 @@ function PathPlannerDiffRobot()
 	-- We start the server on a port that is probably not used:
 	local portNb = getPort()
 
+	graphHandle = simGetObjectHandle("Graph")
+	simResetGraph(graphHandle)		
+	
 	-- Start Server
 	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
 
