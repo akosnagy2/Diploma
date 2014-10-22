@@ -136,15 +136,20 @@ J.~A. Reeds\bibAnd 1L.~A. Shepp:
   backwards}.
 \bibNewBlock 1990, Pacific Journal of Mathematics.
 
-\bibitem{Sprunk}
-Bruno Siciliano\bibAnd 1Oussama Khatib:
-\bibNewBlock {\em Planning Motion Trajectories for Mobile Robots Using
-  Splines}.
-\bibNewBlock 2008, Springer.
+\bibitem{VREP}
+Coppelia Robotics:
+\bibNewBlock V-rep.
+\bibNewBlock \url{http://www.coppeliarobotics.com/}.
 
 \bibitem{Springer}
-Christoph Sprunk:
+Bruno Siciliano\bibAnd 1Oussama Khatib:
 \bibNewBlock {\em Handbook of Robotics}.
+\bibNewBlock 2008, Springer.
+
+\bibitem{Sprunk}
+Christoph Sprunk:
+\bibNewBlock {\em Planning Motion Trajectories for Mobile Robots Using
+  Splines}.
 \bibNewBlock 2008, Albert-Ludwigs-Universitat Freiburg.
 
 \bibitem{BFS}
