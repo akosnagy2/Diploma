@@ -26,7 +26,7 @@
   \bibEarlyBegin
 \else \let\bibEarlyEnd\relax \fi
 
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 \frenchspacing
 \makeatletter
 \global\def\bibIE@lowc{%
@@ -93,21 +93,25 @@
 \def\bibInSelf#1{In u\H{o}: }
 \csname bibOverride\endcsname
 
-\bibitem{Domi}
-Kiss Domokos:
-\bibNewBlock {\em Autonóm robot fejlesztése az Eurobot 2007 versenyre,
-  Diplomamunka}.
-\bibNewBlock 2007, BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék.
-
 \bibitem{Bezi}
 Bézi István:
 \bibNewBlock {\em Robotirányítás rendszertechnikája 3. fejezet}.
 \bibNewBlock 2013.
 
+\bibitem{CCSTopologicalProp}
+D.~Kiss\bibAnd 1G.~Tevesz:
+\bibNewBlock A steering method for the kinematic car using {C*CS} paths.
+\bibNewBlock In {\em Proceedings of the 2014 15th International Carpathian
+  Control Conference ({ICCC})} (kon\-fe\-ren\-cia\-anyag).
+\bibNewBlock Velk\'e Karlovice, Czech Republic, 2013.\ May, 227--232.~p.
+\bibNewBlock ISBN ISBN: 978-1-4799-3527-7.
+
 \bibitem{DomiRTR}
-Domokos Kiss:
-\bibNewBlock {\em The RTR Path Planner for Differential Drive Robots}.
-\bibNewBlock 2014.
+D.~Kiss\bibAnd 1G.~Tevesz:
+\bibNewBlock The {RTR} path planner for differential drive robots.
+\bibNewBlock In {\em Proceedings of the 16th International Workshop on Computer
+  Science and Information Technologies CSIT?2014} (kon\-fe\-ren\-cia\-anyag).
+\bibNewBlock Sheffield, England, 2014.\ September.
 
 \bibitem{Curv2D}
 Dirk-Jan Kroon:
@@ -121,10 +125,26 @@ Steven~M. LaValle:
   planning}.
 \bibNewBlock 1998, Computer Science Dept., Iowa State University.
 
+\bibitem{LaValle2}
+Steven~M. LaValle:
+\bibNewBlock {\em Plannings Algorithms}.
+\bibNewBlock 2006, Cambridge University Press.
+
+\bibitem{ReedsShepp}
+J.~A. Reeds\bibAnd 1L.~A. Shepp:
+\bibNewBlock {\em Optimal paths for a car that goes both forward and
+  backwards}.
+\bibNewBlock 1990, Pacific Journal of Mathematics.
+
 \bibitem{Sprunk}
-Christoph Sprunk:
+Bruno Siciliano\bibAnd 1Oussama Khatib:
 \bibNewBlock {\em Planning Motion Trajectories for Mobile Robots Using
   Splines}.
+\bibNewBlock 2008, Springer.
+
+\bibitem{Springer}
+Christoph Sprunk:
+\bibNewBlock {\em Handbook of Robotics}.
 \bibNewBlock 2008, Albert-Ludwigs-Universitat Freiburg.
 
 \bibitem{BFS}

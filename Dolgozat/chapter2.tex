@@ -11,7 +11,7 @@ Az algoritmus az irodalomból gyakran használt RRT algoritmuson alapszik, ezért e
 %----------------------------------------------------------------------------
 \section{RRT algoritmus}
 %----------------------------------------------------------------------------
-Az RRT (Rapidly Exploring Random Trees) algoritmus lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható térben \cite{LaValle}. A fa csomópontjaiban általában konfigurációk találhatóak és a fa terjesztését úgy irányítjuk, hogy a kívánt cél konfiguráció felé tartson. Ha a fa ténylegesen eléri a cél konfigurációt, akkor az utat a kezdeti konfigurációból a cél konfigurációba már könnyedén megkaphatjuk.
+Az RRT (Rapidly Exploring Random Trees) algoritmus lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben \cite{LaValle}. A fa csomópontjaiban konfigurációk találhatóak és a fa terjesztését úgy irányítjuk, hogy a kívánt cél konfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a cél konfigurációba már könnyedén megkaphatjuk.
 \par
 Létezik olyan változata az RRT algoritmusnak, ahol nemcsak a kezdeti konfigurációból építünk fát, hanem a cél konfigurációból vagy akár több köztes pontból is.
 
@@ -26,7 +26,7 @@ Létezik olyan változata az RRT algoritmusnak, ahol nemcsak a kezdeti konfiguráci
 A fa építés úgy kezdõdik, hogy véletlen konfigurációkat veszünk a környezetbõl ($q_{rand}$). Ezt hívják \emph{mintavételezési szakasznak}. Ezután meghatározzuk, hogy a fában melyik konfiguráció van a legközelebb a mintavételezett konfigurációhoz ($q_{near}$). Ez a \emph{csomópont kiválasztó szakasz}. Elõfordulhat, hogy csak a fa csomópontjaiból választunk konfigurációkat, de gyakran nemcsak ezeket választjuk, hanem a fa csúcspontjai közötti élek egy köztes konfigurációját.
 
 \par
-A következõ lépésben megpróbáljuk a $q_{rand}$ és a $q_{near}$ konfigurációkat interpolálással összekötni (\emph{összekötõ szakasz}). Itt több variációja is létezik az RRT algoritmusnak. Elõfordul, hogy $q_{near}$ konfigurációból csak egy bizonyos fix $\Delta q$ értékkel közelítünk $q_{rand}$ felé. A másik esetben addig terjesztjük a fát amíg el nem érjük $q_{rand}$ konfigurációt vagy amíg nem ütközik a robot. Ebben az esetben a kapott konfiguráció a legmesszebb található ütközés mentes konfiguráció lesz $q_{rand}$ irányában. Az újonnan kapott konfigurációt végül hozzáadjuk a fához.
+A következõ lépésben megpróbáljuk a $q_{rand}$ és a $q_{near}$ konfigurációkat interpolációval összekötni (\emph{összekötõ szakasz}). Itt több variációja is létezik az RRT algoritmusnak. Elõfordul, hogy $q_{near}$ konfigurációból csak egy bizonyos fix $\Delta q$ értékkel közelítünk $q_{rand}$ felé. A másik esetben addig terjesztjük a fát amíg el nem érjük $q_{rand}$ konfigurációt vagy amíg nem ütközik a robot. Ebben az esetben a kapott konfiguráció a legmesszebb található ütközésmentes konfiguráció lesz $q_{rand}$ irányában. Az újonnan kapott konfigurációt végül hozzáadjuk a fához.
 
 \par
 Anholonom rendszerek esetén is használható az RRT eljárás. Ekkor az összekötésnél egyszerû interpolációt nem lehet alkalmazni, mert az azt feltételezné, hogy a robot minden irányba szabadon képes mozogni. Ehelyett az összekötést egy lokális tervezõ segítségével kell  megoldani vagy egyszerûbb esetben itt is használható az a módszer, hogy csak egy adott $\Delta q$ értékkel közelítünk $q_{rand}$ irányába. Ehhez megfelelõ beavatkozó jelet ($\Delta u$) kell választanunk, amit $\Delta t$ ideig alkalmazva elérhetõ $\Delta q$ állapotváltozás.
@@ -49,7 +49,7 @@ Lehetõségünk van differenciális robotnál is lokális tervezõt alkalmazni két konf
 \end{itemize}
 
 \par
-Ennek a tervezõnek az az elõnye, hogy fa élei egyenes pályák lesznek, így egyszerûn tudjuk meghatározni a köztes konfigurációkat is és egzakt módon leírhatjuk a mozgásokat, nem kell mintavételezést alkalmaznunk.
+Ennek a tervezõnek az az elõnye, hogy fa élei egyenes pályák lesznek, így egyszerûen tudjuk meghatározni a köztes konfigurációkat.
 
 \par
 A jelenleg ismertetett módon alkalmazva az RRT algoritmust szûk folyosók esetében igen nehezen találna megoldást az eljárás, abban az esetben is ha mind a kezdeti-, mind a célkonfigurációból növesztünk egy-egy fát. A problémát az okozza, hogy az \emph{összekötés fázisa} gyakran nem ad eredményt és így a fák nem nõnek megfelelõen. Ennek az az oka, hogy a lokális tervezõ használatakor, fal vagy egyéb akadályok közelében az elsõ egy helyben fordulásnál már ütközne a robot. Mivel az összeköttetés fázisa addig tart, amíg nem érjük el $q_{rand}$-ot vagy amíg nem ütközik a robot, így a fa további terjesztése nélkül választunk új $q_{rand}$ értéket. A lokális tervezõ második lépése eredményezné a fa tényleges terjesztését.
@@ -101,15 +101,15 @@ RCI esetén a legkisebb (szög)távolságú konfiguráció kiválasztása \aref{fig:rci_g
 Az RTR algoritmus ezen fázisa különbözik leginkább az eredeti RRT algoritmustól. Különbség, hogy a transzlációs szakasz esetében nemcsak elõre, hanem hátra is kiterjesztjük a fát. Ezenkívül a kiterjesztés nem $p_G$-ig történik, hanem mindenképpen addig amíg nem ütközik a robot. Ez mindkét irányra érvényes. Fontos megjegyezni, hogy a kiterjesztés során az RTR lokális tervezõ elsõ két elemét használjuk fel (RT), tehát a második forgatást nem hajtjuk végre. 
 
 \par
-Lényeges különbség az is, ahogyan a két algoritmus az ütközést kezeli. Az RTR tervezõ esetén ütközés esetén különbséget kell tenni, hogy transzlációs vagy forgatási fázisban történt ütközés. Amennyiben transzlációs fázisban történt ütközés az adott iterációnak vége lesz, hiszen a fát már kiterjesztettük. Ugyanez történne az RTT eljárásnál is.
+Lényeges különbség az is, ahogyan a két algoritmus az ütközést kezeli. Az RTR tervezõ esetén ütközés esetén különbséget kell tenni, hogy transzlációs vagy forgatási fázisban történt ütközés. Amennyiben transzlációs fázisban történt ütközés az adott iterációnak vége lesz, hiszen a fát már kiterjesztettük. Ugyanez történne az RRT eljárásnál is.
 
 %TODO ábra
 
 \par
-Amennyiben forgatás közben történik ütközés a helyzet bonyolultabb, mivel ilyenkor nem sikerült kiterjeszteni még a fát. Ekkor az ütközési orientáció felénél elõre és hátra kiterjesztjük a fát. Ezután a célorientációt megpróbáljuk másik körüljárás szerint elérni. Függetlenül, hogy sikerült-e a második forgatással elérni a célkonfigurációt vagy ütközött a robot, ebben az állapotban megint kiterjesztjük a fát elõre és hátra is. Amennyiben ütközés történt megint az ütközési orientáció felénél alkalmazzuk a kiterjesztést, különben pedig a célkonfiguráció irányában terjesztjük ki a fát.
+Amennyiben forgatás közben történik ütközés a helyzet bonyolultabb, mivel ilyenkor nem sikerült kiterjeszteni még a fát. Ekkor az ütközési orientációnál elõre és hátra kiterjesztjük a fát. Ezután a célorientációt megpróbáljuk másik körüljárás szerint elérni. Függetlenül, hogy sikerült-e a második forgatással elérni a célkonfigurációt vagy ütközött a robot, ebben az állapotban megint kiterjesztjük a fát elõre és hátra is. Amennyiben ütközés történt megint az ütközési orientációnál alkalmazzuk a kiterjesztést, különben pedig a célkonfiguráció irányában terjesztjük ki a fát.
 
 \par
-Azért az ütközési orientáció felénél terjesztjük tovább a fát, hogy nagyobb eséllyel sikerüljön minél nagyobb szabad teret bejárnunk a fával. A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a cél konfiguráció felé haladjunk, másrészt pedig, hogy minél nagyobb szabad területet bejárjunk.
+A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a cél konfiguráció felé haladjunk, másrészt pedig, hogy minél nagyobb szabad területet bejárjunk.
 
 %----------------------------------------------------------------------------
 \subsubsection{Ütközésdetektálás transzlációs kiterjesztés esetén}

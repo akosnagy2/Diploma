@@ -55,13 +55,13 @@ Az is tudjuk, hogy mekkora a szögsebessége értéke $i+n$. idõpontban:
 \omega(i+n) &= \omega(i) - n \cdot \beta^{max} \cdot \Delta t
 \end{align}
 
-Mi arra az állapotra vagyunk kíváncsiak amikor a robot megállt, tehát mikor $\omega (i+n) = 0$. Ezt \aref{eq:omegaN}. képlet alapján könnyedén megkapjuk ügyelve arra, hogy $n$ egész szám:
+Mi arra az állapotra vagyunk kíváncsiak amikor a robot megállt, tehát mikor $\omega (i+n) = 0$. Ezt az \eqref{omegaN} képlet alapján könnyedén megkapjuk ügyelve arra, hogy $n$ egész szám:
 
 \begin{align} \label{eq:n}
 n &= \ceil[\big]{\frac{\omega (i)}{ \beta^{max} \cdot \Delta t}}
 \end{align}
 
-Tehát az $i$. idõpontban (felhasználva \aref{eq:thetaN}. és \aref{eq:n}. egyenleteket) meg tudjuk határozni, hogy ha a következõ mintavételkor elkezdünk maximális szöggyorsulással lassítani, akkor a forgás kívánt orientációját meghaladjuk-e. Amennyiben meghaladnánk, akkor nem adjuk ki az $\omega (i)$ beavatkozójelet, hanem már az $i$. idõpontban elkezdünk lassítani.
+Tehát az $i$. idõpontban (felhasználva \eqref{thetaN} és \eqref{n} egyenleteket) meg tudjuk határozni, hogy ha a következõ mintavételkor elkezdünk maximális szöggyorsulással lassítani, akkor a forgás kívánt orientációját meghaladjuk-e. Amennyiben meghaladnánk, akkor nem adjuk ki az $\omega (i)$ beavatkozójelet, hanem már az $i$. idõpontban elkezdünk lassítani.
 
 \par
 A lassítás közben minden mintavételkor újra megvizsgáljuk, hogy szükséges-e tovább lassítani. Elõfordulhat, hogy azt kapjuk, hogy már nem szükséges. Ilyenkor viszont már nem kezdünk el maximális szöggyorsulással gyorsítani, hanem elõzõ mintavételkor használt szögsebességgel avatkozunk be ismét (0 szöggyorsulással). 
@@ -76,7 +76,7 @@ Tehát az egy helyben fordulás szögsebesség-idõ profilja alapvetõen trapéz alakú,
 A pályakövetés alapja, hogy szétcsatolt sebesség és szögsebesség szabályozást hajtunk végre. A szétcsatolás következménye, hogy egyszerû, lineáris szabályozókat használhatunk a pályakövetés során. A pályakövetés felépítése \aref{fig:Controlling}. ábrán látható.
 
 \par
-Az egy helyben fordulásnál szögsebesség beavatkozójelet határozunk meg, míg a pályakövetésnél szögsebesség és sebesség beavatkozójelet. Az algoritmus végén ezeket az értékeket átszámoljuk keréksebességekre \aref{eq:diffRobotWheel}. egyenlet alapján, tehát közvetlenül keréksebességek lesznek a beavatkozójeleink. Ez \aref{fig:Controlling}. ábra középen látható, \emph{Keréksebesség Átalakítás} néven.
+Az egy helyben fordulásnál szögsebesség beavatkozójelet határozunk meg, míg a pályakövetésnél szögsebesség és sebesség beavatkozójelet. Az algoritmus végén ezeket az értékeket átszámoljuk keréksebességekre a \eqref{diffRobotWheel} egyenlet alapján, tehát közvetlenül keréksebességek lesznek a beavatkozójeleink. Ez \aref{fig:Controlling}. ábra középen látható, \emph{Keréksebesség Átalakítás} néven.
 
 \begin{figure}[H]
 \centering

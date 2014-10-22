@@ -1,5 +1,5 @@
 %----------------------------------------------------------------------------
-\chapter{A C*CS, \boldmath{$c\overline{c}S$} algoritmus}
+\chapter{A C*CS, \boldmath{$c\overline{c}S$} algoritmus} \label{chapter:CCS}
 %----------------------------------------------------------------------------
 A C*CS és a $c\overline{c}S$ algoritmus is Kiss Domokos munkája\cite{CCSTopologicalProp}. Az algoritmusok elsõdlegesen autószerû robotok számára terveznek pályát, de az így tervezett pálya egy differenciális robot számára is végrehajtható. A mi feladatunk az algoritmus implementálása volt C++ nyelven, majd annak tesztelése szimulációs, illetve valós környezetben.
 A fejezetet az algoritmus ismertetésével kezdjük, majd kitérünk az implementációs problémákra, és az elért eredményekre is.
@@ -42,7 +42,7 @@ Hogy egyszerûsítsük a szakaszok jelölését, a továbbiakban az egyes szakaszokra $
 Az általunk használt algoritmus egy approximációs módszert alkot, mely egy elõzetes globális pályát rekurzív módon felbont kisebb szakaszokra, majd ezekre próbál illeszteni egy-egy fentebb bemutatott C*CS pályát.\footnote{Bár a lokális tervezõ algoritmus neve a C*CS, de a végeredményben kialakult pálya összességében is körök és egyenesek kombinációjából áll, így ez a név ráragadt az approximációs módszerre is. A késõbbiekben, ahol ez félreértésre adhat okot, ott ezt külön tisztázzuk.} A végeredményül elkészült, az algoritmus által visszaadott pálya autószerû robotok számára könnyedén lekövethetõ, mivel elsõdlegesen ezek számára lett kialakítva. Ennek ellenére a megoldást természetesen egy differenciális robot is képes lekövetni, mivel az nem rendelkezik korlátozással a forduló kör sugarát illetõen.
 
 %----------------------------------------------------------------------------
-\subsection{Globális tervezõ}
+\subsection{Globális tervezõ}\label{sect:CCSGlobal}
 %----------------------------------------------------------------------------
 Az elõzetes pálya bármilyen globális tervezõ eredménye lehet. Elsõdleges célja egy mankó nyújtása a késõbbi tervezõ számára, a végsõ megoldásnak nem feltétele, hogy az elõzetes pálya akár egyetlen pontját is tartalmazza.
 
