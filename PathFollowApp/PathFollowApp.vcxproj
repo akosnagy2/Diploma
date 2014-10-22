@@ -19,7 +19,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>.</OutDir>
+    <OutDir>.\Debug\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -52,15 +52,16 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0601;CAR_LIKE_ROBOT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\diploma\RobotCommonLib;C:\local\jsoncpp-master\include;C:\local\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\diploma\RobotCommonLib;D:\local\boost_1_56_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\diploma\RobotCommonLib\Debug;C:\local\jsoncpp-master\makefiles\msvc2010\Debug;C:\local\boost_1_56_0\lib32-msvc-12.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lib_json.lib;RobotCommonLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\diploma\RobotCommonLib\Debug;D:\local\boost_1_56_0\lib32-msvc-11.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RobotCommonLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,24 +84,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CarLineFollower.cpp" />
-    <ClCompile Include="CarPathController.cpp" />
-    <ClCompile Include="CarSpeedController.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarLineFollower.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarPathController.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarSpeedController.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.c" />
+    <ClCompile Include="..\PathPlannerApp\PathFollow\PathShifter.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_funcs.cpp" />
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_top.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PathFollow\dcwheel_pathCtrl.c" />
-    <ClCompile Include="PathProfile\path_profile.cpp" />
-    <ClCompile Include="PathProfile\path_profile_funcs.cpp" />
-    <ClCompile Include="PathProfile\path_profile_top.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CarLineFollower.h" />
-    <ClInclude Include="CarPathController.h" />
-    <ClInclude Include="CarSpeedController.h" />
-    <ClInclude Include="pathfollow.h" />
-    <ClInclude Include="PathFollow\dcwheel_pathCtrl.h" />
-    <ClInclude Include="PathProfile\path_profile.h" />
-    <ClInclude Include="PathProfile\path_profile_funcs.h" />
-    <ClInclude Include="PathProfile\path_profile_top.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarLineFollower.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarPathController.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarSpeedController.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.h" />
+    <ClInclude Include="..\PathPlannerApp\PathFollow\PathShifter.h" />
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile.h" />
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_funcs.h" />
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_top.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

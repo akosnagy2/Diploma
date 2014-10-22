@@ -13,63 +13,66 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="PathProfile">
-      <UniqueIdentifier>{07a364a6-9dd1-44b5-bd64-d4f7a561c1a6}</UniqueIdentifier>
+    <Filter Include="PathFollower">
+      <UniqueIdentifier>{9a3fbed7-2cb3-42af-8979-4b2ad3ba7259}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PathFollow">
-      <UniqueIdentifier>{851cd02f-5e4d-443a-9a7d-53ef603d1580}</UniqueIdentifier>
+    <Filter Include="PathProfiler">
+      <UniqueIdentifier>{0aea755b-0a70-4a2a-b463-890408554f91}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PathProfile\path_profile_top.cpp">
-      <Filter>PathProfile</Filter>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarLineFollower.cpp">
+      <Filter>PathFollower</Filter>
     </ClCompile>
-    <ClCompile Include="PathProfile\path_profile_funcs.cpp">
-      <Filter>PathProfile</Filter>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarPathController.cpp">
+      <Filter>PathFollower</Filter>
     </ClCompile>
-    <ClCompile Include="PathProfile\path_profile.cpp">
-      <Filter>PathProfile</Filter>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\CarSpeedController.cpp">
+      <Filter>PathFollower</Filter>
     </ClCompile>
-    <ClCompile Include="PathFollow\dcwheel_pathCtrl.c">
-      <Filter>PathFollow</Filter>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.c">
+      <Filter>PathFollower</Filter>
     </ClCompile>
-    <ClCompile Include="CarPathController.cpp">
-      <Filter>PathFollow</Filter>
+    <ClCompile Include="..\PathPlannerApp\PathFollow\PathShifter.cpp">
+      <Filter>PathFollower</Filter>
     </ClCompile>
-    <ClCompile Include="CarLineFollower.cpp">
-      <Filter>PathFollow</Filter>
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile.cpp">
+      <Filter>PathProfiler</Filter>
     </ClCompile>
-    <ClCompile Include="CarSpeedController.cpp">
-      <Filter>PathFollow</Filter>
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_funcs.cpp">
+      <Filter>PathProfiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PathPlannerApp\PathProfile\path_profile_top.cpp">
+      <Filter>PathProfiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pathfollow.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\PathShifter.h">
+      <Filter>PathFollower</Filter>
     </ClInclude>
-    <ClInclude Include="PathProfile\path_profile_top.h">
-      <Filter>PathProfile</Filter>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarLineFollower.h">
+      <Filter>PathFollower</Filter>
     </ClInclude>
-    <ClInclude Include="PathProfile\path_profile_funcs.h">
-      <Filter>PathProfile</Filter>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarPathController.h">
+      <Filter>PathFollower</Filter>
     </ClInclude>
-    <ClInclude Include="PathProfile\path_profile.h">
-      <Filter>PathProfile</Filter>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\CarSpeedController.h">
+      <Filter>PathFollower</Filter>
     </ClInclude>
-    <ClInclude Include="PathFollow\dcwheel_pathCtrl.h">
-      <Filter>PathFollow</Filter>
+    <ClInclude Include="..\PathPlannerApp\PathFollow\dcwheel_pathCtrl.h">
+      <Filter>PathFollower</Filter>
     </ClInclude>
-    <ClInclude Include="CarPathController.h">
-      <Filter>PathFollow</Filter>
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile.h">
+      <Filter>PathProfiler</Filter>
     </ClInclude>
-    <ClInclude Include="CarLineFollower.h">
-      <Filter>PathFollow</Filter>
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_funcs.h">
+      <Filter>PathProfiler</Filter>
     </ClInclude>
-    <ClInclude Include="CarSpeedController.h">
-      <Filter>PathFollow</Filter>
+    <ClInclude Include="..\PathPlannerApp\PathProfile\path_profile_top.h">
+      <Filter>PathProfiler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
