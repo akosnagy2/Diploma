@@ -31,10 +31,10 @@ Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér}
 A korlátozások ismerete alapvetõ fontosságú a pályatervezés és mozgásirányítás során. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). %TODO így jó?
 
 \par
-A mi dolgozatunkban kinematikai korlátozásokkal fogunk foglalkozni.
+A mi dolgozatunkban kinematikai korlátozásokkal fogunk foglalkozni, dinamikai korlátokkal nem.
 
 \par
-Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni. Autónál emiatt nem olyan egyszerû a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Az anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciál egyenlettel írható le, amely nem integrálható.
+Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, habár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Az anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciál egyenlettel írható le, amely nem integrálható.
 
 \par
 Az általunk vizsgált két robot típus, az \emph{autószerû robotok} és a \emph{differenciális robotok} is anholonom rendszerek. Viszont léteznek olyan robotok, amelyek nem rendelkeznek anholonom korlátozásokkal (holonom rendszerek), ilyenek például az omnidirekcionális robotok. Egy omnidirekcionális robot képes a tér bármely irányába elmozdulni.
@@ -42,7 +42,38 @@ Az általunk vizsgált két robot típus, az \emph{autószerû robotok} és a \emph{dif
 %----------------------------------------------------------------------------
 \subsubsection{Robotmodellek}
 %----------------------------------------------------------------------------
+Differenciális robotot egy közös tengelyen lévõ két kerék segítségével mozgatjuk, így a differenciális meghajtásra utal a differenciális robot elnevezés. A mozgás kinematikai leírását \aref{eq:diffRobot}. egyenletek adják meg.
 
+\begin{align}\label{eq:diffRobot}
+v &= \frac{v_{r}+v_{l}}{2} \\ \notag
+\omega &= \frac{v_{r}-v_{l}}{W},
+\end{align}
+ahol $v$ a robot sebessége, $v_r$ a robot jobb kerekének sebessége, $v_l$ a robot bal kerekének sebessége, $\omega$ a robot szögsebessége és $W$ a robot kerekei közti távolság.
+
+\par
+Ezt a robot típust gyakran alkalmazzák, mivel egyszerû felépítésû és anholonom mivolta ellenére könnyedén irányítható. Ahogyan \aref{eq:diffRobot}. egyenletekbõl is következik a robot képes egy helyben megfordulni, ami sok esetben elõnyös, például párhuzamos parkolás esetén.
+
+\par
+
+
+\par
+Az autószerû robot modellje a következõ.
+\begin{align}\label{eq:carLikeRobot}
+\dot{x} &= v \cos \theta \\ \notag
+\dot{y} &= v \sin \theta \\ \notag
+\dot{\theta} &= \frac {v} {L} \tan \phi,
+\end{align}
+ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, melyet a robot referenciapontjának nevezünk. 
+
+\par
+Könnyen belátható, hogy az egyes kerekek sebességkülönbsége a megtett utak különbségébõl adódik, mely arányos az egyes kerekekhez tartozó elfordulási sugárral, így elegendõ felírnunk ezeket a sugarakat, illetve ezek arányát. \Aref{fig:carLikeRobotModel}. ábrán látható, hogy egy ilyen robot esetén kerékpár modellt feltételezve ezek a sugarak hogyan származtathatók.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=70mm, keepaspectratio]{figures/carLikeRobot.png}
+\caption{Autószerû robot modellje.} 
+\label{fig:carLikeRobotModel}
+\end{figure}
 
 %----------------------------------------------------------------------------
 \subsection{Osztályozás}
