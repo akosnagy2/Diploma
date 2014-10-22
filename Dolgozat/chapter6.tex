@@ -6,7 +6,7 @@ Ebben a fejezetben az algoritmusok megvalósításáról, és az azokhoz használt eszk
 %----------------------------------------------------------------------------
 \section{Szimuláció - V-REP}
 %----------------------------------------------------------------------------
-A robotok mozgásának szimulálására a V-REP robotszimulátort használtuk. A program a Coppelia Robotics terméke\cite{VREP}, oktatási célból ingyenesen letölthetõ és használható. Nagyon széleskörûen használható program, a robotika minden ágában. Tesztelhetõ benne ipari szerelõrobotok mûködés, ahogyan az \aref{fig:vrep} ábrán is látható, felhasználható ilyen robotok programozásának oktatására is, de a mobil robotok területén is kifejezetten praktikus eszköz. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
+A robotok mozgásának szimulálására a V-REP robotszimulátort használtuk. A program a Coppelia Robotics terméke\cite{VREP}, oktatási célból ingyenesen letölthetõ és használható. Nagyon széleskörûen használható program, a robotika minden ágában. Tesztelhetõ benne ipari szerelõrobotok mûködése, ahogyan az \aref{fig:vrep} ábrán is látható, felhasználható ilyen robotok programozásának oktatására is, de a mobil robotok területén is kifejezetten praktikus eszköz. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
 
 %----------------------------------------------------------------------------
 \subsection{Szerver program}
@@ -23,7 +23,7 @@ Több módon is kiegészíthetõ a program mûködése. Mi a megoldásunkban egy szerver 
 %----------------------------------------------------------------------------
 \subsection{Kliens programok}
 %----------------------------------------------------------------------------
-A különbözõ kliens programok más-más paramétereket várnak, ezt biztosítja a szerver alkalmazás. Az idõparaméterezõ és a pályakövetõ szabályozás teszteléséhez készült egy kliens, mely a szimulátortól fogad egy elõre elkészített pályát, majd ezt újramintavételezi. Az így készült pályát visszaküldi a szimulátornak, ami kirajzolja az új pályát, majd elküldi a robot aktuális pozícióját. Innen átveszi átveszi a mûködést a pályakövetõ algoritmus, a kapott pozíciót feldolgozza és ez alapján az elõzõ fejezetben részletezett módon kiszámítja a beavatkozó jeleket, amit visszaküld a szimulátornak. A szimulátor és a pályakövetõ alkalmazás mûködése szinkronizálva van, azaz megvárják egymást a következõ lépéssel.
+A különbözõ kliensprogramok más-más paramétereket várnak, ezt biztosítja a szerver alkalmazás. Az idõparaméterezõ és a pályakövetõ szabályozás teszteléséhez készült egy kliens, mely a szimulátortól fogad egy elõre elkészített pályát, majd ezt újramintavételezi. Az így készült pályát visszaküldi a szimulátornak, ami kirajzolja az új pályát, majd elküldi a robot aktuális pozícióját. Innen átveszi átveszi a mûködést a pályakövetõ algoritmus, a kapott pozíciót feldolgozza és ez alapján az elõzõ fejezetben részletezett módon kiszámítja a beavatkozó jeleket, amit visszaküld a szimulátornak. A szimulátor és a pályakövetõ alkalmazás mûködése szinkronizálva van, azaz megvárják egymást a következõ lépéssel.
 
 \begin{figure}[H]
 \centering
@@ -38,13 +38,38 @@ A másik elkészült kliens alkalmazásunk a pályatervezõ program. Ez nem vár pályár
 \par
 Azért választottuk a C++ nyelvet az implementáláshoz, hogy a valós roboton, beágyazott rendszerben is könnyedén használható legyen. A beágyazott környezet miatt igyekeztünk kerülni bármiféle olyan külsõ szoftvercsomag használatát, aminek a használata problémás lehet a valós roboton. 
 
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/frame2vrep.png}
+\caption{Szimuláció mûködés közben. Jobb középen oldalt a sebesség és gyorsulás profil, alatta a kormányszög értéke.} 
+\label{fig:frame2vrep}
+\end{figure}
+
 \par
 E mellet a fejlesztés során igen fontos volt az objektum-orientált szemléletmód, mivel így biztosítható a legjobban a modularitás, és a késõbbi egyszerû fejlesztés, módosítás. Az implementálás során egyéb elõnyös tulajdonságát is ki tudtuk használni, ezek közül a legjelentõsebb az újrafelhasználhatóság volt. A programozás elõrehaladtával a fejlesztés sebessége is nõtt, mivel az elõzõleg elkészített kódrészleteket egyszerûen újra tudtuk használni.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=50mm, keepaspectratio]{figures/frame3vrep.png}
+\caption{A RTR és C*CS algoritmusok együttes mûködése} 
+\label{fig:frame3vrep}
+\end{figure}
 
 %----------------------------------------------------------------------------
 \section{Szimulációs eredmények}
 %----------------------------------------------------------------------------
 Az általunk ismertetett algoritmusok szimulációs környezetben a várakozásainknak megfelelõen mûködtek. Az eredmények a következõ ábrákon látható. A képek a V-REP szimulátorról készültek, az akadályokat és a pálya határait színes polygonok jelzik, a pályatervezõ által generált pályát kék színnel jelöljük, míg a robot által bejárt pályát sárgával. A képek jobb oldalán található két grafikon, a felsõ grafikon a robot sebességét (piros) és gyorsulását jelenti (sárga), az alsó grafikon a referenciaponttól vett távolságot
+
+
+\par
+Elkészült a hardvere egy robotautónak, melynek elsõdleges célja az ilyen pályatervezési és pályakövetési algoritmusok kipróbálása. A fejlesztés a dolgozat írásának idejében is zajlik, remélhetõleg minél hamarabb kipróbálhatjuk valós környezetben is. A robot fel lett készítve különbözõ szenzoradatok fogadására, ez teszi lehetõvé, hogy a következõ RobonAUT \cite{RobonAUT} versenyen a Safety Car-ként üzemeljen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=100mm, keepaspectratio]{figures/carReal.jpg}
+\caption{Az elkészült robotautó} 
+\label{fig:carReal}
+\end{figure}
 
 %----------------------------------------------------------------------------
 \subsection{Differenciális robot}
