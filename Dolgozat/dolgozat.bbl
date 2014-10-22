@@ -93,10 +93,29 @@
 \def\bibInSelf#1{In u\H{o}: }
 \csname bibOverride\endcsname
 
+\bibitem{RobonAUTszem}
+Kiss Domokos\bibAnd 1Kolumbán Sándor:
+\bibNewBlock {\em Segédlet a RobonAUT verseny szabályozástechnikai
+  szemináriumához}.
+\bibNewBlock 2014.
+
 \bibitem{Bezi}
 Bézi István:
 \bibNewBlock {\em Robotirányítás rendszertechnikája 3. fejezet}.
 \bibNewBlock 2013.
+
+\bibitem{kavraki96prm}
+L.~E. Kavraki\bibAnd 0P.~Svetska\bibAnd 0J.-C. Latombe\bibAnd 2M.~H. Overmars:
+\bibNewBlock Probabilistic roadmaps for path planning in high-dimensional
+  configuration spaces.
+\bibNewBlock 12. \'evf. (1996), 566--580.~p.
+
+\bibitem{dkiss12ppee}
+D.~Kiss\bibAnd 1G.~Tevesz:
+\bibNewBlock A model predictive navigation approach considering mobile robot
+  shape and dynamics.
+\bibNewBlock {\em Periodica Polytechnica - Electrical Engineering}, 56. \'evf.
+  (2012), 43--50.~p.
 
 \bibitem{CCSTopologicalProp}
 D.~Kiss\bibAnd 1G.~Tevesz:
@@ -110,7 +129,7 @@ D.~Kiss\bibAnd 1G.~Tevesz:
 D.~Kiss\bibAnd 1G.~Tevesz:
 \bibNewBlock The {RTR} path planner for differential drive robots.
 \bibNewBlock In {\em Proceedings of the 16th International Workshop on Computer
-  Science and Information Technologies CSIT?2014} (kon\-fe\-ren\-cia\-anyag).
+  Science and Information Technologies CSIT'2014} (kon\-fe\-ren\-cia\-anyag).
 \bibNewBlock Sheffield, England, 2014.\ September.
 
 \bibitem{Curv2D}
@@ -120,21 +139,26 @@ Dirk-Jan Kroon:
   \url{http://www.mathworks.com/matlabcentral/fileexchange/32696-2d-line-curvature-and-normals/content/LineCurvature2D.m}.
 
 \bibitem{LaValle}
-Steven~M. LaValle:
-\bibNewBlock {\em Rapidly-exploring random trees: A new tool for path
-  planning}.
-\bibNewBlock 1998, Computer Science Dept., Iowa State University.
+S.~M. LaValle:
+\bibNewBlock Rapidly-exploring random trees: A new tool for path planning.
+\bibNewBlock {\bibTechRep 0}, 1998, Computer Science Dept., Iowa State
+  University.
 
 \bibitem{LaValle2}
-Steven~M. LaValle:
-\bibNewBlock {\em Plannings Algorithms}.
-\bibNewBlock 2006, Cambridge University Press.
+S.~M. LaValle:
+\bibNewBlock {\em Planning Algorithms}.
+\bibNewBlock Cambridge, U.K., 2006, Cambridge University Press.
+\bibNewBlock Available online at \url{http://planning.cs.uiuc.edu/}.
 
 \bibitem{ReedsShepp}
 J.~A. Reeds\bibAnd 1L.~A. Shepp:
 \bibNewBlock {\em Optimal paths for a car that goes both forward and
   backwards}.
 \bibNewBlock 1990, Pacific Journal of Mathematics.
+
+\bibitem{RobonAUT}
+Robonaut.
+\bibNewBlock \url{http://www.robonaut.hu/}.
 
 \bibitem{VREP}
 Coppelia Robotics:

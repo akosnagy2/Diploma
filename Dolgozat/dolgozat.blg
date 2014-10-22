@@ -9,6 +9,7 @@ A level-1 auxiliary file: chapter2.aux
 A level-1 auxiliary file: chapter4.aux
 A level-1 auxiliary file: chapter5.aux
 A level-1 auxiliary file: chapter6.aux
+A level-1 auxiliary file: chapter7.aux
 A level-1 auxiliary file: acknowledgement.aux
 The style file: huplain.bst
 Reallocated singl_function (elt_size=4) to 100 items from 50.
@@ -19,50 +20,55 @@ Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: mybib.bib
+Warning--string name "ieee_j_ra" is undefined
+--line 106 of file mybib.bib
+Warning--to sort, need author/key/name in RobonAUT
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty publisher in RobonAUTszem
 Warning--empty publisher in Bezi
-You've used 11 entries,
+Warning--empty journal in kavraki96prm
+You've used 15 entries,
             4991 wiz_defined-function locations,
-            1191 strings with 12936 characters,
-and the built_in function-call counts, 21929 in all, are:
-= -- 3968
-> -- 112
-< -- 1
-+ -- 1577
-- -- 66
-* -- 375
-:= -- 970
-add.period$ -- 28
-call.type$ -- 11
-change.case$ -- 44
+            1214 strings with 13548 characters,
+and the built_in function-call counts, 31900 in all, are:
+= -- 5836
+> -- 162
+< -- 5
++ -- 2317
+- -- 95
+* -- 536
+:= -- 1366
+add.period$ -- 41
+call.type$ -- 15
+change.case$ -- 66
 chr.to.int$ -- 0
-cite$ -- 12
-duplicate$ -- 3273
-empty$ -- 531
-format.name$ -- 36
-if$ -- 4582
+cite$ -- 19
+duplicate$ -- 4776
+empty$ -- 719
+format.name$ -- 52
+if$ -- 6675
 int.to.chr$ -- 0
-int.to.str$ -- 11
-missing$ -- 23
-newline$ -- 155
-num.names$ -- 22
-pop$ -- 739
+int.to.str$ -- 15
+missing$ -- 25
+newline$ -- 175
+num.names$ -- 28
+pop$ -- 1084
 preamble$ -- 1
-purify$ -- 39
+purify$ -- 56
 quote$ -- 22
-skip$ -- 195
+skip$ -- 263
 stack$ -- 0
-substring$ -- 2405
-swap$ -- 2344
-text.length$ -- 1
+substring$ -- 3580
+swap$ -- 3461
+text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 41
-warning$ -- 1
-while$ -- 122
-width$ -- 13
-write$ -- 209
-(There was 1 warning)
+type$ -- 61
+warning$ -- 4
+while$ -- 173
+width$ -- 17
+write$ -- 250
+(There were 5 warnings)

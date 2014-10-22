@@ -41,9 +41,9 @@
 \select@language {magyar} \contentsline {section}{\numberline {5.1}Differenci\'alis robotmodell}{44}{section.5.1}
 \select@language {magyar} \contentsline {subsection}{\numberline {5.1.1}Egy helyben fordul\'as}{44}{subsection.5.1.1}
 \select@language {magyar} \contentsline {subsection}{\numberline {5.1.2}P\'alyak\"ovet\'es}{46}{subsection.5.1.2}
-\select@language {magyar} \contentsline {subsubsection}{Sebess\'eg-szab\'alyoz\'as}{46}{section*.36}
-\select@language {magyar} \contentsline {subsubsection}{Referenciapont v\'alaszt\'as}{47}{section*.37}
-\select@language {magyar} \contentsline {subsubsection}{Orient\'aci\'o-szab\'alyoz\'as}{48}{section*.38}
+\select@language {magyar} \contentsline {subsubsection}{Sebess\'egszab\'alyoz\'as}{46}{section*.36}
+\select@language {magyar} \contentsline {subsubsection}{Referenciapont-v\'alaszt\'as}{47}{section*.37}
+\select@language {magyar} \contentsline {subsubsection}{Orient\'aci\'oszab\'alyoz\'as}{48}{section*.38}
 \select@language {magyar} \contentsline {section}{\numberline {5.2}Aut\'oszer\H u robotmodell}{49}{section.5.2}
 \select@language {magyar} \contentsline {subsection}{\numberline {5.2.1}Virtu\'alis vonalk\"ovez\H o szab\'alyoz\'as}{49}{subsection.5.2.1}
 \select@language {magyar} \contentsline {chapter}{\numberline {6}Algoritmusok megval\'os\IeC {\'\i }t\'asa}{52}{chapter.6}
@@ -58,4 +58,4 @@
 \select@language {magyar} \contentsline {subsection}{\numberline {6.3.2}Aut\'oszer\H u robot}{61}{subsection.6.3.2}
 \select@language {magyar} \contentsline {chapter}{\numberline {7}\"Osszegz\'es}{62}{chapter.7}
 \select@language {magyar} \contentsline {chapter}{K\"osz\"onetnyilv\'an\IeC {\'\i }t\'as}{63}{chapter*.54}
-\select@language {magyar} \contentsline {chapter}{Irodalomjegyz\'ek}{64}{chapter*.55}
+\select@language {magyar} \contentsline {chapter}{Irodalomjegyz\'ek}{65}{chapter*.55}
