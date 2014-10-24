@@ -38,6 +38,8 @@ function RobotPilotSimulationLoop()
 		simSetObjectPosition(dummy, sim_handle_parent, position2)
 		simSetObjectOrientation(dummy, sim_handle_parent , orientation2)			
 		
+		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
+  
 		-- Now don't waste time in this loop if the simulation time hasn't changed! This also synchronizes this thread with the main script
 		simSwitchThread() -- This thread will resume just before the main script is called again
 	end
@@ -65,6 +67,9 @@ function RobotPilotDiffRobot()
 	-- We start the server on a port that is probably not used:
 	local portNb = getPort()
 
+	graphHandle = simGetObjectHandle("Graph")
+	simResetGraph(graphHandle)	
+	
 	-- Start Server
 	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
 
@@ -92,10 +97,8 @@ function RobotPilotDiffRobot()
 								robotMaxAccel, 
 								robotMultFactorR, 
 								robotSmoothFactor, 
-								predictLength, 
-								predictLengthImpulse,					
-								distPar_P, 
-								distPar_D, 
+								predictSampleLength, 
+								predictDistanceLength,					
 								oriPar_P, 
 								oriPar_D, 
 								wheelDistance, 

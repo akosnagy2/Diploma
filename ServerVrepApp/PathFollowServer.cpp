@@ -14,11 +14,9 @@ void ParsePathFollowPars(deque<float> &parsIn, PathFollowParamsTypedef &parsOut)
 	parsOut.RightMotor.motorMultFactor = parsIn.front(); parsIn.pop_front();
 	parsOut.RightMotor.motorSmoothFactor = parsIn.front(); parsIn.pop_front();
 
-	parsOut.PredictLength = parsIn.front(); parsIn.pop_front();
-	parsOut.PredictLengthImpulse = parsIn.front(); parsIn.pop_front();
+	parsOut.PredictSampleLength = parsIn.front(); parsIn.pop_front();
+	parsOut.PredictDistanceLength = parsIn.front(); parsIn.pop_front();
 
-	parsOut.DistPar_P = parsIn.front(); parsIn.pop_front();
-	parsOut.DistPar_D = parsIn.front(); parsIn.pop_front();
 	parsOut.OriPar_P = parsIn.front(); parsIn.pop_front();
 	parsOut.OriPar_D = parsIn.front(); parsIn.pop_front();
 
@@ -35,10 +33,9 @@ void ForwardPathFollowPars(tcp::iostream &client, PathFollowParamsTypedef &pars)
 {
 	PackedMessage pathMsg;
 
-	pathMsg.values.push_back(pars.PredictLength);	//PredictLength
-	pathMsg.values.push_back(pars.PredictLengthImpulse);	//PredictLengthImpulse
-	pathMsg.values.push_back(pars.DistPar_P);	//distPar_P
-	pathMsg.values.push_back(pars.DistPar_D);	//distPar_D
+	pathMsg.values.push_back(0.0f);		
+	pathMsg.values.push_back(pars.PredictSampleLength);	//PredictSampleLength
+	pathMsg.values.push_back(pars.PredictDistanceLength);	//PredictDistanceLength
 	pathMsg.values.push_back(pars.OriPar_P);	//oriPar_P
 	pathMsg.values.push_back(pars.OriPar_D);	//oriPar_D
 	pathMsg.values.push_back(pars.TimeStep);	//timeStep

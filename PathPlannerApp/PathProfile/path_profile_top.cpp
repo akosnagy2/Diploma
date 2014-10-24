@@ -23,8 +23,6 @@ float maxW;
 float sampleT;
 //Robot wheel base
 float robotWheelBase;
-//Prediction length
-int predictLen;
 
 CarLikeRobot* pRobot = NULL;
 bool robotType = false;
@@ -40,18 +38,17 @@ static void checkGeoProfile(Profile &prof, bool saveProfiles, ofstream &log);
 static void checkSampProfile(Profile &prof, bool saveProfiles, ofstream &log);
 static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile);
 
-void setCarLimits(CarLikeRobot* pR, float _maxV, float _maxA, float _maxAt, float _sampleT, float _predictLen)
+void setCarLimits(CarLikeRobot* pR, float _maxV, float _maxA, float _maxAt, float _sampleT)
 {
 	maxV = _maxV;
 	maxA = _maxA;
 	maxAt = _maxAt;
 	sampleT = _sampleT;
-	predictLen = _predictLen;
 	pRobot = pR;
 	maxW = maxV * tan(pR->getFiMax()) / pR->getAxisDistance();
 }
 
-void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase, int _predictLen)
+void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase)
 {
 	maxV = _maxV;
 	maxA = _maxA;
@@ -59,7 +56,6 @@ void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampl
 	maxW = _maxW;
 	sampleT = _sampleT;
 	robotWheelBase = _robotWheelBase;
-	predictLen = _predictLen;
 }
 
 static int checkBack_backLimit(Profile &prof, int front_limit, int &back_limit, float &deltaV, float deltaS)
@@ -171,7 +167,7 @@ static void checkBack(Profile &geoProf, Profile &sampProf, float errorS, std::ve
 	}
 
 	//Regenerate midified path
-	sampProf.CalcDistanceFromVelocity(back_limit - 1, length - 1);;
+	sampProf.CalcDistanceFromVelocity(back_limit - 1, length - 1);
 
 	bool start = true;
 	for (int i = back_limit; i < length; i++)
@@ -852,12 +848,12 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 	if (dir)
 	{
 		for (int i = 0; i < (int)sampProfile.path.size() - 1; i++) //Forward direction
-			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p); //[-pi, pi] forward range
+			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p);
 	}
 	else
 	{
 		for (int i = 0; i < (int)sampProfile.path.size() - 1; i++) //Backward direction
-			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p) + (float)M_PI; //[2*pi, 4*pi] backward range
+			sampProfile.path[i].phi = getDirection(sampProfile.path[i].p, sampProfile.path[i + 1].p) + (float)M_PI;
 	}
 	sampProfile.path[sampProfile.path.size() - 1].phi = sampProfile.path[sampProfile.path.size() - 2].phi;
 
@@ -896,7 +892,8 @@ void JoinProfiles(std::vector<Profile> &profs, Profile &out)
 	}
 }
 
-void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, bool rType)
+
+void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vector<vector<float>> &resultVelocity, bool rType)
 {
 	robotType = rType;
 	ofstream logfile("logFile.txt", ios_base::app);
@@ -924,6 +921,8 @@ void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, boo
 		ps.direction = it->direction;
 		ps.path = sampProfileSegment.path;
 		ps.curvature = sampProfileSegment.c;
+		resultVelocity.push_back(sampProfileSegment.v);
+
 		resultPath.push_back(ps);
 
 		//if (it + 1 != path.end())

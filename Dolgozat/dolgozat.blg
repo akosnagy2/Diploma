@@ -1,0 +1,74 @@
+This is BibTeX, Version 0.99d (TeX Live 2013/W32TeX)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: dolgozat.aux
+A level-1 auxiliary file: titlepage.aux
+A level-1 auxiliary file: abstract.aux
+A level-1 auxiliary file: chapter1.aux
+A level-1 auxiliary file: chapter3.aux
+A level-1 auxiliary file: chapter2.aux
+A level-1 auxiliary file: chapter4.aux
+A level-1 auxiliary file: chapter5.aux
+A level-1 auxiliary file: chapter6.aux
+A level-1 auxiliary file: chapter7.aux
+A level-1 auxiliary file: acknowledgement.aux
+The style file: huplain.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: mybib.bib
+Warning--string name "ieee_j_ra" is undefined
+--line 106 of file mybib.bib
+Warning--to sort, need author/key/name in RobonAUT
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty publisher in RobonAUTszem
+Warning--empty publisher in Bezi
+Warning--empty journal in kavraki96prm
+You've used 15 entries,
+            4991 wiz_defined-function locations,
+            1214 strings with 13548 characters,
+and the built_in function-call counts, 31900 in all, are:
+= -- 5836
+> -- 162
+< -- 5
++ -- 2317
+- -- 95
+* -- 536
+:= -- 1366
+add.period$ -- 41
+call.type$ -- 15
+change.case$ -- 66
+chr.to.int$ -- 0
+cite$ -- 19
+duplicate$ -- 4776
+empty$ -- 719
+format.name$ -- 52
+if$ -- 6675
+int.to.chr$ -- 0
+int.to.str$ -- 15
+missing$ -- 25
+newline$ -- 175
+num.names$ -- 28
+pop$ -- 1084
+preamble$ -- 1
+purify$ -- 56
+quote$ -- 22
+skip$ -- 263
+stack$ -- 0
+substring$ -- 3580
+swap$ -- 3461
+text.length$ -- 5
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 61
+warning$ -- 4
+while$ -- 173
+width$ -- 17
+write$ -- 250
+(There were 5 warnings)

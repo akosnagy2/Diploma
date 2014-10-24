@@ -1,0 +1,1109 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  22 OCT 2014 23:51
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**dolgozat.tex
+(./dolgozat.tex
+LaTeX2e <2011/06/27>
+Babel <3.9k> and hyphenation patterns for 78 languages loaded.
+(c:/texlive/2013/texmf-dist/tex/latex/base/report.cls
+Document Class: report 2007/10/19 v1.4h Standard LaTeX document class
+(c:/texlive/2013/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(c:/texlive/2013/texmf-dist/tex/latex/base/t1enc.sty
+Package: t1enc 1994/06/01 Standard LaTeX package
+)
+(c:/texlive/2013/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2008/03/30 v1.1d Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+
+(c:/texlive/2013/texmf-dist/tex/latex/base/latin2.def
+File: latin2.def 2008/03/30 v1.1d Input encoding file
+))
+(c:/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2013/01/14 v2.14 AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+(c:/texlive/2013/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(c:/texlive/2013/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks16
+\ex@=\dimen103
+))
+(c:/texlive/2013/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen104
+)
+(c:/texlive/2013/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count88
+LaTeX Info: Redefining \frac on input line 210.
+\uproot@=\count89
+\leftroot@=\count90
+LaTeX Info: Redefining \overline on input line 306.
+\classnum@=\count91
+\DOTSCASE@=\count92
+LaTeX Info: Redefining \ldots on input line 378.
+LaTeX Info: Redefining \dots on input line 381.
+LaTeX Info: Redefining \cdots on input line 466.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen105
+LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
+\macc@depth=\count93
+\c@MaxMatrixCols=\count94
+\dotsspace@=\muskip10
+\c@parentequation=\count95
+\dspbrk@lvl=\count96
+\tag@help=\toks17
+\row@=\count97
+\column@=\count98
+\maxfields@=\count99
+\andhelp@=\toks18
+\eqnshift@=\dimen106
+\alignsep@=\dimen107
+\tagshift@=\dimen108
+\tagwidth@=\dimen109
+\totwidth@=\dimen110
+\lineht@=\dimen111
+\@envbody=\toks19
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2665.
+LaTeX Info: Redefining \] on input line 2666.
+)
+(c:/texlive/2013/texmf-dist/tex/latex/mh/mathtools.sty
+Package: mathtools 2013/02/12 v1.13 mathematical typesetting tools
+
+(c:/texlive/2013/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks21
+)
+(c:/texlive/2013/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count100
+\calc@Bcount=\count101
+\calc@Adimen=\dimen112
+\calc@Bdimen=\dimen113
+\calc@Askip=\skip46
+\calc@Bskip=\skip47
+LaTeX Info: Redefining \setlength on input line 76.
+LaTeX Info: Redefining \addtolength on input line 77.
+\calc@Ccount=\count102
+\calc@Cskip=\skip48
+)
+(c:/texlive/2013/texmf-dist/tex/latex/mh/mhsetup.sty
+Package: mhsetup 2010/01/21 v1.2a programming setup (MH)
+)
+LaTeX Info: Thecontrolsequence`\['isalreadyrobust on input line 129.
+LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 129.
+\g_MT_multlinerow_int=\count103
+\l_MT_multwidth_dim=\dimen114
+\origjot=\skip49
+\l_MT_shortvdotswithinadjustabove_dim=\dimen115
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen116
+\l_MT_above_intertext_sep=\dimen117
+\l_MT_below_intertext_sep=\dimen118
+\l_MT_above_shortintertext_sep=\dimen119
+\l_MT_below_shortintertext_sep=\dimen120
+)
+(c:/texlive/2013/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(c:/texlive/2013/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(c:/texlive/2013/texmf-dist/tex/latex/tools/enumerate.sty
+Package: enumerate 1999/03/05 v3.00 enumerate extensions (DPC)
+\@enLab=\toks22
+)
+(c:/texlive/2013/texmf-dist/tex/latex/ntheorem/ntheorem.sty
+Style `ntheorem', Version 1.33 <2011/08/15>
+Package: ntheorem 2011/08/15 1.33
+(c:/texlive/2013/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\theorem@style=\toks23
+\theorem@@style=\toks24
+\theorembodyfont=\toks25
+\theoremnumbering=\toks26
+\theorempreskipamount=\skip50
+\theorempostskipamount=\skip51
+\theoremframepreskipamount=\skip52
+\theoremframepostskipamount=\skip53
+\theoreminframepreskipamount=\skip54
+\theoreminframepostskipamount=\skip55
+\theorem@preskip=\toks27
+\theorem@postskip=\toks28
+\theorem@framepreskip=\toks29
+\theorem@framepostskip=\toks30
+\theorem@inframepreskip=\toks31
+\theorem@inframepostskip=\toks32
+\theoremindent=\dimen121
+\theorem@indent=\dimen122
+\theoremrightindent=\dimen123
+\theorem@rightindent=\dimen124
+\theoremheaderfont=\toks33
+\theoremseparator=\toks34
+\theoremprework=\toks35
+\theorempostwork=\toks36
+\theoremsymbol=\toks37
+\qedsymbol=\toks38
+\theoremkeyword=\toks39
+\qedsymbol=\toks40
+\thm@topsep=\skip56
+\thm@topsepadd=\skip57
+Package ntheorem Info: Option `thmmarks' loaded on input line 1175.
+\c@endNonectr=\count104
+\c@currNonectr=\count105
+\mysavskip=\skip58
+)
+(c:/texlive/2013/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(c:/texlive/2013/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(c:/texlive/2013/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(c:/texlive/2013/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(c:/texlive/2013/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(c:/texlive/2013/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count106
+))
+(c:/texlive/2013/texmf-dist/tex/latex/graphics/epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+
+(c:/texlive/2013/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+\Gin@req@height=\dimen125
+\Gin@req@width=\dimen126
+)
+\epsfxsize=\dimen127
+\epsfysize=\dimen128
+)
+(c:/texlive/2013/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count107
+\lst@gtempboxa=\box28
+\lst@token=\toks41
+\lst@length=\count108
+\lst@currlwidth=\dimen129
+\lst@column=\count109
+\lst@pos=\count110
+\lst@lostspace=\dimen130
+\lst@width=\dimen131
+\lst@newlines=\count111
+\lst@lineno=\count112
+\lst@maxwidth=\dimen132
+
+(c:/texlive/2013/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2014/03/04 1.5c (Carsten Heinz)
+\c@lstnumber=\count113
+\lst@skipnumbers=\count114
+\lst@framebox=\box29
+)
+(c:/texlive/2013/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2014/03/04 1.5c listings configuration
+))
+Package: listings 2014/03/04 1.5c (Carsten Heinz)
+
+(c:/texlive/2013/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count115
+\float@exts=\toks42
+\float@box=\box30
+\@float@everytoks=\toks43
+\@floatcapt=\box31
+)
+(c:/texlive/2013/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+(c:/texlive/2013/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+)
+(c:/texlive/2013/texmf-dist/tex/latex/lastpage/lastpage.sty
+Package: lastpage 2013/01/28 v1.2l Refers to last page's name (HMM; JPG)
+)
+(c:/texlive/2013/texmf-dist/tex/latex/anysize/anysize.sty
+Package: anysize 1994/08/13 setting margin sizes
+
+document style option `anysize' loaded
+Michael Salzenberg, Thomas Esser, Dirk Hillbrecht
+Version 1.0, Aug 13, 1994
+\@Leftmargin=\dimen133
+\@Rightmargin=\dimen134
+\@Topmargin=\dimen135
+\@Bottommargin=\dimen136
+) (c:/texlive/2013/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2014/03/24 3.9k The Babel package
+ (./magyar.ldf
+Language: magyar 2007/10/19 v1.5 Magyar support from the babel v3.7 system
+
+(c:/texlive/2013/texmf-dist/tex/generic/babel/babel.def
+File: babel.def 2014/03/24 3.9k Babel common definitions
+\babel@savecnt=\count116
+\U@D=\dimen137
+)
+Package babel Info: Making ` an active character on input line 2609.
+\c@footnote@add=\count117
+\c@footnote@ch=\count118
+))
+(c:/texlive/2013/texmf-dist/tex/latex/sectsty/sectsty.sty
+Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
+les
+)
+(c:/texlive/2013/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
+(c:/texlive/2013/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
+
+(c:/texlive/2013/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 57.
+\captionmargin=\dimen138
+\captionmargin@=\dimen139
+\captionwidth=\dimen140
+\caption@tempdima=\dimen141
+\caption@indent=\dimen142
+\caption@parindent=\dimen143
+\caption@hangindent=\dimen144
+)
+\c@ContinuedFloat=\count119
+Package caption Info: magyar babel option is loaded.
+Package caption Info: float package is loaded.
+Package caption Info: listings package is loaded.
+)
+(c:/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
+
+(c:/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+Package: hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
+
+
+(c:/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
+Package: hobsub-generic 2012/05/28 v1.13 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2012/05/28 v1.13 Construct package bundles (HO)
+Package hobsub Info: Skipping package `infwarerr' (already loaded).
+Package hobsub Info: Skipping package `ltxcmds' (already loaded).
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+)
+Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Package: hopatch 2012/05/28 v1.2 Wrapper for package hooks (HO)
+Package: xcolor-patch 2011/01/30 xcolor patch
+Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package atveryend Info: \enddocument detected (standard20110627).
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+)
+(c:/texlive/2013/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+(c:/texlive/2013/texmf-dist/tex/latex/oberdiek/auxhook.sty
+Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+)
+(c:/texlive/2013/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+)
+\@linkdim=\dimen145
+\Hy@linkcounter=\count120
+\Hy@pagecounter=\count121
+
+(c:/texlive/2013/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
+)
+\Hy@SavedSpaceFactor=\count122
+
+(c:/texlive/2013/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+Package hyperref Info: Hyper figures OFF on input line 4443.
+Package hyperref Info: Link nesting OFF on input line 4448.
+Package hyperref Info: Hyper index ON on input line 4451.
+Package hyperref Info: Plain pages OFF on input line 4458.
+Package hyperref Info: Backreferencing OFF on input line 4463.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4688.
+\c@Hy@tempcnt=\count123
+
+(c:/texlive/2013/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip11
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 5041.
+\XeTeXLinkMargin=\dimen146
+\Fld@menulength=\count124
+\Field@Width=\dimen147
+\Fld@charsize=\dimen148
+Package hyperref Info: Hyper figures OFF on input line 6295.
+Package hyperref Info: Link nesting OFF on input line 6300.
+Package hyperref Info: Hyper index ON on input line 6303.
+Package hyperref Info: backreferencing OFF on input line 6310.
+Package hyperref Info: Link coloring OFF on input line 6315.
+Package hyperref Info: Link coloring with OCG OFF on input line 6320.
+Package hyperref Info: PDF/A mode OFF on input line 6325.
+LaTeX Info: Redefining \ref on input line 6365.
+LaTeX Info: Redefining \pageref on input line 6369.
+\Hy@abspage=\count125
+\c@Item=\count126
+\c@Hfootnote=\count127
+)
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(c:/texlive/2013/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
+\Fld@listcount=\count128
+\c@bookmark@seq@number=\count129
+
+(c:/texlive/2013/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+)
+\Hy@SectionHShift=\skip59
+)
+(c:/texlive/2013/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2011/01/03 v2.1 e-TeX tools for LaTeX
+
+(c:/texlive/2013/texmf-dist/tex/latex/etex-pkg/etex.sty
+Package: etex 1998/03/26 v2.0 eTeX basic definition package (PEB)
+\et@xins=\count130
+)
+\etb@tempcnta=\count131
+)
+
+Package hyperref Warning: Option `bookmarks' has already been used,
+(hyperref)                setting the option has no effect on input line 79.
+
+Package hyperref Info: Option `unicode' set `false' on input line 79.
+Package hyperref Info: Option `pdfnewwindow' set `true' on input line 79.
+Package hyperref Info: Option `colorlinks' set `true' on input line 79.
+(./dolgozat.aux (./titlepage.aux) (./abstract.aux) (./chapter1.aux)
+(./chapter3.aux) (./chapter2.aux) (./chapter4.aux) (./chapter5.aux)
+(./chapter6.aux
+
+LaTeX Warning: Label `fig:DiffSimRobot2' multiply defined.
+
+
+LaTeX Warning: Label `fig:frame2vrep' multiply defined.
+
+
+LaTeX Warning: Label `fig:frame2vrep' multiply defined.
+
+
+LaTeX Warning: Label `fig:frame2vrep' multiply defined.
+
+) (./chapter7.aux) (./acknowledgement.aux))
+\openout1 = `dolgozat.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 151.
+LaTeX Font Info:    ... okay on input line 151.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 151.
+LaTeX Font Info:    ... okay on input line 151.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 151.
+LaTeX Font Info:    ... okay on input line 151.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 151.
+LaTeX Font Info:    ... okay on input line 151.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 151.
+LaTeX Font Info:    ... okay on input line 151.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 151.
+LaTeX Font Info:    ... okay on input line 151.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 151.
+LaTeX Font Info:    ... okay on input line 151.
+
+(c:/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count132
+\scratchdimen=\dimen149
+\scratchbox=\box32
+\nofMPsegments=\count133
+\nofMParguments=\count134
+\everyMPshowfont=\toks44
+\MPscratchCnt=\count135
+\MPscratchDim=\dimen150
+\MPnumerator=\count136
+\makeMPintoPDFobject=\count137
+\everyMPtoPDFconversion=\toks45
+) (c:/texlive/2013/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(c:/texlive/2013/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+)
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(c:/texlive/2013/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+\c@lstlisting=\count138
+Package lastpage Info: Please have a look at the pageslts package at
+(lastpage)             http://www.ctan.org/tex-archive/ 
+(lastpage)             macros/latex/contrib/pageslts/ 
+(lastpage)             or
+(lastpage)             http://www.ctan.org/tex-archive/ 
+(lastpage)             install/macros/latex/contrib/pageslts.tds.zip
+(lastpage)             ! on input line 151.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+\AtBeginShipoutBox=\box33
+Package hyperref Info: Link coloring ON on input line 151.
+
+(c:/texlive/2013/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
+
+(c:/texlive/2013/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+)
+\c@section@level=\count139
+)
+LaTeX Info: Redefining \ref on input line 151.
+LaTeX Info: Redefining \pageref on input line 151.
+LaTeX Info: Redefining \nameref on input line 151.
+
+(./dolgozat.out) (./dolgozat.out)
+\@outlinefile=\write3
+\openout3 = `dolgozat.out'.
+
+
+(c:/texlive/2013/texmf-dist/tex/latex/base/report.cls
+LaTeX Info: Redefining \cal on input line 586.
+LaTeX Info: Redefining \mit on input line 587.
+)
+\openout2 = `titlepage.aux'.
+
+ (./titlepage.tex
+<figures/BMElogo.png, id=209, 975.645pt x 273.02pt>
+File: figures/BMElogo.png Graphic file (type png)
+ <use figures/BMElogo.png>
+Package pdftex.def Info: figures/BMElogo.png used on input line 6.
+(pdftex.def)             Requested size: 170.71652pt x 47.77087pt.
+LaTeX Font Info:    Try loading font information for U+msa on input line 17.
+
+(c:/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 17.
+
+(c:/texlive/2013/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [1
+
+
+
+{c:/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./figures/BMElo
+go.png>])
+(./dolgozat.tocpdfTeX warning (ext4): destination with the same identifier (nam
+e{page.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.38 ....1}Korl\'atoz\'asok}{42}{subsection.4.3.1}
+                                                   [1
+
+
+
+
+pdfTeX warning: pdflatex.exe: pop empty color page stack 0
+])
+\tf@toc=\write4
+\openout4 = `dolgozat.toc'.
+
+ [2]
+\openout2 = `abstract.aux'.
+
+ (./abstract.tex
+Overfull \hbox (2.75546pt too wide) in paragraph at lines 13--14
+\T1/cmr/m/n/10.95 szabályozási kört a ro-bot ke-re-ke-i-nél ta-lál-ha-tó PI sza
+-bá-lyo-zók va-ló-sít-ják meg. A szögsebesség-
+ []
+
+[3
+
+
+] [4] [5
+
+]) [6]
+\openout2 = `chapter1.aux'.
+
+ (./chapter1.tex
+1. fejezet.
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 19.
+
+[7
+
+
+
+] <figures/config.png, id=311, 1003.75pt x 487.8225pt>
+File: figures/config.png Graphic file (type png)
+
+<use figures/config.png>
+Package pdftex.def Info: figures/config.png used on input line 32.
+(pdftex.def)             Requested size: 369.88582pt x 179.76947pt.
+ [8 <./figures/config.png>]
+<figures/carLikeRobot.png, id=328, 772.8875pt x 844.15375pt>
+File: figures/carLikeRobot.png Graphic file (type png)
+
+<use figures/carLikeRobot.png>
+Package pdftex.def Info: figures/carLikeRobot.png used on input line 81.
+(pdftex.def)             Requested size: 184.9429pt x 201.99564pt.
+ [9]
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 87.
+
+[10 <./figures/carLikeRobot.png>]) [11]
+\openout2 = `chapter3.aux'.
+
+ (./chapter3.tex
+2. fejezet.
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@@overline' on input line 2.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2.
+
+<figures/dubins-reeds-shepp.png, id=358, 852.18375pt x 318.43968pt>
+File: figures/dubins-reeds-shepp.png Graphic file (type png)
+
+<use figures/dubins-reeds-shepp.png>
+Package pdftex.def Info: figures/dubins-reeds-shepp.png used on input line 14.
+(pdftex.def)             Requested size: 369.88582pt x 138.21889pt.
+ [12
+
+
+
+ <./figures/dubins-reeds-shepp.png>]
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 45.
+
+[13] <figures/ccs_prepath.png, id=387, 1277.52281pt x 601.4972pt>
+File: figures/ccs_prepath.png Graphic file (type png)
+
+<use figures/ccs_prepath.png>
+Package pdftex.def Info: figures/ccs_prepath.png used on input line 54.
+(pdftex.def)             Requested size: 369.88582pt x 174.15437pt.
+
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 62.
+
+[14 <./figures/ccs_prepath.png>]
+<figures/CCS.pdf, id=395, 250.60326pt x 238.55826pt>
+File: figures/CCS.pdf Graphic file (type pdf)
+ <use figures/CCS.pdf>
+Package pdftex.def Info: figures/CCS.pdf used on input line 71.
+(pdftex.def)             Requested size: 213.39566pt x 203.14311pt.
+
+<figures/CS.pdf, id=397, 171.47362pt x 117.9888pt>
+File: figures/CS.pdf Graphic file (type pdf)
+ <use figures/CS.pdf>
+Package pdftex.def Info: figures/CS.pdf used on input line 81.
+(pdftex.def)             Requested size: 256.0748pt x 176.20497pt.
+
+[15 <./figures/CCS.pdf>]
+<figures/ccs_middle.png, id=433, 1276.01718pt x 601.4972pt>
+File: figures/ccs_middle.png Graphic file (type png)
+
+<use figures/ccs_middle.png>
+Package pdftex.def Info: figures/ccs_middle.png used on input line 94.
+(pdftex.def)             Requested size: 369.88582pt x 174.3563pt.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 100.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@@overline' on input line 100.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 100.
+
+[16 <./figures/CS.pdf> <./figures/ccs_middle.png>]
+<figures/cc_S.png, id=467, 409.53pt x 172.0026pt>
+File: figures/cc_S.png Graphic file (type png)
+ <use figures/cc_S.png>
+Package pdftex.def Info: figures/cc_S.png used on input line 106.
+(pdftex.def)             Requested size: 369.88582pt x 155.36255pt.
+
+[17 <./figures/cc_S.png>] <figures/frame3.png, id=477, 602.25pt x 603.75563pt>
+File: figures/frame3.png Graphic file (type png)
+
+<use figures/frame3.png>
+Package pdftex.def Info: figures/frame3.png used on input line 124.
+(pdftex.def)             Requested size: 170.28297pt x 170.71652pt.
+
+<figures/frame6.png, id=478, 702.37407pt x 603.0028pt>
+File: figures/frame6.png Graphic file (type png)
+
+<use figures/frame6.png>
+Package pdftex.def Info: figures/frame6.png used on input line 125.
+(pdftex.def)             Requested size: 198.84973pt x 170.71652pt.
+) [18 <./figures/frame3.png> <./figures/frame6.png>]
+\openout2 = `chapter2.aux'.
+
+
+(./chapter2.tex
+3. fejezet.
+<figures/RRT.png, id=491, 989.19562pt x 325.215pt>
+File: figures/RRT.png Graphic file (type png)
+ <use figures/RRT.png>
+Package pdftex.def Info: figures/RRT.png used on input line 20.
+(pdftex.def)             Requested size: 369.88582pt x 121.603pt.
+
+[19
+
+
+
+ <./figures/RRT.png (PNG copy)>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 46.
+
+(c:/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 46.
+ [20]
+<figures/tci_gp.png, id=505, 920.238pt x 281.1303pt>
+File: figures/tci_gp.png Graphic file (type png)
+ <use figures/tci_gp.png>
+Package pdftex.def Info: figures/tci_gp.png used on input line 79.
+(pdftex.def)             Requested size: 369.88582pt x 112.9992pt.
+
+[21] <figures/rci_gp.png, id=511, 1284.7197pt x 577.1964pt>
+File: figures/rci_gp.png Graphic file (type png)
+
+<use figures/rci_gp.png>
+Package pdftex.def Info: figures/rci_gp.png used on input line 89.
+(pdftex.def)             Requested size: 369.88582pt x 166.18488pt.
+ [22 <./figures/tci_gp.png> <./figures/rci_gp.png>]
+<figures/rtr_rci.png, id=521, 472.76625pt x 277.78781pt>
+File: figures/rtr_rci.png Graphic file (type png)
+
+<use figures/rtr_rci.png>
+Package pdftex.def Info: figures/rtr_rci.png used on input line 108.
+(pdftex.def)             Requested size: 227.62204pt x 133.74777pt.
+
+<figures/tci_coll2.png, id=526, 645.1302pt x 391.7034pt>
+File: figures/tci_coll2.png Graphic file (type png)
+
+<use figures/tci_coll2.png>
+Package pdftex.def Info: figures/tci_coll2.png used on input line 129.
+(pdftex.def)             Requested size: 369.88582pt x 224.5822pt.
+ [23 <./figures/rtr_rci.png>] [24 <./figures/tci_coll2.png>] <figures/rtr_path.
+pdf, id=546, 868.24374pt x 658.46pt>
+File: figures/rtr_path.pdf Graphic file (type pdf)
+
+<use figures/rtr_path.pdf>
+Package pdftex.def Info: figures/rtr_path.pdf used on input line 170.
+(pdftex.def)             Requested size: 341.43306pt x 258.93845pt.
+ [25]
+<figures/rtr_path2.pdf, id=553, 772.8875pt x 677.53125pt>
+File: figures/rtr_path2.pdf Graphic file (type pdf)
+
+<use figures/rtr_path2.pdf>
+Package pdftex.def Info: figures/rtr_path2.pdf used on input line 180.
+(pdftex.def)             Requested size: 312.9803pt x 274.36763pt.
+ [26 <./figures/rtr_path.pdf> <./figures/rtr_path2.pdf>]) [27]
+\openout2 = `chapter4.aux'.
+
+ (./chapter4.tex
+4. fejezet.
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 2.
+
+<figures/path.pdf, id=567, 1446.40375pt x 708.6475pt>
+File: figures/path.pdf Graphic file (type pdf)
+ <use figures/path.pdf>
+Package pdftex.def Info: figures/path.pdf used on input line 11.
+(pdftex.def)             Requested size: 369.88582pt x 181.21634pt.
+
+[28
+
+
+
+ <./figures/path.pdf>] [29]
+<figures/robot.png, id=592, 396.0396pt x 234.3957pt>
+File: figures/robot.png Graphic file (type png)
+ <use figures/robot.png>
+Package pdftex.def Info: figures/robot.png used on input line 86.
+(pdftex.def)             Requested size: 426.79134pt x 252.59995pt.
+
+[30]
+Overfull \hbox (10.07559pt too wide) in paragraph at lines 104--105
+[]\T1/cmr/m/n/10.95 A ke-re-kek ma-xi-má-lis ere-d® gyor-su-lá-sát a ma-xi-má-l
+is ta-pa-dá-si súr-ló-dá-si együtt-ha-tó ($\OML/cmm/m/it/10.95 ^^V[]$\T1/cmr/m/
+n/10.95 )
+ []
+
+[31 <./figures/robot.png>] [32] [33] [34] [35]
+<figures/geo_sampl2.pdf, id=666, 1446.40375pt x 708.6475pt>
+File: figures/geo_sampl2.pdf Graphic file (type pdf)
+
+<use figures/geo_sampl2.pdf>
+Package pdftex.def Info: figures/geo_sampl2.pdf used on input line 284.
+(pdftex.def)             Requested size: 426.79134pt x 209.10327pt.
+ [36 <./figures/geo_sampl2.pdf>]
+<figures/circle_circle.png, id=683, 462.7689pt x 317.0244pt>
+File: figures/circle_circle.png Graphic file (type png)
+
+<use figures/circle_circle.png>
+Package pdftex.def Info: figures/circle_circle.png used on input line 307.
+(pdftex.def)             Requested size: 369.88582pt x 253.40218pt.
+ [37 <./figures/circle_circle.png>]
+<figures/back_check.pdf, id=697, 1446.40375pt x 708.6475pt>
+File: figures/back_check.pdf Graphic file (type pdf)
+
+<use figures/back_check.pdf>
+Package pdftex.def Info: figures/back_check.pdf used on input line 355.
+(pdftex.def)             Requested size: 426.79134pt x 209.10327pt.
+ [38]
+<figures/back_check2.pdf, id=706, 1446.40375pt x 726.715pt>
+File: figures/back_check2.pdf Graphic file (type pdf)
+
+<use figures/back_check2.pdf>
+Package pdftex.def Info: figures/back_check2.pdf used on input line 371.
+(pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
+ [39 <./figures/back_check.pdf> <./figures/back_check2.pdf>] <figures/diffProfi
+le.pdf, id=722, 1446.40375pt x 726.715pt>
+File: figures/diffProfile.pdf Graphic file (type pdf)
+
+<use figures/diffProfile.pdf>
+Package pdftex.def Info: figures/diffProfile.pdf used on input line 390.
+(pdftex.def)             Requested size: 369.87642pt x 142.25774pt.
+
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 398.
+
+[40 <./figures/diffProfile.pdf>] [41] [42]
+<figures/carProfile.pdf, id=758, 1446.40375pt x 726.715pt>
+File: figures/carProfile.pdf Graphic file (type pdf)
+
+<use figures/carProfile.pdf>
+Package pdftex.def Info: figures/carProfile.pdf used on input line 473.
+(pdftex.def)             Requested size: 369.87642pt x 142.25774pt.
+) [43 <./figures/carProfile.pdf>]
+\openout2 = `chapter5.aux'.
+
+ (./chapter5.tex
+5. fejezet.
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 2.
+
+[44
+
+
+
+] [45] <figures/hajtas.pdf, id=793, 747.54282pt x 618.81187pt>
+File: figures/hajtas.pdf Graphic file (type pdf)
+
+<use figures/hajtas.pdf>
+Package pdftex.def Info: figures/hajtas.pdf used on input line 80.
+(pdftex.def)             Requested size: 426.79134pt x 353.29297pt.
+ [46 <./figures/hajtas.pdf>] [47]
+<figures/oriPD.png, id=868, 231.0231pt x 262.3401pt>
+File: figures/oriPD.png Graphic file (type png)
+ <use figures/oriPD.png>
+Package pdftex.def Info: figures/oriPD.png used on input line 124.
+(pdftex.def)             Requested size: 284.52756pt x 323.12872pt.
+
+[48 <./figures/oriPD.png>]
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 139.
+
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 147.
+
+[49] <figures/ferdevonal.png, id=889, 546.54187pt x 632.3625pt>
+File: figures/ferdevonal.png Graphic file (type png)
+
+<use figures/ferdevonal.png>
+Package pdftex.def Info: figures/ferdevonal.png used on input line 169.
+(pdftex.def)             Requested size: 184.42906pt x 213.39566pt.
+ [50 <./figures/ferdevonal.png>]) [51]
+\openout2 = `chapter6.aux'.
+
+
+(./chapter6.tex
+6. fejezet.
+<figures/vrep.png, id=909, 1284.8pt x 983.675pt>
+File: figures/vrep.png Graphic file (type png)
+ <use figures/vrep.png>
+Package pdftex.def Info: figures/vrep.png used on input line 18.
+(pdftex.def)             Requested size: 426.79134pt x 326.76013pt.
+
+[52
+
+
+
+] <figures/vrepserver.pdf, id=917, 709.90219pt x 522.45187pt>
+File: figures/vrepserver.pdf Graphic file (type pdf)
+
+<use figures/vrepserver.pdf>
+Package pdftex.def Info: figures/vrepserver.pdf used on input line 30.
+(pdftex.def)             Requested size: 398.33858pt x 293.16098pt.
+ [53 <./figures/vrep.png>] [54 <./figures/vrepserver.pdf>] <figures/DiffSimPath
+0RTR.png, id=966, 1075.01625pt x 690.32906pt>
+File: figures/DiffSimPath0RTR.png Graphic file (type png)
+
+<use figures/DiffSimPath0RTR.png>
+Package pdftex.def Info: figures/DiffSimPath0RTR.png used on input line 56.
+(pdftex.def)             Requested size: 369.88582pt x 237.52124pt.
+
+<figures/DiffSimPath0.png, id=967, 1075.01625pt x 690.32906pt>
+File: figures/DiffSimPath0.png Graphic file (type png)
+
+<use figures/DiffSimPath0.png>
+Package pdftex.def Info: figures/DiffSimPath0.png used on input line 64.
+(pdftex.def)             Requested size: 369.88582pt x 237.52124pt.
+ [55 <./figures/DiffSimPath0RTR.png>]
+<figures/DiffSimPath1.png, id=974, 1076.52188pt x 692.5875pt>
+File: figures/DiffSimPath1.png Graphic file (type png)
+
+<use figures/DiffSimPath1.png>
+Package pdftex.def Info: figures/DiffSimPath1.png used on input line 72.
+(pdftex.def)             Requested size: 369.88582pt x 237.97069pt.
+
+<figures/DiffSimPath2.png, id=975, 1156.32pt x 690.32906pt>
+File: figures/DiffSimPath2.png Graphic file (type png)
+
+<use figures/DiffSimPath2.png>
+Package pdftex.def Info: figures/DiffSimPath2.png used on input line 79.
+(pdftex.def)             Requested size: 369.88582pt x 220.815pt.
+ [56 <./figures/DiffSimPath0.png> <./figures/DiffSimPath1.png>]
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 85.
+
+<figures/frame2vrep.png, id=985, 1059.96pt x 566.115pt>
+File: figures/frame2vrep.png Graphic file (type png)
+
+<use figures/frame2vrep.png>
+Package pdftex.def Info: figures/frame2vrep.png used on input line 91.
+(pdftex.def)             Requested size: 399.53807pt x 213.39566pt.
+
+<figures/CarSimPath1.png, id=986, 1157.07281pt x 691.83469pt>
+File: figures/CarSimPath1.png Graphic file (type png)
+
+<use figures/CarSimPath1.png>
+Package pdftex.def Info: figures/CarSimPath1.png used on input line 98.
+(pdftex.def)             Requested size: 356.88802pt x 213.39566pt.
+ [57 <./figures/DiffSimPath2.png> <./figures/frame2vrep.png>] <figures/CarSimPa
+th2.png, id=996, 1156.32pt x 691.83469pt>
+File: figures/CarSimPath2.png Graphic file (type png)
+
+<use figures/CarSimPath2.png>
+Package pdftex.def Info: figures/CarSimPath2.png used on input line 105.
+(pdftex.def)             Requested size: 356.6558pt x 213.39566pt.
+
+<figures/CarSimPath3.png, id=997, 1156.32pt x 691.08188pt>
+File: figures/CarSimPath3.png Graphic file (type png)
+
+<use figures/CarSimPath3.png>
+Package pdftex.def Info: figures/CarSimPath3.png used on input line 112.
+(pdftex.def)             Requested size: 357.04398pt x 213.39566pt.
+ [58 <./figures/CarSimPath1.png> <./figures/CarSimPath2.png>] <figures/Eurobot.
+png, id=1006, 406.51875pt x 556.32843pt>
+File: figures/Eurobot.png Graphic file (type png)
+
+<use figures/Eurobot.png>
+Package pdftex.def Info: figures/Eurobot.png used on input line 129.
+(pdftex.def)             Requested size: 227.62204pt x 311.49934pt.
+ [59 <./figures/CarSimPath3.png>]
+<figures/DiffRealPath.png, id=1014, 554.82281pt x 555.57562pt>
+File: figures/DiffRealPath.png Graphic file (type png)
+
+<use figures/DiffRealPath.png>
+Package pdftex.def Info: figures/DiffRealPath.png used on input line 145.
+(pdftex.def)             Requested size: 256.0748pt x 256.42409pt.
+ [60 <./figures/Eurobot.png>]
+
+Package hyperref Warning: Glyph not defined in PD1 encoding,
+(hyperref)                removing `\H' on input line 151.
+
+<figures/carReal.jpg, id=1023, 3276.24pt x 2457.18pt>
+File: figures/carReal.jpg Graphic file (type jpg)
+
+<use figures/carReal.jpg>
+Package pdftex.def Info: figures/carReal.jpg used on input line 158.
+(pdftex.def)             Requested size: 284.52756pt x 213.3755pt.
+) [61 <./figures/DiffRealPath.png> <./figures/carReal.jpg>]
+\openout2 = `chapter7.aux'.
+
+ (./chapter7.tex
+7. fejezet.
+) [62
+
+
+
+]
+\openout2 = `acknowledgement.aux'.
+
+ (./acknowledgement.tex) [63
+
+
+
+] (./dolgozat.bbl
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 139.
+
+
+(c:/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+Underfull \hbox (badness 1430) in paragraph at lines 136--140
+[]\T1/cmr/m/n/10.95 Dirk-Jan Kro-on: 2d line cur-vat-u-re and nor-mals. [][]$\T
+1/cmtt/m/n/10.95 http : / / www . mathworks . com /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 136--140
+\T1/cmtt/m/n/10.95 matlabcentral / fileexchange / 32696-[]2d-[]line-[]curvature
+-[]and-[]normals / content /
+ []
+
+[64
+
+
+])
+\tf@thm=\write5
+\openout5 = `dolgozat.thm'.
+
+ 
+AED: lastpage setting LastPage
+[65]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 183.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 183.
+ (./dolgozat.aux (./titlepage.aux) (./abstract.aux) (./chapter1.aux)
+(./chapter3.aux) (./chapter2.aux) (./chapter4.aux) (./chapter5.aux)
+(./chapter6.aux) (./chapter7.aux) (./acknowledgement.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 183.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 183.
+Package rerunfilecheck Info: File `dolgozat.out' has not changed.
+(rerunfilecheck)             Checksum: B835394F2183ACA449F8DAD630E08905;3620.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 183.
+ ) 
+Here is how much of TeX's memory you used:
+ 11912 strings out of 493308
+ 180549 string characters out of 6141367
+ 292054 words of memory out of 5000000
+ 14821 multiletter control sequences out of 15000+600000
+ 36278 words of font info for 100 fonts, out of 8000000 for 9000
+ 957 hyphenation exceptions out of 8191
+ 36i,14n,43p,1281b,581s stack positions out of 5000i,500n,10000p,200000b,80000s
+{c:/texlive/2013/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}<c:/texl
+ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2013/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2013/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2013/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2013/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmmi8.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi9.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib1
+0.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/
+texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/texlive/201
+3/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/2013/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2013/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy8.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/
+sfbx1000.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfbx1095.p
+fb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb><c:/tex
+live/2013/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb><c:/texlive/2013/
+texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb><c:/texlive/2013/texmf-dist
+/fonts/type1/public/cm-super/sfrm0600.pfb><c:/texlive/2013/texmf-dist/fonts/typ
+e1/public/cm-super/sfrm0800.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/
+cm-super/sfrm0900.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/s
+frm1095.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pf
+b><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb><c:/texl
+ive/2013/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb><c:/texlive/2013/t
+exmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
+Output written on dolgozat.pdf (66 pages, 9609733 bytes).
+PDF statistics:
+ 1193 PDF objects out of 1200 (max. 8388607)
+ 966 compressed objects within 10 object streams
+ 245 named destinations out of 1000 (max. 500000)
+ 619 words of extra memory for PDF output out of 10000 (max. 10000000)
+

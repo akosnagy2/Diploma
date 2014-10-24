@@ -55,8 +55,8 @@ function PathPlannerSimulationLoop()
 		if (dh ~= nil) then
 			simRemoveDrawingObject(dh)	
 		end
-		--dh = drawLine({returnData[10]/1000, returnData[11]/1000, 0.1}, 					
-		--			  {returnData[12]/1000, returnData[13]/1000, 0.1})
+		dh = drawLine({returnData[10]/1000, returnData[11]/1000, 0.1}, 					
+					  {returnData[12]/1000, returnData[13]/1000, 0.1})
 				 
 		simSetObjectPosition(objHandle,sim_handle_parent,position)
 		simSetObjectOrientation(objHandle,sim_handle_parent,orientation)					
@@ -65,7 +65,9 @@ function PathPlannerSimulationLoop()
 		simSetObjectOrientation(dummy, sim_handle_parent , orientation2)
 		
 		simSetJointPosition(leftMotor,lj)	
-		simSetJointPosition(rightMotor,rj)						
+		simSetJointPosition(rightMotor,rj)		
+
+		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
 		
 		-- Now don't waste time in this loop if the simulation time hasn't changed! This also synchronizes this thread with the main script
 		simSwitchThread() -- This thread will resume just before the main script is called again
@@ -74,7 +76,7 @@ end
 
 function PathPlannerDiffRobot()
 	objHandle=simGetObjectHandle("diff_robot_ext") -- Handle of the robot
-	start = loadOBJ("D:/diploma2/Diploma/Frame/frame" .. envFile ..  ".obj")
+	start = loadOBJ("c:/BME/Diploma/Src/RobotSolution/Frame/frame" .. envFile ..  ".obj")
 	dummy = simCreateDummy(0.01)
 	simSetObjectPosition(dummy,sim_handle_parent,{start[1], start[2], 0.002})
 	simSetObjectOrientation(dummy,sim_handle_parent,{0, 0, start[3]})		
@@ -105,6 +107,9 @@ function PathPlannerDiffRobot()
 	-- We start the server on a port that is probably not used:
 	local portNb = getPort()
 
+	graphHandle = simGetObjectHandle("Graph")
+	simResetGraph(graphHandle)		
+	
 	-- Start Server
 	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
 
@@ -135,10 +140,8 @@ function PathPlannerDiffRobot()
 								robotMaxAccel, 
 								robotMultFactorR, 
 								robotSmoothFactor, 
-								predictLength, 
-								predictLengthImpulse,					
-								distPar_P, 
-								distPar_D, 
+								predictSampleLength, 
+								predictDistanceLength,					
 								oriPar_P, 
 								oriPar_D, 
 								wheelDistance, 

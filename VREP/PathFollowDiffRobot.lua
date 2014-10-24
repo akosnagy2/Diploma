@@ -32,8 +32,8 @@ function PathFollowSimulationLoop()
 		rj = returnData[5]
 
 		-- Set Rabit Position
-		rabitPosition[1] = returnData[6] /1000
-		rabitPosition[2] = returnData[7] /1000
+		rabitPosition[1] = returnData[14] /1000
+		rabitPosition[2] = returnData[15] /1000
 							
 		-- Set graph, robot, rabit position
 		simSetGraphUserData(trackGraphHandle, "TrackError", returnData[8]) 
@@ -53,7 +53,9 @@ function PathFollowSimulationLoop()
 		simSetObjectPosition(rabitHandle,sim_handle_parent,rabitPosition)									
 		
 		simSetJointPosition(leftMotor,lj)	
-		simSetJointPosition(rightMotor,rj)					
+		simSetJointPosition(rightMotor,rj)			
+
+		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())		
 		
 		-- Now don't waste time in this loop if the simulation time hasn't changed! This also synchronizes this thread with the main script
 		simSwitchThread() -- This thread will resume just before the main script is called again
@@ -83,11 +85,14 @@ function PathFollowDiffRobot()
 	-- We start the server on a port that is probably not used:
 	local portNb = getPort()
 
+	graphHandle = simGetObjectHandle("Graph")
+	simResetGraph(graphHandle)	
+	
 	-- Start Server
 	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
 
 	-- Start Client
-	result2=simLaunchExecutable('PathFollowApp',"",1) -- set the last argument to 1 to see the console of the launched server
+	--result2=simLaunchExecutable('PathFollowApp',"",1) -- set the last argument to 1 to see the console of the launched server
 
 	if ((result == -1) or (result2 == -1)) then
 		-- The executable could not be launched!
@@ -113,10 +118,8 @@ function PathFollowDiffRobot()
 								robotMaxAccel, 
 								robotMultFactorR, 
 								robotSmoothFactor, 
-								predictLength, 
-								predictLengthImpulse,					
-								distPar_P, 
-								distPar_D, 
+								predictSampleLength, 
+								predictDistanceLength,					
 								oriPar_P, 
 								oriPar_D, 
 								wheelDistance, 

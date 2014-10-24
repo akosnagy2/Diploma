@@ -56,9 +56,6 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 
 	//Get path from RTR
 	configurationList config;
-	//for(auto &c : s.getPrePath()) {
-	//	config.push_back(Configuration(c.p.x, c.p.y, c.phi));
-	//}
 	for (auto &e : s.GetCIPath())
 	{
 		if (e.type == PathPlanner::TranslationCI)
@@ -67,7 +64,7 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 	config.push_back(Configuration(s.GetCIPath().back().q1.p.x, s.GetCIPath().back().q1.p.y, s.GetCIPath().back().q1.phi));
 
 	Scene sc(env, robot);
-    sc.setReversePenalty(10.0);
+    sc.setReversePenalty(1);
     sc.setDx(50);
     sc.setDy(50);
     OccupancyGrid oG(sc);

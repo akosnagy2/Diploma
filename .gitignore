@@ -6,6 +6,11 @@ Release
 *.opensdf
 *.txt
 *.suo
+*.obj
+*.ps
 *.exe
+*.vcxproj
 *.ilk
 *.pdb
+*.filters
+*.sln

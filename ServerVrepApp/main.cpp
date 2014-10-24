@@ -27,6 +27,7 @@ typedef enum
 	CarPathPlanner = 32,
 } AppTypedef;
 
+
 boost::system::error_code SetupServer(boost::asio::io_service& io_service, int port, tcp::iostream& s)
 {
 	tcp::endpoint endpoint(tcp::v4(), port);

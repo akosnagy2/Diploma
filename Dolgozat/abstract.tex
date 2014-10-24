@@ -1,0 +1,39 @@
+%----------------------------------------------------------------------------
+% Abstract in hungarian
+%----------------------------------------------------------------------------
+\chapter*{Kivonat}\addcontentsline{toc}{chapter}{Kivonat}
+ A mobil robotok manapság egyre inkább feltörekvõben vannak. Már nem csak az ipar fedezi fel õket, hanem lassan a mindennapi életünk részévé válnak. Azonban még rengeteg elméleti és gyakorlati kérdés vár megoldásra, hogy az ilyen robotokkal rendszeresen találkozzunk. A mobil robotika egyik legalapvetõbb kérdése az akadályok jelenlétében történõ mozgástervezés és mozgásvégrehajtás. A dolgozatban ezt a kérdéskört járjuk körül, foglalkozunk a globális és lokális geometriai pályatervezéssel, pályamenti sebességprofil kialakításával, valamint pályakövetõ szabályozással. Ezeket két, síkban mozgó, kerekeken guruló robotmodellre alkalmazzuk, mind szimulált, mind valós környezetben.
+
+A dolgozatban bemutatjuk a leggyakrabban használt pályatervezési algoritmusokat, és az ezekhez kapcsolódó elõnyöket és problémákat. Külön kitérünk az általunk vizsgált (differenciális és autószerû) robotmodelleknél felmerülõ kinematikai korlátozásokra, és ezek hatásaira a pályatervezésben. Egy approximációs pályatervezési megközelítést mutatunk be a dolgozatunkban, amely egy globális és egy lokális tervezõ algoritmus együttes használatán alapszik.
+
+Az általunk alkalmazott RTR (Rotate-Translate-Rotate) globális tervezõ a szakirodalomból jól ismert RRT (Rapidly Exploring Random Trees) eljáráson alapul. Az RTR lényege, hogy a kiindulási és a cél konfigurációból két topológiai fát épít, és amennyiben ezek elérik egymást, a keresett pálya könnyedén elõállítható. A pálya forgásokból (R) és transzlációs mozgásokból (T) áll, így a differenciális robotok számára közvetlenül is végrehajtható pályát eredményez. További lényeges tulajdonsága, hogy figyelembe veszi a robot pontos alakját. Ez hatékony tervezést tesz lehetõvé szûk folyosókat tartalmazó környezet esetén is, szemben az elterjedtebb, a robot alakját körrel helyettesítõ módszerekkel.
+
+A megtervezett geometriai pálya még nem tartalmaz információt a mozgás idõparaméterezésére (a robot sebességére, gyorsulására vagy szögsebességére) nézve. Ezért bemutatunk egy általunk kifejlesztett algoritmust a pályamenti sebességprofil meghatározására. Ezt a profilt a robot maximális sebessége, maximális gyorsulása, maximális szögsebessége és a robot kerekeinek maximális gyorsulása alapján számoljuk ki. Az így kialakuló pályát ezután újramintavételezzük, hogy idõben egyenletes mintavételû pálya álljon rendelkezésre a pályakövetõ szabályozás számára.
+
+A pályakövetõ algoritmus a robot pályamenti sebességét és a szögsebességét függetlenül szabályozza. A szétcsatolt rendszer sebesség és szögsebesség beavatkozó jeleit a robot kinematikai egyenletei alapján átalakítjuk keréksebesség beavatkozó jelekre. A sebesség-szabályozási kört a robot kerekeinél található PI szabályozók valósítják meg. A szögsebesség-szabályozás egy mozgás közbeni orientáció korrekciót hajt végre, amelynek alapját a robot késõbbi elõírt pozíciói képezik.
+
+A fent leírt algoritmusokat differenciális robotmodellt feltételezve alakítottuk ki. A dolgozatban bemutatjuk azokat a módosításokat, illetve kiegészítéseket, amelyek lehetõvé teszik a pályatervezést és követést autószerû (kormányzott) robotok esetében is. Ennek keretében bemutatjuk a C*CS lokális pályatervezõ algoritmust, amely az RTR algoritmussal együtt alkalmazva olyan pályát eredményez, amely figyelembe veszi az autó minimális fordulási sugarát.
+
+Az algoritmusokat a V-REP robotszimulációs környezetben implementáltuk és teszteltük, majd mûködésüket két valós roboton is vizsgáltuk. 
+\vfill
+
+%----------------------------------------------------------------------------
+% Abstract in english
+%----------------------------------------------------------------------------
+\chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
+
+The research and application of mobile robots is nowadays increasingly widespread. Beyond industrial applications they are getting popular in personal usage as well.  However, there are a lot of theoretical and practical issues to be resolved. One of the most fundamental aspects of mobile robotics is motion planning and control in environment populated with obstacles. In this paper we discuss global and local geometric path planning, velocity profile generation and motion control along the path. We simulated the investigated methods and tested with differential and car-like robots.
+
+In this paper we present the most commonly used path planning algorithms, and their benefits and disadvantages. We discuss the kinematic constraints for the tested (differential and car-like) robot models and the consequences of these constraints. We present an approximation method for path planning, which is based on a global and a local planner algorithm.
+
+We use the RTR (Rotate-Translate-Rotate) global path planner algorithm, which is based on the well-known RRT (Rapidly Exploring Random Trees) method. The RTR builds two search trees starting from the initial and the goal configuration. If these paths reach each other, the solution can be obtained easily. The path consists of rotation (R) and translation (T) motion primitives, so the path is directly applicable for differential drive robots. Furthermore, the RTR-planner takes the precise shape of the robot into account, which makes possible to find a path in an environment with narrow corridors. This is advantageous compared to other methods which assume circular robot shape.
+
+The path generated by the RTR-planner does not contain any information about the robot's velocity, acceleration and angular velocity. Therefore, we present an algorithm developed to determine the velocity profile. The profile is based on parameters such as the robot's maximum velocity, maximum acceleration, maximum angular velocity along the path and the maximum acceleration of the robot's wheels. After velocity profile generation the geometric path needs to be re-sampled to obtain a path having uniform time-sampling for the motion controller.
+
+The path following algorithm controls the robot translational and angular velocity in two independent control loops. The translational and angular velocity control signals of the decoupled system are converted to wheel velocity control signals based on the robot kinematic equations. The velocity control loops implemented on both wheel by a PI controllers. The angular velocity controller is based on orientation error between the current robot configuration and a future path point.
+
+The algorithms described above are developed primarily for differential robots, but can be extended for car-like robots as well.  In this context we introduce the C*CS local path planner method, which takes into account the minimal turning radius of the car and can be applied together with the RTR planner in order to obtain a feasible path for this robot class.
+
+We have implemented and tested the algorithms in V-REP robot simulation framework and with real robots as well.
+\vfill
+

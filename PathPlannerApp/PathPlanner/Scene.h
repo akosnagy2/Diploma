@@ -118,7 +118,6 @@ namespace PathPlanner
 		void GenerateRTRPath();
 		void DrawScene(int iteration);
 		void DrawPath();
-
 		vector<Config> getPrePath() { return prepath; }
 
 	private:
