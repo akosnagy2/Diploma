@@ -131,11 +131,15 @@ function loadOBJ(filename)
 					vertices[i][j+2] = vec[3]
 				end	
 				h=simCreateMeshShape(2,20*math.pi/180,vertices[i],indices[i])
-				--simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.5,0.5,0.5})
+				simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.5,0.5,0.5})
 				simSetObjectName(h,names[i])	
 			elseif ((names[i] ~= "StartConfig") and (names[i] ~= "GoalConfig")) then				
 				h=simCreateMeshShape(2,20*math.pi/180,vertices[i],indices[i])
-				--simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.5,0.5,0.5})
+				if (names[i] == "Field") then
+					simSetShapeColor(h,"",sim_colorcomponent_ambient,{1.0,1.0,1.0})
+				else
+					simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.5,0.5,0.5})
+				end
 				simSetObjectName(h,names[i])
 			end
         end
