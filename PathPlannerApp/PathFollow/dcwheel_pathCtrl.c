@@ -400,6 +400,7 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 				ctrl->robotAngVel = 0.0;	
 				ctrl->segmentIndex++;
 				ctrl->timeIndex = 0;
+				ctrl->predictIndex = 0;
 				if (ctrl->segmentIndex == ctrl->pathSegmentsLen)
 				{
 					PathCtrl_SetState(ctrl, DISABLE);

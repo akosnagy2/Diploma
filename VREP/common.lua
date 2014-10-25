@@ -55,13 +55,7 @@ function getFreePort()
 	return portNb
 end
 
-function createPath(data)
-	local pathColor = {
-		0.0,0.75,0.0,
-		0.25,0.25,0.25,
-		0.25,0.25,0.25,
-		0.0,0.0,0.0
-	}
+function createPath(data, pathColor)
 	local sampledPath = simCreatePath(-1,{2,sim_distcalcmethod_dl,0},nil,pathColor)
 	if sampledPath == -1 then return end
 	local ptData = {}		
@@ -145,7 +139,7 @@ function loadOBJ(filename)
 				if(names[i]:find("Obstacle") ~= nil) then
 					simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.4,0.4,0.4})
 				else
-					simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.9,0.9,0.9})
+					simSetShapeColor(h,"",sim_colorcomponent_ambient,{1.0,1.0,1.0})
 				end
 				simSetObjectName(h,names[i])
 			end

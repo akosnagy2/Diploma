@@ -92,3 +92,4 @@ void ForwardPath(CSimpleInConnection& connection, tcp::iostream& s);
 int ReceiveRobotPosition(CSimpleInConnection& connection,float& leftJointPos, float& rightJointPos, Config& robotPos);
 int SendRobotData(CSimpleInConnection& connection,float leftJointPos, float rightJointPos, Config& robotPos, Config& rabitPos, vector<float> info_val);
 void ModelDifferentialMotors(float& leftSpeed, float& rightSpeed, float newLeftSpeed, float newRightSpeed, MotorParamsTypedef& leftMotor, MotorParamsTypedef& rightMotor, PathFollowParamsTypedef &pars);
+vector<float> ConvertVrepPath(PathMessage &path);

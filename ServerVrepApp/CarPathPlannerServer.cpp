@@ -58,17 +58,21 @@ int CarPathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tc
 
 	//Receive (sampled) path from PathPlanner
 	path.receive(client);
-
-	vector<float> path_vrep;
-	for(auto &s : path.path) {
-		for(auto &p : s.path) {
-			path_vrep.push_back(p.p.x);
-			path_vrep.push_back(p.p.y);
-		}
-	}
-
+		
+	vector<float> path_vrep = ConvertVrepPath(path);
+	
 	//Send (sampled) path to V-Rep Client
-	if(!connection.replyToReceivedData((char*) path_vrep._Myfirst, path_vrep.size()*sizeof(float)))
+	if (!connection.replyToReceivedData((char*)path_vrep._Myfirst, path_vrep.size()*sizeof(float)))
+		return -1;
+
+	//Receive (sampled) path from PathPlanner
+	path.path.clear();
+	path.receive(client);
+		
+	vector<float> path_vrep2 = ConvertVrepPath(path);
+	
+	//Send (sampled) path to V-Rep Client
+	if (!connection.replyToReceivedData((char*)path_vrep2._Myfirst, path_vrep2.size()*sizeof(float)))
 		return -1;
 
 	CarSimulationLoop(serverPars.PathFollow, connection, client, logFile);

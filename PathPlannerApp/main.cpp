@@ -208,14 +208,18 @@ int main()
 	if (!ParseObj("..\\Frame\\" + envFileName, sc))
 		return -1;
 
-
 	start = high_resolution_clock::now();
 	sc.PrePlanner();
 	sc.RTRPlanner();
+
+	//Generate and send RTR path
+	PathMessage rtrPath;
+	sc.GenerateRTRPath();
+	rtrPath.path = sc.GetPath();
+	rtrPath.send(s);
+	
 	bool success = sc.CCSPlanner();
-	if(!success && !robotType) {
-		sc.GenerateRTRPath();
-	} else if(!success) {
+	if(!success && robotType) {
 		return -1;
 	}
 	stop = high_resolution_clock::now();
@@ -224,7 +228,7 @@ int main()
 	vector<PathPlanner::PathSegment> &geoPath = sc.GetPath();
 	vector<PathPlanner::PathSegment> sampPath;
 	vector<vector<float>> path_dsp_vel;
-	PathMessage vrepPath;
+	PathMessage ccsPath;
 	
 	if (geoPath.size() == 0)
 		return -1;
@@ -238,8 +242,8 @@ int main()
 	profile_top(geoPath, sampPath,path_dsp_vel, robotType);	
 	
 	//Send back to V-REP
-	vrepPath.path = sampPath;
-	vrepPath.send(s);
+	ccsPath.path = sampPath;
+	ccsPath.send(s);
 
 	if(!robotType) {
 		//Convert Sampled PathSegments to PathFollow PathSegments

@@ -165,6 +165,9 @@ void AddCCSToPath(vector<CCS> ccs, vector<PathPlanner::PathSegment> &path, float
 {
 	bool lastDir = ccs.front().getFirst().getDirection();
 
+	//Clear path
+	path.clear();
+
 	//First segment
 	PathPlanner::PathSegment p;
 	p.direction = lastDir;

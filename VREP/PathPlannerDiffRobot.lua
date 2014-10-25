@@ -161,6 +161,21 @@ function PathPlannerDiffRobot()
 				pars=simPackFloats(pars)
 				writeSocketData(client,pars)
 				
+				-- Read sampled path				
+				local returnData=readSocketData(client)
+				if (returnData==nil) then
+					break -- Read error
+				end
+
+				-- Create sampled path
+				local pathColor1 = {
+					0.0,0.75,0.0,
+					0.25,0.25,0.25,
+					0.25,0.25,0.25,
+					0.0,0.0,0.0
+				}				
+				createPath(simUnpackFloats(returnData), pathColor1)
+				
 				-- Read sampled path
 				local returnData=readSocketData(client)
 				if (returnData==nil) then
@@ -168,7 +183,13 @@ function PathPlannerDiffRobot()
 				end
 
 				-- Create sampled path
-				createPath(simUnpackFloats(returnData))
+				local pathColor2 = {
+					1.0,0.0,0.0,
+					0.45,0.45,0.45,
+					0.45,0.45,0.45,
+					0.0,0.0,0.0
+				}	
+				createPath(simUnpackFloats(returnData), pathColor2)	
 
 				-- We could connect to the server
 				PathPlannerSimulationLoop()

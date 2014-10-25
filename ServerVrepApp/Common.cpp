@@ -67,6 +67,21 @@ int ReceiveRobotPosition(CSimpleInConnection& connection,float& leftJointPos, fl
 	return -1;
 }
 
+vector<float> ConvertVrepPath(PathMessage &path)
+{
+	vector<float> path_vrep;
+	for (auto &s : path.path)
+	{
+		for (auto &p : s.path)
+		{
+			path_vrep.push_back(p.p.x);
+			path_vrep.push_back(p.p.y);
+		}
+	}
+
+	return path_vrep;
+}
+
 int SendRobotData(CSimpleInConnection& connection,float leftJointPos, float rightJointPos, Config& robotPos, Config& rabitPos, vector<float> info_val)
 {
 	vector<float> msg;

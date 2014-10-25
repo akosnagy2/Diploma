@@ -149,9 +149,6 @@
     <ClInclude Include="PathProfile\path_profile_funcs.h">
       <Filter>PathProfile</Filter>
     </ClInclude>
-    <ClInclude Include="PathProfile\path_profile_top.h">
-      <Filter>PathProfile</Filter>
-    </ClInclude>
     <ClInclude Include="PathFollow\dcwheel_pathCtrl.h">
       <Filter>PathFollow</Filter>
     </ClInclude>
@@ -241,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="CCS\planner\Scene.h">
       <Filter>CCS\planner</Filter>
+    </ClInclude>
+    <ClInclude Include="PathProfile\path_profile_top.h">
+      <Filter>PathProfile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
