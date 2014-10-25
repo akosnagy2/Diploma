@@ -118,6 +118,9 @@ Config CarPathController::getSensorCenter(Config carPosition)
 
 	if(predictIndex == paths[pathIndex].path.size() - 1 && Config::Distance(carPosition, predictPoint) < dist) {
 		float distError = dist - Config::Distance(carPosition, frontPath[pathIndex].path[predictIndex]);
+		if(!paths[pathIndex].direction) {
+			distError *= -1.0f;
+		}
 		predictPoint.p.x = predictPoint.p.x + cos(predictPoint.phi) * distError;
 		predictPoint.p.y = predictPoint.p.y + sin(predictPoint.phi) * distError;
 	}

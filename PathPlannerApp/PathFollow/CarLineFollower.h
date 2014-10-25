@@ -7,6 +7,7 @@ public:
 	~CarLineFollower();
 
 	float getFi(float delta, float p);
+	float getFi(float delta, float p, float predictDist);
 private:
 	CarLikeRobot &robot;
 	float L;

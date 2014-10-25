@@ -65,8 +65,10 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 
 	Scene sc(env, robot);
     sc.setReversePenalty(1);
-    sc.setDx(50);
-    sc.setDy(50);
+	double ds = min(s.GetFieldXLength() / 50.0, s.GetFieldYLength() / 50.0);
+	ds = 50.0;
+	sc.setDx(ds);
+	sc.setDy(ds);
     OccupancyGrid oG(sc);
 
 	/* Initialize path planner */
