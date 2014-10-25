@@ -151,6 +151,12 @@ function PathPlannerCarRobot()
 				pars=simPackFloats(pars)
 				writeSocketData(client,pars)
 				
+				-- Read sampled path				
+				local returnData=readSocketData(client)
+				if (returnData==nil) then
+					break -- Read error
+				end				
+				
 				-- Create sampled path
 				local pathColor1 = {
 					0.0,0.75,0.0,
