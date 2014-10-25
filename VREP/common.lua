@@ -56,7 +56,14 @@ function getFreePort()
 end
 
 function createPath(data)
-	local sampledPath = simCreatePath(-1,NULL,NULL,NULL)
+	local pathColor = {
+		0.0,0.75,0.0,
+		0.25,0.25,0.25,
+		0.25,0.25,0.25,
+		0.0,0.0,0.0
+	}
+	local sampledPath = simCreatePath(-1,{2,sim_distcalcmethod_dl,0},nil,pathColor)
+	if sampledPath == -1 then return end
 	local ptData = {}		
 	print("Sampled path received.Length: " .. table.getn(data)/2)
 	for i = 0, table.getn(data)/2 - 1  do
@@ -135,7 +142,11 @@ function loadOBJ(filename)
 				simSetObjectName(h,names[i])	
 			elseif ((names[i] ~= "StartConfig") and (names[i] ~= "GoalConfig")) then				
 				h=simCreateMeshShape(2,20*math.pi/180,vertices[i],indices[i])
-				--simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.5,0.5,0.5})
+				if(names[i]:find("Obstacle") ~= nil) then
+					simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.4,0.4,0.4})
+				else
+					simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.9,0.9,0.9})
+				end
 				simSetObjectName(h,names[i])
 			end
         end

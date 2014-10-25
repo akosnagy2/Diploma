@@ -53,9 +53,9 @@ function PathPlannerSimulationLoop()
 		setRobotSpeed(v,fi)
 
 		simSetObjectPosition(rabitHandle,sim_handle_parent,rabitPos)
-		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
 		
 		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
+		simHandleGraph(trackGraphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
 		
 		-- Now don't waste time in this loop if the simulation time hasn't changed! This also synchronizes this thread with the main script
 		simSwitchThread() -- This thread will resume just before the main script is called again
@@ -85,6 +85,7 @@ function PathPlannerCarRobot()
 	
 	graphHandle = simGetObjectHandle("Graph")
 	simResetGraph(graphHandle)
+	simResetGraph(trackGraphHandle)
 	
 	--Turn off dynamic for Robot
 	p=simBoolOr16(simGetModelProperty(objHandle),sim_modelproperty_not_dynamic)
@@ -100,12 +101,9 @@ function PathPlannerCarRobot()
 
 	-- We start the server on a port that is probably not used:
 	local portNb = getPort()
-
-	graphHandle = simGetObjectHandle("Graph")
-	simResetGraph(graphHandle)	
 	
 	-- Start Server
-	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
+	result=simLaunchExecutable('ServerVrepApp',portNb,0) -- set the last argument to 1 to see the console of the launched server
 
 	-- Start Client
 	--result2=simLaunchExecutable('PathPlannerApp',"",1) -- set the last argument to 1 to see the console of the launched server
