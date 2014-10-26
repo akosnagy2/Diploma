@@ -24,6 +24,7 @@
     <ClCompile Include="misc.cpp" />
     <ClCompile Include="PackedMessage.cpp" />
     <ClCompile Include="PathMessage.cpp" />
+    <ClCompile Include="PathSegment.cpp" />
     <ClCompile Include="Pos2dMessage.cpp" />
   </ItemGroup>
   <ItemGroup>

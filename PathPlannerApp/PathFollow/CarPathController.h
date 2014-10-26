@@ -2,7 +2,6 @@
 #include <vector>
 #include "CarLikeRobot.h"
 #include "CarLineFollower.h"
-#include "CarSpeedController.h"
 #include "PathSegment.h"
 #include "Geometry/Config.h"
 
@@ -18,7 +17,7 @@ typedef enum StateEnum {
 class CarPathController
 {
 public:
-	CarPathController(std::vector<PathSegment> &paths, CarLikeRobot &car, CarLineFollower &lf, CarSpeedController &sc, float predict);
+	CarPathController(std::vector<PathSegment> &paths, CarLikeRobot &car, CarLineFollower &lf, float predict);
 	~CarPathController();
 
 	void Loop(Config nextPos);
@@ -29,7 +28,6 @@ private:
 	std::vector<PathSegment> &paths;
 	std::vector<PathSegment> frontPath;
 	CarLineFollower &lineFollower;
-	CarSpeedController &speedController;
 	CarLikeRobot &car;
 	float predict;
 	int index;

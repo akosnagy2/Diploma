@@ -11,7 +11,6 @@
 #include "PathFollow\dcwheel_pathCtrl.h"
 #include "PathFollow/CarLineFollower.h"
 #include "PathFollow/CarPathController.h"
-#include "PathFollow/CarSpeedController.h"
 
 #include "CarLikeRobot.h"
 
@@ -58,7 +57,7 @@ vector<PathPlanner::Point> LoadPathFromFile(string filename)
 	return path;
 }
 
-void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<float>> &path_dsp_vel, vector<vector<PositionTypedef>> &path_dsp_points, vector<PathSegmentTypedef> &path_dsp)
+void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<PositionTypedef>> &path_dsp_points, vector<PathSegmentTypedef> &path_dsp)
 {
 	int i = 0;
 	for (auto &ps : sampPath)
@@ -76,7 +75,7 @@ void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<float>> &
 		PathSegmentTypedef segmentDSP;
 		segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
 		segmentDSP.path = path_dsp_points.back()._Myfirst;
-		segmentDSP.velocity = path_dsp_vel[i++]._Myfirst;
+		segmentDSP.velocity = ps.velocity._Myfirst;
 		segmentDSP.path_len = (uint16_t)path_dsp_points.back().size();
 		path_dsp.push_back(segmentDSP);
 	}
@@ -227,7 +226,6 @@ int main()
 
 	vector<PathPlanner::PathSegment> &geoPath = sc.GetPath();
 	vector<PathPlanner::PathSegment> sampPath;
-	vector<vector<float>> path_dsp_vel;
 	PathMessage ccsPath;
 	
 	if (geoPath.size() == 0)
@@ -239,7 +237,7 @@ int main()
 	} else {
 		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep);
 	}
-	profile_top(geoPath, sampPath,path_dsp_vel, robotType);	
+	profile_top(geoPath, sampPath, robotType);	
 	
 	//Send back to V-REP
 	ccsPath.path = sampPath;
@@ -249,7 +247,7 @@ int main()
 		//Convert Sampled PathSegments to PathFollow PathSegments
 		vector<PathSegmentTypedef> path_dsp;
 		vector<vector<PositionTypedef>> path_dsp_points;
-		ConvertPathToDSPPath(sampPath, path_dsp_vel, path_dsp_points, path_dsp);
+		ConvertPathToDSPPath(sampPath, path_dsp_points, path_dsp);
 
 		PathCtrlTypedef pathFollow;
 		PathCtrl_Init(&pathFollow, 0, 2*pathMaxAccel/wheelDistance,pathMaxAngularSpeed, (timeStep*1000), 0, 0);
@@ -312,8 +310,7 @@ int main()
 		}
 	} else {
 		CarLineFollower follower(robotData, lineW0, lineKsi, predictSampleLength);
-		CarSpeedController speedController(0.0f, 0.0f, 0.0f, timeStep);
-		CarPathController pathController(sampPath, robotData, follower, speedController, predictSampleLength);
+		CarPathController pathController(sampPath, robotData, follower, predictSampleLength);
 		while(s.good()) {
 			CtrlMessage ctrl_out;
 			Config act_pos;
@@ -335,8 +332,8 @@ int main()
 			pathController.Loop(act_pos);
 			rabitPos.pos = pathController.getRabbit();
 
-			info.values.push_back(speedController.getDistError());
-			info.values.push_back(speedController.getSumError());
+			//info.values.push_back(speedController.getDistError());
+			//info.values.push_back(speedController.getSumError());
 
 			ctrl_out.ctrl_sig.push_back(pathController.getV());
 			ctrl_out.ctrl_sig.push_back(pathController.getFi());

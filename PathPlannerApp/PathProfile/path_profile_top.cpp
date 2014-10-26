@@ -893,7 +893,7 @@ void JoinProfiles(std::vector<Profile> &profs, Profile &out)
 }
 
 
-void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vector<vector<float>> &resultVelocity, bool rType)
+void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, bool rType)
 {
 	robotType = rType;
 	ofstream logfile("logFile.txt", ios_base::app);
@@ -920,8 +920,8 @@ void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vec
 		PathSegment ps;
 		ps.direction = it->direction;
 		ps.path = sampProfileSegment.path;
+		ps.velocity = sampProfileSegment.v;
 		ps.curvature = sampProfileSegment.c;
-		resultVelocity.push_back(sampProfileSegment.v);
 
 		resultPath.push_back(ps);
 
