@@ -1,4 +1,5 @@
 #include "PathSegment.h"
+#include <algorithm>
 
 using namespace PathPlanner;
 

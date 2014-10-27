@@ -27,4 +27,6 @@ int sgn(double val);
 #endif
 
 #define isinf(x) (!_finite(x))
-#define INFINITY (std::numeric_limits<double>::infinity())
+#ifndef INFINITY
+	#define INFINITY (std::numeric_limits<double>::infinity())
+#endif
