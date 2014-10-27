@@ -43,9 +43,10 @@ void CarPathController::Loop(Config nextPos)
 
 		case pathFollow:
 		{
-			index = paths[pathIndex].getClosestPoint(nextPos, index);
+			int newIndex = paths[pathIndex].getClosestPoint(nextPos, index);
 
-			if(index + 1 >= paths[pathIndex].path.size()) {
+			if(max(index + 1, newIndex + 1) >= paths[pathIndex].path.size())
+			{
 				state = preStop;
 				v = 0.0f;
 				fi = 0.0f;
@@ -63,6 +64,7 @@ void CarPathController::Loop(Config nextPos)
 			}
 
 			/* Calculate speed control signal */
+			index = newIndex;
 			v = paths[pathIndex].velocity[index + 1];
 
 			/* Calculate steer control signal */

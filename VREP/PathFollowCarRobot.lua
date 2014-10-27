@@ -39,7 +39,7 @@ function PathFollowSimulationLoop()
 		rabitPos[2] = returnData[7] / 1000
 		rabitPos[3] = 0.1 -- fix
 		
-		simSetGraphUserData(trackGraphHandle, "TrackError", fi) 
+		simSetGraphUserData(trackGraphHandle, "Steering_Angle", fi) 
 
 		if(consoleHandle ~= nil) then
 			simAuxiliaryConsolePrint(consoleHandle,NULL) 
@@ -53,6 +53,9 @@ function PathFollowSimulationLoop()
 		setRobotSpeed(v,fi)
 
 		simSetObjectPosition(rabitHandle,sim_handle_parent,rabitPos)
+		
+		simHandleGraph(graphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
+		simHandleGraph(trackGraphHandle, simGetSimulationTime()+simGetSimulationTimeStep())
 		
 		-- Now don't waste time in this loop if the simulation time hasn't changed! This also synchronizes this thread with the main script
 		simSwitchThread() -- This thread will resume just before the main script is called again
@@ -70,6 +73,10 @@ function PathFollowCarRobot()
 	rightSteer=simGetObjectHandle("FrontRightTurnerJoint") -- Handle of the front right turner joint
 	rabitHandle=simGetObjectHandle("Sphere") -- Handle of the rabit (path position + prediction length)
 	trackGraphHandle=simGetObjectHandle("TrackErrorGraph")
+	
+	graphHandle = simGetObjectHandle("Graph")
+	simResetGraph(graphHandle)
+	simResetGraph(trackGraphHandle)
 	
 	--Turn off dynamic for Robot
 	p=simBoolOr16(simGetModelProperty(objHandle),sim_modelproperty_not_dynamic)
