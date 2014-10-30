@@ -1,8 +1,37 @@
 #include "CarPathPlannerServer.h"
 #include "CtrlMessage.h"
 
+void CarParsePathFollowPars(deque<float> &parsIn, CarPathFollowParamsTypedef &parsOut)
+{
+	parsOut.TimeStep = parsIn.front(); parsIn.pop_front();
+
+	parsOut.motor.motorMaxSpeed = parsIn.front(); parsIn.pop_front();
+	parsOut.motor.motorMaxAccel = parsIn.front(); parsIn.pop_front();
+	parsOut.motor.motorMultFactor = parsIn.front(); parsIn.pop_front();
+	parsOut.motor.motorSmoothFactor = parsIn.front(); parsIn.pop_front();
+
+	parsOut.MaxSteerSpeed = parsIn.front(); parsIn.pop_front();
+
+	parsOut.PredictLength = parsIn.front(); parsIn.pop_front();
+	parsOut.DistPar_P = parsIn.front(); parsIn.pop_front();
+	parsOut.DistPar_D = parsIn.front(); parsIn.pop_front();
+	parsOut.w0 = parsIn.front(); parsIn.pop_front();
+	parsOut.ksi = parsIn.front(); parsIn.pop_front();
+
+	parsOut.WheelDistance = parsIn.front(); parsIn.pop_front();
+	parsOut.WheelDiameter = parsIn.front(); parsIn.pop_front();
+
+	parsOut.PathPars.PathMaxVelocity = parsIn.front(); parsIn.pop_front();
+	parsOut.PathPars.PathMaxAcceleration = parsIn.front(); parsIn.pop_front();
+
+	parsOut.AxisDistance = parsIn.front(); parsIn.pop_front();
+	parsOut.FiMax = parsIn.front(); parsIn.pop_front();
+}
+
 void CarParsePathPlannerPars(deque<float> &parsIn, CarPathPlannerParamsTypedef &parsOut)
 {
+	parsOut.app = (AppTypedef)(int)parsIn.front(); parsIn.pop_front();
+
 	CarParsePathFollowPars(parsIn, parsOut.PathFollow);
 
 	parsOut.iterationMax = parsIn.front(); parsIn.pop_front();
@@ -19,7 +48,7 @@ void CarForwardPathPlannerPars(tcp::iostream &client, CarPathPlannerParamsTypede
 	PackedMessage pathMsg;
 	CarPathFollowParamsTypedef p = pars.PathFollow;
 
-	pathMsg.values.push_back(1.0f);								// robot type = car
+	pathMsg.values.push_back(pars.app);							// robot type
 	pathMsg.values.push_back(p.PredictLength);					// PredictLength
 	pathMsg.values.push_back(p.DistPar_P);						// distPar_P
 	pathMsg.values.push_back(p.DistPar_D);						// distPar_D
@@ -56,14 +85,23 @@ int CarPathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tc
 	//Forward parameters to Client
 	CarForwardPathPlannerPars(client, serverPars);
 
-	//Receive (sampled) path from PathPlanner
-	path.receive(client);
+	if (serverPars.app == AppTypedef::CarPathFollow)
+	{
+		//Receive, forward path from V-Rep Client
+		ForwardPath(connection, client);
+	}
+
+	if (serverPars.app == AppTypedef::CarPathPlanner)
+	{
+		//Receive (sampled) path from PathPlanner
+		path.receive(client);
 		
-	vector<float> path_vrep = ConvertVrepPath(path);
+		vector<float> path_vrep = ConvertVrepPath(path);
 	
-	//Send (sampled) path to V-Rep Client
-	if (!connection.replyToReceivedData((char*)path_vrep._Myfirst, path_vrep.size()*sizeof(float)))
-		return -1;
+		//Send (sampled) path to V-Rep Client
+		if (!connection.replyToReceivedData((char*)path_vrep._Myfirst, path_vrep.size()*sizeof(float)))
+			return -1;
+	}
 
 	//Receive (sampled) path from PathPlanner
 	path.path.clear();

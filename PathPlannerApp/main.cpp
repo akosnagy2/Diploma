@@ -15,26 +15,34 @@
 
 #include "CarLikeRobot.h"
 
+typedef enum
+{
+	DifferentialPathFollow = 2,
+	DifferentialPathPlanner = 4,
+	DifferentialRobotPilot = 8,
+	CarPathFollow = 16,
+	CarPathPlanner = 32,
+} AppTypedef;
 
 using namespace std;
 using namespace std::chrono;
 using boost::asio::ip::tcp;
 
-float predictDistanceLength = 10;
-float predictSampleLength = 10;
-float oriPar_P = 0.1f;
-float oriPar_D = 0.15f;
+float predictDistanceLength = 5.0;
+float predictSampleLength = 2.0;
+float oriPar_P = 0.3f;
+float oriPar_D = 0.1f;
 float lineW0 = 2.0f;
 float lineKsi = 1.0f;
-float timeStep = 0.1f;
+float timeStep = 0.05f;
 float wheelDistance = 254.0f;
 float pathMaxSpeed = 200.0f;
-float pathMaxAccel = 100.0f;
-float pathMaxTangentAccel = 100.0f;
-float pathMaxAngularSpeed = 1.628f;
+float pathMaxAccel = 200.0f;
+float pathMaxTangentAccel = 200.0f;
+float pathMaxAngularSpeed = 1.0f;
 
 CarLikeRobot robotData;
-static bool robotType = false;
+static int robotType;
 
 //TODO: nincs checkBack;
 
@@ -135,8 +143,8 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	parMsg.receive(s);	
 	
 	//PathProfile, PathFollow params
-	robotType = ((float) parMsg.values[0]) > 0.0f;
-	if(robotType) {
+	robotType = (AppTypedef)(int)parMsg.values[0];
+	if((robotType == AppTypedef::CarPathFollow) || (robotType == AppTypedef::CarPathPlanner)) {
 		predictSampleLength = (float)parMsg.values[1];
 		predictDistanceLength = (float)parMsg.values[2];
 		lineW0 = (float) parMsg.values[4];
@@ -184,6 +192,10 @@ int main()
 {
 	chrono::high_resolution_clock::time_point start, stop;
 	string envFileName;
+	vector<PathPlanner::PathSegment> geoPath;
+	vector<PathPlanner::PathSegment> sampPath;
+	vector<vector<float>> path_dsp_vel;
+	PathMessage ccsPath;
 
 	//Load params from V-REP via ServerApp
 	tcp::iostream s("127.0.0.1",to_string(168));
@@ -197,67 +209,102 @@ int main()
 	else
 	{
 		cout << "Manual Mode" << endl;
-		envFileName = "frame115.obj";
-		sc.SetRTRParameters(1000, 0.0f, 0.0f, 50);
+		envFileName = "frame6.obj";
+		sc.SetRobotMinimumRadius(50.0f);
+		sc.SetRobotWheelBase(wheelDistance);
+		sc.SetPathDeltaS(10.0);
+		sc.SetRTRParameters(3000, 0.0f, 0.2f, 350);
+		robotType = AppTypedef::DifferentialPathPlanner;
 	}
 	
-	//Debug
-	sc.SetFixPrePath(LoadPathFromFile("RTRPath.txt"));
-	
-	//Set params to scene object
-	if (!ParseObj("..\\Frame\\" + envFileName, sc))
-		return -1;
+	if ((robotType == AppTypedef::CarPathPlanner) || (robotType == AppTypedef::DifferentialPathPlanner))
+	{
+		PathMessage rtrPath;
+		cout << "PathPlanner Mode" << endl;
 
-	start = high_resolution_clock::now();
-	sc.PrePlanner();
-	sc.RTRPlanner();
-
-	//Generate and send RTR path
-	PathMessage rtrPath;
-	sc.GenerateRTRPath();
-	rtrPath.path = sc.GetPath();
-	rtrPath.send(s);
+		//Debug
+		sc.SetFixPrePath(LoadPathFromFile("RTRPath.txt"));
 	
-	bool success = sc.CCSPlanner();
-	if(!success && robotType) {
-		return -1;
+		//Set params to scene object
+		if (!ParseObj("..\\Frame\\" + envFileName, sc))
+			return -1;
+
+		start = high_resolution_clock::now();
+		cout << "Pre Planner starting..." << endl;
+		sc.PrePlanner();
+		stop = high_resolution_clock::now();
+		cout << "Pre Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
+
+		start = high_resolution_clock::now();
+		cout << "RTR Planner starting..." << endl;
+		sc.RTRPlanner();
+		stop = high_resolution_clock::now();
+		cout << "RTR Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
+
+		//Generate and send RTR path
+		start = high_resolution_clock::now();
+		cout << "C*CS Planner starting..." << endl;
+		sc.GenerateRTRPath();
+		stop = high_resolution_clock::now();
+		cout << "C*CS Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
+
+
+		rtrPath.path = sc.GetPath();
+		rtrPath.send(s);
+	
+		bool success = sc.CCSPlanner();
+		if(!success && robotType) { //!!!SZAR
+			return -1;
+		}
+
+
+		geoPath = sc.GetPath();	
 	}
-	stop = high_resolution_clock::now();
-	cout << duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
-
-	vector<PathPlanner::PathSegment> &geoPath = sc.GetPath();
-	vector<PathPlanner::PathSegment> sampPath;
-	vector<vector<float>> path_dsp_vel;
-	PathMessage ccsPath;
+	else
+	{
+		cout << "PathFollow Mode" << endl;
+		ccsPath.path.clear();
+		ccsPath.receive(s);
+		geoPath = ccsPath.path;			
+	}
 	
 	if (geoPath.size() == 0)
 		return -1;
 
 	//Calc sampled path
-	if(!robotType) {
-		setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance);
-	} else {
+	if ((robotType == AppTypedef::CarPathPlanner) || (robotType == AppTypedef::CarPathPlanner))
+	{
 		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep);
+		profile_top(geoPath, sampPath,path_dsp_vel, true);	
 	}
-	profile_top(geoPath, sampPath,path_dsp_vel, robotType);	
+	else 
+	{
+		setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance);	
+		profile_top(geoPath, sampPath,path_dsp_vel, false);	
+	}	
 	
 	//Send back to V-REP
 	ccsPath.path = sampPath;
 	ccsPath.send(s);
 
-	if(!robotType) {
+	if ((robotType == AppTypedef::DifferentialPathFollow) || (robotType == AppTypedef::DifferentialPathPlanner))
+	{
 		//Convert Sampled PathSegments to PathFollow PathSegments
 		vector<PathSegmentTypedef> path_dsp;
 		vector<vector<PositionTypedef>> path_dsp_points;
 		ConvertPathToDSPPath(sampPath, path_dsp_vel, path_dsp_points, path_dsp);
 
 		PathCtrlTypedef pathFollow;
-		PathCtrl_Init(&pathFollow, 0, 2*pathMaxAccel/wheelDistance,pathMaxAngularSpeed, (timeStep*1000), 0, 0);
+		PathCtrl_Init(&pathFollow, 0, (timeStep*1000), 0, 0);
 		PathCtrl_SetPars(&pathFollow, oriPar_P, oriPar_D);
 		PathCtrl_SetPathSegments(&pathFollow, path_dsp._Myfirst, path_dsp.size());
 		PathCtrl_SetRobotPar(&pathFollow, wheelDistance);
 		pathFollow.predictSampleLength = predictSampleLength;
 		pathFollow.predictDistanceLength = predictDistanceLength;
+		pathFollow.maxVel = pathMaxSpeed;
+		pathFollow.maxAccel = pathMaxAccel;
+		pathFollow.maxAngAccel = 2*pathMaxAccel/wheelDistance;
+		pathFollow.maxAngVel = pathMaxAngularSpeed;
 		PathCtrl_SetState(&pathFollow, 1);
 
 		while(s.good()) {

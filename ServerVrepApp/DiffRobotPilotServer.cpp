@@ -1,5 +1,5 @@
-#include "RobotPilotServer.h"
-#include "PathPlannerServer.h"
+#include "DiffRobotPilotServer.h"
+#include "DiffPathPlannerServer.h"
 #include "PathMessage.h"
 
 void RobotLoop(CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile)

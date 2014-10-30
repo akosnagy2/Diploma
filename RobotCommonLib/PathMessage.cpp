@@ -29,7 +29,8 @@ int PathMessage::receive(iostream &stream)
 			for (Json::Value::iterator it2 = (*it)["Path"].begin(); it2 != (*it)["Path"].end(); it2++)
 			{
 				seg.path.push_back(Config((*it2)["x"].asFloat(), (*it2)["y"].asFloat(), (*it2)["phi"].asFloat()));				
-				seg.curvature.push_back((*it2)["curvature"].asFloat());
+				if (!(*it2)["curvature"].isNull())
+					seg.curvature.push_back((*it2)["curvature"].asFloat());
 			}
 
 			this->path.push_back(seg);

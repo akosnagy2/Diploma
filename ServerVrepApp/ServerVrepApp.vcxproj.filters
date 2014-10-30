@@ -24,19 +24,13 @@
     <ClInclude Include="Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PathFollowServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PathPlannerServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RobotPilotServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CarPathFollowServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CarPathPlannerServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DiffPathPlannerServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DiffRobotPilotServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,19 +47,13 @@
     <ClCompile Include="Common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PathFollowServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PathPlannerServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RobotPilotServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CarPathFollowServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CarPathPlannerServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DiffPathPlannerServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DiffRobotPilotServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -51,25 +51,16 @@ bool Line::LineSegmentIntersection(Config q1, Line s1, Point &intersect)
 	float D = s1.b.y - s1.a.y;
 	float E = s1.b.x - s1.a.x;
 
-	if (fabs(A*E - D*B) > 0.0f)
+	//Intersection point of the two lines
+	if ((A*E - D*B) == 0.0f)
+		return false;
+	else
 	{
 		intersect.x = (A*E*q1.p.x - B*E*q1.p.y - D*B*s1.a.x + B*E*s1.a.y) / (A*E - D*B);
 		intersect.y = (B*D*q1.p.y - A*D*q1.p.x - E*A*s1.a.y + A*D*s1.a.x) / (B*D - E*A);
-
-		if ((((fabs(intersect.x - s1.a.x) + fabs(intersect.x - s1.b.x))) - fabs(E)) < EPS)
-		{
-			if ((((fabs(intersect.y - s1.a.y) + fabs(intersect.y - s1.b.y))) - fabs(D)) < EPS)
-			{
-				if ( (fabs(intersect.x - s1.a.x) > EPS) || (fabs(intersect.y - s1.a.y) > EPS) )
-				{
-					if ( (fabs(intersect.x - s1.b.x) > EPS) || (fabs(intersect.y - s1.b.y) > EPS) )
-						return true;
-				}
-			}
-		}
 	}
 
-	return false;
+	return s1.CheckPointInSegment(intersect);
 }
 
 bool Line::LineLineIntersection(Line l1, Line l2, Point &intersect)
@@ -77,18 +68,15 @@ bool Line::LineLineIntersection(Line l1, Line l2, Point &intersect)
 	float A = l1.b.y - l1.a.y;
 	float B = l1.b.x - l1.a.x;
 	float D = l2.b.y - l2.a.y;
-	float E = l2.b.x - l2.a.x;
-	
-	float det = A*E - D*B;
+	float E = l2.b.x - l2.a.x;	
 
 	//Intersection point of the two lines
-	if (det == 0.0f)
+	if ((A*E - D*B) == 0.0f)
 		return false;
 	else
 	{
-		intersect.x = (E*(A*l1.a.x - B*l1.a.y) - B*(D*l2.a.x - E*l2.a.y)) / det;
-		intersect.y = (A*(E*l2.a.y - D*l2.a.x) - D*(B*l1.a.y - A*l1.a.x)) / det;
-
+		intersect.x = (A*E*l1.a.x - B*E*l1.a.y - D*B*l2.a.x + B*E*l2.a.y) / (A*E - D*B);
+		intersect.y = (B*D*l1.a.y - A*D*l1.a.x - E*A*l2.a.y + A*D*l2.a.x) / (B*D - E*A);
 		return true;
 	}
 }

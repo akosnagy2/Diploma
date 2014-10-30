@@ -12,6 +12,16 @@
 using boost::asio::ip::tcp;
 using namespace std;
 
+typedef enum
+{
+	DifferentialPathFollow = 2,
+	DifferentialPathPlanner = 4,
+	DifferentialRobotPilot = 8,
+	CarPathFollow = 16,
+	CarPathPlanner = 32,
+} AppTypedef;
+
+
 typedef struct
 {
 	float PathMaxVelocity;
@@ -62,6 +72,7 @@ typedef struct
 
 typedef struct
 {
+	AppTypedef app;
 	PathFollowParamsTypedef PathFollow;
 	float iterationMax;
 	float fixPathProb;
@@ -74,6 +85,7 @@ typedef struct
 
 typedef struct
 {
+	AppTypedef app;
 	CarPathFollowParamsTypedef PathFollow;
 	float iterationMax;
 	float fixPathProb;

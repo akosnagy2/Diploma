@@ -3,7 +3,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define EPS	(0.1f)
+#define EPS	(0.01f)
 #define PI ((float)M_PI)
 
 //0-nál 0-t ad vissza

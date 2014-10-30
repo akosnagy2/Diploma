@@ -18,7 +18,10 @@ static float getDistanceOnPath(uint32_t a, uint32_t b, PositionTypedef* path)
 {
 	float dist = 0.0f;
 	while (a < b)
-		dist += getDistance(path[a], path[a++]);
+	{
+		dist += getDistance(path[a], path[a+1]);
+		a++;
+	}
 	return dist;
 }
 
@@ -45,7 +48,7 @@ static float getDirection(PositionTypedef a, PositionTypedef b)
 	return atan2((b.y - a.y), (b.x - a.x));
 }
 
-uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, float maxBeta, float maxW, uint16_t sample_ms, void (*function)(), void (*pathStopFunction)())
+uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, uint16_t sample_ms, void (*function)(), void (*pathStopFunction)())
 {
 	ctrl->timer_index = timer_index;
 	ctrl->function = function;
@@ -55,8 +58,7 @@ uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, flo
 	ctrl->pathSegmentsLen = 0;
 	ctrl->pathStop = pathStopFunction;
 
-	ctrl->maxBeta = maxBeta;
-	ctrl->maxW = maxW;
+//ctrl->robotPosFlag = 0;
 	ctrl->brake = 0;
 	ctrl->state = STATE_INIT;
 
@@ -77,7 +79,14 @@ void PathCtrl_BBXInit(volatile PathCtrlTypedef* ctrl, long robot_speed_index, lo
 
 void PathCtrl_BBXReset(volatile PathCtrlTypedef* ctrl)
 {
-
+	//if (ctrl->robot_speed_index)
+	//	bbx_print("|t|Robot Speed|n|%d|u|mm/s\r\n", ctrl->robot_speed_index);
+	//if (ctrl->robot_angspeed_index)
+	//	bbx_print("|t|Robot Angular Speed|n|%d|u|1/s\r\n", ctrl->robot_angspeed_index);
+	//if (ctrl->left_speed_index)
+	//	bbx_print("|t|Left Wheel Speed|n|%d|u|mm/s\r\n", ctrl->left_speed_index);
+	//if (ctrl->right_speed_index)
+	//	bbx_print("|t|Right Wheel Speed|n|%d|u|mm/s\r\n", ctrl->right_speed_index);
 }
 
 void PathCtrl_SetRobotPar(volatile PathCtrlTypedef* ctrl, float robotWheelDist)
@@ -117,6 +126,7 @@ void PathCtrl_SetState(volatile PathCtrlTypedef* ctrl, uint16_t start)
 		//cntrl_timer_stop(ctrl->timer_index);
 
 		ctrl->timeIndex = 0;
+		ctrl->predictIndex = 0;
 		ctrl->segmentIndex = 0;
 		ctrl->distError = 0.0;
 		ctrl->predictError = 0.0;
@@ -181,16 +191,16 @@ static uint16_t turnLoop(volatile PathCtrlTypedef* ctrl, float destTheta)
  	if (fabs(destTheta - phi) > PI)
 	{
 		if (destTheta > phi)
-			beta = -ctrl->maxBeta; //Decrease
+			beta = -ctrl->maxAngAccel; //Decrease
 		else
-			beta = ctrl->maxBeta; //Increase
+			beta = ctrl->maxAngAccel; //Increase
 	}
 	else
 	{
 		if (destTheta > phi)
-			beta = ctrl->maxBeta; //Increase
+			beta = ctrl->maxAngAccel; //Increase
 		else
-			beta = -ctrl->maxBeta; //Decrease
+			beta = -ctrl->maxAngAccel; //Decrease
 	}
 
 	//Calculate maximum angular velocity
@@ -199,11 +209,11 @@ static uint16_t turnLoop(volatile PathCtrlTypedef* ctrl, float destTheta)
 	else
 		ctrl->robotAngVel = ctrl->robotPrevAngVel + beta * ctrl->sample_s;
 
-	if (ctrl->robotAngVel > ctrl->maxW) //Saturation
-		ctrl->robotAngVel = ctrl->maxW;
+	if (ctrl->robotAngVel > ctrl->maxAngVel) //Saturation
+		ctrl->robotAngVel = ctrl->maxAngVel;
 
-	if (ctrl->robotAngVel < -ctrl->maxW) //Saturation
-		ctrl->robotAngVel = -ctrl->maxW;
+	if (ctrl->robotAngVel < -ctrl->maxAngVel) //Saturation
+		ctrl->robotAngVel = -ctrl->maxAngVel;
 
 	//Check angular velocity
 	k = ceilf(fabs(ctrl->robotAngVel) / (fabs(beta) * ctrl->sample_s));
@@ -287,7 +297,15 @@ static void pathLoop(volatile PathCtrlTypedef* ctrl)
 	static float rad = 0.0f;
 
 	//Robot velocity
-	ctrl->robotVel = ctrl->pathSegments[ctrl->segmentIndex].velocity[ctrl->timeIndex+1];
+	if (ctrl->timeIndex == 0)
+	{
+		ctrl->robotVel = fabs(ctrl->robotVel) + ctrl->maxAccel*DCWHEEL_SEGMENT_START_ACCEL_FACTOR*ctrl->sample_s;
+		if (ctrl->robotVel > ctrl->maxVel*DCWHEEL_SEGMENT_START_VEL_FACTOR)
+			ctrl->robotVel = ctrl->maxVel*DCWHEEL_SEGMENT_START_VEL_FACTOR;
+	}
+	else
+		ctrl->robotVel = ctrl->pathSegments[ctrl->segmentIndex].velocity[ctrl->timeIndex];
+
 	if (ctrl->pathSegments[ctrl->segmentIndex].dir == BACKWARD)
 	{
 		ctrl->robotPos.phi += PI;
@@ -319,15 +337,14 @@ static void pathLoop(volatile PathCtrlTypedef* ctrl)
 	corrigateAngle((float*)&ctrl->robotAngVel, 0);
 
 	ctrl->robotAngVel = ctrl->robotAngVel * ctrl->oriParP + (ctrl->robotAngVel - ctrl->robotPrevAngVel*ctrl->sample_s) * ctrl->oriParD;
-
-	if (ctrl->robotAngVel > PI)
-		ctrl->robotAngVel = PI;
-
-	if (ctrl->robotAngVel < -PI)
-		ctrl->robotAngVel = -PI;
-
 	ctrl->robotAngVel /= ctrl->sample_s;
 	
+	if (ctrl->robotAngVel > ctrl->maxAngVel)
+		ctrl->robotAngVel = ctrl->maxAngVel;
+
+	if (ctrl->robotAngVel < -ctrl->maxAngVel)
+		ctrl->robotAngVel = -ctrl->maxAngVel;
+
 	//if (ctrl->robot_angspeed_index)
 		//bbx_print("|n|%d|v|%d\r\n", ctrl->robot_angspeed_index, (long)(ctrl->robotAngVel));
 }
@@ -352,10 +369,13 @@ float getTrackingError(PositionTypedef p0, PositionTypedef robotPos, PositionTyp
 void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 {
 	PositionTypedef center;
+	float angle;
 	//int16_t v_left, v_right;
-	float dist;
 	if (ctrl->enable == DISABLE)
 		return;
+
+	//if(!ctrl->robotPosFlag)
+	//	ctrl->robotPos = ctrl->shadowRobotPos;
 
 	//Set current, predict point index 
 	ctrl->timeIndex = getClosestPointOnPath(ctrl->robotPos, ctrl->pathSegments[ctrl->segmentIndex].path, ctrl->pathSegments[ctrl->segmentIndex].path_len, ctrl->timeIndex);
@@ -391,9 +411,7 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 			break;
 
 		case STATE_PATHFOLLOW:
-			//dist = getDistance(ctrl->robotPos, ctrl->pathSegments[ctrl->segmentIndex].path[ctrl->pathSegments[ctrl->segmentIndex].path_len - 1]);
-			//if (DCWHEEL_SEGMENT_END_DISTANCE > dist)
-			if (ctrl->timeIndex >= ctrl->pathSegments[ctrl->segmentIndex].path_len - 2)
+			if (ctrl->timeIndex == ctrl->pathSegments[ctrl->segmentIndex].path_len - 1)
 			{
 				ctrl->state = STATE_PRE_STOP;			
 				ctrl->robotVel = 0.0;
@@ -419,7 +437,12 @@ void PathCtrl_Loop(volatile PathCtrlTypedef* ctrl, float *leftV, float *rightV)
 		case STATE_PRE_STOP:
 			ctrl->robotVel = 0.0;
 			ctrl->robotAngVel = 0.0;
-			ctrl->state = STATE_TURN;
+			angle = (ctrl->pathSegments[ctrl->segmentIndex].path[0].phi - ctrl->robotPos.phi);
+			corrigateAngle(&angle, 0);
+			if (fabs(angle) < 0.174)
+				ctrl->state = STATE_INIT;
+			else
+				ctrl->state = STATE_TURN;
 			break;
 
 		case STATE_TURN:

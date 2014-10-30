@@ -5,10 +5,11 @@
 extern "C" {
 #endif
 #include <stdint.h>
-
+//#include "blackbox.h"
 #define DCWHEEL_POINT_SEARCH_LIMIT 25
 #define DCWHEEL_END_DISTANCE_UNIT 5.0
-#define DCWHEEL_SEGMENT_END_DISTANCE 5.0
+#define DCWHEEL_SEGMENT_START_ACCEL_FACTOR 0.75
+#define DCWHEEL_SEGMENT_START_VEL_FACTOR 0.2
 
 typedef struct
 {
@@ -46,9 +47,9 @@ typedef struct
 	uint16_t			enable;
 	void 				(*function)();
 	//PathFollow
-	uint16_t			predictDistanceLength;
-	uint16_t			predictSampleLength;
-	uint16_t			predictIndex;
+	float				predictDistanceLength;
+	uint32_t			predictSampleLength;
+	uint32_t			predictIndex;
 	uint32_t			timeIndex;
 	uint32_t			segmentIndex;
 	float	 			oriParP;
@@ -63,8 +64,10 @@ typedef struct
 	PositionTypedef		robotPrevPos;
 	float				robotVel;
 	float				robotAngVel;
-	float				maxBeta;
-	float				maxW;
+	float				maxAngAccel;
+	float				maxAngVel;
+	float				maxVel;
+	float				maxAccel;
 	float				debugData[6];
 	//Path
 	PathSegmentTypedef* pathSegments;
@@ -80,7 +83,7 @@ typedef struct
 } PathCtrlTypedef;
 
 //Path Controller Initialization
-uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, float maxBeta, float maxW, uint16_t sample_ms, void (*function)(), void (*pathStopFunction)());
+uint16_t PathCtrl_Init(volatile PathCtrlTypedef* ctrl, uint16_t timer_index, uint16_t sample_ms, void (*function)(), void (*pathStopFunction)());
 void PathCtrl_BBXInit(volatile PathCtrlTypedef* ctrl, long robot_speed_index, long robot_angspeed_index, long left_speed_index, long right_speed_index);
 void PathCtrl_BBXReset(volatile PathCtrlTypedef* ctrl);
 

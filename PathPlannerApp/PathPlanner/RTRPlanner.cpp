@@ -31,6 +31,16 @@ void DrawCI(ConfigInterval &ci, Visualizer2 &vis, Color col)
 	}
 }
 
+void DrawRobot(Polygon &poly, Config conf, Visualizer2 &vis, Color col)
+{
+	Polygon p = poly.TransformToWorld(conf);
+	DrawPolygon(p, vis, col);
+	Point2 a(conf.p.x, conf.p.y);
+	Point2 b(conf.p.x + 10*cos(conf.phi), conf.p.y + 10*sin(conf.phi));
+	vis.addObject(a, col);
+	vis.addObject(Segment2(a, b), col);
+}
+
 void Scene::DrawPath()
 {
 	Visualizer2 vis("path.ps");
@@ -62,11 +72,18 @@ void Scene::DrawScene(int iteration)
 
 	//Draw start tree TCIs
 	for (auto &elem : startTree.xtree)
+	{		
+		DrawRobot(robotShape, elem.q, vis, Color(1.0, 1.0, 0.0, 1.0));
 		DrawCI(elem.ci, vis, Color(1.0, 0.0, 0.0, 2.0));
+	}
 
 	//Draw goal tree TCIs
 	for (auto &elem : goalTree.xtree)
+	{
+		DrawRobot(robotShape, elem.q, vis, Color(0.0, 1.0, 1.0, 1.0));
 		DrawCI(elem.ci, vis, Color(0.0, 1.0, 0.0, 2.0));			
+	}
+	//Draw robot
 
 	vis.writeFile();
 }
@@ -80,15 +97,18 @@ bool Scene::RTRPlanner()
 		RTRIteration(true);
 		RTRIteration(false);
 
-		if ((i % 100) == 0)
-			DrawScene(i);
-
+		//if ((i % 500) == 0)
+		//	DrawScene(i);
+		
 		if (MergeTreesGetPath())
+		{
+			//DrawScene(i);
 			break;
+		}
 	}
 
 	OptimizePath();
-	DrawPath();
+	//DrawPath();
 	return true;
 }
 
@@ -123,13 +143,20 @@ bool Scene::TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGo
 	bool collision = TurnToPos(alc.q, p, sgn(alc.angDist), headToGoal, maxRCI);
 	int idR = tree.AddElement(TreeElement(maxRCI), alc.treeElementIdx);
 
+	if (idR == -2)
+		idR = alc.treeElementIdx;
+
 	//TCI extension of the new tree element added after the turn
 	ConfigInterval forwardMaxTCI, backwardMaxTCI;
 	TCI_Extension(tree.xtree[idR].q, forwardMaxTCI, backwardMaxTCI);
 
 	//Add TCIs to the tree
-	recentTCIIDs.push_back(tree.AddElement(TreeElement(forwardMaxTCI), idR));
-	recentTCIIDs.push_back(tree.AddElement(TreeElement(backwardMaxTCI), idR));
+	int id = tree.AddElement(TreeElement(forwardMaxTCI), idR);
+	if (id >= 0)
+		recentTCIIDs.push_back(id);
+	id = tree.AddElement(TreeElement(backwardMaxTCI), idR);
+	if (id >= 0)
+		recentTCIIDs.push_back(id);
 
 	return collision;
 }
@@ -222,14 +249,13 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 				Config q0(robotShapeWorld.ps[k],q.phi);
 				Point inter;
 
-				//if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
 				if (Line::LineSegmentIntersection(q0, s0, inter))
 				{
-					if (fabs(Angle::Corrigate(Point::atan2(inter, q0.p) - q0.phi)) < 0.01) //Forward collision possibility
+					if (fabs(Angle::Corrigate(Point::atan2(inter, q0.p) - q0.phi)) < PI*0.5f) //Forward collision possibility
 					{
 						forwardPointDist.push_back(Point::Distance(inter, q0.p));
 					}
-					else if (fabs(Angle::Corrigate(Point::atan2(q0.p, inter) - q0.phi)) < 0.01) //Backward collision possibility
+					else
 					{
 						backwardPointDist.push_back(Point::Distance(inter, q0.p));
 					}
@@ -240,14 +266,13 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 				s0.b = robotShapeWorld.ps[((k + 1) % rob_size)];
 				q0.p = envsx[i].ps[j];				 
 
-				//if (Line::LineSegmentIntersection(Line(q0.p, q0.p + Point(cosf(q0.phi), sinf(q0.phi))), s0, inter))
 				if (Line::LineSegmentIntersection(q0, s0, inter))
 				{		
-					if (fabs(Angle::Corrigate(Point::atan2(q0.p, inter) - q0.phi)) < 0.01) //Forward collision possibility
+					if (fabs(Angle::Corrigate(Point::atan2(q0.p, inter) - q0.phi)) < PI*0.5f) //Forward collision possibility
 					{
 						forwardPointDist.push_back(Point::Distance(inter, q0.p));
 					}
-					else if (fabs(Angle::Corrigate(Point::atan2(inter, q0.p) - q0.phi)) < 0.01) //Backward collision possibility
+					else
 					{
 						backwardPointDist.push_back(Point::Distance(inter, q0.p));
 					}
@@ -267,8 +292,8 @@ void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterva
 	if (backwardPointDist.size())
 		backwardMinDist = *min_element(backwardPointDist.begin(), backwardPointDist.end());
 
-	forwardMinDist = forwardMinDist - min(0.1f*forwardMinDist, EPS);
-	backwardMinDist = backwardMinDist - min(0.1f*backwardMinDist, EPS);
+	forwardMinDist = forwardMinDist - 1.0f;
+	backwardMinDist = backwardMinDist - 1.0f;
 	if (forwardMinDist < EPS)
 		forwardMinDist = 0.0f;
 	if (backwardMinDist < EPS)
@@ -363,7 +388,7 @@ bool Scene::TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, Co
 
 	bool collision = (fabs(dThetaAbs - dThetaMax) > EPS);
 
-	dThetaAbs -=  min(dThetaAbs*0.01f, EPS);
+	dThetaAbs -=  min(dThetaAbs*0.01f, 0.017f);
 	if (dThetaAbs < EPS)
 		dThetaAbs = 0.0f;
 	
@@ -539,9 +564,7 @@ void Scene::ReversePath(vector<ConfigInterval> &path)
 */
 int Scene::circleSegLineSegIntersect(Point center, float angleStart, float dTheta, float radius, Line s1, Point res[2])
 {
-	//Point center(qStart.p.x - radius*sinf(qStart.phi), qStart.p.y + radius*cosf(qStart.phi));
 	Point resI[2];
-	//Config q1(s1.a, Point::atan2(s1.b, s1.a));
 
 	if (!Line::CircleLineIntersect(s1, fabs(radius), center, resI[0], resI[1]))
 		return 0; 

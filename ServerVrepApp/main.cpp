@@ -6,10 +6,8 @@
 #include "Pos2dMessage.h"
 #include "PathMessage.h"
 #include "simpleInConnection.h"
-#include "PathFollowServer.h"
-#include "PathPlannerServer.h"
-#include "RobotPilotServer.h"
-#include "CarPathFollowServer.h"
+#include "DiffPathPlannerServer.h"
+#include "DiffRobotPilotServer.h"
 #include "CarPathPlannerServer.h"
 
 #define _USE_MATH_DEFINES
@@ -17,16 +15,6 @@
 
 using boost::asio::ip::tcp;
 using namespace std;
-
-typedef enum
-{
-	DifferentialPathFollow = 2,
-	DifferentialPathPlanner = 4,
-	DifferentialRobotPilot = 8,
-	CarPathFollow = 16,
-	CarPathPlanner = 32,
-} AppTypedef;
-
 
 boost::system::error_code SetupServer(boost::asio::io_service& io_service, int port, tcp::iostream& s)
 {
@@ -77,11 +65,10 @@ int main(int argc, char* argv[])
 
 		//Switch App
 		AppTypedef app = (AppTypedef)(int) vrepPars.front();
-		vrepPars.pop_front();
 
 		switch(app) {
 			case DifferentialPathFollow:
-				PathFollowServer(vrepPars, connection, client, logFile);
+				PathPlannerServer(vrepPars, connection, client, logFile);
 				break;
 			case DifferentialPathPlanner:
 				PathPlannerServer(vrepPars, connection, client, logFile);
@@ -90,7 +77,7 @@ int main(int argc, char* argv[])
 				RobotPilotServer(vrepPars, connection, client, logFile);
 				break;
 			case CarPathFollow:
-				CarPathFollowServer(vrepPars, connection, client, logFile);
+				CarPathPlannerServer(vrepPars, connection, client, logFile);
 				break;
 			case CarPathPlanner:
 				CarPathPlannerServer(vrepPars, connection, client, logFile);

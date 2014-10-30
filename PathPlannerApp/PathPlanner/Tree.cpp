@@ -11,6 +11,9 @@ int Tree::AddElement(TreeElement &elem, int parentIdx)
 	if (parentIdx >= (int)xtree.size())
 		return -1;
 
+	if (elem.ci.amount == 0.0)
+		return -2;
+
 	elem.parentIdx = parentIdx;
 	xtree.push_back(elem);
 
