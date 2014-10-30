@@ -66,6 +66,9 @@
     <ClCompile Include="lib_json\json_writer.cpp">
       <Filter>Header Files\json</Filter>
     </ClCompile>
+    <ClCompile Include="PathSegment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CtrlMessage.h">

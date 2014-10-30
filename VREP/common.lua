@@ -139,7 +139,7 @@ function loadOBJ(filename)
 				if(names[i]:find("Obstacle") ~= nil) then
 					simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.4,0.4,0.4})
 				else
-					simSetShapeColor(h,"",sim_colorcomponent_ambient,{1.0,1.0,1.0})
+					simSetShapeColor(h,"",sim_colorcomponent_ambient,{0.9,0.9,0.9})
 				end
 				simSetObjectName(h,names[i])
 			end

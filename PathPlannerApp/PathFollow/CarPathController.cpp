@@ -7,12 +7,11 @@
 #include <math.h>
 #include "misc.h"
 
-CarPathController::CarPathController(std::vector<PathSegment> &paths, CarLikeRobot &car, CarLineFollower &lf, CarSpeedController &sc, float predict) :
+CarPathController::CarPathController(std::vector<PathSegment> &paths, CarLikeRobot &car, CarLineFollower &lf, float predict) :
 paths(paths),
 car(car),
 predict(predict),
-lineFollower(lf),
-speedController(sc)
+lineFollower(lf)
 {
 	index = 0;
 	pathIndex = 0;
@@ -44,7 +43,10 @@ void CarPathController::Loop(Config nextPos)
 
 		case pathFollow:
 		{
-			if(index + 1 == paths[pathIndex].path.size()) {
+			int newIndex = paths[pathIndex].getClosestPoint(nextPos, index);
+
+			if(max(index + 1, newIndex + 1) >= paths[pathIndex].path.size())
+			{
 				state = preStop;
 				v = 0.0f;
 				fi = 0.0f;
@@ -62,9 +64,8 @@ void CarPathController::Loop(Config nextPos)
 			}
 
 			/* Calculate speed control signal */
-			float distError = Config::Distance(nextPos, paths[pathIndex].path[index]);
-			float nextDist = Config::Distance(paths[pathIndex].path[index], paths[pathIndex].path[index + 1]);
-			v = speedController.getVelocity(distError, nextDist);
+			index = newIndex;
+			v = paths[pathIndex].velocity[index + 1];
 
 			/* Calculate steer control signal */
 			/* Virtual sensor middile position */

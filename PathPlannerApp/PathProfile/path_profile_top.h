@@ -17,6 +17,6 @@
 
 void setLimits(float _maxV, float _maxA, float _maxAt, float _maxW, float _sampleT, float _robotWheelBase);
 void setCarLimits(CarLikeRobot* pR, float _maxV, float _maxA, float _maxAt, float _sampleT);
-void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, vector<vector<float>> &resultVelocity, bool rType);
+void profile_top(vector<PathSegment> &path, vector<PathSegment> &resultPath, bool rType);
 
 #endif /* PATH_PROFILE_TOP_H_ */

@@ -11,7 +11,6 @@
 #include "PathFollow\dcwheel_pathCtrl.h"
 #include "PathFollow/CarLineFollower.h"
 #include "PathFollow/CarPathController.h"
-#include "PathFollow/CarSpeedController.h"
 
 #include "CarLikeRobot.h"
 
@@ -66,7 +65,7 @@ vector<PathPlanner::Point> LoadPathFromFile(string filename)
 	return path;
 }
 
-void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<float>> &path_dsp_vel, vector<vector<PositionTypedef>> &path_dsp_points, vector<PathSegmentTypedef> &path_dsp)
+void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<PositionTypedef>> &path_dsp_points, vector<PathSegmentTypedef> &path_dsp)
 {
 	int i = 0;
 	for (auto &ps : sampPath)
@@ -84,7 +83,7 @@ void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<float>> &
 		PathSegmentTypedef segmentDSP;
 		segmentDSP.dir = ps.direction ? FORWARD : BACKWARD;
 		segmentDSP.path = path_dsp_points.back()._Myfirst;
-		segmentDSP.velocity = path_dsp_vel[i++]._Myfirst;
+		segmentDSP.velocity = ps.velocity._Myfirst;
 		segmentDSP.path_len = (uint16_t)path_dsp_points.back().size();
 		path_dsp.push_back(segmentDSP);
 	}
@@ -248,7 +247,6 @@ int main()
 		stop = high_resolution_clock::now();
 		cout << "C*CS Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
-
 		rtrPath.path = sc.GetPath();
 		rtrPath.send(s);
 	
@@ -256,7 +254,6 @@ int main()
 		if(!success && robotType) { //!!!SZAR
 			return -1;
 		}
-
 
 		geoPath = sc.GetPath();	
 	}
@@ -275,12 +272,12 @@ int main()
 	if ((robotType == AppTypedef::CarPathPlanner) || (robotType == AppTypedef::CarPathPlanner))
 	{
 		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep);
-		profile_top(geoPath, sampPath,path_dsp_vel, true);	
+		profile_top(geoPath, sampPath, true);	
 	}
 	else 
 	{
 		setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance);	
-		profile_top(geoPath, sampPath,path_dsp_vel, false);	
+		profile_top(geoPath, sampPath, false);	
 	}	
 	
 	//Send back to V-REP
@@ -292,7 +289,7 @@ int main()
 		//Convert Sampled PathSegments to PathFollow PathSegments
 		vector<PathSegmentTypedef> path_dsp;
 		vector<vector<PositionTypedef>> path_dsp_points;
-		ConvertPathToDSPPath(sampPath, path_dsp_vel, path_dsp_points, path_dsp);
+		ConvertPathToDSPPath(sampPath, path_dsp_points, path_dsp);
 
 		PathCtrlTypedef pathFollow;
 		PathCtrl_Init(&pathFollow, 0, (timeStep*1000), 0, 0);
@@ -359,8 +356,7 @@ int main()
 		}
 	} else {
 		CarLineFollower follower(robotData, lineW0, lineKsi, predictSampleLength);
-		CarSpeedController speedController(0.0f, 0.0f, 0.0f, timeStep);
-		CarPathController pathController(sampPath, robotData, follower, speedController, predictSampleLength);
+		CarPathController pathController(sampPath, robotData, follower, predictSampleLength);
 		while(s.good()) {
 			CtrlMessage ctrl_out;
 			Config act_pos;
@@ -382,8 +378,8 @@ int main()
 			pathController.Loop(act_pos);
 			rabitPos.pos = pathController.getRabbit();
 
-			info.values.push_back(speedController.getDistError());
-			info.values.push_back(speedController.getSumError());
+			//info.values.push_back(speedController.getDistError());
+			//info.values.push_back(speedController.getSumError());
 
 			ctrl_out.ctrl_sig.push_back(pathController.getV());
 			ctrl_out.ctrl_sig.push_back(pathController.getFi());
