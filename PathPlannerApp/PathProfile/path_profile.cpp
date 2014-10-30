@@ -264,7 +264,7 @@ int Profile::SetSampleTime(float sample_s, int _length)
 int Profile::RemovePoint(int index)
 {
 	if (deltaS.size())
-		deltaS.erase(deltaS.begin() + index);
+		deltaS.erase(deltaS.begin() + index-1);
 
 	if (path.size())
 		path.erase(path.begin() + index);
@@ -276,7 +276,7 @@ int Profile::RemovePoint(int index)
 		sc.erase(sc.begin() + index);
 	
 	if (deltaSc.size())
-		deltaSc.erase(deltaSc.begin() + index);
+		deltaSc.erase(deltaSc.begin() + index-1);
 	
 	if (a.size())
 		a.erase(a.begin() + index);
@@ -285,7 +285,7 @@ int Profile::RemovePoint(int index)
 		c.erase(c.begin() + index);
 	
 	if (deltaT.size())
-		deltaT.erase(deltaT.begin() + index);
+		deltaT.erase(deltaT.begin() + index-1);
 	
 	if (t.size())
 		t.erase(t.begin() + index);

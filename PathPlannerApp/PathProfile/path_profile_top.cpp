@@ -807,6 +807,14 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 	//Determinate sampled path length based on sample time
 	sampLength = (int)ceil(geoProfile.t[geoLength - 1] / sampleT) + 1;
 	sampProfile.SetSampleTime(sampleT, sampLength);
+	//Check timing for numeric error
+	int idx = sampLength - 2;
+	while (sampProfile.t[idx] > geoProfile.t[geoLength - 1])
+	{
+		sampProfile.RemovePoint(idx + 1);
+		idx--;
+		sampLength--;
+	}
 	logfile << "Sampled profile: path length: " << sampLength << endl;
 
 	//Linear interpolate sampled path velocity

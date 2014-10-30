@@ -228,32 +228,34 @@ int main()
 		if (!ParseObj("..\\Frame\\" + envFileName, sc))
 			return -1;
 
+		//Generate Pre Path
 		start = high_resolution_clock::now();
 		cout << "Pre Planner starting..." << endl;
 		sc.PrePlanner();
 		stop = high_resolution_clock::now();
 		cout << "Pre Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
+		//Generate RTR Path
 		start = high_resolution_clock::now();
 		cout << "RTR Planner starting..." << endl;
 		sc.RTRPlanner();
-		stop = high_resolution_clock::now();
-		cout << "RTR Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
-
-		//Generate and send RTR path
-		start = high_resolution_clock::now();
-		cout << "C*CS Planner starting..." << endl;
 		sc.GenerateRTRPath();
 		stop = high_resolution_clock::now();
-		cout << "C*CS Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
-
+		cout << "RTR Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
+		
+		//Send RTR Path
+		cout << "Sending RTR Path to V-REP..." << endl;
 		rtrPath.path = sc.GetPath();
 		rtrPath.send(s);
-	
+
+		start = high_resolution_clock::now();
+		cout << "C*CS Planner starting..." << endl;
 		bool success = sc.CCSPlanner();
-		if(!success && robotType) { //!!!SZAR
-			return -1;
-		}
+		stop = high_resolution_clock::now();
+		cout << "C*CS Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
+		
+		if(!success && (robotType == AppTypedef::CarPathPlanner)) 
+			return -1;		
 
 		geoPath = sc.GetPath();	
 	}
@@ -269,6 +271,8 @@ int main()
 		return -1;
 
 	//Calc sampled path
+	start = high_resolution_clock::now();
+	cout << "Time Parameterization starting..." << endl;
 	if ((robotType == AppTypedef::CarPathPlanner) || (robotType == AppTypedef::CarPathPlanner))
 	{
 		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep);
@@ -279,11 +283,15 @@ int main()
 		setLimits(pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, pathMaxAngularSpeed, timeStep, wheelDistance);	
 		profile_top(geoPath, sampPath, false);	
 	}	
+	stop = high_resolution_clock::now();
+	cout << "Time Parameterization ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 	
 	//Send back to V-REP
+	cout << "Sending Time Parameterized C*CS Path to V-REP..." << endl;
 	ccsPath.path = sampPath;
 	ccsPath.send(s);
 
+	cout << "Path Follow Controlling starting..." << endl;
 	if ((robotType == AppTypedef::DifferentialPathFollow) || (robotType == AppTypedef::DifferentialPathPlanner))
 	{
 		//Convert Sampled PathSegments to PathFollow PathSegments
