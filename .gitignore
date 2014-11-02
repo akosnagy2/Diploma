@@ -14,3 +14,4 @@ Release
 *.pdb
 *.filters
 *.sln
+!Frame/*.obj
