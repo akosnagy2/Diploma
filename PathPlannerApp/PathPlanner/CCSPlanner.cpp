@@ -13,8 +13,8 @@ void AddCCSToPath(vector<CCS> ccs, vector<PathPlanner::PathSegment> &path, float
 Shape ShapeToShape(PathPlanner::Polygon poly)
 {
 	pointList pl;
-	for (auto &p : poly.ps)
-	{					
+	for(auto &p : poly.ps)
+	{
 		pl.push_back(Point(p.x, p.y));
 	}
 
@@ -31,14 +31,15 @@ void _writeLog(string s)
 
 bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 {
-	bool ret; 
+	bool ret;
+	ccsStateTypedef state = ccsStateTypedef::arm;
 	logFile.open("CCS_log.txt");
 
 	//Environment
 	Environment env(s.GetFieldXLength(), s.GetFieldYLength());
 
 	//Obstacles
-	for (auto &e : s.GetEnv())
+	for(auto &e : s.GetEnv())
 		env.addObstacle(ShapeToShape(e));
 
 	//Robot
@@ -46,7 +47,7 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 	Configuration start(s.GetStartConfig().p.x, s.GetStartConfig().p.y, s.GetStartConfig().phi);
 	Configuration goal(s.GetGoalConfig().p.x, s.GetGoalConfig().p.y, s.GetGoalConfig().phi);
 
-	robot.setStart(start); 
+	robot.setStart(start);
 	robot.setGoal(goal);
 	robot.setBody(ShapeToShape(s.GetRobotShape()));
 
@@ -56,93 +57,111 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 
 	//Get path from RTR
 	configurationList config;
-	for (auto &e : s.GetCIPath())
+	for(auto &e : s.GetCIPath())
 	{
-		if (e.type == PathPlanner::TranslationCI)
+		if(e.type == PathPlanner::TranslationCI)
 			config.push_back(Configuration(e.q0.p.x, e.q0.p.y, e.q0.phi));
 	}
 	config.push_back(Configuration(s.GetCIPath().back().q1.p.x, s.GetCIPath().back().q1.p.y, s.GetCIPath().back().q1.phi));
 
 	Scene sc(env, robot);
-    sc.setReversePenalty(1);
+	sc.setReversePenalty(1);
 	double ds = min(s.GetFieldXLength() / 50.0, s.GetFieldYLength() / 50.0);
 	ds = 50.0;
 	sc.setDx(ds);
 	sc.setDy(ds);
-    OccupancyGrid oG(sc);
+	OccupancyGrid oG(sc);
 
 	/* Initialize path planner */
-    unsigned startIndex = 0;
-    unsigned endIndex = config.size() - 1;
-    unsigned insertCount = 0;
-    ARM arm = ARMBuilder(config[startIndex], oG, sc).getARM();
-
-    std::ostringstream stringStream;
-    stringStream << "ARM created from configuration #" << startIndex << ".";
-    _writeLog(stringStream.str());
-    stringStream.str("");
-
 	vector<CCS> ccsVec;
-	/* Loop through possible configuration pairs until solution found */
-    while (startIndex != config.size() - 1 && endIndex > startIndex && insertCount < 10) {
-        /* Get the distance of the next configuration */
-        double nextDist = 0;
-        if (endIndex != config.size() - 1) {
-            nextDist = Point::distance(config[endIndex].position, config[endIndex + 1].position);
-        }
-
-        /* Search path between the two configurations */
-        LocalPlanner lp(arm, config[endIndex], nextDist, sc);
-        stringStream << "Local Planner between configurations #" << startIndex << " and #" << endIndex << ".";
-        _writeLog(stringStream.str());
-        stringStream.str("");
-
-        /* Last check has a solution */
-        if (lp.hasSolution()) {
-            _writeLog("Has solution");
-            CCS ccs = lp.getShortest();
-            stringStream << ccs << std::endl;
-            _writeLog(stringStream.str());
-            stringStream.str("");
-
-            /* Insert new tangential configuration */
-            startIndex = endIndex;
-            if (startIndex != config.size() - 1) {
-                configurationList::iterator it = config.begin();
-                it += ++startIndex;
-                config.insert(it, ccs.getMiddle().getEndConfig());
-
-                /* Calculate ARM from the new configuration */
-                arm = ARMBuilder(config[startIndex], oG, sc).getARM();
-                stringStream << "ARM created from configuration #" << startIndex << ".";
-                _writeLog(stringStream.str());
-                stringStream.str("");
-            }
-            endIndex = config.size() - 1;
-			ccsVec.push_back(ccs);
-
-        } else {
-            if (endIndex - startIndex == 1) {
-                endIndex = startIndex;
-            } else {
-                /* Select new configuration from predefined path */
-                endIndex = (endIndex - startIndex - 1) / 2 + 1 + startIndex;
-            }
-        }
-    }
-	
-    if (startIndex != config.size() - 1) 
+	ARM arm;
+	LocalPlanner lp(sc);
+	unsigned startIndex = 0;
+	unsigned endIndex = config.size() - 1;
+	unsigned insertCount = 0;
+	double nextDist = 0;
+	bool isConfigLeft = true;
+	while(isConfigLeft)
 	{
-        _writeLog("Fail!");
+		switch(state)
+		{
+			case ccsStateTypedef::arm:
+				arm = ARMBuilder(config[startIndex], oG, sc).getARM();
+				logFile << "ARM created from configuration #" << startIndex << "." << endl;
+				state = ccsStateTypedef::localPlanner;
+				break;
+
+			case ccsStateTypedef::localPlanner:
+				if(endIndex != config.size() - 1)
+					nextDist = Point::distance(config[endIndex].position, config[endIndex + 1].position);
+				else
+					nextDist = 0.0;
+
+				lp = LocalPlanner(arm, config[endIndex], nextDist, sc);
+				logFile << "Local Planner between configurations #" << startIndex << " and #" << endIndex << "." << endl;
+				if(lp.hasSolution())
+					state = ccsStateTypedef::solution;
+				else
+					state = ccsStateTypedef::fail;
+				break;
+
+			case ccsStateTypedef::solution:
+				startIndex = endIndex;
+				/* Check if this was the last segment */
+				if(startIndex != config.size() - 1)
+				{
+					CCS ccs = lp.getShortest();
+					//TODO itt lehene kiírni a CCS eredményt ha érdekel valakit
+					ccsVec.push_back(ccs);
+
+					/* Insert intermediate configuration */
+					//TODO itt el kéne gondolkozni rajta, hogy az S szakaszt kihagyjuk-e
+					configurationList::iterator it = config.begin();
+					it += ++startIndex;
+					config.insert(it, ccs.getMiddle().getEndConfig());
+
+					state = ccsStateTypedef::arm;
+					endIndex = config.size() - 1;
+				}
+				else
+				{
+					isConfigLeft = false;
+				}
+				break;
+
+			case ccsStateTypedef::fail:
+				if(endIndex - startIndex == 1)
+				{
+					isConfigLeft = false;
+					//TODO: Ide jön a c_cS
+				}
+				else
+				{
+					/* Select new configuration from predefined path */
+					endIndex = (endIndex - startIndex - 1) / 2 + 1 + startIndex;
+				}
+				break;
+
+			default:
+				isConfigLeft = false;
+				break;
+		}
+	}
+
+	if(startIndex != config.size() - 1)
+	{
+		logFile << "Fail!" << endl;
+		cout << "Fail!" << endl;
 		ret = false;
 	}
-    else 
+	else
 	{
-        _writeLog("Success!");
+		logFile << "Success!" << endl;
+		cout << "Success!" << endl;
 		startIndex = 0;
 		AddCCSToPath(ccsVec, path, s.GetPathDeltaS());
 		ret = true;
-    }
+	}
 
 	logFile.close();
 	return ret;
@@ -150,13 +169,13 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 
 PathPlanner::Config ConfigToConfig(Configuration c)
 {
-	return PathPlanner::Config((float)c.position.x, (float)c.position.y, (float)c.orientation);
+	return PathPlanner::Config((float) c.position.x, (float) c.position.y, (float) c.orientation);
 }
 
 vector<PathPlanner::Config> ConfigListToConfigVector(configurationList c)
 {
 	vector<PathPlanner::Config> cc;
-	for (auto e : c)
+	for(auto e : c)
 		cc.push_back(ConfigToConfig(e));
 	return cc;
 }
@@ -173,14 +192,14 @@ void AddCCSToPath(vector<CCS> ccs, vector<PathPlanner::PathSegment> &path, float
 	p.direction = lastDir;
 	path.push_back(p);
 
-	for (auto c : ccs)
+	for(auto c : ccs)
 	{
 		Arc first = c.getFirst();
 		Arc second = c.getMiddle();
 
 		//First Arc
 		vector<PathPlanner::Config> c1 = ConfigListToConfigVector(first.getPoints(ds));
-		if (first.getDirection() != lastDir) 
+		if(first.getDirection() != lastDir)
 		{
 			//Close last segment
 			path.back().path.push_back(c1.front());
@@ -196,11 +215,11 @@ void AddCCSToPath(vector<CCS> ccs, vector<PathPlanner::PathSegment> &path, float
 		}
 
 		path.back().path.insert(path.back().path.end(), c1.begin(), c1.end() - 1);
-		path.back().curvature.insert(path.back().curvature.end(), c1.size() - 1, (float)(1/first.getRadius()));
+		path.back().curvature.insert(path.back().curvature.end(), c1.size() - 1, (float) (1 / first.getRadius()));
 
 		//Second Arc
 		vector<PathPlanner::Config> c2 = ConfigListToConfigVector(second.getPoints(ds));
-		if (second.getDirection() != lastDir) 
+		if(second.getDirection() != lastDir)
 		{
 			//Close last segment
 			path.back().path.push_back(c2.front());
@@ -209,20 +228,20 @@ void AddCCSToPath(vector<CCS> ccs, vector<PathPlanner::PathSegment> &path, float
 			//Direction changed -> new segment
 			PathPlanner::PathSegment p;
 			p.direction = second.getDirection();
-			path.push_back(p);		
+			path.push_back(p);
 
 			//Set last direction
 			lastDir = second.getDirection();
 		}
 
 		path.back().path.insert(path.back().path.end(), c2.begin(), c2.end() - 1);
-		path.back().curvature.insert(path.back().curvature.end(), c2.size() - 1, (float)(1/second.getRadius()));
+		path.back().curvature.insert(path.back().curvature.end(), c2.size() - 1, (float) (1 / second.getRadius()));
 	}
 
 	//Last C*CS's segment
-	Segment seg = ccs.back().getLast();	
+	Segment seg = ccs.back().getLast();
 	vector<PathPlanner::Config> c3 = ConfigListToConfigVector(seg.getPoints(ds));
-	if (seg.getDirection() != lastDir) 
+	if(seg.getDirection() != lastDir)
 	{
 		//Close last segment
 		path.back().path.push_back(c3.front());
@@ -231,12 +250,12 @@ void AddCCSToPath(vector<CCS> ccs, vector<PathPlanner::PathSegment> &path, float
 		//Direction changed -> new segment
 		PathPlanner::PathSegment p;
 		p.direction = seg.getDirection();
-		path.push_back(p);		
+		path.push_back(p);
 
 		//Set last direction
 		lastDir = seg.getDirection();
 	}
 
 	path.back().path.insert(path.back().path.end(), c3.begin(), c3.end());
-	path.back().curvature.insert(path.back().curvature.end(), c3.size(), 0.0);	
+	path.back().curvature.insert(path.back().curvature.end(), c3.size(), 0.0);
 }

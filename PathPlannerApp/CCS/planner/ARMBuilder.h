@@ -17,13 +17,11 @@ typedef arcList ARM;
 
 class ARMBuilder {
 public:
+	ARMBuilder();
     ARMBuilder(Configuration& startConfig, OccupancyGrid& og, Scene& sc);
     ARM& getARM();
 private:
-    Configuration& start;
-    OccupancyGrid& og;
     ARM reachableArcs;
-    Scene& scene;
 };
 
 #endif	/* ARMBUILDER_H */
