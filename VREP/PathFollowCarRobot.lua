@@ -129,7 +129,14 @@ function PathFollowCarRobot()
 								pathMaxSpeed,
 								pathMaxAccel,
 								axisDistance,
-								fiMax
+								fiMax,
+								iterationMax,
+								fixPathProb,
+								roadmapProb,
+								randomSeed,
+								envFile,
+								minimumRadius,
+								ds		
 								}
 				pars=simPackFloats(pars)
 				writeSocketData(client,pars)

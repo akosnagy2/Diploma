@@ -1,5 +1,6 @@
 #include "CarPathPlannerServer.h"
 #include "CtrlMessage.h"
+#include "misc.h"
 
 void CarParsePathFollowPars(deque<float> &parsIn, CarPathFollowParamsTypedef &parsOut)
 {

@@ -8,19 +8,10 @@
 #include "CtrlMessage.h"	
 #include "Pos2dMessage.h"
 #include "PathMessage.h"
+#include "AppTypedef.h"
 
 using boost::asio::ip::tcp;
 using namespace std;
-
-typedef enum
-{
-	DifferentialPathFollow = 2,
-	DifferentialPathPlanner = 4,
-	DifferentialRobotPilot = 8,
-	CarPathFollow = 16,
-	CarPathPlanner = 32,
-} AppTypedef;
-
 
 typedef struct
 {

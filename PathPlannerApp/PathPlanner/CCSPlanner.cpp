@@ -75,7 +75,7 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 	/* Initialize path planner */
 	vector<CCS> ccsVec;
 	ARM arm;
-	LocalPlanner lp(sc);
+	Configuration tempConfig;
 	unsigned startIndex = 0;
 	unsigned endIndex = config.size() - 1;
 	unsigned insertCount = 0;
@@ -97,12 +97,22 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 				else
 					nextDist = 0.0;
 
-				lp = LocalPlanner(arm, config[endIndex], nextDist, sc);
-				logFile << "Local Planner between configurations #" << startIndex << " and #" << endIndex << "." << endl;
-				if(lp.hasSolution())
-					state = ccsStateTypedef::solution;
-				else
-					state = ccsStateTypedef::fail;
+				{
+					LocalPlanner lp = LocalPlanner(arm, config[endIndex], nextDist, sc);
+					logFile << "Local Planner between configurations #" << startIndex << " and #" << endIndex << "." << endl;
+					if(lp.hasSolution())
+					{
+						state = ccsStateTypedef::solution;
+						//TODO itt lehene kiírni a CCS eredményt ha érdekel valakit
+						CCS ccs = lp.getShortest();
+						ccsVec.push_back(ccs);
+						tempConfig = ccs.getMiddle().getEndConfig();
+					}
+					else
+					{
+						state = ccsStateTypedef::fail;
+					}
+				}
 				break;
 
 			case ccsStateTypedef::solution:
@@ -110,15 +120,11 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 				/* Check if this was the last segment */
 				if(startIndex != config.size() - 1)
 				{
-					CCS ccs = lp.getShortest();
-					//TODO itt lehene kiírni a CCS eredményt ha érdekel valakit
-					ccsVec.push_back(ccs);
-
 					/* Insert intermediate configuration */
 					//TODO itt el kéne gondolkozni rajta, hogy az S szakaszt kihagyjuk-e
 					configurationList::iterator it = config.begin();
 					it += ++startIndex;
-					config.insert(it, ccs.getMiddle().getEndConfig());
+					config.insert(it, tempConfig);
 
 					state = ccsStateTypedef::arm;
 					endIndex = config.size() - 1;
@@ -139,6 +145,7 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 				{
 					/* Select new configuration from predefined path */
 					endIndex = (endIndex - startIndex - 1) / 2 + 1 + startIndex;
+					state = ccsStateTypedef::localPlanner;
 				}
 				break;
 

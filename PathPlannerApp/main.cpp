@@ -2,7 +2,11 @@
 #include "Geometry\Config.h"
 #include <chrono>
 #include "tiny_obj_loader.h"
+
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/asio.hpp>
+#include <boost/system/error_code.hpp>
+
 #include "CtrlMessage.h"
 #include "PathMessage.h"
 #include "PathProfile\path_profile_top.h"
@@ -13,15 +17,7 @@
 #include "PathFollow/CarPathController.h"
 
 #include "CarLikeRobot.h"
-
-typedef enum
-{
-	DifferentialPathFollow = 2,
-	DifferentialPathPlanner = 4,
-	DifferentialRobotPilot = 8,
-	CarPathFollow = 16,
-	CarPathPlanner = 32,
-} AppTypedef;
+#include "AppTypedef.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -143,7 +139,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	
 	//PathProfile, PathFollow params
 	robotType = (AppTypedef)(int)parMsg.values[0];
-	if((robotType == AppTypedef::CarPathFollow) || (robotType == AppTypedef::CarPathPlanner)) {
+	if((robotType == AppTypedef::CarPathFollow) || (robotType == AppTypedef::CarPathPlanner || robotType == AppTypedef::CarRobotPilotFollow)) {
 		predictSampleLength = (float)parMsg.values[1];
 		predictDistanceLength = (float)parMsg.values[2];
 		lineW0 = (float) parMsg.values[4];
@@ -365,6 +361,18 @@ int main()
 	} else {
 		CarLineFollower follower(robotData, lineW0, lineKsi, predictSampleLength);
 		CarPathController pathController(sampPath, robotData, follower, predictSampleLength);
+
+		boost::asio::io_service io;
+		boost::asio::serial_port serial_port(io);
+		boost::system::error_code ec;
+		
+		//serial_port.open("COM3", ec);
+		//if(ec == boost::system::errc::no_such_file_or_directory)
+		//{
+		//	cout << "Could not open serial port" << endl;
+		//}
+		//serial_port.set_option(boost::asio::serial_port::baud_rate(115200));
+		
 		while(s.good()) {
 			CtrlMessage ctrl_out;
 			Config act_pos;
@@ -394,10 +402,12 @@ int main()
 			ctrl_out.src = 1;
 
 			std::cout << "Target speed: " << pathController.getV() << ", angle: " << pathController.getFi() << endl;
+
 			ctrl_out.send(s);
 			rabitPos.send(s);
 			info.send(s);
 		}
+		serial_port.close();
 	}
 
 	return 0;

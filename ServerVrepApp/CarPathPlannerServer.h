@@ -12,5 +12,5 @@ using namespace std;
 
 void CarParsePathFollowPars(deque<float> &parsIn, CarPathFollowParamsTypedef &parsOut);
 void CarParsePathPlannerPars(deque<float> &parsIn, CarPathPlannerParamsTypedef &parsOut);
-void CarForwardPathPlannerPars(tcp::iostream &client, PathPlannerParamsTypedef &pars);
+void CarForwardPathPlannerPars(tcp::iostream &client, CarPathPlannerParamsTypedef &pars);
 int CarPathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile);

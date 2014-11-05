@@ -9,6 +9,8 @@
 #include "DiffPathPlannerServer.h"
 #include "DiffRobotPilotServer.h"
 #include "CarPathPlannerServer.h"
+#include "CarRobotPilotServer.h"
+#include "misc.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -77,10 +79,12 @@ int main(int argc, char* argv[])
 				RobotPilotServer(vrepPars, connection, client, logFile);
 				break;
 			case CarPathFollow:
-				CarPathPlannerServer(vrepPars, connection, client, logFile);
-				break;
 			case CarPathPlanner:
 				CarPathPlannerServer(vrepPars, connection, client, logFile);
+				break;
+			case CarRobotPilotFollow:
+			case CarRobotPilotPlanner:
+				CarRobotPilotServer(vrepPars, connection, client, logFile);
 				break;
 			default:
 				break;
