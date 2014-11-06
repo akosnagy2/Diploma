@@ -683,13 +683,7 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 				log << "Profile Check: right wheel tangent acceleration error in " << i << ". point." << endl;
 			if(fabs((at_right[i] / at_left[i]) - ((1 + robotWheelBase*0.5f*prof.c[i]) / (1 - robotWheelBase*0.5f*prof.c[i]))) > EPS)
 				log << "Profile Check: wheels tangent accelerations ratio error in " << i << ". point." << endl;
-		} else {
-			at_left[i] = (prof.v[i + 1] - prof.v[i]) / prof.deltaT[i] * pRobot->getMaxRadiusRatio(prof.c[i]);
-			if(abs(at_left[i]) > (maxAt + EPS) || (boost::math::isnan(at_left[i])))
-				log << "Profile Check: tangent acceleration error in " << i << ". point." << endl;
-		}
-
-		if(!robotType) {
+		
 			//Check wheels accel.
 			acp_left = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f - prof.c[i] * robotWheelBase*0.5f);
 			a_left[i] = sqrtf(powf(acp_left, 2) + powf(at_left[i], 2));
@@ -700,6 +694,7 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 			if((fabs(a_right[i]) > (maxA + EPS)) || (boost::math::isnan(a_right[i])))
 				log << "Profile Check: right wheel acceleration error in " << i << ". point." << endl;
 		} else {
+			//Check wheels accel.
 			acp_left = (pow(prof.v[i], 2)*prof.c[i]) * pRobot->getMaxRadiusRatio(prof.c[i]);
 			a_left[i] = sqrt(pow(acp_left, 2) + pow(at_left[i], 2));
 			if((abs(a_left[i]) > (maxA + EPS)) || (boost::math::isnan(at_left[i])))

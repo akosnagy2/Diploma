@@ -4,6 +4,10 @@
 #include "SimpleSerial.h"
 #include "misc.h"
 
+#include <string>
+#include <iomanip>
+#include <iostream>
+
 int CarRobotPilotServer(deque<float> &pars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile)
 {
 	cout << "Connected to PathPlanner Client." << endl;
@@ -74,17 +78,19 @@ void CarRobotPilotLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnecti
 		if(init)
 		{
 			init = false;
-			//car.setPosition(robotPos);
-			serial.writeLine("R");
+			ostringstream setstr;
+			setstr.precision(3);
+			setstr << std::fixed << "S," << robotPos.p.x << "," << robotPos.p.y << "," << robotPos.phi;
+			serial.writeLine(setstr.str());
 		}
 
 		std::string serialPos = serial.readLine();
 		sscanf(serialPos.c_str(), "O,%f,%f,%f\r\n", &robotPos.p.x, &robotPos.p.y, &robotPos.phi);
 
 		//Send robot position to the PathFollow Client
-		pos_msg.pos = robotPos;
 		robotPos.p.x *= 1000.0f;
 		robotPos.p.y *= 1000.0f;
+		pos_msg.pos = robotPos;
 		pos_msg.send(client);
 
 		//Receive result from PathFollow Client
@@ -100,7 +106,7 @@ void CarRobotPilotLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnecti
 
 		ostringstream strs;
 		strs.precision(3);
-		strs << "I," << v*0.001f << "," << "fi";
+		strs << std::fixed << "I," << v*0.001f << "," << fi;
 		serial.writeLine(strs.str());
 
 		//Send data to V-Rep Client

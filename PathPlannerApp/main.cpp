@@ -148,6 +148,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 		wheelDistance = (float) parMsg.values[7];
 		pathMaxSpeed = (float) parMsg.values[8];
 		pathMaxAccel = (float) parMsg.values[9];
+		//pathMaxTangentAccel = pathMaxAccel;
 		robotData.setAxisDistance((float) parMsg.values[10]);
 		robotData.setFiMax((float) parMsg.values[11]);
 		robotData.setWheelDistance(wheelDistance);
@@ -269,7 +270,10 @@ int main()
 	//Calc sampled path
 	start = high_resolution_clock::now();
 	cout << "Time Parameterization starting..." << endl;
-	if ((robotType == AppTypedef::CarPathPlanner) || (robotType == AppTypedef::CarPathPlanner))
+	if ((robotType == AppTypedef::CarPathPlanner)
+		|| (robotType == AppTypedef::CarPathFollow)
+		|| (robotType == AppTypedef::CarRobotPilotFollow)
+		|| (robotType == AppTypedef::CarRobotPilotPlanner))
 	{
 		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep);
 		profile_top(geoPath, sampPath, true);	
