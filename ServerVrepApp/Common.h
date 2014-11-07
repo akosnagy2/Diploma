@@ -8,7 +8,7 @@
 #include "CtrlMessage.h"	
 #include "Pos2dMessage.h"
 #include "PathMessage.h"
-#include "AppTypedef.h"
+#include "App.h"
 
 using boost::asio::ip::tcp;
 using namespace std;
@@ -63,7 +63,7 @@ typedef struct
 
 typedef struct
 {
-	AppTypedef app;
+	App app;
 	PathFollowParamsTypedef PathFollow;
 	float iterationMax;
 	float fixPathProb;
@@ -76,7 +76,7 @@ typedef struct
 
 typedef struct
 {
-	AppTypedef app;
+	App app;
 	CarPathFollowParamsTypedef PathFollow;
 	float iterationMax;
 	float fixPathProb;

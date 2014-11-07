@@ -32,7 +32,7 @@ void ParsePathFollowPars(deque<float> &parsIn, PathFollowParamsTypedef &parsOut)
 
 void ParsePathPlannerPars(deque<float> &parsIn, PathPlannerParamsTypedef &parsOut)
 {
-	parsOut.app = (AppTypedef)(int)parsIn.front(); parsIn.pop_front();
+	parsOut.app.appType = (App::AppTypedef)(int)parsIn.front(); parsIn.pop_front();
 
 	ParsePathFollowPars(parsIn, parsOut.PathFollow);
 
@@ -50,7 +50,7 @@ void ForwardPathPlannerPars(tcp::iostream &client, PathPlannerParamsTypedef &par
 	PackedMessage pathMsg;
 	PathFollowParamsTypedef p = pars.PathFollow;
 
-	pathMsg.values.push_back(pars.app); // robot type
+	pathMsg.values.push_back(pars.app.appType); // robot type
 	pathMsg.values.push_back(p.PredictSampleLength);	//PredictSampleLength
 	pathMsg.values.push_back(p.PredictDistanceLength);	//PredictDistanceLength
 	pathMsg.values.push_back(p.OriPar_P);	//oriPar_P
@@ -87,13 +87,13 @@ int PathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tcp::
 	//Forward parameters to Client
 	ForwardPathPlannerPars(client, serverPars);		
 
-	if (serverPars.app == AppTypedef::DifferentialPathFollow)
+	if (serverPars.app.isPathFollow())
 	{
 		//Receive, forward path from V-Rep Client
 		ForwardPath(connection, client);
 	}
 
-	if (serverPars.app == AppTypedef::DifferentialPathPlanner)
+	if (serverPars.app.isPathPlanner())
 	{
 		//Receive (sampled) path from PathPlanner
 		path.receive(client);

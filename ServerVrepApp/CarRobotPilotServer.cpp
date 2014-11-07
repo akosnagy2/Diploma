@@ -2,7 +2,7 @@
 
 #include "CarPathPlannerServer.h"
 #include "SimpleSerial.h"
-#include "misc.h"
+#include "App.h"
 
 #include <string>
 #include <iomanip>
@@ -21,13 +21,13 @@ int CarRobotPilotServer(deque<float> &pars, CSimpleInConnection &connection, tcp
 	//Forward parameters to Client
 	CarForwardPathPlannerPars(client, serverPars);
 
-	if(serverPars.app == AppTypedef::CarRobotPilotFollow)
+	if(serverPars.app.isPathFollow())
 	{
 		//Receive, forward path from V-Rep Client
 		ForwardPath(connection, client);
 	}
 
-	if(serverPars.app == AppTypedef::CarRobotPilotPlanner)
+	if(serverPars.app.isPathPlanner())
 	{
 		//Receive (sampled) path from PathPlanner
 		path.receive(client);

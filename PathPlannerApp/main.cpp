@@ -17,7 +17,7 @@
 #include "PathFollow/CarPathController.h"
 
 #include "CarLikeRobot.h"
-#include "AppTypedef.h"
+#include "App.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -37,7 +37,7 @@ float pathMaxTangentAccel = 200.0f;
 float pathMaxAngularSpeed = 1.0f;
 
 CarLikeRobot robotData;
-static int robotType;
+static App robotType;
 
 //TODO: nincs checkBack;
 
@@ -138,8 +138,8 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	parMsg.receive(s);	
 	
 	//PathProfile, PathFollow params
-	robotType = (AppTypedef)(int)parMsg.values[0];
-	if((robotType == AppTypedef::CarPathFollow) || (robotType == AppTypedef::CarPathPlanner || robotType == AppTypedef::CarRobotPilotFollow)) {
+	robotType.appType = (App::AppTypedef)(int)parMsg.values[0];
+	if(robotType.isCarLikeRobot()) {
 		predictSampleLength = (float)parMsg.values[1];
 		predictDistanceLength = (float)parMsg.values[2];
 		lineW0 = (float) parMsg.values[4];
@@ -160,7 +160,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 		sc.SetRobotMinimumRadius((float)parMsg.values[17]);
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS((float)parMsg.values[18]);
-	} else {
+	} else { 
 		predictSampleLength = (float)parMsg.values[1];
 		predictDistanceLength = (float)parMsg.values[2];
 		oriPar_P = (float) parMsg.values[3];
@@ -210,10 +210,10 @@ int main()
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS(10.0);
 		sc.SetRTRParameters(3000, 0.0f, 0.2f, 350);
-		robotType = AppTypedef::DifferentialPathPlanner;
+		robotType.appType = App::DifferentialPathPlanner;
 	}
 	
-	if ((robotType == AppTypedef::CarPathPlanner) || (robotType == AppTypedef::DifferentialPathPlanner))
+	if (robotType.isPathPlanner())
 	{
 		PathMessage rtrPath;
 		cout << "PathPlanner Mode" << endl;
@@ -251,7 +251,7 @@ int main()
 		stop = high_resolution_clock::now();
 		cout << "C*CS Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 		
-		if(!success && (robotType == AppTypedef::CarPathPlanner)) 
+		if(!success && robotType.isCarLikeRobot()) 
 			return -1;		
 
 		geoPath = sc.GetPath();	
@@ -270,10 +270,7 @@ int main()
 	//Calc sampled path
 	start = high_resolution_clock::now();
 	cout << "Time Parameterization starting..." << endl;
-	if ((robotType == AppTypedef::CarPathPlanner)
-		|| (robotType == AppTypedef::CarPathFollow)
-		|| (robotType == AppTypedef::CarRobotPilotFollow)
-		|| (robotType == AppTypedef::CarRobotPilotPlanner))
+	if (robotType.isCarLikeRobot())
 	{
 		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep);
 		profile_top(geoPath, sampPath, true);	
@@ -292,7 +289,7 @@ int main()
 	ccsPath.send(s);
 
 	cout << "Path Follow Controlling starting..." << endl;
-	if ((robotType == AppTypedef::DifferentialPathFollow) || (robotType == AppTypedef::DifferentialPathPlanner))
+	if (robotType.isDifferentialRobot())
 	{
 		//Convert Sampled PathSegments to PathFollow PathSegments
 		vector<PathSegmentTypedef> path_dsp;
