@@ -85,6 +85,10 @@ typedef struct
 	float envFile;
 	float rMin;
 	float ds;
+	float reversePenaltyFactor;
+	float useIntermediateS;
+	float insertCount;
+	float dx;
 } CarPathPlannerParamsTypedef;
 
 

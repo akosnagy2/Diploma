@@ -160,6 +160,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 		sc.SetRobotMinimumRadius((float)parMsg.values[17]);
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS((float)parMsg.values[18]);
+		sc.SetCCSParameters(parMsg.values[19], parMsg.values[20], parMsg.values[21], parMsg.values[22]);
 	} else { 
 		predictSampleLength = (float)parMsg.values[1];
 		predictDistanceLength = (float)parMsg.values[2];

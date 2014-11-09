@@ -42,6 +42,11 @@ void CarParsePathPlannerPars(deque<float> &parsIn, CarPathPlannerParamsTypedef &
 	parsOut.envFile = parsIn.front(); parsIn.pop_front();
 	parsOut.rMin = parsIn.front(); parsIn.pop_front();
 	parsOut.ds = parsIn.front(); parsIn.pop_front();
+
+	parsOut.reversePenaltyFactor = parsIn.front(); parsIn.pop_front();
+	parsOut.useIntermediateS = parsIn.front(); parsIn.pop_front();
+	parsOut.insertCount = parsIn.front(); parsIn.pop_front();
+	parsOut.dx = parsIn.front(); parsIn.pop_front();
 }
 
 void CarForwardPathPlannerPars(tcp::iostream &client, CarPathPlannerParamsTypedef &pars)
