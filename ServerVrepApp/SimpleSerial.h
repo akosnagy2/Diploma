@@ -15,6 +15,7 @@ public:
 private:
 	boost::asio::io_service io;
 	boost::asio::serial_port serialPort;
+	//boost::system::error_code ec;
 	std::stringstream inputBuffer;
 };
 

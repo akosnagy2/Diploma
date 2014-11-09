@@ -80,6 +80,7 @@ void CarPathController::Loop(Config nextPos)
 				p *= -1.0f;
 			}
 			fi = lineFollower.getFi(delta, p);
+			trackError = Config::Distance(paths[pathIndex].path[index], nextPos);
 
 			if(!paths[pathIndex].direction) {
 				fi *= -1.0f;
@@ -108,14 +109,14 @@ void CarPathController::Loop(Config nextPos)
 
 Config CarPathController::getSensorCenter(Config carPosition)
 {
+	Config carFrontPos = carPosition;
 	Config intersection;
-	int predictIndex = index;
 	float dist = predict + car.getAxisDistance();
-	predictPoint = frontPath[pathIndex].path[predictIndex];
 
-	while(predictIndex < paths[pathIndex].path.size() - 1 && Config::Distance(carPosition, predictPoint) < dist) {
-		predictPoint = frontPath[pathIndex].path[++predictIndex];
-	}
+	carFrontPos.p.x += dist*cos(carPosition.phi);
+	carFrontPos.p.y += dist*sin(carPosition.phi);
+	int predictIndex = frontPath[pathIndex].getClosestPoint(carFrontPos, index);
+	predictPoint = frontPath[pathIndex].path[predictIndex];
 
 	if(predictIndex == paths[pathIndex].path.size() - 1 && Config::Distance(carPosition, predictPoint) < dist) {
 		float distError = dist - Config::Distance(carPosition, frontPath[pathIndex].path[predictIndex]);

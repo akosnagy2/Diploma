@@ -395,7 +395,7 @@ int main()
 			pathController.Loop(act_pos);
 			rabitPos.pos = pathController.getRabbit();
 
-			//info.values.push_back(speedController.getDistError());
+			info.values.push_back(pathController.getTrackError());
 			//info.values.push_back(speedController.getSumError());
 
 			ctrl_out.ctrl_sig.push_back(pathController.getV());

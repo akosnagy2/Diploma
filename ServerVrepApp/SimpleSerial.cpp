@@ -3,10 +3,13 @@
 #include <iostream>
 #include <boost/system/error_code.hpp>
 
-SimpleSerial::SimpleSerial(const std::string port, unsigned int baudRate):
+SimpleSerial::SimpleSerial(const std::string port, unsigned int baudRate) :
 io(),
-serialPort(io, port)
+serialPort(io)
 {
+	//bool doTry = true;
+	//int tryCnt = 0;
+	serialPort.open(port);
 	if(!serialPort.is_open())
 	{
 		std::cerr << "Error! Could not open serial! \n";
