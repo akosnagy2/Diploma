@@ -18,6 +18,7 @@ public:
 	float getFiMax() { return fiMax; }
 	float getWheelDistance() { return wheelDistance; }
 	float getWheelDiameter() { return wheelDiameter; }
+	float getTimeStep() { return timeStep; }
 
 	Config getPosition();
 

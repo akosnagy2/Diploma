@@ -20,7 +20,7 @@ public:
 
 	bool isPathFollow(void)
 	{
-		if(appType == DifferentialPathFollow || appType == CarPathFollow || appType == CarRobotPilotFollow)
+		if(appType == DifferentialPathFollow || appType == CarPathFollow)
 			return true;
 		else
 			return false;
@@ -28,7 +28,8 @@ public:
 
 	bool isPathPlanner(void)
 	{
-		if(appType == DifferentialPathPlanner || appType == CarPathPlanner)
+		if(appType == DifferentialPathPlanner || appType == CarPathPlanner
+			|| appType == DifferentialRobotPilot || appType == CarRobotPilot)
 			return true;
 		else
 			return false;
@@ -41,8 +42,7 @@ public:
 		DifferentialRobotPilot = 8,
 		CarPathFollow = 16,
 		CarPathPlanner = 32,
-		CarRobotPilotFollow = 64,
-		CarRobotPilotPlanner = 128,
+		CarRobotPilot = 64,
 	} AppTypedef;
 
 	AppTypedef appType;

@@ -7,6 +7,10 @@
 #include <math.h>
 #include "misc.h"
 
+#define ROBOT_MAX_ACCEL		300.0f
+#define ROBOT_MAX_VEL		250.0f
+#define ROBOT_ACCEL_FACTOR	0.75f
+
 CarPathController::CarPathController(std::vector<PathSegment> &paths, CarLikeRobot &car, CarLineFollower &lf, float predict) :
 paths(paths),
 car(car),
@@ -23,6 +27,7 @@ lineFollower(lf)
 		frontPath.push_back(shifter.getShiftedPath());
 	}
 
+	trackError = 0.0f;
 }
 
 
@@ -65,7 +70,16 @@ void CarPathController::Loop(Config nextPos)
 
 			/* Calculate speed control signal */
 			index = newIndex;
-			v = paths[pathIndex].velocity[index + 1];
+			if(index == 0)
+			{
+				v = abs(v) + ROBOT_MAX_ACCEL * ROBOT_ACCEL_FACTOR * car.getTimeStep();
+				if(v > ROBOT_MAX_VEL)
+					v = ROBOT_MAX_VEL;
+			}
+			else
+			{
+				v = paths[pathIndex].velocity[index + 1];
+			}
 
 			/* Calculate steer control signal */
 			/* Virtual sensor middile position */

@@ -80,7 +80,7 @@ void CarRobotPilotLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnecti
 			init = false;
 			ostringstream setstr;
 			setstr.precision(3);
-			setstr << std::fixed << "S," << robotPos.p.x << "," << robotPos.p.y << "," << robotPos.phi;
+			setstr << std::fixed << "S," << robotPos.p.x * 0.001 << "," << robotPos.p.y * 0.001 << "," << robotPos.phi;
 			serial.writeLine(setstr.str());
 		}
 
