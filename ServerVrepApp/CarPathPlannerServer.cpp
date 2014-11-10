@@ -54,7 +54,7 @@ void CarForwardPathPlannerPars(tcp::iostream &client, CarPathPlannerParamsTypede
 	PackedMessage pathMsg;
 	CarPathFollowParamsTypedef p = pars.PathFollow;
 
-	pathMsg.values.push_back(pars.app.appType);							// robot type
+	pathMsg.values.push_back(pars.app.appType);					// robot type
 	pathMsg.values.push_back(p.PredictLength);					// PredictLength
 	pathMsg.values.push_back(p.DistPar_P);						// distPar_P
 	pathMsg.values.push_back(p.DistPar_D);						// distPar_D
@@ -74,6 +74,11 @@ void CarForwardPathPlannerPars(tcp::iostream &client, CarPathPlannerParamsTypede
 	pathMsg.values.push_back(pars.envFile);
 	pathMsg.values.push_back(pars.rMin);
 	pathMsg.values.push_back(pars.ds);
+
+	pathMsg.values.push_back(pars.reversePenaltyFactor);
+	pathMsg.values.push_back(pars.useIntermediateS);
+	pathMsg.values.push_back(pars.insertCount);
+	pathMsg.values.push_back(pars.dx);
 
 	pathMsg.send(client);
 }

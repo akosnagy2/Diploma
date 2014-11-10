@@ -39,7 +39,7 @@ function PathPlannerSimulationLoop()
 		rabitPos[2] = returnData[7] / 1000
 		rabitPos[3] = 0.1 -- fix
 		
-		simSetGraphUserData(trackGraphHandle, "Steering_Angle", fi) 
+		simSetGraphUserData(trackGraphHandle, "Steering_Angle", returnData[8]) 
 
 		if(consoleHandle ~= nil) then
 			simAuxiliaryConsolePrint(consoleHandle,NULL) 
@@ -103,7 +103,7 @@ function PathPlannerCarRobot()
 	local portNb = getPort()
 	
 	-- Start Server
-	result=simLaunchExecutable('ServerVrepApp',portNb,0) -- set the last argument to 1 to see the console of the launched server
+	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
 
 	-- Start Client
 	--result2=simLaunchExecutable('PathPlannerApp',"",1) -- set the last argument to 1 to see the console of the launched server
@@ -146,7 +146,11 @@ function PathPlannerCarRobot()
 								randomSeed,
 								envFile,
 								minimumRadius,
-								ds		
+								ds,
+								reversePenaltyFactor,
+								useIntermediateS,
+								insertCount,
+								dx
 								}
 				pars=simPackFloats(pars)
 				writeSocketData(client,pars)

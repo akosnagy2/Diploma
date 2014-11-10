@@ -3,7 +3,7 @@
 class App
 {
 private:
-	const int separator = 12;
+	static const int separator = 12;
 public:
 	bool isCarLikeRobot(void)
 	{

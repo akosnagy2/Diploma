@@ -19,6 +19,7 @@
 Segment::Segment(const Point& p1, const Point& p2, bool dir) {
     this->dir = dir;
     this->length = Point::distance(p1, p2);
+	this->radius = INFINITY;
     Vector v(p1, p2);
     double angle = v.getFi();
     if (dir) {
@@ -35,6 +36,7 @@ Segment::Segment(const Configuration& start, const Configuration& end, bool dir)
     this->end = end;
     this->dir = dir;
     this->length = Point::distance(start.position, end.position);
+	this->radius = INFINITY;
 }
 
 bool Segment::isIntersect(const Segment& s) const {

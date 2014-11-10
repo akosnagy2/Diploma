@@ -34,7 +34,7 @@ private:
 	int index;
 	int pathIndex;
 
-	float trackError = 0.0f;
+	float trackError;
 	Config predictPoint;
 	float v;
 	float fi;
