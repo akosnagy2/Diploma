@@ -9,6 +9,7 @@
 class Segment : public Path {
 public:
     Segment(const Point& p1, const Point& p2, bool dir = true);
+	Segment(const Configuration& start, const Point& end);
     Segment(const Configuration& start, const Configuration& end, bool dir);
     
     bool isIntersect(const Segment& s, Point& p) const;

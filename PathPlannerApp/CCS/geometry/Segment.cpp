@@ -1,11 +1,5 @@
 #include "Segment.h"
-/*
-<<<<<<< HEAD
-#include <cmath>
-=======
-#define _USE_MATH_DEFINES
-#include <math.h>
->>>>>>> origin/car-like-robot*/
+
 #include <vector>
 #include <algorithm>
 #include <float.h>
@@ -29,6 +23,17 @@ Segment::Segment(const Point& p1, const Point& p2, bool dir) {
         start = Configuration(p1, wrapAngle(angle + M_PI));
         end = Configuration(p2, wrapAngle(angle + M_PI));
     }
+}
+
+Segment::Segment(const Configuration& start, const Point& end)
+{
+	Configuration c(start.position, atan2(end.y - start.position.y, end.x - start.position.x));
+	this->start = c;
+	c.position = end;
+	this->end = c;
+	this->dir = (abs(wrapAngle(start.orientation - c.orientation)) < M_PI_2);
+	this->length = Point::distance(start.position, end);
+	this->radius = INFINITY;
 }
 
 Segment::Segment(const Configuration& start, const Configuration& end, bool dir) {

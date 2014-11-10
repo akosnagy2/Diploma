@@ -152,5 +152,8 @@
     <ClInclude Include="lib_json\json_tool.h">
       <Filter>Header Files\json</Filter>
     </ClInclude>
+    <ClInclude Include="App.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

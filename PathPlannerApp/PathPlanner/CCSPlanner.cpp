@@ -159,7 +159,7 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 							/* Insert straigth segment */
 							tempConfig.position = config[endIndex].position;
 							tempConfig.orientation = config[startIndex].orientation;
-							ccsPath.push_back(shared_ptr<Path>(new Segment(config[startIndex].position, tempConfig.position)));
+							ccsPath.push_back(shared_ptr<Path>(new Segment(config[startIndex], tempConfig.position)));
 							startIndex = endIndex;
 
 							/* Insert new start config */
