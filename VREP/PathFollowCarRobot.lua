@@ -93,10 +93,10 @@ function PathFollowCarRobot()
 	local portNb = getPort()
 
 	-- Start Server
-	result=simLaunchExecutable('ServerVrepApp',portNb,0) -- set the last argument to 1 to see the console of the launched server
+	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
 
 	-- Start Client
-	result2=simLaunchExecutable('PathPlannerApp',"",0) -- set the last argument to 1 to see the console of the launched server
+	--result2=simLaunchExecutable('PathPlannerApp',"",0) -- set the last argument to 1 to see the console of the launched server
 
 	if ((result == -1) or (result2 == -1)) then
 		-- The executable could not be launched!

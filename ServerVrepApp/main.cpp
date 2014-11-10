@@ -89,8 +89,7 @@ int main(int argc, char* argv[])
 			case App::CarPathPlanner:
 				CarPathPlannerServer(vrepPars, connection, client, logFile);
 				break;
-			case App::CarRobotPilotFollow:
-			case App::CarRobotPilotPlanner:
+			case App::CarRobotPilot:
 				CarRobotPilotServer(vrepPars, connection, client, logFile);
 				break;
 			default:
