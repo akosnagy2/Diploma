@@ -15,9 +15,12 @@
     <ClCompile Include="CtrlMessage.cpp" />
     <ClCompile Include="Geometry\Angle.cpp" />
     <ClCompile Include="Geometry\Config.cpp" />
+    <ClCompile Include="Geometry\Frame.cpp" />
     <ClCompile Include="Geometry\Line.cpp" />
+    <ClCompile Include="Geometry\Point.cpp" />
     <ClCompile Include="Geometry\Polygon.cpp" />
     <ClCompile Include="Geometry\Triangle.cpp" />
+    <ClCompile Include="ISerializable.cpp" />
     <ClCompile Include="lib_json\json_reader.cpp" />
     <ClCompile Include="lib_json\json_value.cpp" />
     <ClCompile Include="lib_json\json_writer.cpp" />
@@ -26,6 +29,7 @@
     <ClCompile Include="PathMessage.cpp" />
     <ClCompile Include="PathSegment.cpp" />
     <ClCompile Include="Pos2dMessage.cpp" />
+    <ClCompile Include="tiny_obj_loader.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -34,10 +38,12 @@
     <ClInclude Include="Geometry\Angle.h" />
     <ClInclude Include="Geometry\Common.h" />
     <ClInclude Include="Geometry\Config.h" />
+    <ClInclude Include="Geometry\Frame.h" />
     <ClInclude Include="Geometry\Line.h" />
     <ClInclude Include="Geometry\Point.h" />
     <ClInclude Include="Geometry\Polygon.h" />
     <ClInclude Include="Geometry\Triangle.h" />
+    <ClInclude Include="ISerializable.h" />
     <ClInclude Include="json\assertions.h" />
     <ClInclude Include="json\autolink.h" />
     <ClInclude Include="json\config.h" />
@@ -56,6 +62,7 @@
     <ClInclude Include="PathSegment.h" />
     <ClInclude Include="Pos2dMessage.h" />
     <ClInclude Include="Position.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A4B34A9E-0E2A-4967-A138-65075343E388}</ProjectGuid>
@@ -93,7 +100,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\RobotCommonLib\;$(BOOST_DIR)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
