@@ -664,7 +664,7 @@ Point Scene::GetGuidePoint(bool startPoint)
 
 	float r = distribution(generator);
 
-	if (r <= roadmapProbability)
+	if ((r <= roadmapProbability) && roadmap_node.size())
 	{
 		int t = static_cast<int>((distribution(generator)*(roadmap_node.size() - 1)) + 0.5f); //Mivel nincs round az MSVC2012-ben...
 		return roadmap_node[t].p;
@@ -748,6 +748,17 @@ void Scene::OptimizePath()
 				}
 			}
 		}
+	}
+
+	//TODO: ilyet nem kéne csinálnia!
+	for (vector<ConfigInterval>::iterator it = pathCI.begin(); it != pathCI.end(); )
+	{
+		if (it->amount == 0.0f)
+		{
+			it = pathCI.erase(it);
+		}
+		else
+			++it;
 	}
 }
 

@@ -29,21 +29,22 @@ boost::system::error_code SetupServer(boost::asio::io_service& io_service, int p
 
 int main(int argc, char* argv[])
 {
-	int portNb = 0;
+	int portVrep = 0;
+	int portClient = 168;
 	boost::asio::io_service io_service;
 	tcp::iostream client;
 	boost::system::error_code e;
 	ofstream logFile;
 
 	if(argc == 2) {
-		portNb = atoi(argv[1]);
+		portVrep = atoi(argv[1]);
 	} else {
 		cout << "Indicate following arguments: portNumber!" << endl;
 		return -1;
 	}
 
-	cout << "Waiting for the Client..." << endl;
-	if((e = SetupServer(io_service, 168, client))) {
+	cout << "Waiting for the Client on " << portClient << " ..." << endl;
+	if((e = SetupServer(io_service, portClient, client))) {
 		cout << "Client connection failed." << endl;
 		cout << "Error Code: " << e.message() << endl;
 		return -1;
@@ -54,7 +55,7 @@ int main(int argc, char* argv[])
 	cout << "Logfile: log.txt." << endl;
 	logFile << "Log starting." << endl;
 
-	CSimpleInConnection connection(portNb, 20000, 50, 47);
+	CSimpleInConnection connection(portVrep, 20000, 50, 47);
 	logFile << "Connecting to client..." << endl;
 
 	if(connection.connectToClient()) {

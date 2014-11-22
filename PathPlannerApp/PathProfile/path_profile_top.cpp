@@ -459,9 +459,16 @@ static void correctAccelBackward(Profile &prof, std::vector<float> &Vmax, std::v
 		{
 			Vmax[i] = min(min(vmL*(1 - EPS), vmR*(1 - EPS)), Vmax[i]);
 			prof.v[i] = Vmax[i];
+			
 			acpL[i] = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f - prof.c[i]*robotWheelBase*0.5f);
 			acpR[i] = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f + prof.c[i]*robotWheelBase*0.5f);
 
+			aL = (powf(prof.v[i+1],2) - powf(prof.v[i],2)) / (2*deltaSl[i]);
+			aL *= powf((1 - robotWheelBase*0.5f*prof.c[i]),2);
+			aR = (powf(prof.v[i+1],2) - powf(prof.v[i],2)) / (2*deltaSr[i]);
+			aR *= powf((1 + robotWheelBase*0.5f*prof.c[i]),2); 
+
+			prof.a[i] = (aL + aR)*0.5f;
 			i--;
 		}
 
@@ -695,6 +702,10 @@ static void checkProfile(Profile &prof, bool saveProfiles, std::string profile_n
 			a_left[i] = sqrtf(powf(acp_left, 2) + powf(at_left[i], 2));
 			acp_right = (powf(prof.v[i], 2)*prof.c[i]) * (1.0f + prof.c[i] * robotWheelBase*0.5f);
 			a_right[i] = sqrtf(powf(acp_right, 2) + powf(at_right[i], 2));
+			if (at_right[i] < 0.0)
+				a_right[i] *= -1.0;
+			if (at_left[i] < 0.0)
+				a_left[i] *= -1.0;
 			if((fabs(a_left[i]) > (maxA + EPS)) || (boost::math::isnan(a_left[i])))
 				log << "Profile Check: left wheel acceleration error in " << i << ". point." << endl;
 			if((fabs(a_right[i]) > (maxA + EPS)) || (boost::math::isnan(a_right[i])))
@@ -788,6 +799,7 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 		generateVelocityProfile_car(geoProfile);
 	}
 	geoProfile.CalcTime();
+	geoProfile.CalcTangentAcceleration();
 	stop = high_resolution_clock::now();
 	logfile << "Geometric profile: profile created, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
@@ -832,7 +844,7 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 	//Generate sampled path points coordinates
 	start = high_resolution_clock::now();
 	std::vector<int> segment(sampProfile.v.size());
-	float errorS = generateSampledPath(geoProfile, sampProfile, segment);
+	float errorS = generateSampledPath(geoProfile, sampProfile, segment) * -2000;
 	stop = high_resolution_clock::now();
 	logfile << "Sampled profile: path points generation, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
@@ -840,13 +852,13 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 	start = high_resolution_clock::now();
 	sampProfile.CalcPathDistance();
 	interpolateCurvature(geoProfile, sampProfile);
-	sampProfile.CalcAcceleration();
+	sampProfile.CalcTangentAcceleration();
 	stop = high_resolution_clock::now();
 	logfile << "Sampled profile: curvature, acceleration estimation, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
 	//Check and correct path back
 	start = high_resolution_clock::now();
-	//checkBack(geoProfile, sampProfile, errorS, segment);
+	checkBack(geoProfile, sampProfile, errorS, segment);
 	stop = high_resolution_clock::now();
 	logfile << "Sampled profile: path end point correction, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 

@@ -39,7 +39,8 @@ function PathPlannerSimulationLoop()
 		rabitPos[2] = returnData[7] / 1000
 		rabitPos[3] = 0.1 -- fix
 		
-		simSetGraphUserData(trackGraphHandle, "Steering_Angle", fi) 
+		simSetGraphUserData(trackGraphHandle, "Steering_Angle", fi*100) 
+		simSetGraphUserData(trackGraphHandle, "Track_Error", returnData[8]) 
 
 		if(consoleHandle ~= nil) then
 			simAuxiliaryConsolePrint(consoleHandle,NULL) 
@@ -146,7 +147,11 @@ function PathPlannerCarRobot()
 								randomSeed,
 								envFile,
 								minimumRadius,
-								ds		
+								ds,
+								reversePenaltyFactor,
+								useIntermediateS,
+								insertCount,
+								dx
 								}
 				pars=simPackFloats(pars)
 				writeSocketData(client,pars)

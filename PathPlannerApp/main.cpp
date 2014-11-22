@@ -212,7 +212,7 @@ int main()
 		sc.SetRobotMinimumRadius(50.0f);
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS(10.0);
-		sc.SetRTRParameters(3000, 0.0f, 0.2f, 350);
+		sc.SetRTRParameters(2000, 0.0f, 0.2f, 350);
 		robotType = AppTypedef::DifferentialPathPlanner;
 	}
 	
