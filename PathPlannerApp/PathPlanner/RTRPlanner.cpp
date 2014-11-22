@@ -4,9 +4,11 @@
 #include "Geometry\Line.h"
 #include "Geometry\Common.h"
 #include <queue>
+#include <chrono>
 
 using namespace PathPlanner;
 using namespace std;
+using namespace std::chrono;
 
 void DrawPolygon(Polygon &poly, Visualizer2 &vis, Color col)
 {
@@ -91,24 +93,37 @@ void Scene::DrawScene(int iteration)
 bool Scene::RTRPlanner()
 {
 	InitRTTrees();
-	
+	chrono::high_resolution_clock::time_point start, stop;
+	std::ofstream file1, file2;
+	file1.open("RTR_iteration_core.txt");	
+	file2.open("RTR_iteration_merge.txt");	
+
 	for (int i = 0; i < maxIteration; i++)
 	{
+		start = high_resolution_clock::now();
 		RTRIteration(true);
 		RTRIteration(false);
+		stop = high_resolution_clock::now();
+		file1 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
 
 		//if ((i % 500) == 0)
 		//	DrawScene(i);
 		
+		start = high_resolution_clock::now();
 		if (MergeTreesGetPath())
 		{
 			//DrawScene(i);
-			break;
+			//break;
 		}
+		stop = high_resolution_clock::now();
+		file2 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
+
 	}
 
 	OptimizePath();
 	//DrawPath();
+	file1.close();
+	file2.close();
 	return true;
 }
 
