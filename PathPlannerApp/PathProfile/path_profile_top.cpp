@@ -844,7 +844,7 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 	//Generate sampled path points coordinates
 	start = high_resolution_clock::now();
 	std::vector<int> segment(sampProfile.v.size());
-	float errorS = generateSampledPath(geoProfile, sampProfile, segment) * -2000;
+	float errorS = generateSampledPath(geoProfile, sampProfile, segment);
 	stop = high_resolution_clock::now();
 	logfile << "Sampled profile: path points generation, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 
@@ -858,7 +858,7 @@ static Profile profile(Profile &geoProfile, bool dir, std::ofstream &logfile)
 
 	//Check and correct path back
 	start = high_resolution_clock::now();
-	checkBack(geoProfile, sampProfile, errorS, segment);
+	//checkBack(geoProfile, sampProfile, errorS, segment);
 	stop = high_resolution_clock::now();
 	logfile << "Sampled profile: path end point correction, duration: " <<  duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 

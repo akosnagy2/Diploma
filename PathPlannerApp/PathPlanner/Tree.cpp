@@ -6,66 +6,68 @@ using namespace PathPlanner;
 Tree::Tree()
 {}
 
-int Tree::AddElement(TreeElement &elem, int parentIdx)
+TreeElement* Tree::AddElement(TreeElement &elem, TreeElement* parentIdx)
 {
-	if (parentIdx >= (int)xtree.size())
-		return -1;
+	//TreeElement t = elem;
+	//if (parentIdx >= (int)xtree.size())
+	//	return -1;
 
 	if (elem.ci.amount == 0.0)
-		return -2;
+		return NULL;
 
 	elem.parentIdx = parentIdx;
 	xtree.push_back(elem);
 
-	int id = (int)(xtree.size()) - 1;
-	if (parentIdx >= 0)
-		xtree[parentIdx].childrenIdx.push_back(id);		
+	//int id = (int)(xtree.size()) - 1;
+	if (parentIdx != NULL)
+		parentIdx->childrenIdx.push_back(&xtree.back());		
 		
-	return id;
+	return &xtree.back();
 }
 
-int Tree::Split(int splitID, Config &q)
+TreeElement*  Tree::Split(TreeElement*  splitID, Config &q)
 {
 	TreeElement elem;
 
 	//Inserting a new tree element at splitID
 	elem.childrenIdx.push_back(splitID);
-	elem.parentIdx = xtree[splitID].parentIdx;
+	elem.parentIdx = splitID->parentIdx;
 	elem.q = q;
-	elem.ci.type = xtree[splitID].ci.type;
-	elem.ci.q0 = xtree[splitID].ci.q0;
+	elem.ci.type = splitID->ci.type;
+	elem.ci.q0 = splitID->ci.q0;
 	elem.ci.q1 = q;
 	if (elem.ci.type == TranslationCI)
-		elem.ci.amount = (sgn(xtree[splitID].ci.amount)) * Config::Distance(elem.ci.q0, elem.ci.q1);
+		elem.ci.amount = (sgn(splitID->ci.amount)) * Config::Distance(elem.ci.q0, elem.ci.q1);
 	else
-		elem.ci.amount = Angle::DirectedAngleDist(elem.ci.q0.phi, elem.ci.q1.phi, sgn(xtree[splitID].ci.amount));
+		elem.ci.amount = Angle::DirectedAngleDist(elem.ci.q0.phi, elem.ci.q1.phi, sgn(splitID->ci.amount));
 
 	xtree.push_back(elem);
-	int id = (int)xtree.size() - 1;
+	TreeElement*  id = &(xtree.back());
 
 	//Modifying the children list of the parent of the old tree element whose CI was splitted
-	(*find(xtree[elem.parentIdx].childrenIdx.begin(), xtree[elem.parentIdx].childrenIdx.end(), splitID)) = id;
+	(*find(elem.parentIdx->childrenIdx.begin(), elem.parentIdx->childrenIdx.end(), splitID)) = id;
 
 	//Modifying the old tree element whose CI was splitted
-	xtree[splitID].parentIdx = id;
-	xtree[splitID].ci.q0 = q;
-	xtree[splitID].ci.amount -= elem.ci.amount; 
+	splitID->parentIdx = id;
+	splitID->ci.q0 = q;
+	splitID->ci.amount -= elem.ci.amount; 
 
 	return id;
 }
 
-vector<ConfigInterval> Tree::PathFromRoot(int id)
+vector<ConfigInterval> Tree::PathFromRoot(TreeElement* id)
 {
 	vector<ConfigInterval> path;
+	TreeElement* e = id;
 
-	if (id > 0)
+	if (e != NULL)
 	{
 		//Fill elements of the path from the given element to the root
 		do
 		{
-			path.push_back(xtree[id].ci);
-			id = xtree[id].parentIdx;
-		} while (xtree[id].parentIdx != -1);
+			path.push_back(e->ci);
+			e = e->parentIdx;
+		} while (e->parentIdx != NULL);
 
 		reverse(path.begin(), path.end());
 	}

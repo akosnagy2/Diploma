@@ -112,8 +112,8 @@ bool Scene::RTRPlanner()
 		start = high_resolution_clock::now();
 		if (MergeTreesGetPath())
 		{
-			//DrawScene(i);
-			//break;
+//			DrawScene(i);
+//			break;
 		}
 		stop = high_resolution_clock::now();
 		file2 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
@@ -121,7 +121,7 @@ bool Scene::RTRPlanner()
 	}
 
 	OptimizePath();
-	//DrawPath();
+	DrawPath();
 	file1.close();
 	file2.close();
 	return true;
@@ -131,7 +131,7 @@ void Scene::RTRIteration(bool start)
 {
 	//Select tree
 	Tree &tree = (start) ? startTree : goalTree;
-	vector<int> &recentTCIIDs = (start) ? recentTCIStartIDs : recentTCIGoalIDs;
+	vector<TreeElement*> &recentTCIIDs = (start) ? recentTCIStartIDs : recentTCIGoalIDs;
 
 	//Choose a guiding position (GP)
 	Point gp = GetGuidePoint(start);
@@ -141,7 +141,7 @@ void Scene::RTRIteration(bool start)
 
     //If ALC is an internal configuration of a CI, split the corresponding tree element accordingly
 	if (alc.internalC)
-		alc.treeElementIdx = tree.Split(alc.treeElementIdx, alc.q);
+		alc.treeElementIdx = tree.Split((TreeElement*)alc.treeElementIdx, alc.q);
 
 	//Check if there was a collision. If yes, then perform a turning movement in the other direction as well
 	if (TurnAndExtend(tree, gp, alc, start, recentTCIIDs))
@@ -151,26 +151,26 @@ void Scene::RTRIteration(bool start)
 	}
 }
 
-bool Scene::TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGoal, vector<int> &recentTCIIDs)
+bool Scene::TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGoal, vector<TreeElement*> &recentTCIIDs)
 {
 	//Maximal collision-free RCI in the direction of the minimal turning amount to the GP
 	ConfigInterval maxRCI;
 	bool collision = TurnToPos(alc.q, p, sgn(alc.angDist), headToGoal, maxRCI);
-	int idR = tree.AddElement(TreeElement(maxRCI), alc.treeElementIdx);
+	TreeElement*  idR = tree.AddElement(TreeElement(maxRCI), (TreeElement*)alc.treeElementIdx);
 
-	if (idR == -2)
-		idR = alc.treeElementIdx;
+	if (idR == NULL)
+		idR = (TreeElement*)alc.treeElementIdx;
 
 	//TCI extension of the new tree element added after the turn
 	ConfigInterval forwardMaxTCI, backwardMaxTCI;
-	TCI_Extension(tree.xtree[idR].q, forwardMaxTCI, backwardMaxTCI);
+	TCI_Extension(idR->q, forwardMaxTCI, backwardMaxTCI);
 
 	//Add TCIs to the tree
-	int id = tree.AddElement(TreeElement(forwardMaxTCI), idR);
-	if (id >= 0)
+	TreeElement*  id = tree.AddElement(TreeElement(forwardMaxTCI), idR);
+	if (id != NULL)
 		recentTCIIDs.push_back(id);
 	id = tree.AddElement(TreeElement(backwardMaxTCI), idR);
-	if (id >= 0)
+	if (id != NULL)
 		recentTCIIDs.push_back(id);
 
 	return collision;
@@ -186,7 +186,7 @@ ALCCandidate Scene::GetALC(Point &GP, bool start, bool preferredDir)
 	//Fill ALC candidate list, while taking care of smaller position and angular distance 
 	float minPosDist = numeric_limits<float>::infinity(), minAngDist = numeric_limits<float>::infinity();
 	vector<ALCCandidate>::iterator min;
-	for (vector<TreeElement>::iterator it = tree.xtree.begin() + 1; it != tree.xtree.end(); ++it)
+	for (list<TreeElement>::iterator it = ++tree.xtree.begin(); it != tree.xtree.end(); ++it)
 	{
 		ALCCandidates.push_back(it->ci.PointCIDistance(GP, preferredDir));
 
@@ -195,6 +195,10 @@ ALCCandidate Scene::GetALC(Point &GP, bool start, bool preferredDir)
 			minPosDist = ALCCandidates.back().posDist;
 			minAngDist = fabs(ALCCandidates.back().angDist);
 			min = ALCCandidates.end() - 1;
+			if ((min->internalC) || (min->q == it->q))
+				min->treeElementIdx = &(*it);
+			else
+				min->treeElementIdx = it->parentIdx;
 		}
 		else if (ALCCandidates.back().posDist == minPosDist)
 		{
@@ -203,16 +207,13 @@ ALCCandidate Scene::GetALC(Point &GP, bool start, bool preferredDir)
 				minPosDist = ALCCandidates.back().posDist;
 				minAngDist = fabs(ALCCandidates.back().angDist);
 				min = ALCCandidates.end() - 1;
+				if ((min->internalC) || (min->q == it->q))
+					min->treeElementIdx = &(*it);
+				else
+					min->treeElementIdx = it->parentIdx;
 			}
 		}
 	}
-
-	int treeIdx = (min - ALCCandidates.begin()) + 1; //Get position in tree
-
-	if ((min->internalC) || (min->q == tree.xtree[treeIdx].q))
-		min->treeElementIdx = treeIdx;
-	else
-		min->treeElementIdx = tree.xtree[treeIdx].parentIdx;
 
 	return *min;
 }
@@ -226,22 +227,22 @@ void Scene::InitRTTrees()
 	recentTCIGoalIDs.clear();
 
 	//Init Start, Goal trees
-	startTree.AddElement(TreeElement(robotStart), -1);
-	goalTree.AddElement(TreeElement(robotGoal), -1);
+	startTree.AddElement(TreeElement(robotStart), NULL);
+	goalTree.AddElement(TreeElement(robotGoal), NULL);
 
 	//TCI extension of the start config
 	ConfigInterval startFwdCI, startBwdCI;	
 	TCI_Extension(robotStart, startFwdCI, startBwdCI); 
 
-	startTree.AddElement(TreeElement(startFwdCI), 0);
-	startTree.AddElement(TreeElement(startBwdCI), 0);
+	startTree.AddElement(TreeElement(startFwdCI), &startTree.xtree.front());
+	startTree.AddElement(TreeElement(startBwdCI), &startTree.xtree.front());
 
 	//TCI extension of the goal config
 	ConfigInterval goalFwdCI, goalBwdCI;	
 	TCI_Extension(robotGoal, goalFwdCI, goalBwdCI); 
 
-	goalTree.AddElement(TreeElement(goalFwdCI), 0);
-	goalTree.AddElement(TreeElement(goalBwdCI), 0);
+	goalTree.AddElement(TreeElement(goalFwdCI), &goalTree.xtree.front());
+	goalTree.AddElement(TreeElement(goalBwdCI), &goalTree.xtree.front());
 }
 
 void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterval &backwardMaxTCI)
@@ -481,8 +482,8 @@ bool Scene::MergeTreesGetPath()
 	{
 
 		ConfigInterval mergeRCI;
-		int ID = treeTCIMergeability(startTree, goalTree.xtree[recentTCIGoalIDs[i]].ci, mergeRCI);
-		if (ID != -1)
+		TreeElement* ID = treeTCIMergeability(startTree, recentTCIGoalIDs[i]->ci, mergeRCI);
+		if (ID != NULL)
 		{
 			pathCandidate = ObtainPath(ID, recentTCIGoalIDs[i], mergeRCI, pathCandidateLength);
 			if (((int)pathCandidate.size() < minPathSize) || (((int)pathCandidate.size() == minPathSize) && (pathCandidateLength < minPathLength)))
@@ -500,8 +501,8 @@ bool Scene::MergeTreesGetPath()
 	for (int i = 0; i < (int)recentTCIStartIDs.size(); i++)
 	{
 		ConfigInterval mergeRCI;
-		int ID = treeTCIMergeability(goalTree, startTree.xtree[recentTCIStartIDs[i]].ci, mergeRCI);
-		if (ID != -1)
+		TreeElement* ID = treeTCIMergeability(goalTree, recentTCIStartIDs[i]->ci, mergeRCI);
+		if (ID != NULL)
 		{
 			pathCandidate = ObtainPath(recentTCIStartIDs[i], ID, mergeRCI, pathCandidateLength);
 			if (((int)pathCandidate.size() < minPathSize) || (((int)pathCandidate.size() == minPathSize) && (pathCandidateLength < minPathLength)))
@@ -517,13 +518,13 @@ bool Scene::MergeTreesGetPath()
 	return (pathCI.size() > 0);
 }
 
-vector<ConfigInterval> Scene::ObtainPath(int startMergeID, int goalMergeID, ConfigInterval mergeRCI, float &pathLength)
+vector<ConfigInterval> Scene::ObtainPath(TreeElement* startMergeID, TreeElement* goalMergeID, ConfigInterval mergeRCI, float &pathLength)
 {
 	Point mergePos(mergeRCI.q0.p);
 
 	//Split the corresponding tree elements at the intersection point
-	int startTreeNewID = startTree.Split(startMergeID, Config(mergePos, startTree.xtree[startMergeID].ci.q0.phi));
-	int goalTreeNewID = goalTree.Split(goalMergeID, Config(mergePos, goalTree.xtree[goalMergeID].ci.q0.phi));
+	TreeElement* startTreeNewID = startTree.Split(startMergeID, Config(mergePos, startMergeID->ci.q0.phi));
+	TreeElement* goalTreeNewID = goalTree.Split(goalMergeID, Config(mergePos, goalMergeID->ci.q0.phi));
 
 	//1st part of the path: CIs from the start configuration to the newly added intersection point + merging RCI
 	vector<ConfigInterval> path = startTree.PathFromRoot(startTreeNewID);
@@ -602,30 +603,30 @@ int Scene::circleSegLineSegIntersect(Point center, float angleStart, float dThet
 }
 
 
-int Scene::treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &mergingRCI)
+TreeElement* Scene::treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &mergingRCI)
 {
-	queue<int> idFIFO;
+	queue<TreeElement*> idFIFO;
 
 	//Seek through every tree elements in a breadth-first manner starting from the root element
-	for (int i = 0; i < (int)tree.xtree[0].childrenIdx.size(); i++)
-		idFIFO.push(tree.xtree[0].childrenIdx[i]); //Insert the children of the root first
+	for (int i = 0; i < (int)tree.xtree.front().childrenIdx.size(); i++)
+		idFIFO.push(tree.xtree.front().childrenIdx[i]); //Insert the children of the root first
 
 	while (!idFIFO.empty())
 	{
-		int id = idFIFO.front();
+		TreeElement* id = idFIFO.front();
 		idFIFO.pop();
 
-		if (tree.xtree[id].ci.type == RotationCI)
+		if (id->ci.type == RotationCI)
 		{
 			//RCI -> do nothing, only put its children to the queue
-			for (int i = 0; i < (int)tree.xtree[id].childrenIdx.size(); i++)
-				idFIFO.push(tree.xtree[id].childrenIdx[i]); //Insert the children 
+			for (int i = 0; i < (int)id->childrenIdx.size(); i++)
+				idFIFO.push(id->childrenIdx[i]); //Insert the children 
 		}
 		else
 		{
 			//TCI -> check mergeability, if possible then break, else put children to the queue
 			Point mergingPoint;
-			if (tciTCIMergeability(tree.xtree[id].ci, TCI, mergingRCI, mergingPoint))
+			if (tciTCIMergeability(id->ci, TCI, mergingRCI, mergingPoint))
 			{
 				//Merging is possible -> return
 				return id;
@@ -633,14 +634,14 @@ int Scene::treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &m
 			else
 			{
 				//Merging is not possible -> put children to the queue
-				for (int i = 0; i < (int)tree.xtree[id].childrenIdx.size(); i++)
-					idFIFO.push(tree.xtree[id].childrenIdx[i]); //Insert the children 
+				for (int i = 0; i < (int)id->childrenIdx.size(); i++)
+					idFIFO.push(id->childrenIdx[i]); //Insert the children 
 			}
 		}
 	}
 
 	//Merging is not possible
-	return -1;
+	return NULL;
 }
 
 //tciTCIMergeability - Checks whether the given TCIs can be merged by a single RCI
