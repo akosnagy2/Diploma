@@ -11,7 +11,7 @@ using namespace PathPlanner;
 
 #define FRAME_TYPE_CODE		"frame"
 
-class Frame : ISerializable
+class Frame : public ISerializable
 {
 public:
 	Frame() {}
@@ -20,24 +20,27 @@ public:
 	void Load(std::string file);
 
 	/* Getters */
-	vector<Polygon>& getObstacles() { return obstacles; }
-	Polygon& getField() { return field; }
+	vector<PathPlanner::Polygon>& getObstacles() { return obstacles; }
+	PathPlanner::Polygon& getField() { return field; }
+	PathPlanner::Polygon& getRobotShape() { return robotBody; }
+	PathPlanner::Config& getStart() { return start; }
+	PathPlanner::Config& getGoal() { return goal; }
 
 	/* Setters */
-	void addObstacle(Polygon& poly) { obstacles.push_back(poly); }
-	void setField(Polygon& field) { this->field = field; }
+	void addObstacle(PathPlanner::Polygon& poly) { obstacles.push_back(poly); }
+	void setField(PathPlanner::Polygon& field) { this->field = field; }
 
 	~Frame() {}
 
 	virtual Json::Value getJsonValue();
 	virtual void setFromJson(Json::Value& value);
 private:
-	vector<Polygon> obstacles;
-	Polygon field;
-	Polygon robotBody;
+	vector<PathPlanner::Polygon> obstacles;
+	PathPlanner::Polygon field;
+	PathPlanner::Polygon robotBody;
 	Config start;
 	Config goal;
 
-	Polygon ParseObjShape(tinyobj::shape_t &shp);
+	static PathPlanner::Polygon ParseObjShape(tinyobj::shape_t &shp);
 };
 

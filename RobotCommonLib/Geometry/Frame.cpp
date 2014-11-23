@@ -63,7 +63,7 @@ void Frame::setFromJson(Json::Value& value)
 	}
 }
 
-Polygon ParseObjShape(tinyobj::shape_t &shp)
+PathPlanner::Polygon Frame::ParseObjShape(tinyobj::shape_t &shp)
 {
 	PathPlanner::Polygon poly;
 

@@ -38,20 +38,20 @@ bool CCSWrapper(PathPlanner::Scene &s, vector<PathPlanner::PathSegment> &path)
 	logFile.open("CCS_log.txt");
 
 	//Environment
-	Environment env(s.GetFieldXLength(), s.GetFieldYLength());
+	Environment env(s.GetFrame().getField().getWidth(), s.GetFrame().getField().getHeight());
 
 	//Obstacles
-	for(auto &e : s.GetEnv())
+	for(auto &e : s.GetFrame().getObstacles())
 		env.addObstacle(ShapeToShape(e));
 
 	//Robot
 	Robot robot;
-	Configuration start(s.GetStartConfig().p.x, s.GetStartConfig().p.y, s.GetStartConfig().phi);
-	Configuration goal(s.GetGoalConfig().p.x, s.GetGoalConfig().p.y, s.GetGoalConfig().phi);
+	Configuration start(s.GetFrame().getStart().p.x, s.GetFrame().getStart().p.y, s.GetFrame().getStart().phi);
+	Configuration goal(s.GetFrame().getGoal().p.x, s.GetFrame().getGoal().p.y, s.GetFrame().getGoal().phi);
 
 	robot.setStart(start);
 	robot.setGoal(goal);
-	robot.setBody(ShapeToShape(s.GetRobotShape()));
+	robot.setBody(ShapeToShape(s.GetFrame().getRobotShape()));
 
 	robot.setAxleDistance(s.GetRobotMinimumRadius());
 	robot.setWheelBase(s.GetRobotWheelBase());

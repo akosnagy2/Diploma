@@ -46,10 +46,10 @@ void Scene::DrawPath()
 	Visualizer2 vis("path.ps");
 	
 	//Draw field
-	DrawPolygon(field, vis, Color(0.0, 0.0, 1.0, 2.0));
+	DrawPolygon(frame.getField(), vis, Color(0.0, 0.0, 1.0, 2.0));
 
 	//Draw obstacles
-	for (auto &elem : envs)
+	for (auto &elem : frame.getObstacles())
 		DrawPolygon(elem, vis, Color(0.0, 0.0, 1.0, 1.0));
 
 	for (auto &elem : pathCI)
@@ -64,23 +64,23 @@ void Scene::DrawScene(int iteration)
 	Visualizer2 vis("scene" + to_string(iteration) + ".ps");
 
 	//Draw field
-	DrawPolygon(field, vis, Color(0.0, 0.0, 1.0, 2.0));
+	DrawPolygon(frame.getField(), vis, Color(0.0, 0.0, 1.0, 2.0));
 
 	//Draw obstacles
-	for (auto &elem : envs)
+	for (auto &elem : frame.getObstacles())
 		DrawPolygon(elem, vis, Color(0.0, 0.0, 1.0, 1.0));
 
 	//Draw start tree TCIs
 	for (auto &elem : startTree.xtree)
 	{		
-		DrawRobot(robotShape, elem.q, vis, Color(1.0, 1.0, 0.0, 1.0));
+		DrawRobot(frame.getRobotShape(), elem.q, vis, Color(1.0, 1.0, 0.0, 1.0));
 		DrawCI(elem.ci, vis, Color(1.0, 0.0, 0.0, 2.0));
 	}
 
 	//Draw goal tree TCIs
 	for (auto &elem : goalTree.xtree)
 	{
-		DrawRobot(robotShape, elem.q, vis, Color(0.0, 1.0, 1.0, 1.0));
+		DrawRobot(frame.getRobotShape(), elem.q, vis, Color(0.0, 1.0, 1.0, 1.0));
 		DrawCI(elem.ci, vis, Color(0.0, 1.0, 0.0, 2.0));			
 	}
 	//Draw robot
@@ -211,19 +211,19 @@ void Scene::InitRTTrees()
 	recentTCIGoalIDs.clear();
 
 	//Init Start, Goal trees
-	startTree.AddElement(TreeElement(robotStart), -1);
-	goalTree.AddElement(TreeElement(robotGoal), -1);
+	startTree.AddElement(TreeElement(frame.getStart()), -1);
+	goalTree.AddElement(TreeElement(frame.getGoal()), -1);
 
 	//TCI extension of the start config
 	ConfigInterval startFwdCI, startBwdCI;	
-	TCI_Extension(robotStart, startFwdCI, startBwdCI); 
+	TCI_Extension(frame.getStart(), startFwdCI, startBwdCI); 
 
 	startTree.AddElement(TreeElement(startFwdCI), 0);
 	startTree.AddElement(TreeElement(startBwdCI), 0);
 
 	//TCI extension of the goal config
 	ConfigInterval goalFwdCI, goalBwdCI;	
-	TCI_Extension(robotGoal, goalFwdCI, goalBwdCI); 
+	TCI_Extension(frame.getGoal(), goalFwdCI, goalBwdCI); 
 
 	goalTree.AddElement(TreeElement(goalFwdCI), 0);
 	goalTree.AddElement(TreeElement(goalBwdCI), 0);
@@ -232,10 +232,12 @@ void Scene::InitRTTrees()
 void Scene::TCI_Extension(Config q, ConfigInterval &forwardMaxTCI, ConfigInterval &backwardMaxTCI)
 {
 	//Transform the robot polygon to the world frame
-	Polygon robotShapeWorld = robotShape.TransformToWorld(q);
+	Polygon robotShapeWorld = frame.getRobotShape().TransformToWorld(q);
 
 	//Traverse on obstacles
 	vector<float> forwardPointDist, backwardPointDist;
+	vector<PathPlanner::Polygon> envsx = frame.getObstacles();
+	envsx.push_back(frame.getField());
 	for (int i = 0; i < (int)envsx.size(); i++)
 	{
 		int env_size = envsx[i].ps.size();
@@ -353,11 +355,13 @@ bool Scene::TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, Co
 	dThetaMax = fabs(Angle::DirectedAngleDist(qStart.phi, thetaGoal, turnDir));
 
 	//Transform the robot polygon to the world frame
-	Polygon robotShapeWorld = robotShape.TransformToWorld(qStart);
+	Polygon robotShapeWorld = frame.getRobotShape().TransformToWorld(qStart);
 
 	//Collision check
 	float dThetaAbs = numeric_limits<float>::infinity();
 	vector<float> turnAmount;
+	vector<PathPlanner::Polygon> envsx = frame.getObstacles();
+	envsx.push_back(frame.getField());
 	for (int i = 0; i < (int)envsx.size(); i++)
 	{
 		int env_size = envsx[i].ps.size();
@@ -678,7 +682,7 @@ Point Scene::GetGuidePoint(bool startPoint)
 	}
 	else
 	{
-		return Point(distribution(generator)*fieldXLength, distribution(generator)*fieldYLength);
+		return Point(distribution(generator)*frame.getField().getWidth(), distribution(generator)*frame.getField().getHeight());
 	}
 }
 

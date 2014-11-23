@@ -6,7 +6,7 @@
 namespace PathPlanner
 {
 
-	struct Point : ISerializable
+	struct Point : public ISerializable
 	{
 		Point() {}
 		Point(float x, float y);

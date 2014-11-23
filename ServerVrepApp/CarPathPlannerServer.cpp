@@ -1,6 +1,7 @@
 #include "CarPathPlannerServer.h"
 #include "CtrlMessage.h"
 #include "App.h"
+#include "Geometry/Frame.h"
 
 void CarParsePathFollowPars(deque<float> &parsIn, CarPathFollowParamsTypedef &parsOut)
 {
@@ -104,6 +105,12 @@ int CarPathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tc
 
 	if (serverPars.app.isPathPlanner())
 	{
+		stringstream frameName;
+		frameName << "..\\Frame\\frame" << (int) serverPars.envFile << "c.obj";
+		Frame frame(frameName.str());
+
+		client << frame;
+
 		//Receive (sampled) path from PathPlanner
 		path.receive(client);
 		

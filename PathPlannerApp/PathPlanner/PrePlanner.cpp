@@ -43,18 +43,18 @@ void Scene::Triangulate()
 	Fade_2D dt;
 	vector<Point2> fi;
 
-	fi.reserve(field.ps.size());
+	fi.reserve(frame.getField().ps.size());
 	//Convert field to FADE2D Point2s and add to triangulation
-	for (vector<Point>::iterator it = field.ps.begin(); it != field.ps.end(); ++it)
-		fi.push_back(Point2(it->x, it->y));
+	for(auto &p : frame.getField().getPoints())
+		fi.push_back(Point2(p.x, p.y));
 	
 	dt.insert(fi);
 
 	//Generate zones for scene environment
 	vector<Zone2*> zoneEnv;
-	zoneEnv.reserve(envs.size());
-	for (vector<Polygon>::iterator it = envs.begin(); it != envs.end(); ++it)
-		zoneEnv.push_back(generateObjectZone((*it), dt));
+	zoneEnv.reserve(frame.getObstacles().size());
+	for(auto &obst : frame.getObstacles())
+		zoneEnv.push_back(generateObjectZone(obst, dt));
 		
 	dt.applyConstraintsAndZones();
 
@@ -189,8 +189,8 @@ bool Scene::PrePlanner()
 	}
 
 	//Add robot start, target Config to roadmap_node
-	roadmap_node.push_back(robotStart);
-	roadmap_node.push_back(robotGoal);
+	roadmap_node.push_back(frame.getStart());
+	roadmap_node.push_back(frame.getGoal());
 
 	//Build adjacency matrix
 	roadmap_adj = ublas::zero_matrix<float>(roadmap_node.size());
@@ -229,10 +229,10 @@ bool Scene::PrePlanner()
 	int start_index, goal_index;
 	for(vector<Triangle>::iterator it = cells.begin(); it != cells.end(); ++it)
 	{
-		if (it->PointInside(robotStart.p))
+		if (it->PointInside(frame.getStart().p))
 			start_index = it - cells.begin();
 
-		if (it->PointInside(robotGoal.p))
+		if (it->PointInside(frame.getGoal().p))
 			goal_index = it - cells.begin();		
 	}
 
@@ -269,6 +269,8 @@ bool Scene::PrePlanner()
 
 				segment<d2::point_xy<float>> seg0(p0, p1);			
 
+				vector<Polygon> envsx = frame.getObstacles();
+				envsx.push_back(frame.getField());
 				for (int k = 0; k < (int)envsx.size(); k++)
 				{
 					int size = envsx[k].ps.size();

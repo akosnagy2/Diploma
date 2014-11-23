@@ -18,6 +18,7 @@
 
 #include "CarLikeRobot.h"
 #include "App.h"
+#include "Geometry/Frame.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -85,43 +86,43 @@ void ConvertPathToDSPPath(vector<PathSegment> &sampPath, vector<vector<PositionT
 	}
 }
 
-PathPlanner::Polygon ParseObjShape(tinyobj::shape_t &shp)
-{
-	PathPlanner::Polygon poly;
-
-	for (int i = 0; i < (int)shp.mesh.positions.size(); i += 3)
-		poly.AddPoint(PathPlanner::Point(shp.mesh.positions[i], shp.mesh.positions[i+1])); //Load x, y coord. Skip z coord.
-
-	return poly;
-}
-
-bool ParseObj(string objName, PathPlanner::Scene &scene)
-{
-	bool ret = true;
-	vector<tinyobj::shape_t> shapes;
-	vector<tinyobj::material_t> materials;
-
-	//Load obj file by TinyObjLoader
-	tinyobj::LoadObj(shapes, materials, objName.c_str());
-
-	for (auto& elem : shapes)
-	{
-		if (elem.name == "Robot")
-			scene.SetRobotShape(ParseObjShape(elem)); //Load Robot shape -> Set in Scene
-		else if (elem.name.find("Obstacle") != string::npos)
-			scene.AddEnv(ParseObjShape(elem)); //Load ObstacleX shape
-		else if (elem.name == "StartConfig")
-			scene.SetStartConfig(Config(elem.mesh.positions[0], elem.mesh.positions[1], elem.mesh.positions[2])); //Start Config
-		else if (elem.name == "GoalConfig")
-			scene.SetGoalConfig(Config(elem.mesh.positions[0], elem.mesh.positions[1], elem.mesh.positions[2])); //Goal Config
-		else if (elem.name == "Field") 
-			scene.AddField(elem.mesh.positions[6], elem.mesh.positions[4]); //Load field
-		else
-			ret = false;
-	}
-
-	return ret;
-}
+//PathPlanner::Polygon ParseObjShape(tinyobj::shape_t &shp)
+//{
+//	PathPlanner::Polygon poly;
+//
+//	for (int i = 0; i < (int)shp.mesh.positions.size(); i += 3)
+//		poly.AddPoint(PathPlanner::Point(shp.mesh.positions[i], shp.mesh.positions[i+1])); //Load x, y coord. Skip z coord.
+//
+//	return poly;
+//}
+//
+//bool ParseObj(string objName, PathPlanner::Scene &scene)
+//{
+//	bool ret = true;
+//	vector<tinyobj::shape_t> shapes;
+//	vector<tinyobj::material_t> materials;
+//
+//	//Load obj file by TinyObjLoader
+//	tinyobj::LoadObj(shapes, materials, objName.c_str());
+//
+//	for (auto& elem : shapes)
+//	{
+//		if (elem.name == "Robot")
+//			scene.SetRobotShape(ParseObjShape(elem)); //Load Robot shape -> Set in Scene
+//		else if (elem.name.find("Obstacle") != string::npos)
+//			scene.AddEnv(ParseObjShape(elem)); //Load ObstacleX shape
+//		else if (elem.name == "StartConfig")
+//			scene.SetStartConfig(Config(elem.mesh.positions[0], elem.mesh.positions[1], elem.mesh.positions[2])); //Start Config
+//		else if (elem.name == "GoalConfig")
+//			scene.SetGoalConfig(Config(elem.mesh.positions[0], elem.mesh.positions[1], elem.mesh.positions[2])); //Goal Config
+//		else if (elem.name == "Field") 
+//			scene.AddField(elem.mesh.positions[6], elem.mesh.positions[4]); //Load field
+//		else
+//			ret = false;
+//	}
+//
+//	return ret;
+//}
 
 bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 {
@@ -193,6 +194,7 @@ int main()
 	vector<PathPlanner::PathSegment> sampPath;
 	vector<vector<float>> path_dsp_vel;
 	PathMessage ccsPath;
+	Frame frame;
 
 	//Load params from V-REP via ServerApp
 	tcp::iostream s("127.0.0.1",to_string(168));
@@ -202,11 +204,14 @@ int main()
 		cout << "V-REP Mode" << endl;
 		if (!LoadParams(s, sc, envFileName))
 			return -1;
+		
+		s >> frame;
 	}
 	else
 	{
 		cout << "Manual Mode" << endl;
-		envFileName = "frame6.obj";
+		envFileName = "..\\Frame\\frame6.obj";
+		frame.Load(envFileName);
 		sc.SetRobotMinimumRadius(50.0f);
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS(10.0);
@@ -223,8 +228,7 @@ int main()
 		sc.SetFixPrePath(LoadPathFromFile("RTRPath.txt"));
 	
 		//Set params to scene object
-		if (!ParseObj("..\\Frame\\" + envFileName, sc))
-			return -1;
+		sc.SetFrame(frame);
 
 		//Generate Pre Path
 		start = high_resolution_clock::now();

@@ -7,6 +7,7 @@
 #include "ConfigInterval.h"
 #include "Geometry\Point.h"
 #include "Geometry\Polygon.h"
+#include "Geometry/Frame.h"
 #include "PathSegment.h"
 #include <vector>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
@@ -23,93 +24,26 @@ namespace PathPlanner
 	class Scene
 	{
 	public:
-		Scene()
-		{
-		}
-		~Scene()
-		{
-		}
-		void AddField(float xMax, float yMax);
-		void AddEnv(Polygon env);
-		vector<Polygon>& GetEnv()
-		{
-			return envs;
-		}
-		float GetFieldXLength()
-		{
-			return fieldXLength;
-		}
-		float GetFieldYLength()
-		{
-			return fieldYLength;
-		}
-		void SetStartConfig(Config pos)
-		{
-			robotStart = pos;
-		}
-		Config& GetStartConfig()
-		{
-			return robotStart;
-		}
-		void SetGoalConfig(Config pos)
-		{
-			robotGoal = pos;
-		}
-		Config& GetGoalConfig()
-		{
-			return robotGoal;
-		}
-		void SetRobotShape(Polygon shp)
-		{
-			robotShape = shp;		
-		}
-		Polygon& GetRobotShape()
-		{
-			return robotShape;
-		}
-		void SetFixPrePath(vector<Point> &fPath)
-		{
-			fixPrePath = fPath;
-		}
-		void SetFixPrePath(vector<Config> &fPath)
-		{
-			for (vector<Config>::iterator it = fPath.begin(); it != fPath.end(); ++it)
-				fixPrePath.push_back(it->p);
-		}
-		vector<PathSegment>& GetPath()
-		{
-			return pathC;
-		}
-		vector<ConfigInterval>& GetCIPath()
-		{
-			return pathCI;
-		}
-		void SetPathDeltaS(float ds)
-		{
-			pathDeltaS = ds;
-		}
-		float GetPathDeltaS()
-		{
-			return pathDeltaS;
-		}
-		void SetRobotWheelBase(float wb)
-		{
-			robotWheelBase = wb;
-		}
-		float GetRobotWheelBase()
-		{
-			return robotWheelBase;
-		}
-		void SetRobotMinimumRadius(float r)
-		{
-			robotMinimumRadius = r;
-		}
-		float GetRobotMinimumRadius()
-		{
-			return robotMinimumRadius;
-		}
+		Scene() {}
+		~Scene() {}
+
+		//Getters, setters
+		void SetFixPrePath(vector<Point> &fPath) { fixPrePath = fPath; }
+		void SetFixPrePath(vector<Config> &fPath);
+		vector<PathSegment>& GetPath() { return pathC; }
+		vector<ConfigInterval>& GetCIPath() { return pathCI; }
+		void SetPathDeltaS(float ds) { pathDeltaS = ds; }
+		float GetPathDeltaS() { return pathDeltaS; }
+		void SetRobotWheelBase(float wb) { robotWheelBase = wb; }
+		float GetRobotWheelBase() { return robotWheelBase; }
+		void SetRobotMinimumRadius(float r) { robotMinimumRadius = r; }
+		float GetRobotMinimumRadius() { return robotMinimumRadius; }
+		void SetFrame(Frame& f) { frame = f; }
+		Frame& GetFrame() { return frame; }
 		float GetRobotWidth();
 		void SetRTRParameters(int _maxIteration, float _fixPathProbability, float _roadmapProbability, int randSeed);
+
+		//Planners
 		bool PrePlanner();
 		bool RTRPlanner();
 		void DrawPrePath();
@@ -146,12 +80,6 @@ namespace PathPlanner
 		void PathTCIExtension(vector<ConfigInterval> &pathExt);
 		void ReversePath(vector<ConfigInterval> &path);
 	private:
-		vector<Polygon> envs; //Obstacles
-		vector<Polygon> envsx; //Obstacles with field
-
-		Polygon field;
-		float fieldXLength, fieldYLength;
-		
 		//PrePlanner
 		vector<Triangle> cells;
 		ublas::mapped_matrix<int> adjN;	
@@ -160,11 +88,11 @@ namespace PathPlanner
 		vector<Config> prepath;
 
 		//Robot
-		Config robotStart;
-		Config robotGoal;
-		Polygon robotShape;
 		float robotWheelBase;
 		float robotMinimumRadius;
+
+		//Frame
+		Frame frame;
 
 		//RTR
 		Tree startTree;

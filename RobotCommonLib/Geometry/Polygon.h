@@ -9,7 +9,7 @@ using namespace std;
 namespace PathPlanner
 {
 
-	struct Polygon : ISerializable
+	struct Polygon : public ISerializable
 	{
 		Polygon() {}
 		Polygon(float width, float heigth);
@@ -22,6 +22,7 @@ namespace PathPlanner
 
 		float getWidth();
 		float getHeight();
+		vector<Point>& getPoints() { return ps; }
 
 		vector<Point> ps;
 
