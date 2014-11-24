@@ -20,7 +20,7 @@ using namespace GEOM_FADE2D;
 
 namespace PathPlanner
 {
-	static class Scene
+	class Scene
 	{
 	public:
 		Scene()

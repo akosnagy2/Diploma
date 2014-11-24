@@ -208,11 +208,11 @@ int main()
 	else
 	{
 		cout << "Manual Mode" << endl;
-		envFileName = "frame6.obj";
+		envFileName = "frame10.obj";
 		sc.SetRobotMinimumRadius(50.0f);
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS(10.0);
-		sc.SetRTRParameters(2000, 0.0f, 0.2f, 350);
+		sc.SetRTRParameters(50000, 0.0f, 0.0f, 300);
 		robotType = AppTypedef::DifferentialPathPlanner;
 	}
 	
@@ -227,6 +227,40 @@ int main()
 		//Set params to scene object
 		if (!ParseObj("..\\Frame\\" + envFileName, sc))
 			return -1;
+
+		//TEST!!!!!!!!!!!!!
+		/*
+		for(int i = 1; i < 4; i++)
+		{
+			sc.AddEnv(sc.GetEnv()[i]);
+			for (int j = 0; j < sc.GetEnv()[i].ps.size(); j++)
+				sc.GetEnv()[i+3].ps[j].y = 2500 - sc.GetEnv()[i].ps[j].y;
+		}
+
+		int m = sc.GetEnv().size();
+		for(int i = 0; i < m; i++)
+		{
+			sc.AddEnv(sc.GetEnv()[i]);
+			for (int j = 0; j < sc.GetEnv()[i].ps.size(); j++)
+				sc.GetEnv()[i+m].ps[j].x = 6000 - sc.GetEnv()[i].ps[j].x;
+		}
+		sc.AddField(6000.0f, 2500.0f);
+
+		vector<PathPlanner::Polygon> e = sc.GetEnv();
+		
+		ofstream f;
+		f.open("env.txt");
+		for (auto &a : e)
+		{
+			f << "v " << a.ps[0].x << ".0 " << a.ps[0].y << ".0 2.0" << endl;
+			f << "v " << a.ps[1].x << ".0 " << a.ps[1].y << ".0 2.0" << endl;
+			f << "v " << a.ps[2].x << ".0 " << a.ps[2].y << ".0 2.0" << endl;
+			f << "v " << a.ps[3].x << ".0 " << a.ps[3].y << ".0 2.0" << endl;
+			f << endl;
+		}
+		f.close();
+		*/
+		//TEST!!!!!!!!!!!!!
 
 		//Generate Pre Path
 		start = high_resolution_clock::now();
@@ -244,9 +278,12 @@ int main()
 		cout << "RTR Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 		
 		//Send RTR Path
-		cout << "Sending RTR Path to V-REP..." << endl;
-		rtrPath.path = sc.GetPath();
-		rtrPath.send(s);
+		if (s)
+		{
+			cout << "Sending RTR Path to V-REP..." << endl;
+			rtrPath.path = sc.GetPath();
+			rtrPath.send(s);
+		}
 
 		start = high_resolution_clock::now();
 		cout << "C*CS Planner starting..." << endl;
@@ -287,9 +324,12 @@ int main()
 	cout << "Time Parameterization ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 	
 	//Send back to V-REP
-	cout << "Sending Time Parameterized C*CS Path to V-REP..." << endl;
-	ccsPath.path = sampPath;
-	ccsPath.send(s);
+	if (s)
+	{
+		cout << "Sending Time Parameterized C*CS Path to V-REP..." << endl;
+		ccsPath.path = sampPath;
+		ccsPath.send(s);
+	}
 
 	cout << "Path Follow Controlling starting..." << endl;
 	if ((robotType == AppTypedef::DifferentialPathFollow) || (robotType == AppTypedef::DifferentialPathPlanner))

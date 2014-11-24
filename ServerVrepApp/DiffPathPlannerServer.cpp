@@ -102,7 +102,10 @@ int PathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tcp::
 	
 		//Send (sampled) path to V-Rep Client
 		if (!connection.replyToReceivedData((char*)path_vrep._Myfirst, path_vrep.size()*sizeof(float)))
+		{
+			logFile << "Send RTR path to V-REP failed!" << endl;
 			return -1;
+		}
 	}
 
 	//Receive (sampled) path from PathPlanner
@@ -113,7 +116,10 @@ int PathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tcp::
 	
 	//Send (sampled) path to V-Rep Client
 	if (!connection.replyToReceivedData((char*)path_vrep2._Myfirst, path_vrep2.size()*sizeof(float)))
+	{
+		logFile << "Send C*CS path to V-REP failed!" << endl;
 		return -1;
+	}
 
 	SimulationLoop(serverPars.PathFollow, connection, client, logFile);
 

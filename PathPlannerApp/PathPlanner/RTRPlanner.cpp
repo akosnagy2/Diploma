@@ -51,10 +51,11 @@ void Scene::DrawPath()
 	//Draw field
 	DrawPolygon(field, vis, Color(0.0, 0.0, 1.0, 2.0));
 
+	/*
 	for (int i = 0; i < envsxC.size(); i++)
 	{	
 		vis.addObject(Circle2(envsxC[i].x, envsxC[i].y, envsxR[i]*envsxR[i]), Color(0.0, 0.0, 1.0, 1.0));
-	}
+	}*/
 
 	//Draw obstacles
 	for (auto &elem : envs)
@@ -102,6 +103,7 @@ void Scene::DrawScene(int iteration)
 
 bool Scene::RTRPlanner()
 {
+	bool ret = false;
 	CalcEnvCenter();
 	InitRTTrees();
 	chrono::high_resolution_clock::time_point start, stop;
@@ -124,6 +126,9 @@ bool Scene::RTRPlanner()
 		if (MergeTreesGetPath())
 		{
 			//DrawScene(i);
+			OptimizePath();
+			DrawPath();
+			ret = true;
 			break;
 		}
 		stop = high_resolution_clock::now();
@@ -131,11 +136,9 @@ bool Scene::RTRPlanner()
 
 	}
 
-	OptimizePath();
-	//DrawPath();
 	file1.close();
 	file2.close();
-	return true;
+	return ret;
 }
 
 void Scene::RTRIteration(bool start)
@@ -503,7 +506,6 @@ bool Scene::MergeTreesGetPath()
 	//#pragma omp parallel for
 	for (int i = 0; i < (int)recentTCIGoalIDs.size(); i++)
 	{
-
 		ConfigInterval mergeRCI;
 		TreeElement* ID = treeTCIMergeability(startTree, recentTCIGoalIDs[i]->ci, mergeRCI);
 		if (ID != NULL)

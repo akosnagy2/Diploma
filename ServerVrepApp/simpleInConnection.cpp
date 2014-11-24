@@ -78,7 +78,7 @@ bool CSimpleInConnection::connectToClient()
 
 	_socketClient=accept(_socketServer,(struct sockaddr*) &from, (_socklen *) &fromlen);
 	_socketConnectedMachineIP=inet_ntoa(from.sin_addr);
-	_socketTimeOut.tv_sec=1; // 1 second max between successive receive for the same packet
+	_socketTimeOut.tv_sec=10; // 1 second max between successive receive for the same packet
 	_socketTimeOut.tv_usec=0;
 	FD_ZERO(&_socketTheSet);
 	FD_SET(_socketClient,&_socketTheSet);
@@ -182,7 +182,7 @@ bool CSimpleInConnection::_sendSimplePacket(char* packet,int packetLength,WORD p
 int CSimpleInConnection::_receiveSimplePacket(std::vector<char>& packet)
 {
 	// Returns the number of packets left to read if >=0, -2=error, -1=select time out
-	_socketTimeOut.tv_sec=10; // 1 second max between successive receive for the same packet
+	_socketTimeOut.tv_sec=10; // 10 second max between successive receive for the same packet
 	_socketTimeOut.tv_usec=0;
 	FD_ZERO(&_socketTheSet);
 	FD_SET(_socketClient,&_socketTheSet);

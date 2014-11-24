@@ -64,6 +64,7 @@ int ReceiveRobotPosition(CSimpleInConnection& connection,float& leftJointPos, fl
 		return 0;
 	}
 
+	if (receivedData)
 	return -1;
 }
 
@@ -163,7 +164,10 @@ void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &co
 
 		//Receive robot position from V-Rep Client
 		if (ReceiveRobotPosition(connection,leftJointPos,rightJointPos,robotPos))
+		{
+			logFile << "Receive robot position from V-REP failed!" << endl;
 			break;
+		}
 
 		//Send robot position to the PathFollow Client
 		pos_msg.pos = robotPos;
@@ -171,11 +175,20 @@ void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &co
 
 		//Receive result from PathFollow Client
 		if (!ctrl_msg.receive(client))
+		{
+			logFile << "Receive ctrl msg from V-REP failed!" << endl;
 			break;
+		}			
 		if (!rabit_msg.receive(client))
+		{
+			logFile << "Receive rabit position from V-REP failed!" << endl;
 			break;
+		}			
 		if (!info_msg.receive(client))
+		{
+			logFile << "Receive info msg from V-REP failed!" << endl;
 			break;
+		}		
 
 		//Apply motor models
 		ModelDifferentialMotors(leftSpeed, rightSpeed,(float)ctrl_msg.ctrl_sig[0], (float)ctrl_msg.ctrl_sig[1], followPars.LeftMotor, followPars.RightMotor, followPars);
@@ -204,7 +217,10 @@ void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &co
 
 		//Send data to V-Rep Client
 		if (SendRobotData(connection,leftJointPos, rightJointPos, robotPos, rabit_msg.pos, info_msg.values))
+		{
+			logFile << "Send robot data to V-REP failed!" << endl;
 			break;
+		}
 	}
 }
 
