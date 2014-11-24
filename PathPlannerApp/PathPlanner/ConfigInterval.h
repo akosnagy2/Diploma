@@ -3,6 +3,7 @@
 #include "Geometry\Config.h"
 #include "Geometry\Point.h"
 #include "Geometry\Line.h"
+#include <limits>
 
 namespace PathPlanner
 {
@@ -42,13 +43,13 @@ namespace PathPlanner
 		*	preferredOrient  -  positive: reference orientation points to the GP
 		*                       negative: reference orientation points away from the GP
 		*/
-		ALCCandidate PointCIDistance(Point &p, bool preferredOrient);
+		ALCCandidate PointCIDistance(Point &p, bool preferredOrient, float minDistance = std::numeric_limits<float>::infinity());
 
 		//Position and angular distance calculation between a position and a TCI, returning the configuration with the smallest position distance
-		ALCCandidate PointTCIDistance(const Point &p, bool preferredOrient);
+		ALCCandidate PointTCIDistance(const Point &p, bool preferredOrient, float minDistance);
 
 		//Position and angular distance calculation between a position and an RCI, returning the configuration with the smallest (signed) angular distance 
-		ALCCandidate PointRCIDistance(const Point &p, bool preferredOrient);
+		ALCCandidate PointRCIDistance(const Point &p, bool preferredOrient, float minDistance);
 	};
 
 }

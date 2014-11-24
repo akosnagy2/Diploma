@@ -41,6 +41,10 @@ namespace PathPlanner
 		{
 			return sqrtf((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 		}
+		static float Distance2(const Point &a, const Point &b)
+		{
+			return ((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
+		}
 		static float ScalarProduct(const Point &a, const Point &b)
 		{
 			return a.x*b.x + a.y*b.y;

@@ -5,6 +5,7 @@
 #include "Geometry\Common.h"
 #include <queue>
 #include <chrono>
+#include <random>
 
 using namespace PathPlanner;
 using namespace std;
@@ -50,12 +51,21 @@ void Scene::DrawPath()
 	//Draw field
 	DrawPolygon(field, vis, Color(0.0, 0.0, 1.0, 2.0));
 
+	for (int i = 0; i < envsxC.size(); i++)
+	{	
+		vis.addObject(Circle2(envsxC[i].x, envsxC[i].y, envsxR[i]*envsxR[i]), Color(0.0, 0.0, 1.0, 1.0));
+	}
+
 	//Draw obstacles
 	for (auto &elem : envs)
 		DrawPolygon(elem, vis, Color(0.0, 0.0, 1.0, 1.0));
 
 	for (auto &elem : pathCI)
+	{
+		DrawRobot(robotShape, elem.q0, vis, Color(0.0, 1.0, 1.0, 1.0));
 		DrawCI(elem, vis, Color(0.0, 0.0, 0.0, 4.0)); 
+	}
+	DrawRobot(robotShape, pathCI.back().q1, vis, Color(0.0, 1.0, 1.0, 1.0));
 
 	vis.writeFile();
 }
@@ -75,14 +85,14 @@ void Scene::DrawScene(int iteration)
 	//Draw start tree TCIs
 	for (auto &elem : startTree.xtree)
 	{		
-		DrawRobot(robotShape, elem.q, vis, Color(1.0, 1.0, 0.0, 1.0));
+		DrawRobot(robotShape, elem.ci.q1, vis, Color(1.0, 1.0, 0.0, 1.0));
 		DrawCI(elem.ci, vis, Color(1.0, 0.0, 0.0, 2.0));
 	}
 
 	//Draw goal tree TCIs
 	for (auto &elem : goalTree.xtree)
 	{
-		DrawRobot(robotShape, elem.q, vis, Color(0.0, 1.0, 1.0, 1.0));
+		DrawRobot(robotShape, elem.ci.q1, vis, Color(0.0, 1.0, 1.0, 1.0));
 		DrawCI(elem.ci, vis, Color(0.0, 1.0, 0.0, 2.0));			
 	}
 	//Draw robot
@@ -92,6 +102,7 @@ void Scene::DrawScene(int iteration)
 
 bool Scene::RTRPlanner()
 {
+	CalcEnvCenter();
 	InitRTTrees();
 	chrono::high_resolution_clock::time_point start, stop;
 	std::ofstream file1, file2;
@@ -106,14 +117,14 @@ bool Scene::RTRPlanner()
 		stop = high_resolution_clock::now();
 		file1 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
 
-		//if ((i % 500) == 0)
+		//if ((i % 100) == 0)
 		//	DrawScene(i);
 		
 		start = high_resolution_clock::now();
 		if (MergeTreesGetPath())
 		{
-//			DrawScene(i);
-//			break;
+			//DrawScene(i);
+			break;
 		}
 		stop = high_resolution_clock::now();
 		file2 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
@@ -121,7 +132,7 @@ bool Scene::RTRPlanner()
 	}
 
 	OptimizePath();
-	DrawPath();
+	//DrawPath();
 	file1.close();
 	file2.close();
 	return true;
@@ -163,7 +174,7 @@ bool Scene::TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGo
 
 	//TCI extension of the new tree element added after the turn
 	ConfigInterval forwardMaxTCI, backwardMaxTCI;
-	TCI_Extension(idR->q, forwardMaxTCI, backwardMaxTCI);
+	TCI_Extension(idR->ci.q1, forwardMaxTCI, backwardMaxTCI);
 
 	//Add TCIs to the tree
 	TreeElement*  id = tree.AddElement(TreeElement(forwardMaxTCI), idR);
@@ -179,43 +190,41 @@ bool Scene::TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGo
 ALCCandidate Scene::GetALC(Point &GP, bool start, bool preferredDir)
 {
 	Tree &tree = (start) ? startTree : goalTree;
-
-	vector<ALCCandidate> ALCCandidates;
-	ALCCandidates.reserve((int)tree.xtree.size() - 1);
+	ALCCandidate alc_cur, alc_min;
 
 	//Fill ALC candidate list, while taking care of smaller position and angular distance 
 	float minPosDist = numeric_limits<float>::infinity(), minAngDist = numeric_limits<float>::infinity();
-	vector<ALCCandidate>::iterator min;
 	for (list<TreeElement>::iterator it = ++tree.xtree.begin(); it != tree.xtree.end(); ++it)
 	{
-		ALCCandidates.push_back(it->ci.PointCIDistance(GP, preferredDir));
+		alc_cur = it->ci.PointCIDistance(GP, preferredDir, minPosDist);
 
-		if (ALCCandidates.back().posDist < minPosDist) //Check posDist
+		if (alc_cur.posDist < minPosDist) //Check posDist
 		{
-			minPosDist = ALCCandidates.back().posDist;
-			minAngDist = fabs(ALCCandidates.back().angDist);
-			min = ALCCandidates.end() - 1;
-			if ((min->internalC) || (min->q == it->q))
-				min->treeElementIdx = &(*it);
+			minPosDist = alc_cur.posDist;
+			minAngDist = fabs(alc_cur.angDist);
+			alc_min = alc_cur;
+			if ((alc_min.internalC) || (alc_min.q == it->ci.q1))
+				alc_min.treeElementIdx = &(*it);
 			else
-				min->treeElementIdx = it->parentIdx;
+				alc_min.treeElementIdx = it->parentIdx;
 		}
-		else if (ALCCandidates.back().posDist == minPosDist)
+		else if (alc_cur.posDist == minPosDist)
 		{
-			if (fabs(ALCCandidates.back().angDist) < minAngDist) //Check angDist
+			if (fabs(alc_cur.angDist) < minAngDist) //Check angDist
 			{
-				minPosDist = ALCCandidates.back().posDist;
-				minAngDist = fabs(ALCCandidates.back().angDist);
-				min = ALCCandidates.end() - 1;
-				if ((min->internalC) || (min->q == it->q))
-					min->treeElementIdx = &(*it);
+				minPosDist = alc_cur.posDist;
+				minAngDist = fabs(alc_cur.angDist);
+				alc_min = alc_cur;
+				if ((alc_min.internalC) || (alc_min.q == it->ci.q1))
+					alc_min.treeElementIdx = &(*it);
 				else
-					min->treeElementIdx = it->parentIdx;
+					alc_min.treeElementIdx = it->parentIdx;
 			}
 		}
 	}
 
-	return *min;
+	alc_min.posDist = sqrtf(alc_min.posDist);
+	return alc_min;
 }
 
 void Scene::InitRTTrees()
@@ -376,10 +385,13 @@ bool Scene::TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, Co
 	vector<float> turnAmount;
 	for (int i = 0; i < (int)envsx.size(); i++)
 	{
+		if (Point::Distance(qStart.p, envsxC[i]) > robotRadius + envsxR[i])
+			continue;
+
 		int env_size = envsx[i].ps.size();
 		for (int j = 0; j < env_size; j++) //Traverse on obstacles's edges
 		{
-			int rob_size = robotShapeWorld.ps.size();
+			int rob_size = robotShapeWorld.ps.size();		
 			for (int k = 0; k < rob_size; k++) //Traverse on robot's edges
 			{
 				//Collision check of robot polygon cornerpoints with obstacle edges	
@@ -402,12 +414,22 @@ bool Scene::TurnToPos(Config qStart, Point pos, int turnDir, bool headToGoal, Co
 		}
 	}
 
+	if (dThetaAbs == numeric_limits<float>::infinity())
+		dThetaAbs = dThetaMax;
+
 	bool collision = (fabs(dThetaAbs - dThetaMax) > EPS);
 
 	dThetaAbs -=  min(dThetaAbs*0.01f, 0.017f);
+	/*
+	random_device rd1;
+	default_random_engine generator1;
+	generator1.seed(rd());
+	uniform_real_distribution<float> distribution1(0.01f, 0.9f);
+	dThetaAbs -= dThetaAbs*distribution1(generator1);
+	*/
 	if (dThetaAbs < EPS)
 		dThetaAbs = 0.0f;
-	
+
 	float dTheta = sgn(turnDir)*dThetaAbs;
 
 	maxRCI.type = RotationCI;
@@ -478,6 +500,7 @@ bool Scene::MergeTreesGetPath()
 	float pathCandidateLength;
 
 	//Start tree with recent goal TCIs
+	//#pragma omp parallel for
 	for (int i = 0; i < (int)recentTCIGoalIDs.size(); i++)
 	{
 
@@ -498,6 +521,7 @@ bool Scene::MergeTreesGetPath()
 	recentTCIGoalIDs.clear();
 
 	//Goal tree with recent start TCIs
+	//#pragma omp parallel for
 	for (int i = 0; i < (int)recentTCIStartIDs.size(); i++)
 	{
 		ConfigInterval mergeRCI;
@@ -776,6 +800,8 @@ void Scene::OptimizePath()
 		else
 			++it;
 	}
+
+	//TODO: egymás után két forgás is lehet, vagy nem kéne?
 }
 
 void Scene::PathTCIExtension(vector<ConfigInterval> &pathExt)
@@ -817,7 +843,7 @@ void Scene::GenerateRTRPath()
 		{
 			PathSegment s;			
 			s.direction = (it->amount >= 0.0f);
-			int interpolate = (int)(fabs(it->amount)/pathDeltaS);
+			int interpolate = max((int)(fabs(it->amount)/pathDeltaS), 2); //Every pathsegments consist of 3 points
 			for (int i = 0; i < interpolate+1; i++)
 			{
 				s.path.push_back(Config(((it->q1.p*((float)i) + it->q0.p*((float)interpolate - i))/((float)interpolate)), it->q0.phi));

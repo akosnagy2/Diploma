@@ -8,6 +8,7 @@ namespace PathPlanner
 
 	struct Line
 	{
+		Line() {};
 		Line(Point _a, Point _b) : a(_a), b(_b) {}
 		float Length();
 		bool CheckPointInSegment(Point p);

@@ -20,7 +20,7 @@ using namespace GEOM_FADE2D;
 
 namespace PathPlanner
 {
-	class Scene
+	static class Scene
 	{
 	public:
 		Scene()
@@ -61,7 +61,15 @@ namespace PathPlanner
 		}
 		void SetRobotShape(Polygon shp)
 		{
-			robotShape = shp;		
+			robotShape = shp;	
+			
+			robotRadius = 0.0f;
+			for (auto &e : robotShape.ps)
+			{
+				float d = Point::Distance(e, Point(0.0f, 0.0f));
+				if (d > robotRadius)
+					robotRadius = d;
+			}
 		}
 		Polygon& GetRobotShape()
 		{
@@ -138,8 +146,11 @@ namespace PathPlanner
 		void OptimizePath();
 		void PathTCIExtension(vector<ConfigInterval> &pathExt);
 		void ReversePath(vector<ConfigInterval> &path);
+		void CalcEnvCenter();
 	private:
 		vector<Polygon> envs; //Obstacles
+		vector<Point> envsxC;
+		vector<float> envsxR;
 		vector<Polygon> envsx; //Obstacles with field
 
 		Polygon field;
@@ -158,6 +169,7 @@ namespace PathPlanner
 		Polygon robotShape;
 		float robotWheelBase;
 		float robotMinimumRadius;
+		float robotRadius;
 
 		//RTR
 		Tree startTree;

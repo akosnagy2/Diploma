@@ -5,15 +5,15 @@
 using namespace PathPlanner;
 using namespace std;
 
-ALCCandidate ConfigInterval::PointCIDistance(Point &p, bool preferredOrient)
+ALCCandidate ConfigInterval::PointCIDistance(Point &p, bool preferredOrient, float minDistance)
 {
 	if (type == TranslationCI)
-		return PointTCIDistance(p, preferredOrient);
+		return PointTCIDistance(p, preferredOrient, minDistance);
 	else
-		return PointRCIDistance(p, preferredOrient);
+		return PointRCIDistance(p, preferredOrient, minDistance);
 }
 
-ALCCandidate ConfigInterval::PointTCIDistance(const Point &p, bool preferredOrient)
+ALCCandidate ConfigInterval::PointTCIDistance(const Point &p, bool preferredOrient, float minDistance)
 {
 	ALCCandidate alc;
 	Point proj;
@@ -24,7 +24,7 @@ ALCCandidate ConfigInterval::PointTCIDistance(const Point &p, bool preferredOrie
 		//Internal config
 		alc.internalC = true;
 
-		alc.posDist = Point::Distance(p, proj);
+		alc.posDist = Point::Distance2(p, proj);
 		alc.q.p = proj;
 		alc.q.phi = q0.phi;
 	}
@@ -33,8 +33,8 @@ ALCCandidate ConfigInterval::PointTCIDistance(const Point &p, bool preferredOrie
 		//Boundary config
 		alc.internalC = false;
 
-		float dist0 = Point::Distance(p, q0.p);
-		float dist1 = Point::Distance(p, q1.p);
+		float dist0 = Point::Distance2(p, q0.p);
+		float dist1 = Point::Distance2(p, q1.p);
 
 		if (dist0 < dist1)
 		{
@@ -48,15 +48,24 @@ ALCCandidate ConfigInterval::PointTCIDistance(const Point &p, bool preferredOrie
 		}
 	}
 
-	//Determine angular distance (trivial)
-	alc.angDist = alc.q.PointAngularDistance(p, preferredOrient);
+	//Determine angular distance (trivial), when necessary
+	if (alc.posDist < minDistance)
+		alc.angDist = alc.q.PointAngularDistance(p, preferredOrient);
+
 	return alc;
 }
 
-ALCCandidate ConfigInterval::PointRCIDistance(const Point &p, bool preferredOrient)
+ALCCandidate ConfigInterval::PointRCIDistance(const Point &p, bool preferredOrient, float minDistance)
 {
 	ALCCandidate alc;
 	float refAngle;
+
+	//Determine position distance (trivial)
+	alc.posDist = Point::Distance2(p, q0.p);
+
+	//Exit when distance too large
+	if (alc.posDist > minDistance)
+		return alc;
 
 	//Determine the reference angle (pointing to or away from the given point, accorting to preferred_ori)
 	if (preferredOrient)
@@ -92,7 +101,5 @@ ALCCandidate ConfigInterval::PointRCIDistance(const Point &p, bool preferredOrie
 		}
 	}
 
-	//Determine position distance (trivial)
-	alc.posDist = Point::Distance(p, q0.p);
 	return alc;
 }

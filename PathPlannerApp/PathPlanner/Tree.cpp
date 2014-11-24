@@ -12,7 +12,7 @@ TreeElement* Tree::AddElement(TreeElement &elem, TreeElement* parentIdx)
 	//if (parentIdx >= (int)xtree.size())
 	//	return -1;
 
-	if (elem.ci.amount == 0.0)
+	if ((elem.ci.amount == 0.0) && (parentIdx != NULL))
 		return NULL;
 
 	elem.parentIdx = parentIdx;
@@ -32,7 +32,7 @@ TreeElement*  Tree::Split(TreeElement*  splitID, Config &q)
 	//Inserting a new tree element at splitID
 	elem.childrenIdx.push_back(splitID);
 	elem.parentIdx = splitID->parentIdx;
-	elem.q = q;
+	//elem.q = q;
 	elem.ci.type = splitID->ci.type;
 	elem.ci.q0 = splitID->ci.q0;
 	elem.ci.q1 = q;

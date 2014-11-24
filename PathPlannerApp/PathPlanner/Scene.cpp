@@ -7,6 +7,7 @@ void PathPlanner::Scene::AddField(float xMax, float yMax)
 	fieldYLength = yMax;
 
 	//Create field
+	field.ps.clear();
 	field.AddPoint(Point(0.0f, 0.0f));
 	field.AddPoint(Point(0.0f, yMax));
 	field.AddPoint(Point(xMax, yMax));
@@ -56,4 +57,33 @@ void PathPlanner::Scene::SetRTRParameters(int _maxIteration, float _fixPathProba
 bool PathPlanner::Scene::CCSPlanner()
 {
 	return CCSWrapper(*this, pathC);
+}
+
+void PathPlanner::Scene::CalcEnvCenter()
+{
+	envsxC.clear();
+	envsxR.clear();
+
+	for (auto &e : envsx)
+	{
+		//Center
+		Point cent(0.0f, 0.0f);
+		for (auto &p : e.ps)
+		{
+			cent = cent + p;
+		}
+
+		cent = cent / e.ps.size();
+		envsxC.push_back(cent);
+		
+		//Radius
+		float rad = 0.0f;
+		for (auto &p : e.ps)
+		{
+			float d = Point::Distance(p, cent);
+			if (d > rad)
+				rad = d;
+		}
+		envsxR.push_back(rad);
+	}
 }
