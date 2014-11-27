@@ -136,13 +136,13 @@ namespace PathPlanner
 		void InitRTTrees();
 		ALCCandidate GetALC(Point &GP, bool start, bool preferredDir);
 		bool MergeTreesGetPath();
-		TreeElement* treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &mergingRCI);
+		int treeTCIMergeability(Tree &tree, ConfigInterval TCI, ConfigInterval &mergingRCI);
 		float maxCollFreeTurnAmountPointVsLineseg(Point p, Point center, float dThetaMax, int turnDir, Line s1);
-		vector<ConfigInterval> ObtainPath(TreeElement* startMergeID, TreeElement* goalMergeID, ConfigInterval mergeRCI, float &pathLength);
+		vector<ConfigInterval> ObtainPath(int startMergeID, int goalMergeID, ConfigInterval mergeRCI, float &pathLength);
 		int circleSegLineSegIntersect(Point center, float angleStart, float dTheta, float radius, Line s1, Point res[2]);
 		bool tciTCIMergeability(ConfigInterval start, ConfigInterval end, ConfigInterval &mergingRCI, Point &mergingPoint);
 		Point GetGuidePoint(bool startPoint);
-		bool TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGoal, vector<TreeElement*> &recentTCIIDs);
+		bool TurnAndExtend(Tree &tree, Point &p, ALCCandidate &alc, bool headToGoal, vector<int> &recentTCIIDs);
 		void OptimizePath();
 		void PathTCIExtension(vector<ConfigInterval> &pathExt);
 		void ReversePath(vector<ConfigInterval> &path);
@@ -175,8 +175,8 @@ namespace PathPlanner
 		Tree startTree;
 		Tree goalTree;
 
-		vector<TreeElement*> recentTCIStartIDs;
-		vector<TreeElement*> recentTCIGoalIDs;
+		vector<int> recentTCIStartIDs;
+		vector<int> recentTCIGoalIDs;
 
 		int maxIteration;
 		float fixPathProbability;

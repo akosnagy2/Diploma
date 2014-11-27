@@ -7,7 +7,6 @@
 
 namespace PathPlanner
 {
-	struct TreeElement;
 
 	enum IntervalType
 	{
@@ -21,8 +20,9 @@ namespace PathPlanner
 		float	posDist;
 		float	angDist;
 		bool	internalC;
-		TreeElement* treeElementIdx;
+		int		treeElementIdx;
 	};
+
 
 	struct ConfigInterval
 	{

@@ -5,7 +5,6 @@
 #include "Geometry\Line.h"
 #include "Geometry\Common.h"
 #include <vector>
-#include <list>
 
 using namespace std;
 
@@ -16,8 +15,8 @@ namespace PathPlanner
 		//Ha kell törölni, akkor inkább külön jelezzük, hogy érvényes-e!!!!!!!!!!!!!!!!!!!
 		//int					ID;			//Identifier
 		//Config					q;				//Corresponding configuration
-		TreeElement*			parentIdx;		//Parent tree element index in the tree
-		vector<TreeElement*>	childrenIdx;	//Children tree element index in the tree
+		int						parentIdx;		//Parent tree element index in the tree
+		vector<int>				childrenIdx;	//Children tree element index in the tree
 		ConfigInterval			ci;				//Configuration interval leading from parent to here
 		TreeElement()
 		{}
@@ -27,26 +26,26 @@ namespace PathPlanner
 			this->ci.type = TranslationCI;
 			this->ci.q0 = q;
 			this->ci.q1 = q;
-			this->parentIdx = NULL;
+			this->parentIdx = -1;
 		}/*
 		TreeElement(Config q, ConfigInterval &ci) //Create Tree Element with Config, ConfigInterval
 		{
 			//this->q = q;
 			this->ci = ci;
-			this->parentIdx = NULL;
+			this->parentIdx = -1;
 		}*/
 		TreeElement(ConfigInterval &ci) //Create Tree Element with ConfigInterval
 		{
 			//this->q = ci.q1;
 			this->ci = ci;
-			this->parentIdx = NULL;
+			this->parentIdx = -1;
 		}
 	};
 
 	struct Tree
 	{
 		Tree();
-		TreeElement* AddElement(TreeElement &elem, TreeElement* parentIdx);
+		int AddElement(TreeElement &elem, int parentIdx);
 		/*
 		* Splitting a given tree element of a tree at the given
 		* configuration
@@ -58,10 +57,10 @@ namespace PathPlanner
 		* Retrun:
 		*   newID       - The ID of the new tree element
 		*/
-		TreeElement* Split(TreeElement* splitID, Config &q);
-		vector<ConfigInterval> PathFromRoot(TreeElement* id);
+		int Split(int splitID, Config &q);
+		vector<ConfigInterval> PathFromRoot(int id);
 
-		list<TreeElement> xtree;
+		vector<TreeElement> xtree;
 	};
 
 }
