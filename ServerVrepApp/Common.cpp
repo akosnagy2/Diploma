@@ -216,7 +216,7 @@ void CarSimulationLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnecti
 		followPars.motor.motorSmoothFactor, followPars.motor.motorMultFactor,
 		followPars.MaxSteerSpeed, followPars.TimeStep);
 	car.setAxisDistance(followPars.AxisDistance);
-	car.setFiMax(followPars.FiMax);
+	car.setFiMax(followPars.FiMax * 1.3f);
 	car.setWheelDiameter(followPars.WheelDiameter);
 	car.setWheelDistance(followPars.WheelDistance);
 
