@@ -1,0 +1,57 @@
+\begin{thebibliography}{10}
+
+\bibitem{LaValle2}
+S.~M. LaValle, {\em Planning Algorithms}.
+\newblock Cambridge, U.K.: Cambridge University Press, 2006.
+\newblock Available online at \url{http://planning.cs.uiuc.edu/}.
+
+\bibitem{Springer}
+B.~Siciliano and O.~Khatib, {\em Handbook of Robotics}.
+\newblock Springer, 2008.
+
+\bibitem{dkiss12ppee}
+D.~Kiss and G.~Tevesz, ``A model predictive navigation approach considering
+  mobile robot shape and dynamics,'' {\em Periodica Polytechnica - Electrical
+  Engineering}, vol.~56, pp.~43--50, 2012.
+
+\bibitem{kavraki96prm}
+L.~E. Kavraki, P.~Svetska, J.-C. Latombe, and M.~H. Overmars, ``Probabilistic
+  roadmaps for path planning in high-dimensional configuration spaces,'' {\em
+  {IEEE} Trans. Robot. Autom.}, vol.~12, pp.~566--580, 1996.
+
+\bibitem{LaValle}
+S.~M. LaValle, ``Rapidly-exploring random trees: A new tool for path
+  planning,'' tech. rep., Computer Science Dept., Iowa State University, 1998.
+
+\bibitem{fade2d}
+B.~Kornberger, ``Fade2d - {An} easy to use {Delaunay} {Triangulation} {Library}
+  for {C++},'' 2014.
+\newblock \url{http://www.geom.at/fade2d/html/}.
+
+\bibitem{DomiRTR}
+D.~Kiss and G.~Tevesz, ``The {RTR} path planner for differential drive
+  robots,'' in {\em Proceedings of the 16th International Workshop on Computer
+  Science and Information Technologies CSIT'2014}, (Sheffield, England),
+  September 2014.
+
+\bibitem{BFS}
+{Katona Gyula Y., Recski András és Szabó Csaba}, {\em A számítástudomány
+  alapjai}.
+\newblock Typotex, 2. javított kiadás~ed., 2001.
+
+\bibitem{Sprunk}
+C.~Sprunk, {\em Planning Motion Trajectories for Mobile Robots Using Splines}.
+\newblock Albert-Ludwigs-Universitat Freiburg, 2008.
+
+\bibitem{Curv2D}
+D.-J. Kroon, ``{2D} {Line} {Curvature} and {Normals}.''
+  \url{http://www.mathworks.com/matlabcentral/fileexchange/32696-2d-line-curvature-and-normals/content/LineCurvature2D.m}.
+
+\bibitem{Bezi}
+{Bézi István}, {\em Robotirányítás rendszertechnikája 3. fejezet}.
+\newblock BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék, 2013.
+
+\bibitem{VREP}
+{Coppelia Robotics}, ``V-rep.'' \url{http://www.coppeliarobotics.com/}.
+
+\end{thebibliography}

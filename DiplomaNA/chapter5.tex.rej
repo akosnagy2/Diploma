@@ -1,0 +1,74 @@
+diff a/Dolgozat/chapter5.tex b/Dolgozat/chapter5.tex	(rejected hunks)
+@@ -18,70 +18,7 @@
+ %----------------------------------------------------------------------------
+ \section{Aut�szer� robotmodell - 4 oldal CsG}
+ %----------------------------------------------------------------------------
+-Ahogy l�ttuk a differenci�lis robot eset�n, a p�lyak�vet�s probl�m�j�t sz�tbontottuk a p�ly�ba k�dolt sebess�g szab�lyoz�s�ra, �s orient�ci� szab�lyoz�sra. Az aut�szer� robotok eset�n is hasonl� m�don j�rhatunk el. M�gis van n�h�ny l�nyeges k�l�nbs�g a k�t robott�pus k�zt. M�g a differenci�lis robot eset�n a k�t ker�k sebess�g�vel, addig az aut�szer� robot eset�n a robot referencia pontj�nak tangenci�lis sebess�g�vel �s a korm�nysz�ggel tudunk beavatkozni.
+-
+-\par
+-Ez az als�bb szab�lyz�si szinteken az k�vetkez� k�l�nbs�geket jelenti: A differenci�lis robot eset�n a szab�lyoz� a p�ly�b�l meghat�rozott sebess�g �s sz�gsebess�g alapjelet sz�tv�lasztja ker�ksebess�gekre, mivel itt ez k�pzi a szab�lyoz�s beavatkoz� jel�t. Az aut�szer� robot eset�n nincs sz�ks�g a sz�tv�laszt�sra, a sebess�get k�zvetlen�l �tadjuk az als�bb szint� sebess�g szab�lyoz�snak, a kisz�m�tott korm�nysz�get, pedig m�r a beavatkoz� szervnek adjuk vissza.
+ 
+ %----------------------------------------------------------------------------
+ \subsection{Virtu�lis vonalk�vez� szab�lyoz�s - 2 oldal}
+-%----------------------------------------------------------------------------
+-A fentiekb�l l�that�, hogy a fels�bb szinten l�v� sebess�g szab�lyoz�s m�dos�t�s�ra nincs sz�ks�g, teljesen megegyez� m�don m�k�dhet mindk�t robot eset�n. Az orient�ci� szab�lyoz�s eset�n m�r jelent�s k�l�nbs�gek mutatkoznak. Egy aut�szer� robot eset�n nem hasznos a sz�gsebess�g kiad�sa, mivel a beavatkoz� jel�nk a korm�nysz�g. Term�szetesen a k�t mennyis�g sz�rmaztathat� egym�sb�l �gy ez nem jelentene akkora probl�m�t.
+-
+-\par
+-Az orient�ci� szab�lyz�s alap�tlete a differenci�lis robotn�l, egy predikci�s t�vols�g meghat�roz�sa volt, mely alapj�n sz�m�tunk egy sz�ghib�t, majd ebb�l sz�gsebess�g beavatkoz� jelet. Ezt a m�dszer nagyon hasonl� a RobonAUT versenyen is l�tott vonalk�vet� aut�k szab�lyoz�s�ra, azzal az el�nnyel, hogy itt sokkal pontosabban ismert a "vonal" helye �s orient�ci�ja.
+-
+-Az el�re tekint�s miatt a mi c�lunk, hogy az aut� eleje k�vesse a vonalat, �gy \aref{eq:carLikeRobot} egyenleteit egy kicsit m�dos�tanunk kell. Els� k�rben induljunk ki abb�l, hogy a virtu�lis szenzorunk az els� tengelyn�l tal�lhat�. \Aref{fig:carLikeRobotModel} �br�n alapj�n a k�vetkez�kre jutunk:
+-
+-\begin{align}\label{eq:carLikeRobotMod}
+-\dot{x} &= v \frac{\cos (\theta + \phi)}{\cos \phi} \notag \\
+-\dot{y} &= v \frac{\sin(\theta + \phi)}{\cos \phi} \notag \\
+-\dot{\theta} &= v \frac{\tan \phi}{L}
+-\end{align}
+-
+-ahol, a jel�l�sek megegyeznek \aref{eq:carLikeRobot} eset�n haszn�ltakkal. Most vizsg�ljuk meg, hogyan f�gg egy p�rhuzamos egyenes t�vols�ga, a robot mozg�s�t�l:
+-
+-\begin{align}\label{eq:parallelLine}
+-\dot{p} = -v \cdot \tan \phi
+-\end{align}
+-
+-ahol, $p$ a virtu�lis szenzorunk k�zep�nek, �s vonalnak az el�jeles t�vols�ga. A k�pletb�l az is leolvashat�, hogy pozit�v korm�nysz�g eset�n az el�jeles t�vols�g negat�v ir�nyba mozdul el. Most vizsg�ljuk meg az aut�hoz k�pest ferde vonal hat�s�t:
+-
+-\begin{align}\label{eq:crossLine}
+-\dot{p} = v \cdot \tan \delta
+-\end{align}
+-
+-ahol, $\delta$ az aut� halad�s�nak egyenese, �s a vonal egyenese �ltal bez�rt sz�g. Az eddigiek alapj�n fel�rhatjuk a $\delta$ �s $p$ v�ltoz�s�t:
+-
+-\begin{align}\label{eq:deltaAndp}
+-\dot{\delta} &= -v \frac{\tan \phi}{L} \nolabel \\
+-\dot{p} = v \cdot \tan \delta - v \cdot \tan \phi - v \cdot \frac{p}{L} \tan \delta \tan \phi
+-\end{align}
+-
+-Fontos megjegyezz�k, hogy a rendszer�nk nem line�ris, �gy a szuperpoz�ci� se �rv�nyes r�!
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
++%----------------------------------------------------------------------------
+\ No newline at end of file

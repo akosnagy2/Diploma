@@ -1,0 +1,118 @@
+%----------------------------------------------------------------------------
+\chapter{Elméleti bevezetés}
+%----------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------
+\section{Problémafelvetés}
+%----------------------------------------------------------------------------
+A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb amikor a robot környezetében akadályok is találhatóak. 
+
+\par
+Célunk azon megközelítések és módszerek áttekintése, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetünk, ezeket szimulátoron és valós roboton is implementáltam, illetve teszteltem. A pályatervezéshez szorosan kapcsolódó téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
+
+%----------------------------------------------------------------------------
+\section{Pályatervezés elmélete}
+%----------------------------------------------------------------------------
+Az elmúlt idõszakban a pályatervezéssel igen sok kutatás foglalkozott \cite{LaValle2}. Ahhoz, hogy ezeket az algoritmusokat ismertessük, be kell vezetnünk néhány alapvetõ fogalmat. 
+
+%----------------------------------------------------------------------------
+\subsection{Alapvetõ fogalmak}
+%----------------------------------------------------------------------------
+A pályatervezés során a robot pillanatnyi állapotát a \emph{konfigurációjával} írhatjuk le. Síkban mozgó robotok esetében a konfiguráció a következõket tartalmazza \cite{Springer}:
+
+\begin{align}
+q &= (x,y,\theta),
+\end{align}
+ahol $q$ a robot konfigurációja, $x,y$ határozza meg a robot pozícióját a síkon és $\theta$ határozza meg a robot orientációját.
+
+Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér} adja meg, amit $C$-vel jelölünk. A konfigurációs tér azon részhalmazát, amely esetében a robot a környezetben található akadályokkal nem ütközik, \emph{szabad (konfigurációs) térnek} nevezzük ($C_{free}$). E halmaz komplementere azokat a konfigurációkat tartalmazza, amelyek esetén a robot akadályokkal ütközne ($C_{obs} = C \backslash C_{free}$). A konfigurációs teret \aref{fig:ConfigSpace}. ábrán szemléltetjük.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/config.png}
+\caption{Konfigurációs tér szemléltetése egy adott útvonal során. A konfigurációs térben a piros vonal jelzi a robot útját a célpontja felé \cite{dkiss12ppee}.} 
+\label{fig:ConfigSpace}
+\end{figure}
+
+\par
+A korlátozások ismerete alapvetõ fontosságú a pályatervezés és mozgásirányítás során. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál-egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). %TODO így jó?
+
+\par
+Dolgozatunkban kinematikai korlátozásokkal fogunk foglalkozni, dinamikai korlátokkal nem.
+
+\par
+Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, habár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. 	Anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciálegyenlettel írható le, amely nem integrálható.
+
+\par
+Az általunk vizsgált robot típus, a \emph{differenciális robot} is anholonom rendszer. Viszont léteznek olyan robotok, amelyek nem rendelkeznek anholonom korlátozásokkal (holonom rendszerek), ilyenek például az omnidirekcionális robotok. Egy omnidirekcionális robot képes bármilyen konfigurációból a tér bármely irányába elmozdulni.
+
+%----------------------------------------------------------------------------
+\subsubsection{Robotmodell}
+%----------------------------------------------------------------------------
+A differenciális robotot egy közös tengelyen lévõ két kerék segítségével mozgatjuk, így a differenciális meghajtásra utal a differenciális robot elnevezés. A mozgás kinematikai leírását \aref{eq:diffRobot}. egyenletek adják meg.
+
+\begin{align}\label{eq:diffRobot}
+v &= \frac{v_{r}+v_{l}}{2} \\ \notag
+\omega &= \frac{v_{r}-v_{l}}{W},
+\end{align}
+ahol $v$ a robot sebessége, $v_r$ a robot jobb kerekének sebessége, $v_l$ a robot bal kerekének sebessége, $\omega$ a robot szögsebessége és $W$ a robot kerekei közti távolság. Innen a robot mozgás-egyenletei:
+
+\begin{align}\label{eq:diffRobotModel}
+\dot{x} &= v \cos \theta \\ \notag
+\dot{y} &= v \sin \theta \\ \notag
+\dot{\theta} &= \omega,
+\end{align}
+
+\par
+Ezt a robot típust gyakran alkalmazzák, mivel egyszerû felépítésû és anholonom mivolta ellenére könnyedén irányítható. Ahogyan \aref{eq:diffRobot}. egyenletekbõl is következik, a robot képes egy helyben megfordulni, ami sok esetben elõnyös, például párhuzamos parkolás esetén.
+
+%----------------------------------------------------------------------------
+\subsection{Pályatervezõk osztályozása}
+%----------------------------------------------------------------------------
+Mielõtt belekezdenénk az általunk megvizsgált pályatervezõ algoritmusok részletesebb ismertetésébe, tekintsük át az irodalomban található, elterjedtebben használt módszereket.
+
+%----------------------------------------------------------------------------
+\subsubsection{Geometriai tervezés szerinti csoportosítás} \label{sect:fade2d}
+%----------------------------------------------------------------------------
+A pályatervezõk geometriai módszerei szerint alapvetõen két csoportot különböztetünk meg: a \emph{globális tervezõk} és a \emph{reaktív tervezõk} csoportját \cite{Springer}.
+
+\par
+A globális tervezõk esetében a konfigurációs tér egészét figyelembe vesszük a tervezéskor, míg a reaktív tervezõk csupán a robot környezetében lévõ szûkebb tér ismeretére építenek. A globális tervezõk elõnye, hogy képesek akár optimális megoldást is találni, míg a reaktív tervezõk egy lokális minimumhelyen ragadhatnak, nem garantálható, hogy a robot eljut a célponthoz. A globális tervezés hátránya azonban a lényegesen nagyobb futási idõ, ezért gyakran változó vagy ismeretlen környezet esetén elõnyösebb lehet a reaktív tervezõk használata.
+
+\par
+A reaktív tervezõk esetében a robot alakját körrel szokták közelíteni, ezzel is egyszerûsítve a tervezés folyamatát. Ezzel szemben globális algoritmusok a robot pontos alakját figyelembe veszik, aminek nagy jelentõsége van szûk folyosókat tartalmazó pálya esetén. Az általunk bemutatott algoritmusok esetén mi is figyelembe vesszük a robot pontos alakját.
+
+\par
+A globális tervezõk esetén megkülönböztetünk mintavételes és kombinatorikus módszereket \cite{LaValle2}. A mintavételes módszerek a konfigurációs teret véletlenszerûen mintavételezik és ez alapján próbálnak utat keresni a célpontba, sok-sok iterációs keresztül. Ellenben a kombinatorikus módszerek direkt módon, a környezet pontos geometriai modellje alapján terveznek utat. Ennek az az elõnye a mintavételes módszerrel szemben, hogy képesek megállapítani, hogy létezik-e egyáltalán megoldás az adott környezetben. A mintavételes tervezõk esetén viszont nem tudjuk ezt eldönteni.
+
+\par
+A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) használnak a konfigurációs tér struktúrájának leírásához \cite{kavraki96prm, LaValle}. Az általunk bemutatott globális tervezõ, az RTR algoritmus is ezt a megközelítést alkalmazza. A gráfok (ill. fák) csomópontjai a konfigurációs térbõl vett minták, élei pedig az ezeket összekötõ ütközésmentes pályaszakaszok.
+
+\par
+Kombinatorikus globális tervezõk közé tartoznak például a celladekompozíción alapuló megoldások. Ezeknél az algoritmusoknál a szabad konfigurációs teret cellákra bontjuk fel, és e cellák alapján felépítünk egy a konfigurációs teret leíró gráfot. Az RTR algoritmusnál mi is használunk celladekompozíciót, a mi esetünkben a cellák háromszögek és a háromszögek oldalfelezõ pontjai alkotják a gráf csúcspontjait. A celladekompozíciót megvalósító algoritmushoz Bernhard Kornberger munkáját használtuk fel \cite{fade2d}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=90mm, keepaspectratio]{figures/celladekomp.png}
+\caption{Celladekompozíció háromszögek segítségével.} 
+\label{fig:Celladekomp}
+\end{figure}
+
+
+%
+%\par
+%Léteznek még más módszerek a pályatervezésre, ilyenek például a reaktív algoritmusok, és a %kombinatorikus tervezõ eljárások is. A dolgozatunknak nem témája a reaktív tervezés, de a %késõbbiekben látunk példát egy kombinatorikus tervezõre.
+
+%----------------------------------------------------------------------------
+\subsubsection{Irányított rendszer szerinti csoportosítás} \label{chapter:intro}
+%----------------------------------------------------------------------------
+A robotok, mint irányított rendszerek esetén megkülönböztetjük az anholonom és holonom rendszereket a pályatervezõk csoportosítása esetén is. Anholonom rendszerek esetén önmagában a robot állapotváltoztatása sem triviális feladat. Azokat az eljárásokat, amelyek képesek egy anholonom rendszert egy kezdõ konfigurációból egy cél konfigurációba eljuttatni az akadáyok figyelembe vétele nélkül, \emph{lokális tervezõknek} hívjuk \cite{LaValle2}.
+
+\par
+Gyakran már a globális tervezõ figyelembe veszi a robot korlátozásait, és ennek megfelelõ geometriai primitíveket használ, vagy esetleg egy lokális tervezõt használ minden állapotváltoztatásra.
+
+\par
+Az általunk vizsgált RTR tervezõ egyenes mozgással és egy helyben fordulással dolgozik. Ezek a mozgásprimitívek ideálisak egy differenciális robot számára \cite{LaValle2}, így az RTR pályatervezõ által tervezett pályát módosítás nélkül végre tudja hajtani egy differenciális robot.
+
+\par
+A globális tervezõ által megtervezett pályát közelíthetjük egy lokális tervezõvel, ha az anholonom robotunk közvetlenül nem tudná lekövetni a globális tervezõ pályáját. Ezt az eljárást, \emph{approximációs módszernek} nevezik. \Aref{chapter:implement}. fejezetben felhasználunk egy lokális tervezõt, amely képes egy elõzetes út alapján olyan utat generálni, amely akár autószerû robot számára is végrehajtható. Az elõzetes pályát valamilyen globális tervezõ szolgáltatja, a mi esetünkben az RTR pályatervezõ. Habár egy differenciális robot közvetlenül már az RTR eljárás által generált pályát is le tudja követni, de az approximációs módszer által tervezett pályán lényegesen gyorsabban tud végighaladni. 

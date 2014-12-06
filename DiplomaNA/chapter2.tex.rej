@@ -1,0 +1,8 @@
+diff a/Dolgozat/chapter2.tex b/Dolgozat/chapter2.tex	(rejected hunks)
+@@ -187,3 +187,6 @@
+ 
+ \par
+ Az implementálás során ahol úgy ítéltük meg módosítottunk az eredeti algoritmuson a rövidebb futási idő érdekében. Ezek habár csak apróbb változásokat jelentettek, de mivel az érintett programrészek egy iterációban akár többször is lefutnak, így egy bonyolultabb pályán, ahol akár több száz iteráció szükséges jelentős lehet a javulás. Ilyen apróbb módosítást tettünk a különböző geometriai elemek közötti metszetéspont számításánál és az iterációk végén található eljárásban, amely a két fát próbálja összekötni.
++
++\par
++Azért is választottuk a C++ nyelvet az implementáláshoz, hogy a valós roboton, beágyazott rendszerben is könnyedén használható legyen. A beágyazott környezet miatt igyekeztünk kerülni bármiféle olyan külső szoftvercsomag használatát, aminek a használata problémás lehet a valós roboton. A szimuláció eredményeire és a valós roboton végzet tesztelésre a dolgozatban még visszatérünk.

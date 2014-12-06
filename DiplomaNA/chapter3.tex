@@ -1,0 +1,502 @@
+%----------------------------------------------------------------------------
+\chapter{Pálya idõparaméterezése}
+%----------------------------------------------------------------------------
+A pályatervezõ által elkészített ütközésmentes pálya nem tartalmaz semmilyen idõvel kapcsolatos információt. Ebben a fejezetben a pálya pontjaihoz sebesség értékeket rendelünk hozzá. Ezt a többletinformációt a pályakövetõ algoritmus használja fel, hogy mozgás során a robot kinematikai korlátai ne okozzanak problémát. Tehát az idõparaméterezés elsõsorban a robot korlátait használja fel, de arra is alkalmas, hogy meghatározzuk a pálya bejárásának idejét. 
+
+\par
+Az idõparaméterezés két fõ lépésbõl áll. Elsõként a kapott geometriai pályához sebesség értékeket rendelünk hozzá, majd ezután újramintavételezzük a pályát. Az újramintavételezés után a pálya idõben egyenletes lesz, tehát az egymást követõ pályapontok között azonos idõ telik el. A mintavételezés idejét a pályakövetõ algoritmus mintavételi ideje határozza meg. A geometriai pályát általában távolságban egyenletesen mintavételezve kapjuk a pályatervezõ algoritmus kimeneteként, de ez nem kötelezõ feltétel az idõparaméterezéshez. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=140mm, keepaspectratio]{figures/path.pdf}
+\caption{A pálya idõparaméterezése.} 
+\label{fig:Path}
+\end{figure}
+
+\par
+A szakirodalomban nem sok idõparaméterezéssel kapcsolatos munka található. Egy, az itt bemutatotthoz hasonló megközelítést Christoph Sprunk munkájában találhatunk \cite{Sprunk}. A legfontosabb elméleti eltérés, hogy Sprunk külön korlátozza a robot tangenciális és centripetális gyorsulását, míg mi a robot kerekeinek eredõ gyorsulását korlátozzuk. Ez a megoldás a valóságot jobban közelíti, hiszen attól, hogy a gyorsulás két komponense a korlátok alatt marad, nem biztos, hogy az eredõ gyorsulás sem haladja meg a korlátot.
+
+\par
+Az idõparaméterezés során nem használjuk ki az elõzõ fejezetben bemutatott pályatervezõ által tervezett pálya speciális tulajdonságait, a célunk egy olyan algoritmus készítése, amely tetszõleges geometriai pályából képes sebesség információval ellátott, idõben egyenletes mintavételû pályát készíteni. Emiatt nem építhetünk a pályatervezõ által használt geometriai elemekre és ezek speciális tulajdonságaira.
+
+\par
+A geometriai elemek egyik legalapvetõbb tulajdonsága az lenne, hogy a görbületüket analitikusan ki tudnánk számolni (ami a konkrét elemek esetében ráadásul triviális). Általános esetben azonban nem tudjuk a pálya görbületét analitikusan meghatározni, így görbület becslést kell alkalmaznunk. A szakirodalomban sok cikket találhatunk görbület becslésrõl, fõleg képfeldolgozással kapcsolatos témákban, azonban dolgozatunknak nem ez a témája. Az algoritmus fejlesztésekor több becslõt is kipróbáltunk, ezeket úgy teszteltük, hogy olyan pályát adtunk meg nekik, amelynek a görbülete analitikusan is számolható, így össze tudtuk hasonlítani az ideális megoldással a becslést. Ez alapján választottunk egy eljárást \cite{Curv2D}. Természetesen abban az esetben, ha a pályatervezõ rendelkezik már a pálya görbületével, az idõparaméterezõ algoritmus azt fogja használni a becslés helyett.
+
+%----------------------------------------------------------------------------
+\section{Jelölések}
+%----------------------------------------------------------------------------
+Ebben a fejezetben \aref{eq:pars}. táblázatban megadott jelöléseket fogjuk használni. Azokban az esetekben, ahol fontos megkülönböztetni a geometriai pályát és az (újra)mintavételezett pályát, ott a felsõ indexben található $\mathbf{g}$ betû a geometriai pályát jelöli, az $\mathbf{s}$ betû pedig a mintavételezett pályát. A pálya pontjait 1-tõl számozzuk.
+
+\begin{align}\label{eq:pars}
+\Delta{t}(k)& : \text{A $k$ és a $k+1$ pontok között eltelt idõ} \notag\\
+t(k)& : \text{A $k$. pontban az addig eltelt idõ}\notag\\
+\Delta{s}(k)& : \text{A $k$ és a $k+1$ pontok között megtett távolság}\notag\\
+s(k)& : \text{A $k$. pontban az addig megtett távolság}\notag\\
+v(k)& : \text{A $k$. pontban a robot sebességének nagysága}\notag\\
+\omega(k)& : \text{A $k$. pontban a robot szögsebességének nagysága}\notag\\
+a_{t}(k)& : \text{A $k$. pontban a robot tangenciális gyorsulásának nagysága}\notag\\
+c(k)& : \text{A $k$. pontban a görbület nagysága}\notag\\
+N& : \text{A pálya pontjainak száma}
+\end{align}
+
+\par
+Azokban az esetekben, amikor a robot kerekére vonatkozó mennyiségekrõl beszélünk, külön jelöljük, hogy bal ($l$) vagy jobb ($r$) kerékrõl van szó. Ezenkívül a kerekeknél megkülönböztetjük, hogy tangenciális ($a_{t}$), centripetális ($a_{c}$) vagy eredõ ($a_{e}$) gyorsulásról beszélünk.
+
+\par
+Fontos megjegyezni, hogy a $\Delta{s}(k)$ távolságot úgy kell értelmezni, hogy a $k$. és $k+1$. pont között egy körív található, és az ezen mért távolság lesz $\Delta{s}(k)$. A körívet a $c(k)$ görbület határozza meg. Ha nem köríveket használnánk, hanem egyenessel kötnénk össze a pályapontokat, akkor a görbületnek szükségszerûen 0-nak kellene lennie.
+%TODO esetleg itt lehetn folytatni
+
+%----------------------------------------------------------------------------
+\section{Differenciális robotmodell}
+%----------------------------------------------------------------------------
+
+Mivel a fejezetben késõbb még többször szükség lesz rá, \aref{eq:diffRobot}. egyenletet írjuk át úgy, hogy a kerekek sebességeit fejezzük ki akár a szögsebesség, akár a pálya adott görbülete alapján:
+
+\begin{align}\label{eq:diffRobotWheel}
+v_{l}(k) &= v(k) - \frac{W\cdot\omega(k)}{2} = v(k) \cdot p_l(k) \\ \notag
+v_{r}(k) &= v(k) + \frac{W\cdot\omega(k)}{2} = v(k) \cdot p_r(k) \notag,
+\end{align}
+ahol 
+
+\begin{align}
+p_l(k) &= 1 - \frac{W \cdot c(k)}{2} \\ \notag
+p_r(k) &= 1 + \frac{W \cdot c(k)}{2}  \notag,
+\end{align}
+és felhasználtuk, hogy $v(k) \cdot c(k) = \omega(k)$.
+
+%----------------------------------------------------------------------------
+\section{Korlátozások}\label{sect:diffConstraints}
+%----------------------------------------------------------------------------
+A robot mozgását általános esetben \aref{fig:velocityProfileModel}. ábra mutatja be. Az idõparaméterezés során figyelembe vesszük a robot pályamenti sebességét és szögsebességét, valamint a robot kerekeinek tangenciális és eredõ gyorsulását. Adott robot esetében ezekre a mennyiségekre határozunk meg korlátozásokat:
+
+\begin{align}\label{eq:constraints}
+v^{max}& : \text{A robot pályamenti sebesség korlátja}\\
+\omega^{max}& : \text{A robot szögsebesség korlátja}\notag\\
+{{a_{l}}_t}^{max}& : \text{A robot bal kerekének tangenciális gyorsulás korlátja}\notag\\
+{{a_{r}}_t}^{max}& : \text{A robot jobb kerekének tangenciális gyorsulás korlátja}\notag\\
+{a_{l}}^{max}& : \text{A robot bal kerekének eredõ gyorsulás korlátja}\notag\\
+{a_{r}}^{max}& : \text{A robot jobb kerekének eredõ gyorsulás korlátja}\notag
+\end{align}
+
+\par
+Mivel a robot kerekeinek tangenciális gyorsulásából már adódik a robot tangenciális gyorsulása is, így a robot gyorsulását nem szükséges külön korlátozni. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=150mm, keepaspectratio]{figures/robot.png}
+\caption{Differenciális hajtású robot mozgása köríven.} 
+\label{fig:velocityProfileModel}
+\end{figure}
+
+\begin{align}\label{eq:diffRobotAccel}
+a_{t}^{max} &= {\frac{{{a_{l}}_t}^{max} + {{a_{r}}_t}^{max}}{2}} 
+\end{align}
+
+\par 
+Ugyanez a helyzet a kerekek sebességkorlátjával, ami meghatározható a robot sebesség és szögsebesség korlátaiból.
+
+\begin{align}\label{eq:diffRobotWheelVelocity}
+v^{max}_{l} &= v^{max} - \frac{W\cdot\omega^{max}}{2} \\
+v^{max}_{r} &= v^{max} + \frac{W\cdot\omega^{max}}{2} 
+\end{align}
+
+\par
+A kerekek maximális eredõ gyorsulását a maximális tapadási súrlódási együttható, \linebreak $\mu_{tap_{max}}$ határozza meg, amelynél a robot kerekei még nem csúsznak meg. A maximális gyorsulás és a tapadási együttható között a következõ egyszerû összefüggés áll fent:
+
+\begin{align}\label{eq:mu}
+a_{max} &=\mu_{tap_{max}} \cdot g,
+\end{align}
+ahol $g$ a nehézségi gyorsulás
+
+\par
+Írjuk fel \aref{fig:velocityProfileModel}. ábra alapján a robot kerekeinek gyorsulását:
+
+\begin{align}\label{eq:velocityProfileF}
+a(k) = \sqrt{a_{c}(k)^2 + a_{t}(k)^2} \leq g  \cdot \mu_{tap_{max}},
+\end{align}
+ahol $a_{c}(k)$ a kerék centripetális gyorsulása, $a_{t}(k)$ a kerék tangenciális gyorsulása
+
+\par
+\Aref{eq:velocityProfileF}. egyenletben azzal a feltevéssel élünk, hogy a robot kerekei és a talaj között a tapadási súrlódási együttható állandó és nem függ az erõ irányától. Az általunk használt differenciális robotnál ez a közelítés megengedhetõ, mivel a gumikerekek homogénnek tekinthetõk. Ha barázdákat tartalmaznának, akkor már nagyobb eltérést okozna ez a közelítés. 
+
+%TODO átfogalmazni
+\par
+Fontos megjegyezni, hogy a kerékgyorsulás korlátokat lassulásnál is alkalmazzuk. Tehát a kerék gyorsulásának abszolút értékét korlátozzák ezek a korlátozások. Így azt tesszük fel, hogy a kerekek viselkedése gyorsulás és lassulás esetében megegyezik. A robot sebességénél viszont nem engedünk elõjelváltást, úgy vesszük, hogy a robot végig egy irányba halad. A tervezõ viszont megadhat olyan pályát, ahol tolatnia kell a robotnak, vagy egy helyben megfordulnia, de ezt a pályatervezõ algoritmus kezeli.
+
+%----------------------------------------------------------------------------
+\section{Geometriai sebességprofil}
+%----------------------------------------------------------------------------
+Az idõparaméterezés elsõ lépéseként a geometriai pályapontokhoz rendelünk a korlátoknak megfelelõ sebességeket, és a késõbbiekben ezt a sebességprofilt használjuk fel a pálya újramintavételezéséhez.
+
+\par
+A pályamenti sebességeket úgy határozzuk meg, hogy a robot pályamenti gyorsulása a lehetõ legnagyobb legyen. {\Aref{eq:diffRobotAccel}}. egyenlet alapján ezt megtehetjük úgy, hogy a robot kerekeinek tangenciális gyorsulását maximalizáljuk. Több hatás miatt azonban nem tudjuk a kerekek gyorsulását folyamatosan növelni. 
+
+\par
+Egyrészt a robot sebesség és szögsebesség korlátját nem sérthetjük meg. Ebbõl a két korlátból a pálya minden pontjára kiszámolhatunk egy maximális sebességet függetlenül az elõzõ pályapont sebességétõl:
+
+\begin{align}\label{eq:vmax}
+v^{max}(k)& = \min \left( v^{max}, \frac{\omega^{max}}{c(k)} \right)
+\end{align}
+
+\par
+Valamint a kerekek centripetális gyorsulása nem haladhatja meg az elõírt eredõ gyorsuláskorlátot, különben a robot kereke megcsúszna. A pálya adott $k$. pontjában a kerekek centripetális gyorsulását a következõképpen számolhatjuk ki:
+
+\begin{align}\label{eq:acplr}
+{a_{l}}_{c}(k)& = \left( v(k) \cdot p_l(k) \right)^2 \cdot c(k) \\ \notag
+{a_{r}}_{c}(k)& = \left( v(k) \cdot p_r(k) \right)^2 \cdot c(k)
+\end{align}
+
+Fontos megjegyezni, hogy mivel a robot gyorsulását határozzuk meg a $k$. pontban, így a $v(k)$ már rendelkezésünkre áll a $k-1$. pontban számított gyorsulásból. Amennyiben a kiszámolt centripetális gyorsulások már önmagukban is meghaladják az elõírt eredõ gyorsuláskorlátot, úgy $v(k)$ értékét addig kell csökkenteni, hogy a centripetális gyorsulás az eredõ gyorsuláskorlátot már ne haladja meg. Errõl a folyamatról a késõbbiekben még szót ejtünk. 
+
+\par
+Ezután a kerekek tangenciális gyorsulását \aref{eq:alr}. egyenlet alapján határozhatjuk meg.
+
+\begin{align}\label{eq:alr}
+{a_{l}}_{t}(k)& = \min \left( \sqrt{({a_{l}}^{max})^2 - {{a_{l}}_{c}(k)}^2}, {{a_{l}}_t}^{max} \right) \\
+{a_{r}}_{t}(k)& = \min \left( \sqrt{({a_{r}}^{max})^2 - {{a_{r}}_{c}(k)}^2}, {{a_{r}}_t}^{max} \right) \notag
+\end{align}
+
+\par
+Eddig a két kerék gyorsulását teljesen függetlenül tárgyaltuk, azonban mindkét gyorsulást nem választhatjuk meg szabadon, mert a pálya görbülete meghatározza a köztük lévõ arányt. Ezt a következõképpen láthatjuk be:
+
+\begin{align} \label{eq:ar/al1}
+{a_{l}}_{t}(k)& = \beta(k) \cdot (r(k) - \frac{W}{2}) \\
+{a_{r}}_{t}(k)& = \beta(k) \cdot (r(k) + \frac{W}{2}) \\
+\label{eq:ar/al2}
+\frac{{a_{l}}_{t}(k)}{{a_{r}}_{t}(k)} &= \frac{r(k) - \frac{W}{2}}{r(k) + \frac{W}{2}} = \frac{p_l(k)}{p_r(k)},
+\end{align}
+ahol $\beta(k)$ a robot szöggyorsulása, $r(k)$ a pálya görbületi sugara a robot középpontjához viszonyítva (\aref{eq:diffRobotWheel}. egyenlet alapján következik, hogy a sebességek aránya is ugyanez lesz).
+
+\par
+\Aref{eq:ar/al2}. és \aref{eq:alr}. egyenletek alapján 2-2 lehetséges kerék gyorsulást tudunk számolni. Ezek közül azt a gyorsulás párt fogjuk választani, amelyiknek egyik eleme sem sérti \aref{eq:alr}. egyenletek által meghatározott korlátokat. 
+
+%TODO ezt bekéne látni
+
+\par
+Miután kiszámoltuk, hogy az adott pályapontnál mekkora legyen a robot kerekeinek tangenciális gyorsulása, már könnyedén számolható a robot gyorsulása és sebessége:
+
+\begin{align}\label{eq:a}
+a_{t}(k) &= \frac{{a_{l}}_{t}(k) + {a_{r}}_{t}(k)} {2}\\
+\label{eq:v}
+v(k+1) &= \min \left( v^{max}(k+1), \sqrt{v(k) + 2 \cdot a_{t}(k) \cdot \Delta s_{c}(k)} \right)
+\end{align}
+
+%----------------------------------------------------------------------------
+\subsection{Profil visszaterjesztés}
+%----------------------------------------------------------------------------
+Két esetben elõfordulhat, hogy az elõzõ pályaponthoz meghatározott sebességértéket módosítani kell. Egyrészt, ha a centripetális gyorsulás önmagában meghaladja a megengedhetõ maximális gyorsulást, akkor az elõzõ pályaponthoz tartozó sebességet mindenképp csökkenteni kell. Másrészt \aref{eq:v}. egyenlet esetében elõfordulhat, hogy a robot gyorsulás korlátját megsértjük, és így módosítani kell az elõzõ ponthoz tartozó sebességet. Ez például a pálya végpontjában fordulhat elõ, ahol elõírjuk, hogy a robot álljon meg, tehát $v^{max}(N)=0$. Ha nem terjesztenénk vissza a profilt, akkor az utolsó pontnál lévõ fékezés meghaladhatja az elõírt korlátot, hiszen az elõzõ pontokban nem tudtuk, hogy meg kell állni a robotnak.
+
+\par
+Mindkét esetben ugyanazt az eljárást alkalmazhatjuk a visszaterjesztéshez. Azért beszélünk visszaterjesztésrõl, mivel addig kell visszafelé haladni a pályán, amíg minden korlátot betartunk.
+
+\par
+Kezdetnek kiszámoljuk, hogy a megváltozott sebesség következtében hogyan alakulnak a kerekek tangenciális gyorsulásai. \Aref{eq:at}. egyenletben felhasználjuk \aref{eq:diffRobotWheel}. egyenlet összefüggését a robot és kerék sebesség kapcsolatára.
+
+\begin{align}\label{eq:at}
+{a_{l}}_{t}(k) &= \frac{v_l(k+1)^2 - v_l(k)^2}{2 \cdot \Delta s_{l}(k)} = \frac{v(k+1)^2 - v(k)^2}{2\cdot\Delta s_{l}(k)} \cdot p_l(k) ^2 \\
+{a_{r}}_{t}(k) &= \frac{v_r(k+1)^2 - v_r(k)^2}{2 \cdot \Delta s_{l}(k)} = \frac{v(k+1)^2 - v(k)^2}{2\cdot\Delta s_{r}(k)} \cdot p_r(k) ^2 \notag
+\end{align}
+
+%TODO mesélni a görbületrõl a k, k+1 pontban
+
+\par
+Amennyiben a kapott tangenciális gyorsulások megsértik a tangenciális vagy eredõ gyorsulásra vonatkozó korlátokat, kiszámoljuk, hogy mekkora robotsebesség esetében teljesülnének a korlátok. Ezt mindkét kerék esetén megtesszük, és a szigorúbb sebesség korlátot fogjuk választani, mint robotsebesség. Ezt az eljárást mindaddig megtesszük visszafelé a pályán, amíg azt nem kapjuk, hogy egyik kerék sem sérti meg a korlátokat. 
+
+\par
+Most vizsgáljuk meg, hogy ha a kerékgyorsulás egy adott korlátot megsért, akkor hogyan kapjuk meg belõle azt a robotsebességet, amely esetében még nem sértjük meg a korlátot. Elõször tekintsük a tangenciális gyorsulásra vonatkozó korlátot. \aref{eq:at}. egyenletet fejezzük ki $v(k)$-ra mindkét kerék esetén:
+
+\begin{align} \label{eq:backat}
+{v_l}^{t}(k) &= \sqrt{ v(k+1)^2 + \frac{ 2 \cdot {{a_{l}}_t}^{max} \Delta s_{l}(k)} {p_l(k)^2} } \\ \notag
+{v_r}^{t}(k) &= \sqrt{ v(k+1)^2 + \frac{ 2 \cdot {{a_{r}}_t}^{max} \Delta s_{r}(k)} {p_r(k)^2} },
+\end{align}
+ahol a ${v_l}^{t}(k)$, ${v_r}^{t}(k)$ jelölések arra utalnak, hogy a sebességek a tangenciális korlátból adódnak a bal és jobb kerék esetén.
+
+\par
+\Aref{eq:backat}. egyenlet alapján minden esetben meg tudjuk határozni a keresett robotsebességet, hiszen a gyök alatt található összeg mindkét tagja biztosan nem negatív.
+
+\par
+Az eredõ gyorsulásra vonatkozó korlát esetén pedig \aref{eq:backacp}. összefüggést használhatjuk. Ehhez felhasználjuk \aref{eq:acplr} egyenletet (az egyszerûség kedvéért most nem vezetjük le külön a két kerék esetén a számítást, és $w$-vel jelöljük a kerékre vonatkozó mennyiségeket):
+
+\begin{align}\label{eq:backacp}
+{{a_w}_{t}}(k) &= \frac{ v(k+1)^2 - {v_w}^{e}(k)^2 }{ 2 \cdot \Delta s_w(k) } \cdot p_w(k)^2 =  \sqrt{(a^{max})^2 - ({{{{a_w}_c}^{max}})^2}} \\ \notag &=  \sqrt{ ({a}^{max})^2 - \left( {{v_w}^{e}}(k) \cdot p_w(k) \cdot c(k) \right) ^2}
+\end{align}
+ahol a ${v_w}^{e}(k)$ jelölés arra utal, hogy a sebesség az eredõ gyorsulásra vonatkozó korlátból adódik. 
+
+\par
+\Aref{eq:backacp}. egyenletet kifejezhetjük ${v_w}^{e}(k)$-re. Ekkor egy negyedfokú egyenletet kapunk, ami a következõképpen épül fel:
+
+\begin{align} \label{eq:backacp2}
+d(k) &= \frac{p_w(k)^4}{4 \cdot \Delta s_w(k)^2} + c(k)^2 \cdot p_w(k)^2	 \\
+e(k) &= -\frac{2 \cdot v(k+1)^2 \cdot p_w(k)^4} {4 \cdot \Delta s_w(k)^2} \notag\\
+f(k) &= \frac{v(k+1)^4 \cdot p_w(k)^4}{4 \cdot \Delta s_w(k)^2} - {a_{max}}^2 \notag \\
+\label{eq:backacp3}
+0 &= {v_w}^e(k)^4 \cdot d(k) + {v_w}^e(k)^2 \cdot e(k) + f(k)
+\end{align}
+
+\par
+\Aref{eq:backacp3}. negyedfokú egyenlet visszavezethetõ másodfokú egyenletre, ha bevezetjük az $x(k) = {v_w}^e(k)^2$ változót:
+
+\begin{align} \label{eq:backacp4}
+0 &= x(k)^2 \cdot d(k) + x(k) \cdot e(k) + f(k)
+\end{align}
+
+\Aref{eq:backacp4}. egyenlet valós, pozitív megoldásait keressük, hiszen ekkor lesz megoldása az eredeti \ref{eq:backacp3}. egyenletnek. Felmerülhet a kérdés, hogy mi garantálja, hogy mindig lesz ilyen megoldás. 
+
+\par
+A gyökök összegére felírt {Vi\`ete}-formula segítségével belátható, hogy legalább egy pozitív megoldása van az egyenletnek:
+
+\begin{align} \label{eq:backacp5}
+x_1(k) + x_2(k) &= \frac{-e(k)} {d(k)} \geq 0,
+\end{align}
+ahol $x_1(k)$ és $x_2(k)$ \aref{eq:backacp3}. egyenlet gyökei, és felhasználtuk, hogy $e(k) \leq 0$ és $d(k) \geq 0$.
+
+\par
+\Aref{eq:backacp4}. egyenlet diszkriminánsának felírásával pedig beláthatjuk, hogy az egyenlet megoldásai minden esetben valósak:
+
+\begin{align} \label{eq:backacp6}
+D = e(k)^2 - 4 \cdot d(k) \cdot f(k) \geq 0
+\end{align}
+
+Tehát amennyiben a diszkrimináns nem negatív, akkor az egyenletnek csak valós megoldása van. Az $d(k)$, $e(k)$ és $f(k)$ értékét behelyettesítve, a következõ összefüggést kell belátnunk:
+
+\begin{align} \label{eq:backacp7}
+{a_{max}}^2 \cdot \frac{{p_w}(k)^4}{\Delta {s_w}(k)^2} - \frac{v(k+1)^4 \cdot p_w(k)^6 \cdot c(k)^2}{\Delta s_w(k)^2} + 4 \cdot p_w(k)^2 \cdot c(k)^2 \cdot {a_{max}}^2  \geq 0
+\end{align}
+
+Az egyenlõtlenség mindkét oldalát szorozzuk be $\frac{\Delta s_w(k)^2}{p_w(k)^4}$-vel, és használjuk fel, hogy $v_w(k+1) = v(k+1) \cdot p_w(k)$:
+
+\begin{align} \label{eq:backacp8}
+{a_{max}}^2 - v_w(k+1)^4 \cdot \frac{c(k)^2}{p_w(k)^2} + 4 \cdot p_w(k)^2 \cdot \Delta s_w(k)^2 \cdot {a_{max}}^2 \cdot \frac{c(k)^2}{p_w(k)^2}  \geq 0
+\end{align}
+
+Mivel $\frac{c(k)}{p_w(k)} = c_w(k)$ és ${{a_w}_c}(k) = v_w(k)^2 \cdot c_w(k)$, ezért \aref{eq:backacp8}. egyenlõtlenséget átírhatjuk a következõk szerint:
+
+\begin{align} \label{eq:backacp9}
+{a_{max}}^2 - {{a_w}_c}(k+1)^2 + 4 \cdot p_w(k)^2 \cdot \Delta s_w(k)^2 \cdot {a_{max}}^2 \cdot \frac{c(k)^2}{p_w(k)^2}  \geq 0
+\end{align}
+
+\Aref{eq:backacp9}. egyenlõtlenség elsõ két tagjára a következõ feltétel teljesül a gyorsulás korlátok alapján: 
+
+\begin{align} \label{eq:backacp10}
+{{a_w}_t}(k+1)^2  + {{a_w}_c}(k+1)^2 &\leq {a_{max}}^2 \\ \notag
+0 \leq {{a_w}_t}(k+1)^2  &\leq {a_{max}}^2 - {{a_w}_c}(k+1)^2
+\end{align}
+
+Tehát \aref{eq:backacp10} feltétel alapján \aref{eq:backacp9}. egyenlõtlenség minden esetben teljesül és így biztosak lehetünk benne, hogy \aref{eq:backacp3}. egyenletnek lesz valós megoldása.
+
+\par
+Miután meghatároztuk $v^e(k)$ és $v^t(k)$ értékeit mindkét kerékre (összesen 4 érték), $v(k)$ értéke ezek közül a legkisebb lesz, hiszen így biztosíthatjuk, hogy a robot egyik kereke sem fogja megsérteni a két gyorsulás korlátot.
+
+\par
+A visszaterjesztés során a sebesség és szögsebesség korlátokkal nem kell foglalkoznunk, hiszen mindkét esetben, mikor módosítjuk a sebességet, csökkentjük az értékét, és ezáltal ezektõl a korlátoktól távolodunk.
+
+
+%----------------------------------------------------------------------------
+\section{Újramintavételezés}
+%----------------------------------------------------------------------------
+Miután elkészítettük a geometriai pályához tartozó sebességprofilt, létrehozzuk a végleges pályát, amit majd a pályakövetõ algoritmus bemenetként megkap. Ez a végleges pálya már idõben egyenletesen lesz mintavételezve (mintavételezett pálya).
+
+\par
+Elõször számoljuk ki az eltelt idõt a geometriai pálya mentén, amelynek alapja, hogy két pályapont között a robot állandó gyorsulással halad.
+
+\begin{align}\label{eq:time}
+\Delta{t}^{g}(k)& = \frac{2 \Delta{s}^{g}(k)}{v^{g}(k) + v^{g}(k+1)} \\
+t^{g}(k+1)& = t^{g}(k) + \Delta{t}^{g}(k)
+\end{align}
+
+%\begin{align}\label{eq:accel}
+%a_t^{g}(k)& = \frac{v^{g}(k) - v^{g}(k-1)}{\Delta{t}^{g}(k-1)} \\
+%a_c^{g}(k)& = \frac{v^{g}(k)^2}{1/c^{g}(k)} \\
+%a^{g}(k)& = \sqrt{a_t^{g}(k)^2 + a_c^{g}(k)^2}
+%\end{align}
+
+%\par
+%Miután minden pontban kiszámoltuk a robot eredõ gyorsulását, ellenõrizni tudjuk, hogy a %robot tényleg betartja-e a korábban megadott gyorsulás korlátot.
+
+\par
+A következõ lépésben meghatározzuk, hogy az újramintavételezett pályánk hány pontból álljon. Ezt könnyedén megtehetjük, hiszen adott számunkra a kívánt mintavételi idõ($t_s$).
+Így a következõ képlet adódik a mintavételezett pálya pontjainak számára:
+
+\begin{align}\label{eq:pathSamplLength}
+N^{s}& = \lceil{t^{g}(N^{g})/t_s}\rceil + 1
+\end{align}
+
+\par
+A pontok számába beleértjük a kezdõ és végpontot is. \Aref{eq:pathSamplLength}. egyenletbõl következik, hogy amennyiben $t(N^{g})$ és $t_s$ nem egymás többszörösei, a mintavételezett pálya utolsó pontjához olyan idõpont tartozik, amely nagyobb mint $t(N^{g})$. A pálya végpontját még a késõbbiekben tárgyaljuk, akkor visszatérünk erre az eltérésre is.
+%TODO Ide lehetne egy ábrát rakni.
+
+\par
+Most pedig meghatározzuk a mintavételezett pálya pontjaiban a sebességet. Ezt a geometriai pálya alapján tesszük, figyelembe véve, hogy a mintavételezett pálya esetén is két pont között állandó gyorsulást feltételezünk. A számítás egy egyszerû lineáris interpolációt valósít meg:
+
+\begin{align}\label{eq:pathInterVel}
+v^{s}(k)& = v^{g}(j) + v^{g}(j+1) \cdot it(k) \\
+it(k)& = \frac{t^{s}(k) - t^{g}(j)}{t^{g}(j+1) - t^{g}(j)},
+\end{align}
+ahol $j$ jelöli a legkisebb indexet amelyre teljesül, hogy $t^{s}(k) < t^{g}(j)$
+
+\par
+A lineáris interpoláció miatt teljesül az a feltétel, hogy két pont között állandó gyorsulással mozogjon a robot.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=150mm, keepaspectratio]{figures/geo_sampl.pdf}
+\caption{A geometriai és mintavételezett sebességprofil egy részlete.} 
+\label{fig:samplVelocityProfile}
+\end{figure}
+
+\par
+A kiszámított sebességprofil alapján könnyedén adódik a megtett út is:
+
+\begin{align}\label{eq:samplS}
+\Delta{s}^{s}(k)& = \frac{v^{s}(k) + v^{s}(k+1)}{2} \cdot t_s \\
+s^{s+1}(k)& = s^{s}(k) + \Delta{s}^{s}(k)
+\end{align}
+
+\par
+Így már rendelkezésünkre áll a robot kívánt sebessége, a megtett út, valamint az idõ a mintavételezett pálya összes pontjában. Már csupán a pálya pontjainak koordinátáit kell ezek alapján meghatároznunk.
+
+\par
+Mivel ismerjük a pályapontok közötti távolságot ($\Delta{s}^{s}(k)$), iteratív eljárással az elõzõ pályapont koordinátái alapján az aktuális pontról tudjuk, hogy egy körön helyezkedik el. További feltételünk, hogy a pont az eredeti, geometriai pályán rajta legyen. Ha vesszük a geometriai pálya pontjai közötti görbületbõl adódó köríveket, akkor az ívek és a kör metszéspontjai közül kell kiválasztanunk a keresett pontot. A kiválasztás egyszerû, ha megjegyezzük, hogy az elõzõ pontnál melyik szakasz alapján találtuk meg a pontot, így csak attól a szakasztól kezdve kell keresni a metszéspontokat. Az algoritmus menete látható \aref{fig:samplPoint}. ábrán.
+Minden vizsgált szakasznál arra kell figyelni, hogy a metszéspont a szakasz határpontjai között helyezkedjen el. Az elsõ szakasz vizsgálatánál még az is fontos, hogy az elõzõ pont elõtti metszéspontot ne vegyük figyelembe. Az ábrán a $Ps(1)$ pontban ezért nem választhatjuk a másik metszéspontot.
+A legelsõ mintavételezett pontot a geometriai pálya elsõ pontjába helyezzük el.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/circle_circle.png}
+\caption{A mintavételezett pontok meghatározása. $P(x)$ a geometriai pálya pontjait jelöli, $Ps(y)$ pedig a keletkezõ mintavételezett pályát.} 
+\label{fig:samplPoint}
+\end{figure}
+
+%----------------------------------------------------------------------------
+\subsection{Mintavételezett pálya végpontja} \label{sect:back_check}
+%----------------------------------------------------------------------------
+Az lenne az optimális eset, ha a mintavételezett pálya utolsó pontja egybeesne az eredeti pálya végpontjával, ahogyan a kezdõpontjaik ténylegesen egybeesnek. Alapvetõen úgy hoztuk létre a mintavételezett pályát, hogy az a geometriai pálya sebességprofiljának megfeleljen, ez viszont nem garantálja az elõzõ feltétel teljesülését.
+
+
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=130mm, keepaspectratio]{figures/circle_line2.png}
+%\caption{A mintavételezett pontok meghatározásánál keletkezõ hiba.} 
+%\label{fig:samplPoint2}
+%\end{figure}
+
+\par
+Három hatás azt eredményezi, hogy nem fog teljesülni ez a feltétel a pálya utolsó pontjára:
+\begin{enumerate}
+  \item Ahogy már említettük korábban, nem biztos, hogy a két pályát ugyanannyi idõ alatt járja be a robot. Ez maximum $t_s$ idõkülönbséget okozhat, és minden esetben távolabbi végpontot eredményez, mint az eredeti végpont.
+  \item A mintavételezett pálya sebességprofiljának elkészítésekor nem tökéletesen követi az eredeti sebességet a robot a mintavételezésbõl adódóan. Ez látszik \aref{fig:samplVelocityProfile}. ábrán is. A hiba megegyezik a két görbe alatti terület közötti különbséggel,ami okozhat távolabbi és közelebbi végpontot is. 
+  \item A harmadik hiba a koordináták meghatározásánál keletkezik. Ez a hatás is mindig távolabbi végpontot okoz.
+\end{enumerate}
+
+\par
+A legtöbb esetben célszerû, ha a végpontok egybeesnek, így ezt a mintavételezett pálya meghatározásánál biztosítanunk kell. Ha egyszerûen az utolsó pályapontot az eredeti pálya végpontjába tesszük, nem biztos, hogy betartjuk a robot gyorsulás korlátait, így más módszerhez kell folyamodnunk.
+
+\par
+Az általunk használt algoritmus lényege, hogy a sebességprofilnak egy részét egy adott sebességgel eltoljuk úgy, hogy a két pálya végpontja pontosan egybeessen. Az eltolás mértékét ($\Delta{v_{corr}}$) a következõ képlettel kapjuk meg:
+
+\begin{align}\label{eq:backDeltaV}
+\Delta{v_{corr}}& = \frac{\Delta{s_{corr}}}{t_s \cdot n},
+\end{align}
+ahol $\Delta{s_{corr}}$ a mintavételezett és a geometriai pálya végpontjai közötti távolság elõjelesen. Ha a mintavételezett pálya utolsó pontja van távolabb, akkor negatív a távolság, különben pozitív. $n$ pedig azoknak a sebességpontoknak a száma, amiket eltolunk.
+
+\par
+\Aref{eq:backDeltaV}. egyenlet egyszerûen belátható, ha felírjuk az eltolásból adódó területkülönbséget.  A $\Delta{s_{corr}}$ útkülönbséget azért kell elõjelesen megadnunk, hogy mindkét esetben használható legyen az algoritmus, akkor is, ha a mintaévtelezett pálya végpontja van távolabb és akkor is ha a geometriai pályáé.
+
+\par
+A továbbiakban meghatározzuk azokat a sebességpontokat, amelyeket $\Delta{v_{corr}}$ sebességgel eltolunk. Mivel a megváltozott sebességponthoz tartozó koordinátákat újra ki kell számolnunk, így minél kevesebb pontot szeretnénk eltolni a sebességprofilon. Viszont a sebesség és gyorsulás korlátokat be kell tartanunk, így nem tolhatunk el tetszõlegesen kevés pontot.
+
+\par
+Vizsgáljuk külön a két alapesetet $\Delta{s_{corr}}$ elõjele alapján. Kezdjük azzal az esettel amikor $\Delta{s_{corr}}$ negatív, tehát a mintavételezett pálya végpontja van távolabb (\ref{fig:backCheck1}. ábra). Ekkor a módosítandó szakasz kezdõ pontjához tartozó gyorsulásnak pozitívnak kell lennie, hiszen mi csökkenteni fogjuk a soron következõ pont sebességét, és ha a gyorsulás pozitív vagy nulla, akkor a módosítás hatására csökkenni fog a robot gyorsulása a szakasz kezdõpontjában. Ha a gyorsulás negatív lenne a kezdõpontban, akkor könnyedén elõfordulhat olyan eset, hogy a sebességcsökkentés után megszegjük a gyorsulás korlátot. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=140mm, keepaspectratio]{figures/back_check2.pdf}
+\caption{A módosított mintavételezett sebességprofil ha $\Delta{s_{corr}}$ negatív.} 
+\label{fig:backCheck1}
+\end{figure}
+
+\par
+A szakasz végpontjánál pedig negatív gyorsulás szükséges, hiszen a következõ pont gyorsulása meg fog nõni a módosítás hatására, és ha pozitív lenne a gyorsulás, a gyorsulásra vonatkozó korlátunkat könnyedén megszegnénk. 
+
+\par
+Tehát a legegyszerûbb esetben a módosítandó szakasz kezdõpontja a pálya végén található lassító szakasz eleje, mielõtt lassítani kezd a robot és a végpontja a pálya utolsó elõtti pontja. Ennek a szakasznak a pontjait fogjuk \aref{eq:backDeltaV}. egyenletbõl adódó $\Delta{v_{corr}}$ sebességgel csökkenteni, és így a robot pontosan a geometriai pálya végpontjában áll meg.
+
+\par
+A másik eset, amikor $\Delta{s_{corr}}$ pozitív, tehát a mintavételezett pálya végpontja messzebb van a geometriai pálya végpontjához képest. Ekkor, mivel meg fogjuk növelni a szakasz sebességét, pont fordítva kell kiválasztanunk a módosítandó szakaszt, a kezdõpontjánál negatív gyorsulás szükséges, a végpontjánál pedig pozitív. Így kerülhetõ el leginkább a gyorsulás korlát megszegése. Itt pedig egy megfelelõ szakasz a pályán található utolsó gyorsító rész.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=150mm, keepaspectratio]{figures/back_check.pdf}
+\caption{A módosított mintavételezett sebességprofil ha $\Delta{s_{corr}}$ pozitív.} 
+\label{fig:backCheck2}
+\end{figure}
+
+\par
+Abban az esetben, ha valamiért az elõbb leírt triviális szakaszok mégsem jók, másik szakaszt kell választanunk. Elsõ lépésként válasszunk ki egy megfelelõ végpontot a keresendõ szakaszhoz. Ha $\Delta{s_{corr}}$ negatív, akkor megfelelõ választás a pálya utolsó elõtti pontja, ha pozitív, akkor pedig a pálya utolsó olyan pontja, ahol a gyorsulás pozitív. Ezután keressünk ehhez a kiválasztott végponthoz egy kezdõpontot, de most már vegyük figyelembe a robot korlátozásait, és természetesen azt, hogy az útkülönbség az elõírt $\Delta{s_{corr}}$ legyen. Miután megkaptuk a kezdõpontot is, akkor még ellenõriznünk kell, hogy a végpontnál a robot korlátozásait nem sértjük-e meg. Ezt az elsõ lépésben nem tudtuk megtenni, mivel nem ismertük a végpontot, így $\Delta{v_{corr}}$ értékét sem. Ha a végpont megsérti a korlátokat, új végpontot kell keresnünk és ahhoz új kezdõpontot. Ezt addig kell folytatnunk, amíg a robot korlátozásait be nem tartjuk.
+
+\par
+Miután a módosított sebességprofil elkészült, a szakasz elejétõl kezdve újra kell számolnunk a mintavételezett pálya koordinátáit. Ez teljesen ugyanúgy történik, ahogyan már egyszer megkaptuk a mintavételezett pályát. Azért volt fontos, hogy a lehetõ legkevesebb sebességpontot toljuk el, hogy a koordináták újraszámlálását is kevesebb pontnál kelljen megtenni.
+
+\par
+Habár a fenti iteratív eljárás hosszadalmasnak tûnik, vegyük figyelembe, hogy általában kis távolságot kell kompenzálnunk, amihez kis sebességkülönbség tartozik. Ebbõl adódóan nagy valószínûséggel a triviális szakasz is megfelelõ lesz számunkra. 
+
+\par
+Szintén fontos megjegyezni, hogy mivel a tárgyalt három hatás elsõsorban negatív $\Delta_{s_{corr}}$-t eredményezz, így a gyakorlatban ez az eset fordul elõ. A gyakorlatot tekintve még megemlítendõ, hogy a $\Delta_{s_{corr}}$ nagyságrendje igencsak csekély a pálya teljes hosszához képest, nehezen elképzelhetõ akárcsak 1\%-ot meghaladó arány a teljes pálya hosszához képest. A jobb ábrázolás érdekében ezért \aref{fig:backCheck1}. és \aref{fig:backCheck2}. ábrákon megnöveltük az eltérést, a valóságban ekkora eltérés nem fordul elõ.
+
+%----------------------------------------------------------------------------
+\section{Eredmények}
+%----------------------------------------------------------------------------
+
+A következõkben bemutatjuk az idõparaméterezés eredményeit egy konkrét pályán. A pályát nem az RTR pályatervezõ szolgáltatja ebben a példában, hanem egy tetszõleges pályát vizsgálunk. 
+
+\par
+\Aref{fig:profileP}. ábrán látható a geometriai és az újramintavételezett pálya, a jobb oldali ábrán kiemelve a pálya egy részletét. A kiemelt részen látható, hogy a kanyarban, ahol nagy a pálya görbülete, a mintavételezett pálya pontjai besûrûsödnek, mivel itt a robotnak lassítani kell.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=72mm]{figures/profilePath.pdf}
+\caption{A geometriai és mintavételezett pálya.} 
+\label{fig:profileP}
+\end{figure}
+
+\par
+\Aref{fig:profileVA}. ábrán látható a geometriai és mintavételezett pályához tartozó sebesség- és gyorsulásprofil. A sebesség itt robotsebességet jelent, a gyorsulás pedig a robot tangenciális gyorsulását.
+
+\par
+A sebességprofil esetében elmondható, hogy a mintavételezett pálya sebességprofilja jól követi az eredeti, geometriai pályához tartozó sebességeket. Ez nem meglepõ, hiszen a lineáris interpolációt a sebességprofilon végeztük el.
+
+\par
+A gyorsulásprofil esetében már tapasztalunk némi eltérést a profil közepénél. Ez egyértelmûen a mintavételezésbõl adódik, hiszen ahogy a sebességprofilnál látható, ezen a szakaszon a geometriai pálya felbontása kicsi a sebesség-változás leírására.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=72mm]{figures/profileVA.pdf}
+\caption{A két pályához tartozó sebesség- és gyorsulásprofil 200 $mm/s$ sebességkorlát és 200 $mm/s^2$ gyorsuláskorlát esetén.}
+\label{fig:profileVA}
+\end{figure}
+
+\par
+A következõ ábra a robot szögsebességprofilját mutatja be. Itt is elmondható, hogy a pálya középsõ részén a mintavételezés miatt eltérés van a két pálya szögsebességében. A mintavételezett szögsebességprofil emiatt megsérti az elõírt 0.8 $1/s$-os szögsebességkorlátot. (Fontos megjegyezni, hogy a pályakövetõ algoritmus nem fogja engedni a korlátnál nagyobb szögsebesség érték használatát.)
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=72mm]{figures/profileW.pdf}
+\caption{A két pályához tartozó szögsebességprofil 0.8 $1/s$ szögsebességkorlát esetén.} 
+\label{fig:profileW}
+\end{figure}
+
+\par
+\Aref{fig:profileALR}. ábra a kerekek eredõ gyorsulását ábrázolja mindkét pálya esetén. Mindkét ábrán az eredõ gyorsulás nagyságát ábrázoltuk, a profilok elõjelét a tangenciális gyorsulás elõjele adja meg, így szemléltethetõ, hogy mikor lassít és mikor gyorsít az adott kerék.
+
+\par
+A mintavételezés hatása itt a legnagyobb, a 200 $mm/s^2$ gyorsuláskorlátot jóval meghaladó tüskék jelennek meg a kerékgyorsulásban a mintavételezett pálya esetén.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm]{figures/profileALR.pdf}
+\caption{A robot két kerekének eredõ gyorsulása a geometriai és a mintavételezett pálya esetén 200 $mm/s^2$ gyorsuláskorlát esetén.} 
+\label{fig:profileALR}
+\end{figure}
+
+\par
+Összegzésképpen elmondható, hogy igen fontos az eredeti geometriai pálya felbontása, hiszen az idõparaméterezés során csak a geometriai pálya esetén biztosítjuk a korlátok betartását. Viszont lehetõségünk van arra is, hogy a geometriai pálya felbontását a kritikusabb részeken (elsõsorban kanyarokban) megnöveljük, hiszen az algoritmus nem feltételezi, hogy a geometriai pálya térbeli felbontása a pálya mentén egyenletes. Így a mintavételezésbõl adódó eltérések csökkenthetõk.
