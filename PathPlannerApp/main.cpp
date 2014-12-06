@@ -208,11 +208,11 @@ int main()
 	else
 	{
 		cout << "Manual Mode" << endl;
-		envFileName = "frame10.obj";
+		envFileName = "frame3.obj";
 		sc.SetRobotMinimumRadius(50.0f);
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS(10.0);
-		sc.SetRTRParameters(50000, 0.0f, 0.0f, 300);
+		sc.SetRTRParameters(50000, 0.0f, 0.7f, 200);
 		robotType = AppTypedef::DifferentialPathPlanner;
 	}
 	

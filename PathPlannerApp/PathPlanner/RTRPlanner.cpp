@@ -59,14 +59,29 @@ void Scene::DrawPath()
 
 	//Draw obstacles
 	for (auto &elem : envs)
-		DrawPolygon(elem, vis, Color(0.0, 0.0, 1.0, 1.0));
+		DrawPolygon(elem, vis, Color(0.0, 0.0, 1.0, 2.0));
+	
+	//Draw start tree TCIs
+	for (auto &elem : startTree.xtree)
+	{		
+		//DrawRobot(robotShape, elem.ci.q1, vis, Color(1.0, 1.0, 0.0, 1.0));
+		DrawCI(elem.ci, vis, Color(1.0, 0.0, 0.0, 2.0));
+	}
 
+	//Draw goal tree TCIs
+	for (auto &elem : goalTree.xtree)
+	{
+		//DrawRobot(robotShape, elem.ci.q1, vis, Color(0.0, 1.0, 1.0, 1.0));
+		DrawCI(elem.ci, vis, Color(0.0, 1.0, 0.0, 2.0));			
+	}
+	
+	DrawRobot(robotShape, pathCI.front().q0, vis, Color(1.0, 0.0, 0.0, 2.0));
 	for (auto &elem : pathCI)
 	{
-		DrawRobot(robotShape, elem.q0, vis, Color(0.0, 1.0, 1.0, 1.0));
-		DrawCI(elem, vis, Color(0.0, 0.0, 0.0, 4.0)); 
-	}
-	DrawRobot(robotShape, pathCI.back().q1, vis, Color(0.0, 1.0, 1.0, 1.0));
+		DrawRobot(robotShape, elem.q1, vis, Color(0.25, 0.9, 0.91, 2.0));
+		DrawCI(elem, vis, Color(0.0, 0.0, 0.0, 2.0)); 
+	}	
+	DrawRobot(robotShape, pathCI.back().q1, vis, Color(0.0, 1.0, 0.0, 2.0));
 
 	vis.writeFile();
 }
@@ -86,14 +101,14 @@ void Scene::DrawScene(int iteration)
 	//Draw start tree TCIs
 	for (auto &elem : startTree.xtree)
 	{		
-		DrawRobot(robotShape, elem.ci.q1, vis, Color(1.0, 1.0, 0.0, 1.0));
+		//DrawRobot(robotShape, elem.ci.q1, vis, Color(1.0, 1.0, 0.0, 1.0));
 		DrawCI(elem.ci, vis, Color(1.0, 0.0, 0.0, 2.0));
 	}
 
 	//Draw goal tree TCIs
 	for (auto &elem : goalTree.xtree)
 	{
-		DrawRobot(robotShape, elem.ci.q1, vis, Color(0.0, 1.0, 1.0, 1.0));
+		//DrawRobot(robotShape, elem.ci.q1, vis, Color(0.0, 1.0, 1.0, 1.0));
 		DrawCI(elem.ci, vis, Color(0.0, 1.0, 0.0, 2.0));			
 	}
 	//Draw robot
@@ -106,23 +121,23 @@ bool Scene::RTRPlanner()
 	bool ret = false;
 	CalcEnvCenter();
 	InitRTTrees();
-	chrono::high_resolution_clock::time_point start, stop;
-	std::ofstream file1, file2;
-	file1.open("RTR_iteration_core.txt");	
-	file2.open("RTR_iteration_merge.txt");	
+	//chrono::high_resolution_clock::time_point start, stop;
+	//std::ofstream file1, file2;
+	//file1.open("RTR_iteration_core.txt");	
+	//file2.open("RTR_iteration_merge.txt");	
 
 	for (int i = 0; i < maxIteration; i++)
 	{
-		start = high_resolution_clock::now();
+		//start = high_resolution_clock::now();
 		RTRIteration(true);
 		RTRIteration(false);
-		stop = high_resolution_clock::now();
-		file1 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
+		//stop = high_resolution_clock::now();
+		//file1 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
 
 		//if ((i % 100) == 0)
 		//	DrawScene(i);
 		
-		start = high_resolution_clock::now();
+		//start = high_resolution_clock::now();
 		if (MergeTreesGetPath())
 		{
 			//DrawScene(i);
@@ -131,13 +146,13 @@ bool Scene::RTRPlanner()
 			ret = true;
 			break;
 		}
-		stop = high_resolution_clock::now();
-		file2 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
+		//stop = high_resolution_clock::now();
+		//file2 << i << ", " <<duration_cast<chrono::microseconds>(stop-start).count() << endl;
 
 	}
 
-	file1.close();
-	file2.close();
+	//file1.close();
+	//file2.close();
 	return ret;
 }
 

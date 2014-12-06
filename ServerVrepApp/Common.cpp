@@ -150,6 +150,9 @@ void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &co
 	float robotSpeed;
 	float prevRobotSpeed = 0.0f;
 	float robotAngularSpeed;
+	ofstream debugFile, debugFile2;
+	debugFile.open("robotV.txt");
+	debugFile2.open("robotP.txt");
 
 	// This is the server loop
 	while (true)
@@ -202,7 +205,7 @@ void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &co
 		robotSpeed = (leftSpeed + rightSpeed) / 2.0f;
 		robotAngularSpeed = (rightSpeed - leftSpeed) / followPars.WheelBase;
 
-		//dFile[0] << robotSpeed << endl;
+		debugFile << robotSpeed << endl;
 		//dFile[1] << (robotSpeed - prevRobotSpeed) / followPars.TimeStep << endl;
 		prevRobotSpeed = robotSpeed;
 
@@ -211,6 +214,8 @@ void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &co
 		robotPos.p.x += cos(robotPos.phi) * robotSpeed * followPars.TimeStep;
  		robotPos.p.y += sin(robotPos.phi) * robotSpeed * followPars.TimeStep;
 		robotPos.phi += robotAngularSpeed  * followPars.TimeStep / 2.0f;
+
+		debugFile2 << robotPos.p.x << ", " << robotPos.p.y << ", " << robotPos.phi << endl;
 
 		leftJointPos += leftSpeed*followPars.TimeStep*2/followPars.WheelDiameter;
 		rightJointPos += rightSpeed*followPars.TimeStep*2/followPars.WheelDiameter;
@@ -222,6 +227,9 @@ void SimulationLoop(PathFollowParamsTypedef &followPars, CSimpleInConnection &co
 			break;
 		}
 	}
+
+	debugFile.close();
+	debugFile2.close();
 }
 
 void CarSimulationLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile)
