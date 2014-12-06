@@ -1,21 +1,93 @@
 %----------------------------------------------------------------------------
 \chapter{Útvonaltervezés C*CS pályákkal}
 %----------------------------------------------------------------------------
-\section{Reeds-Shepp lokális pályák}
-%----------------------------------------------------------------------------
+A C*CS és a $c\overline{c}S$ algoritmus Kiss Domokos munkája \cite{CCSTopologicalProp}. Az algoritmusok elsõdlegesen autószerû robotok számára terveznek pályát, de az így tervezett pálya egy differenciális robot számára is végrehajtható. Feladatom az algoritmus implementálása volt C++ nyelven, majd annak tesztelése szimulációs, illetve valós környezetben.
+A fejezetet az algoritmus ismertetésével kezdem, majd kitérek az implementációs problémákra, és az elért eredményekre is.
 
 %----------------------------------------------------------------------------
-\section{C*CS lokális pályák}
+\section{Reeds-Shepp lokális pályák}
 %----------------------------------------------------------------------------
+Az anholonom rendszerek irányítása akadályoktól mentes környezetben is egy igen bonyolult feladat. Sok esetben nem adható meg általános algoritmus, csak néhány speciális rendszer esetén. Szerencsére ilyen rendszerek közé tartoznak a differenciális robotok, az autószerû robotok, amelyek csak elõre mozoghatnak (Dubins autó), és azok amelyek elõre és hátra is képesek mozogni.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/dubins-reeds-shepp.png}
+\caption{Dubins és Reeds-Shepp megoldások \cite{LaValle2}} 
+\label{fig:reeds_shepp}
+\end{figure}
+
+Az utóbbi típusú robotokat hívjuk Reeds-Shepp autóknak, melyeknél bizonyított, hogy bármely kezdõ- és célkonfiguráció közt a legrövidebb utat megtalálhatjuk 48 lehetséges megoldás közül, amelybõl kettõ látható \aref{fig:reeds_shepp} ábrán. Ezek a megoldások maximum öt egyenes vagy körív kombinációjából állhatnak, és a pályák maximum két csúcsot tartalmazhatnak, azaz ennyiszer lehet irányt változtatni a végrehajtás közben \cite{ReedsShepp}. A megoldások száma egyéb megkötések árán tovább csökkenthetõ.
+
+Mint látható akadályoktól mentes környezetben találhatunk optimális útvonalat, de ennek hátránya, hogy mindig minimális sugarú pályákat feltételez, mely egy valós esetben nem életszerû, illetve a pályák lehetnek igen bonyolultak is. De ha elvetjük az optimalitás igényét, amit egyébként is meg kell tennünk, ha egy globális tervezõ részeként alkalmazzuk a módszert, akkor a lehetséges megoldásokon jelentõs mértékben egyszerûsíthetünk.
+
+%----------------------------------------------------------------------------
+\section{C*CS lokális pályák}\label{CCSlocal}
+%----------------------------------------------------------------------------
+A lokális tervezõk bármely kezdõ- és célkonfiguráció páros esetén megoldást kell nyújtsanak, de megfelelõ koordináta-rendszer választásával egyszerûsíthetünk a számításokon. Tegyük fel hogy egy ilyen választás mellett adódott $q_{I} = (x_{I},y_{I},\theta_{I})$ kezdõ és $q_{G} = (0,0,0)$ célkonfiguráció. Ha eltekintünk a minimális fordulási sugár korlátozásától, és feltesszük, hogy $\theta_{I} \neq 0$, akkor könnyen belátható, hogy egy kör és egy egyenes segítségével elérhetõ a célkonfiguráció. Elõször egy érintõ körön elfordulunk a $\tilde{q_{G}} = (\tilde{x_{G}},0,0)$ köztes célkonfigurációba, majd egy egyenes mentén végighaladunk a célig. Az ehhez tartozó kör sugarát a következõ egyenlet segítségével számíthatjuk:
+\begin{align}\label{eq:middleRadius}
+\rho_{I,\tilde{G}} = \frac{y_{I}}{1 - \cos \theta_{I}}
+\end{align}
+
+%TODO ide egy ábrát az elõzõ dolgokról
+
+Ha a kiadódó sugár kisebb mint a minimálisan megengedett ($|\rho_{I,\tilde{G}}| < \rho_{min}$), esetleg $\theta_{I} = 0$, akkor egy egyenes vagy egy kör segítségével egy köztes kezdõkonfigurációba ($\tilde{q_{I}} = (\tilde{x_{I}},\tilde{y_{I}},\tilde{\theta_{I}})$) kell eljutnunk, ahol biztosított, hogy $\tilde{\theta_{I}} \neq 0$ és, hogy $\rho_{\tilde{I},\tilde{G}} \geq \rho_{min}$. Megjegyzendõ, hogy az elsõ szakasz nem lehet egyenes, ha $\theta_{I} = 0$, $\theta_{I} = \pi$ vagy $|y_{I}| < 2\rho_{min}$. Bebizonyítható \cite{CCSTopologicalProp}, hogy $\tilde{q_I}$ köztes konfigurációt végtelen sokféleképpen megválaszthatjuk.
+
+Hogy egyszerûsítsük a jelöléseket, a továbbiakban az egyenes szakaszokra $S$ a körívekre pedig a $C$ betûk segítségével hivatkozunk. Ezt felhasználva belátható hogy a célpontba egy $SCS$, vagy egy $CCS$ pálya segítségével eljuthatunk. Könnyen belátható, hogy ha egy körív ($C$) sugarával a végtelenbe tartunk, akkor a szakasz az egyeneshez tart. Az olyan speciális köríveket, amelyek sugara végtelen is lehet, $C^{*}$-gal jelöljük. Innen a módszer neve a $C^{*}CS$.
+
 
 %----------------------------------------------------------------------------
 \section{C*CS approximációs módszer}
 %----------------------------------------------------------------------------
+Az általam használt algoritmus egy approximációs módszert alkot, mely egy elõzetes globális pályát rekurzív módon felbont kisebb szakaszokra, majd ezekre próbál illeszteni egy-egy fentebb bemutatott C*CS pályát.\footnote{Bár a lokális tervezõ algoritmus neve a C*CS, de a végeredményben kialakult pálya összességében is körök és egyenesek kombinációjából áll, így ez a név ráragadt az approximációs módszerre is.} A végeredményül elkészült, az algoritmus által visszaadott pálya autószerû robotok számára könnyedén lekövethetõ, mivel elsõdlegesen ezek számára lett kialakítva. Ennek ellenére a megoldást természetesen egy differenciális robot is képes lekövetni, mivel az nem rendelkezik korlátozással a forduló kör sugarát illetõen.
+
 \subsection{Globális tervezõ}
+A szükséges elõzetes pálya bármilyen globális tervezõ eredménye lehet. Elsõdleges célja egy mankó nyújtása a késõbbi tervezõ számára. A végsõ megoldásnak nem feltétele, hogy az elõzetes pálya akár egyetlen pontját is tartalmazza.
+
+Mi erre a célra egy celladekompozíción alapuló algoritmust használtunk. Ez az eljárás a környezetet háromszögekre bontja, majd ezeknek a háromszögeknek az oldalfelezõ pontjait összekötve gráfot alkot. Ebbe beszúrja a kezdõ- és célkonfigurációt, majd ezeket összeköti a legközelebb álló néhány ponttal. Az éleket a pontok egymástól való távolságával súlyozzuk, majd ebben a gráfban a Dijkstra-algoritmus \cite{BFS} segítségével megkeressük a legrövidebb utat. Erre egy példát \aref{fig:ccs_triang} ábrán láthatunk.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=130mm, keepaspectratio]{figures/ccs_prepath.png}
+	\caption{Elõzetes pálya tervezése, folytonos vonal jelzi a felbontást, pontozott vonal a gráfot, szaggatott pedig az elkészült elõzetes pályát} 
+	\label{fig:ccs_triang}
+\end{figure}
+
+Ennek a megoldásnak az elõnye, hogy a szabad terület közepén alkot pályát, így ha az autó ezt követi, akkor bármilyen irányú manõverezésre lesz lehetõsége, ha a pálya ezt megengedi. További elõnye, hogy ez egy kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Az eljárás egyik fõ hibája, hogy a háromszögelés miatt, csak sokszögekkel leírható akadályokkal képes dolgozni, és még ebben a formájában nem veszi figyelembe az autó kiterjedését. Ezen könnyen lehet segíteni, ha figyelembe vesszük az oldalfelezõ pontok közötti szakaszok távolságát az akadályoktól, és ha a pálya- és az akadályél túl közel vannak egymáshoz, akkor töröljük az élt a gráfból. Sajnos az eljárás egyéb negatívumokkal is bír, amirõl a fejezet végén még szót ejtek.
+
 \subsection{Lokális tervezõ alkalmazása}
+Ha a globális tervezõ tudott visszaadni megoldást, akkor az algoritmus tovább folytatódik a következõképpen: Az elõzetes pálya két konfigurációját kiválasztjuk, és a fentebb említett C*CS pályákat keresünk köztük. Az eljárás elõször a pálya két végpontja közt keres útvonalat, ami egyszerû esetekben akár rögtön megoldásra is vezethet, felgyorsítva az algoritmus mûködését. Ha ez a keresés nem járt sikerrel, akkor az elõzetes pályát megfelezi az algoritmus, és az elsõ konfiguráció valamint az új célkonfiguráció közt keres megoldást. Ezt egészen addig ismétli, míg van köztes konfigurációs pont, ha elfogyott, további pontokat illeszt a pályába.
+
+Az elõzõekben láthattuk, hogy a C*CS végtelen sok megoldást nyújt. Lokális esetben ez nem feltétlen hasznos, de akadályok jelenlétében ez megváltozik, mivel így sokkal nagyobb valószínûséggel találhatunk végrehajtható pályát. Természetesen az összes megoldást nincs lehetõségünk kipróbálni, így ezt a problémát valamilyen mintavételezõ eljárással kell megoldanunk.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=75mm, keepaspectratio]{figures/CCS.pdf}
+\caption{$q_{\tilde{I}}$ megválasztása } 
+\label{fig:infCCS}
+\end{figure}
+
+A végtelen sok megoldást a $\tilde{q_{I}}$ kiválasztásának szabadsága okozza. Erre egy példa látható \aref{fig:infCCS} ábrán. Ezért az algoritmus összegyûjti azokat a konfigurációkat, melyeket a $q_{I}$ konfigurációból ütközés nélkül elérhetünk. Ehhez a környezetet fel kell osszuk egységnyi távolságokra, mivel így véges sok lehetõséget kapunk. A kiszámítás ideje természetesen függ a választott távolságegységtõl és a környezet méretétõl. Az eredmények azt mutatják, hogy a teljes algoritmus futásának ez a leghosszabb része, ami nem meglepõ, mivel a körívek kiszámítása komplex mûvelet, és ezt egy adott pont esetén a robot testének minden csúcsára ki kell számoljuk, hogy ütközést tudjunk detektálni. A mûvelet hatékonyságán több módon lehet javítani, például nagyobb távolságegység megválasztásával. Másik javítási lehetõség, ha elõre elkészítünk egy foglaltsági mátrixot, ami megmondja az adott pont akadályon beül van-e, így ezekre a pontokra nem kell a számítást elvégezni. Mivel az így kapott körívek egy adott kezdõkonfigurációhoz tartoznak, további gyorsításra ad lehetõséget, ha az approximációs lépésben inkább a célkonfiguráció pontját mozgatjuk, így nem kell újra és újra kiszámolni a köríven elérhetõ sokaságot.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=90mm, keepaspectratio]{figures/CS.pdf}
+\caption{Középsõ körív számítása érintõ körrel} 
+\label{fig:erintoKor}
+\end{figure}
+
+Az algoritmus további részében \aref{CCSlocal} pontban említett módon, a hátralévõ körív, és egyenes szakasz kiszámítása a feladat. Egy irányított kör esetén ez két lehetséges pályát jelent, amint az látható \aref{fig:erintoKor} ábrán. Ezek után nem elég csak a körívek végrehajthatóságát ellenõriznünk, hanem meg kell nézzük ezt a hátralévõ egyenes szakaszokra is. Ugyan a globális pálya tervezésekor ellenõriztük ezeket, de az érintõ körök keresésekor nem volt feltétel, hogy az érintési pontok ezeken a szakaszokon belül helyezkedjenek el.
+
+Végül az így keletkezõ végrehajtható pályák sokasága közül ki kell választanunk egyet. Ezt többféleképpen megtehetjük. Talán a legkézenfekvõbb a legrövidebb megoldás kikeresése és beillesztése az elõzetes pályába. Itt érdemes megemlíteni, hogy a végeredmény akkor fog igazán hasonlítani a valósághoz, ha lecsökkentjük a tolatások számát, mivel az emberek nagy többsége nem szeret tolatva közlekedni. Hogy ezt megtehessük, az algoritmus opcionálisan elfogad egy súlytényezõt, mellyel a tolató szakaszok ``hosszát'' tudjuk megnövelni.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/ccs_middle.png}
+\caption{A C*CS algoritmus mûködés közben} 
+\label{fig:CCSonline}
+\end{figure}
 
 %----------------------------------------------------------------------------
-\section{\boldmath{$c\overline{c}S$}}
+\section{ \texorpdfstring{\boldmath{$c\overline{c}S$}}{ccS} }
 %----------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------

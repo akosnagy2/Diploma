@@ -19,15 +19,16 @@
 \usepackage{sectsty}
 \usepackage{setspace}  % Ettol a tablazatok, abrak, labjegyzetek maradnak 1-es sorkozzel!
 \usepackage[hang]{caption}
-\usepackage{hyperref}
+\usepackage[unicode]{hyperref}
+\usepackage{float}
 
 %--------------------------------------------------------------------------------------
 % Main variables
 %--------------------------------------------------------------------------------------
 \newcommand{\vikszerzo}{Csorvási Gábor}
 \newcommand{\vikkonzulens}{Kiss Domokos}
-\newcommand{\vikcim}{Pályatervezési és pályakövetõ szabályozási algoritmusok fejlesztése robotautóhoz}
-\newcommand{\viktanszek}{Autómatizálási és Alkalmazott Informatikai Tanszék}
+\newcommand{\vikcim}{Pályatervezési és pályakövet? szabályozási algoritmusok fejlesztése robotautóhoz}
+\newcommand{\viktanszek}{Automatizálási és Alkalmazott Informatikai Tanszék}
 \newcommand{\vikdoktipus}{Diplomaterv}
 \newcommand{\vikdepartmentr}{Csorvási Gábor}
 
@@ -56,8 +57,8 @@
 %	Setup hyperref package
 %--------------------------------------------------------------------------------------
 \hypersetup{
-    bookmarks=true,            % show bookmarks bar?
-    unicode=false,             % non-Latin characters in Acrobat’s bookmarks
+    %bookmarks=true,            % show bookmarks bar?
+    %unicode=false,             % non-Latin characters in Acrobat’s bookmarks
     pdftitle={\vikcim},        % title
     pdfauthor={\vikszerzo},    % author
     pdfsubject={\vikdoktipus}, % subject of the document
@@ -164,7 +165,8 @@ aboveskip=10pt}
 
 \bibliography{mybib}
 \addcontentsline{toc}{chapter}{Irodalomjegyzék}
-\bibliographystyle{plain}
+%\bibliographystyle{plain}
+\bibliographystyle{ieeetr}
 
 \include{appendices}
 
