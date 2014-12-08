@@ -89,11 +89,64 @@ Végül az így keletkezõ végrehajtható pályák sokasága közül ki kell választanunk 
 %----------------------------------------------------------------------------
 \section{ \texorpdfstring{\boldmath{$c\overline{c}S$}}{ccS} }
 %----------------------------------------------------------------------------
+Ha az elõzõekben látottak nem vezetnek megoldásra, tehát nincs olyan C*CS pálya, mely végrehajtható lenne, akkor egy kisebb szakaszt kell választanunk a globális pályából. Ezt viszont nem tehetjük meg végtelenségig, mivel a globális pálya általában egyenes szakaszok együttesébõl áll. Ezek a szakaszok határozzák meg az $S$ szakasz egyenesét, így tovább bontani nincs értelme, mert nem változtatja meg a tervezett pályát. Ezért az új konfigurációkat a töréspontokban kell elhelyezni, viszont önmagában ez még nem biztosítja, hogy találunk megoldást. Valahogy biztosítanunk kell azt, hogy az algoritmusunk konvergáljon a megoldás felé, amihez olyan lokális tervezõre van szükségünk, mely teljesíti a topológiai feltételt \cite{CCSTopologicalProp}. Ha ezt biztosítani tudjuk, akkor az approximációs algoritmusunk teljes lesz. A teljesség itt azt jelenti, hogy az algoritmus minden olyan esetben megoldással tér vissza, mikor a globális tervezõ érvényes pályát ad vissza. Azaz a körívekkel való közelítés nem csökkenti a megoldás létezésének esélyét.
 
-%----------------------------------------------------------------------------
-\section{RTR}
-%----------------------------------------------------------------------------
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/cc_S.png}
+\caption{A $c\overline{c}S$ algoritmus megoldásai különbözõ $y_{I}$ esetén\cite{CCSTopologicalProp}} 
+\label{fig:cc_S}
+\end{figure}
+
+Olyan esetekben, amikor a globális pályát tovább kellene bontanunk, átváltunk a $c\overline{c}S$ algoritmusra, mely a topológiai feltételt teljesíti. Ez az algoritmus a C*CS algoritmus egy módosított változata, mely csak egy megoldást ad egy konfiguráció párra. Az eljárás lényege, hogy az elsõ két kör sugara megegyezõ, de ellentétes elõjelû, tehát a másik irányba kell forgassuk a kormányt. A komplementer jelölés jelzi az elõjel változását. Ahogy \aref{fig:cc_S} ábrán látható, ha $q_{I}$ túl közel van a $q_{G}$ egyeneséhez, akkor a körök egymás mellett elcsúsznak, és két megoldást is adnak.
+
+Bár a $c\overline{c}S$ egy megoldást ad, a végrehajtásakor több lehetséges megoldást is ``eldob''. A módszer implementációját úgy készítettem el, hogy minden ilyen megoldást ellenõrizzen, ha esetleg a legrövidebb nem lenne végrehajtható, akkor válasszon másikat. Jogosan felmerülhet a kérdés, hogy ha ez az algoritmus minden esetben nyújt megoldást, akkor miért nem ezt használjuk a C*CS helyett? Bár valóban a $c\overline{c}S$ mindig használható, a C*CS több lehetséges megoldás közül választ, így a gyakorlatban természetesebb pályákat ad eredményül.
 
 %----------------------------------------------------------------------------
 \section{Eredmények}
 %----------------------------------------------------------------------------
+A feladatom megvalósításához rendelkezésre állt a C*CS algoritmus egy MATLAB scriptben megírt változata, ellenben ez csak demonstrációs céllal szolgált, a feladatot lassan hajtotta végre, valószínûleg az interpretált mûködés következtében, ezért vált szükségessé egy C++ implementáció.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=60mm, keepaspectratio]{figures/frame3.png}
+\includegraphics[height=60mm, keepaspectratio]{figures/frame6.png}
+\caption{A C*CS algoritmus megoldása különféle környezetekben} 
+\label{fig:ccssolutions}
+\end{figure}
+
+%TODO ide kéne pár mérés, hogy ne csak a levegõbe beszéljek
+\subsection{Mérések}
+Pontos méréseket nem végeztünk, de nagyságrendileg százszoros gyorsulást sikerült elérnünk, és a legbonyolultabb környezetben is egy másodpercen belül sikerült megoldást találnia az algoritmusnak\footnote{Intel Core 2 Duo E8400 @ 3.0GHz, 4GB RAM}. Ez egy igen nagy elõrelépés, így valószínû, hogy egy kisebb teljesítményû beágyazott számítógépen is elfogadható idõn belül végez.
+
+\subsection{Fejlesztési lehetõségek}
+A fejlesztés során odafigyeltem, hogy hol lehetne gyorsítani, módosítani a mûködésen. Ahol ez egyszerûen megvalósítható volt, ott ezeket megtettem, de maradtak további fejlesztési lehetõségek is a programban, például számos helyen lehetne a futást párhuzamosítani.
+
+Az esetek nagy többségében a celladekompozíciós eljárással tervezett globális pálya jó eredménnyel szolgál, de néhány speciális esetben, ilyen két szûk merõleges folyosó találkozása, nem található megoldás. Részben hasonló probléma mikor a célkonfiguráció és az utolsó szakasz iránya pont ellentétes, ilyen probléma merül fel a párhuzamos parkolás esetén is. Ezek elkerülésére egy másik globális tervezõt kell használnunk.
+
+%----------------------------------------------------------------------------
+\section{Új globális tervezõ}
+%----------------------------------------------------------------------------
+A fejlesztés során a fentebb felsorolt problémák miatt a globális tervezõt lecseréltem az RTR nevû algoritmusra. Ez is Kiss Domokos munkája \cite{DomiRTR}, az implementációját Nagy Ákos végezte el. %TODO hivatkozni a másik diplomára?
+
+\subsection{RRT}
+A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) használnak a konfigurációs tér struktúrájának leírásához \cite{kavraki96prm}. A szakirodalomban egyik leggyakrabban használt ilyen algoritmus a \emph{Rapidly Exploring Random Trees} \cite{LaValle}. Ennek a lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben. A fa csomópontjaiban konfigurációk találhatóak és a fa terjesztését úgy irányítjuk, hogy a kívánt célkonfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a célkonfigurációba már könnyedén megkaphatjuk.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/RRT.png}
+\caption{Az RRT algoritmus három különbözõ iterációnál \cite{LaValle}.} 
+\label{fig:RRT}
+\end{figure}
+
+\subsection{RTR}
+Az \emph{Rotate-Translate-Rotate} algoritmus a fentebb látott RRT algoritmus egy módosított változata. Elsõdlegesen differenciális robotok számára tervez pályát, de jó alapot szolgáltat a C*CS algoritmusnak is. Nevét a benne használt mozgási primitívekrõl kapta, azaz a $R$, mint fordulás, a $T$ pedig az egyenesen haladást jelöli. Az RRT algoritmustól eltérõen itt az algoritmus két fát épít, egyet a kezdõ, egyet pedig a célkonfigurációból. Másik fontos különbség, hogy ütközés esetén a pályát minden irányba továbbterjeszti, így növelve a megoldás megtalálásának lehetõségét.
+
+\begin{figure}[b]
+\centering
+\includegraphics[width=110mm, keepaspectratio]{figures/rtr_path2.pdf}
+\caption{Az RTR algoritmus, piros a kezdõ, kék a célkonfigurációból indított fa. Fekete a megoldást jelöli.} %TODO ide is kell a hivatkozás
+\label{fig:rtr_path2}
+\end{figure}
+
+Számomra ez az algoritmus azért elõnyös, mert celladekompozíciós eljárás hibát kiküszöböli. Tehát két szûk folyosó találkozásánál csak akkor ad megoldást, ha van hely az elfordulásra. Mivel a keresés során két fát épít, így a párhuzamos parkolás esetén is segíti a megoldás megtalálását.

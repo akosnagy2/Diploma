@@ -1,14 +1,117 @@
 %----------------------------------------------------------------------------
 \chapter{Pálya idõparaméterezése}
 %----------------------------------------------------------------------------
+A pályatervezõ által elkészített ütközésmentes pálya nem tartalmaz semmilyen idõvel kapcsolatos információt. Ebben a fejezetben a pálya pontjaihoz sebesség értékeket rendelünk hozzá. Ezt a többlet információt a pályakövetõ algoritmus használja fel, hogy mozgás során a robot kinematikai korlátai ne okozzanak problémát. Tehát az idõparaméterezés elsõsorban a robot korlátait használja fel, de arra is alkalmas, hogy meghatározzuk a pálya bejárásának idejét.
+
+A módszert Nagy Ákos dolgozta ki differenciális robotokhoz, majd én módosítottam autószerû robotok számára. Az elveket végül úgy alakítottuk ki közösen, hogy az ne függjön a robot típusától, így az alkalmazható legyen bármilyen kerekeken mozgó robottípusra.
+
+%----------------------------------------------------------------------------
+\section{Idõparaméterezés}
+%----------------------------------------------------------------------------
+Az idõparaméterezés két fõ lépésbõl áll. Elsõként a kapott geometriai pályához sebesség értékeket rendelünk hozzá, majd ezután újramintavételezzük a pályát. Az újramintavételezés után a pálya idõben egyenletes lesz, tehát az egymást követõ pályapontok között azonos idõ telik el. A mintavételezés idejét a pályakövetõ algoritmus mintavételi ideje határozza meg. A geometriai pályát általában távolságban egyenletesen mintavételezzük, de ez nem kötelezõ feltétel az idõparaméterezéshez. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/path.pdf}
+\caption{A pálya idõparaméterezése.} 
+\label{fig:Path}
+\end{figure}
+
+A szakirodalomban nem sok idõparaméterezéssel kapcsolatos munka található. Egy hasonló megközelítést Christoph Sprunk munkájában találhatunk \cite{Sprunk}. A legfontosabb eltérés, hogy Sprunk külön korlátozza a robot tangenciális és centripetális gyorsulását, míg mi a robot kerekeinek eredõ gyorsulását korlátozzuk. Ez a megoldás a valóságot jobban közelíti, hiszen attól, hogy a gyorsulás két komponense a korlátok alatt marad, nem biztos, hogy az eredõ gyorsulás sem haladja meg a korlátot.
+
+Az idõparaméterezés során nem használjuk ki az elõzõ fejezetekben bemutatott pályatervezõ által tervezett pálya speciális tulajdonságait, a célunk egy olyan algoritmus készítése, amely tetszõleges geometriai pályából képes sebesség információval ellátott, idõben egyenletes mintavételû pályát készíteni. Emiatt nem építhetünk a pályatervezõ által használt geometriai elemekre (körív, egyenes) és ezek speciális tulajdonságaira.
+
+Általános esetben nem tudjuk analitikusan meghatározni a pálya görbületét, így görbület becslést kell alkalmaznunk \cite{Curv2D}. Természetesen abban az esetben, ha a pályatervezõ rendelkezik már a pálya görbületével, az idõparaméterezõ algoritmus azt fogja használni a becslés helyett, mivel így pontosabb eredményt érhetünk el, és gyorsítja is a végrehajtást.
 
 %----------------------------------------------------------------------------
 \section{Jelölések}
 %----------------------------------------------------------------------------
+Ebben a fejezetben \eqref{pars} táblázatban megadott jelöléseket fogjuk használni. Azokban az esetekben, ahol fontos megkülönböztetni a geometriai pályát és az (újra)mintavételezett pályát, ott a felsõ indexben található $\mathbf{g}$ betû a geometriai pályát jelöli, az $\mathbf{s}$ betû pedig a mintavételezett pályát. A pálya pontjait 1-tõl számozzuk.
+
+\begin{align}\label{eq:pars}
+\Delta{t}(k)& : \text{A $k$ és a $k+1$ pontok között eltelt idõ} \notag\\
+t(k)& : \text{A $k$. pontban az addig eltelt idõ}\notag\\
+\Delta{s}(k)& : \text{A $k$ és a $k+1$ pontok közti távolság}\notag\\
+s(k)& : \text{A $k$. pontban az addig megtett távolság}\notag\\
+v(k)& : \text{A $k$. pontban a robot sebességének nagysága}\notag\\
+\omega(k)& : \text{A $k$. pontban a robot szögsebességének nagysága}\notag\\
+a_{t}(k)& : \text{A $k$. pontban a robot tangenciális gyorsulásának nagysága}\notag\\
+c(k)& : \text{A $k$. pontban a görbület nagysága}\notag\\
+N& : \text{A pálya pontjainak száma}
+\end{align}
+
+Azokban az esetekben, amikor a robot egyik kerekére vonatkozó mennyiségekrõl beszélünk, külön jelöljük, hogy bal ($l$), jobb ($r$), elsõ ($f$) vagy hátsó ($r$) kerékrõl van szó. Ezenkívül a kerekeknél megkülönböztetjük, hogy tangenciális ($a_{t}$), centripetális ($a_{c}$) vagy eredõ ($a$) gyorsulásról beszélünk.
+
+Fontos megjegyezni, hogy a $\Delta{s}(k)$ távolságot úgy kell értelmezni, hogy a $k$. és $k+1$. pont között egy körív található, és az ezen mért távolság lesz $\Delta{s}(k)$. A körívet a $c(k)$ görbület határozza meg. Ha nem köríveket használnánk, hanem egyenessel kötnénk össze a pályapontokat, akkor a görbületnek szükségszerûen nullának kellene lennie.
 
 %----------------------------------------------------------------------------
 \section{Korlátozások}
 %----------------------------------------------------------------------------
+A robot mozgását általános esetben \aref{fig:velocityProfileModel}. ábra mutatja be. Az idõparaméterezés során figyelembe vesszük a robot pályamenti sebességét és szögsebességét valamint a robot kerekeinek tangenciális és eredõ gyorsulását. Hogy ezeket minden kerékre ki tudjuk számolni fel kell írnunk a robotunk mozgásegyenletét.\eqref{carLikeRobot} harmadik egyenletébõl könnyen adódik, hogy a referenciapont által bejárt kör sugara az alábbi módon számítható:
+
+\begin{align}\label{eq:carRadius}
+\rho = \frac{L}{\tan \phi}
+\end{align}
+
+innen a hátsó kerekek által bejárt kör sugara a következõképpen adódik:
+
+\begin{align}\label{eq:carLikeRearRadiuses}
+\rho_{rl} &= \rho - \frac{d}{2} \\ \notag
+\rho_{rr} &= \rho + \frac{d}{2},
+\end{align}
+
+Ahhoz, hogy fordulás közben ne csússzanak meg oldalirányba az elsõ kerekek, a két oldali keréknek különbözõ szögben kell állnia. Ezt nevezzük Ackermann-hajtásnak. Ez a különbség csak a különbözõ fordulókörrel áll összefüggésben, és a következõképpen számolható a kormányszögbõl:
+
+\begin{align}\label{eq:carAckermannAngles}
+\phi_{r} &= \arctan \left( \frac{L}{\rho - \frac{d}{2}} \right) \\ \notag
+\phi_{l} &= \arctan \left( \frac{L}{\rho + \frac{d}{2}} \right)
+\end{align}
+
+Ezekbõl a következõ módon számítható az elsõ kerekek fordulókörének sugara:
+
+\begin{align}\label{eq:carLikeFrontRadiuses}
+\rho_{fl} &= \frac{\rho - \frac{d}{2}}{\cos \phi_{l}} \\ \notag
+\rho_{fr} &= \frac{\rho + \frac{d}{2}}{\cos \phi_{r}}
+\end{align}
+
+Könnyen belátható, hogy a kerekek sebességkülönbsége csak a különbözõ fordulókörökbõl fakad, és ez hasonlóan igaz a kerékgyorsulásokra is, tehát egy adott pályapontban a pálya görbületébõl, és a robot tangenciális sebességébõl kiszámítható bármely kerék gyorsulása is.
+
+%TODO kocsi kereiei és gyorsulásainak ábrája
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=150mm, keepaspectratio]{figures/robot.png}
+%\caption{Differenciális hajtású robot mozgása köríven.} 
+%\label{fig:velocityProfileModel}
+%\end{figure}
+
+A sebességprofil készítésekor egy adott robot esetében ezekre a mennyiségekre határozunk meg korlátozásokat:
+
+\begin{align}\label{eq:constraints}
+v^{max}& : \text{A robot pályamenti sebesség korlátja}\\
+\omega^{max}& : \text{A robot szögsebesség korlátja}\notag\\
+{a_w}^{max}& : \text{A robot egy kerekének maximális gyorsulás korlátja}\notag\\
+\end{align}
+
+A gyorsulás korlátját elég egyetlen kerékre meghatározni, feltéve, hogy a kerekek tapadási tényezõje megegyezik. Mivel a kerekek maximális eredõ gyorsulását a tapadási súrlódási együttható ($\mu_{tap}$) határozza meg, amelynél a robot kerekei még nem csúsznak meg. A maximális gyorsulás és a tapadási együttható között a következõ egyszerû összefüggés áll fent:
+
+\begin{align}\label{eq:mu}
+a_{max} &=\mu_{tap_{max}} \cdot g,
+\end{align}
+
+ahol $g$ a nehézségi gyorsulás. Írjuk fel egy kerék gyorsulását:
+
+\begin{align}\label{eq:velocityProfileF}
+a(k) = \sqrt{a_{wc}(k)^2 + a_{wt}(k)^2} \leq g  \cdot \mu_{tap},
+\end{align}
+
+ahol $a_{wc}(k)$ egy kerék centripetális gyorsulása és $a_{wt}(k)$ a tangenciális gyorsulása
+
+\par
+\eqref{velocityProfileF} egyenletben azzal a feltevéssel élünk, hogy a robot kerekei és a talaj között a tapadási súrlódási együttható állandó és nem függ az erõ irányától. Az általunk használt differenciális robotnál ez a közelítés megengedhetõ, mivel a gumikerekek homogénnek tekinthetõk. Ha barázdákat tartalmaznának, akkor már nagyobb eltérést okozna ez a közelítés. 
+
+%TODO átfogalmazni
+\par
+Fontos megjegyezni, hogy a kerékgyorsulás korlátokat lassulásnál is alkalmazzuk. Tehát a kerék gyorsulásának abszolút értékét korlátozzák ezek a korlátozások. Így azt tesszük fel, hogy a kerekek viselkedése gyorsulás és lassulás esetében megegyezik. A robot sebességénél viszont nem engedünk negatív értékeket, a robot végig elõre haladhat. A tervezõ viszont megadhat olyan pályát ahol tolatnia kell a robotnak, vagy egy helyben megfordulnia, de ezt a pályatervezõ algoritmus kezeli.
 
 %----------------------------------------------------------------------------
 \section{Geometriai sebességprofil}
