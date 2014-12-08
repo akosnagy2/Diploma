@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  6 DEC 2014 20:39
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  8 DEC 2014 18:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -735,7 +735,7 @@ Package pdftex.def Info: figures/path.pdf used on input line 11.
 <figures/robot.png, id=491, 396.0396pt x 234.3957pt>
 File: figures/robot.png Graphic file (type png)
  <use figures/robot.png>
-Package pdftex.def Info: figures/robot.png used on input line 86.
+Package pdftex.def Info: figures/robot.png used on input line 87.
 (pdftex.def)             Requested size: 426.79134pt x 252.59995pt.
 
 [27] [28 <./figures/robot.png>] [29] [30] [31] [32] [33]
@@ -743,56 +743,56 @@ Package pdftex.def Info: figures/robot.png used on input line 86.
 File: figures/geo_sampl.pdf Graphic file (type pdf)
 
 <use figures/geo_sampl.pdf>
-Package pdftex.def Info: figures/geo_sampl.pdf used on input line 342.
+Package pdftex.def Info: figures/geo_sampl.pdf used on input line 343.
 (pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
  [34 <./figures/geo_sampl.pdf>]
 <figures/circle_circle.png, id=602, 656.4525pt x 603.75563pt>
 File: figures/circle_circle.png Graphic file (type png)
 
 <use figures/circle_circle.png>
-Package pdftex.def Info: figures/circle_circle.png used on input line 365.
+Package pdftex.def Info: figures/circle_circle.png used on input line 366.
 (pdftex.def)             Requested size: 369.88582pt x 340.1921pt.
  [35 <./figures/circle_circle.png>] [36]
 <figures/back_check2.pdf, id=624, 1446.40375pt x 726.715pt>
 File: figures/back_check2.pdf Graphic file (type pdf)
 
 <use figures/back_check2.pdf>
-Package pdftex.def Info: figures/back_check2.pdf used on input line 413.
+Package pdftex.def Info: figures/back_check2.pdf used on input line 414.
 (pdftex.def)             Requested size: 398.33858pt x 200.13pt.
 
 <figures/back_check.pdf, id=626, 1446.40375pt x 726.715pt>
 File: figures/back_check.pdf Graphic file (type pdf)
 
 <use figures/back_check.pdf>
-Package pdftex.def Info: figures/back_check.pdf used on input line 429.
+Package pdftex.def Info: figures/back_check.pdf used on input line 430.
 (pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
  [37 <./figures/back_check2.pdf>] [38 <./figures/back_check.pdf>] <figures/prof
 ilePath.pdf, id=649, 1446.40375pt x 726.715pt>
 File: figures/profilePath.pdf Graphic file (type pdf)
 
 <use figures/profilePath.pdf>
-Package pdftex.def Info: figures/profilePath.pdf used on input line 457.
+Package pdftex.def Info: figures/profilePath.pdf used on input line 458.
 (pdftex.def)             Requested size: 407.727pt x 204.85983pt.
 
 <figures/profileVA.pdf, id=651, 1446.40375pt x 726.715pt>
 File: figures/profileVA.pdf Graphic file (type pdf)
 
 <use figures/profileVA.pdf>
-Package pdftex.def Info: figures/profileVA.pdf used on input line 473.
+Package pdftex.def Info: figures/profileVA.pdf used on input line 474.
 (pdftex.def)             Requested size: 407.727pt x 204.85983pt.
  [39 <./figures/profilePath.pdf>]
 <figures/profileW.pdf, id=664, 1446.40375pt x 726.715pt>
 File: figures/profileW.pdf Graphic file (type pdf)
 
 <use figures/profileW.pdf>
-Package pdftex.def Info: figures/profileW.pdf used on input line 483.
+Package pdftex.def Info: figures/profileW.pdf used on input line 484.
 (pdftex.def)             Requested size: 407.727pt x 204.85983pt.
 
 <figures/profileALR.pdf, id=666, 1446.40375pt x 726.715pt>
 File: figures/profileALR.pdf Graphic file (type pdf)
 
 <use figures/profileALR.pdf>
-Package pdftex.def Info: figures/profileALR.pdf used on input line 496.
+Package pdftex.def Info: figures/profileALR.pdf used on input line 497.
 (pdftex.def)             Requested size: 424.72116pt x 213.39566pt.
  [40 <./figures/profileVA.pdf> <./figures/profileW.pdf>]) [41 <./figures/profil
 eALR.pdf>]
@@ -856,99 +856,107 @@ Package pdftex.def Info: figures/pathfollowA.pdf used on input line 205.
 
  (./chapter5.tex
 5. fejezet.
-<figures/frame6.png, id=855, 702.37407pt x 603.0028pt>
-File: figures/frame6.png Graphic file (type png)
+<figures/RTR_CCS_CAR.png, id=856, 615.0478pt x 613.54219pt>
+File: figures/RTR_CCS_CAR.png Graphic file (type png)
 
-<use figures/frame6.png>
-Package pdftex.def Info: figures/frame6.png used on input line 19.
-(pdftex.def)             Requested size: 265.12584pt x 227.62204pt.
+<use figures/RTR_CCS_CAR.png>
+Package pdftex.def Info: figures/RTR_CCS_CAR.png used on input line 23.
+(pdftex.def)             Requested size: 199.65355pt x 199.16928pt.
+
+<figures/RTR_CCS_DIFF.png, id=857, 605.26125pt x 604.50844pt>
+File: figures/RTR_CCS_DIFF.png Graphic file (type png)
+
+<use figures/RTR_CCS_DIFF.png>
+Package pdftex.def Info: figures/RTR_CCS_DIFF.png used on input line 24.
+(pdftex.def)             Requested size: 199.41357pt x 199.16928pt.
  [51
 
 
 
-] [52 <./figures/frame6.png>]
-<figures/vrep.png, id=873, 1284.8pt x 983.675pt>
+] [52 <./figures/RTR_CCS_CAR.png> <./figures/RTR_CCS_DIFF.png>] <figures/vrep.p
+ng, id=875, 1284.8pt x 983.675pt>
 File: figures/vrep.png Graphic file (type png)
- <use figures/vrep.png>
-Package pdftex.def Info: figures/vrep.png used on input line 44.
+
+<use figures/vrep.png>
+Package pdftex.def Info: figures/vrep.png used on input line 47.
 (pdftex.def)             Requested size: 426.79134pt x 326.76013pt.
 
-<figures/vrepSystem.pdf, id=874, 536.75531pt x 387.69844pt>
+<figures/vrepSystem.pdf, id=876, 536.75531pt x 387.69844pt>
 File: figures/vrepSystem.pdf Graphic file (type pdf)
 
 <use figures/vrepSystem.pdf>
-Package pdftex.def Info: figures/vrepSystem.pdf used on input line 56.
+Package pdftex.def Info: figures/vrepSystem.pdf used on input line 59.
 (pdftex.def)             Requested size: 398.33858pt x 287.72055pt.
  [53 <./figures/vrep.png>] [54 <./figures/vrepSystem.pdf>] <figures/DiffSimPath
-0RTR.png, id=917, 1075.01625pt x 690.32906pt>
+0RTR.png, id=919, 1075.01625pt x 690.32906pt>
 File: figures/DiffSimPath0RTR.png Graphic file (type png)
 
 <use figures/DiffSimPath0RTR.png>
-Package pdftex.def Info: figures/DiffSimPath0RTR.png used on input line 74.
+Package pdftex.def Info: figures/DiffSimPath0RTR.png used on input line 77.
 (pdftex.def)             Requested size: 369.88582pt x 237.52124pt.
 
-<figures/DiffSimPath0.png, id=918, 1075.01625pt x 690.32906pt>
+<figures/DiffSimPath0.png, id=920, 1075.01625pt x 690.32906pt>
 File: figures/DiffSimPath0.png Graphic file (type png)
 
 <use figures/DiffSimPath0.png>
-Package pdftex.def Info: figures/DiffSimPath0.png used on input line 81.
+Package pdftex.def Info: figures/DiffSimPath0.png used on input line 84.
 (pdftex.def)             Requested size: 369.88582pt x 237.52124pt.
 
-<figures/DiffSimPath1.png, id=919, 1076.52188pt x 692.5875pt>
+<figures/DiffSimPath1.png, id=921, 1076.52188pt x 692.5875pt>
 File: figures/DiffSimPath1.png Graphic file (type png)
 
 <use figures/DiffSimPath1.png>
-Package pdftex.def Info: figures/DiffSimPath1.png used on input line 88.
+Package pdftex.def Info: figures/DiffSimPath1.png used on input line 91.
 (pdftex.def)             Requested size: 369.88582pt x 237.97069pt.
  [55 <./figures/DiffSimPath0RTR.png> <./figures/DiffSimPath0.png>] <figures/Dif
-fSimPath2.png, id=928, 1156.32pt x 690.32906pt>
+fSimPath2.png, id=930, 1156.32pt x 690.32906pt>
 File: figures/DiffSimPath2.png Graphic file (type png)
 
 <use figures/DiffSimPath2.png>
-Package pdftex.def Info: figures/DiffSimPath2.png used on input line 95.
+Package pdftex.def Info: figures/DiffSimPath2.png used on input line 98.
 (pdftex.def)             Requested size: 369.88582pt x 220.815pt.
 
-<figures/Eurobot.png, id=929, 406.51875pt x 556.32843pt>
+<figures/Eurobot.png, id=931, 406.51875pt x 556.32843pt>
 File: figures/Eurobot.png Graphic file (type png)
 
 <use figures/Eurobot.png>
-Package pdftex.def Info: figures/Eurobot.png used on input line 108.
+Package pdftex.def Info: figures/Eurobot.png used on input line 111.
 (pdftex.def)             Requested size: 227.62204pt x 311.49934pt.
  [56 <./figures/DiffSimPath1.png> <./figures/DiffSimPath2.png>] [57 <./figures/
 Eurobot.png>]
-<figures/Sitara.png, id=944, 476.982pt x 335.8146pt>
+<figures/Sitara.png, id=946, 476.982pt x 335.8146pt>
 File: figures/Sitara.png Graphic file (type png)
  <use figures/Sitara.png>
-Package pdftex.def Info: figures/Sitara.png used on input line 127.
+Package pdftex.def Info: figures/Sitara.png used on input line 130.
 (pdftex.def)             Requested size: 284.52756pt x 200.322pt.
 
 [58 <./figures/Sitara.png>]
-<figures/RealTest/Env2_200.png, id=952, 679.03688pt x 679.78969pt>
+<figures/RealTest/Env2_200.png, id=954, 679.03688pt x 679.78969pt>
 File: figures/RealTest/Env2_200.png Graphic file (type png)
 
 <use figures/RealTest/Env2_200.png>
-Package pdftex.def Info: figures/RealTest/Env2_200.png used on input line 153.
+Package pdftex.def Info: figures/RealTest/Env2_200.png used on input line 156.
 (pdftex.def)             Requested size: 341.43306pt x 341.81296pt.
 
-<figures/RealTest/Env1_200.png, id=953, 379.4175pt x 679.03688pt>
+<figures/RealTest/Env1_200.png, id=955, 379.4175pt x 679.03688pt>
 File: figures/RealTest/Env1_200.png Graphic file (type png)
 
 <use figures/RealTest/Env1_200.png>
-Package pdftex.def Info: figures/RealTest/Env1_200.png used on input line 160.
+Package pdftex.def Info: figures/RealTest/Env1_200.png used on input line 163.
 (pdftex.def)             Requested size: 312.9803pt x 560.15016pt.
  [59 <./figures/RealTest/Env2_200.png>]
-<figures/RealTest/Env0_200.png, id=961, 358.33875pt x 641.39626pt>
+<figures/RealTest/Env0_200.png, id=963, 358.33875pt x 641.39626pt>
 File: figures/RealTest/Env0_200.png Graphic file (type png)
 
 <use figures/RealTest/Env0_200.png>
-Package pdftex.def Info: figures/RealTest/Env0_200.png used on input line 167.
+Package pdftex.def Info: figures/RealTest/Env0_200.png used on input line 170.
 (pdftex.def)             Requested size: 312.9803pt x 560.24165pt.
  [60 <./figures/RealTest/Env1_200.png>]
-<figures/RealTest/Env0_400.png, id=969, 383.93437pt x 682.80093pt>
+<figures/RealTest/Env0_400.png, id=971, 383.93437pt x 682.80093pt>
 File: figures/RealTest/Env0_400.png Graphic file (type png)
 
 <use figures/RealTest/Env0_400.png>
-Package pdftex.def Info: figures/RealTest/Env0_400.png used on input line 174.
+Package pdftex.def Info: figures/RealTest/Env0_400.png used on input line 177.
 (pdftex.def)             Requested size: 312.9803pt x 556.64975pt.
  [61 <./figures/RealTest/Env0_200.png>])
 [62 <./figures/RealTest/Env0_400.png>] [63]
@@ -991,14 +999,14 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 185.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 185.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 185.
 Package rerunfilecheck Info: File `dolgozat.out' has not changed.
-(rerunfilecheck)             Checksum: BCCED4F27B47E657E0B55BA29A020757;7228.
+(rerunfilecheck)             Checksum: 9A5DC238F0B85B6D3049F97CDF48C961;7233.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 185.
  ) 
 Here is how much of TeX's memory you used:
- 15724 strings out of 493308
- 230073 string characters out of 6141367
- 328476 words of memory out of 5000000
- 18634 multiletter control sequences out of 15000+600000
+ 15730 strings out of 493308
+ 230240 string characters out of 6141367
+ 327729 words of memory out of 5000000
+ 18639 multiletter control sequences out of 15000+600000
  27316 words of font info for 67 fonts, out of 8000000 for 9000
  961 hyphenation exceptions out of 8191
  36i,13n,43p,999b,580s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1024,10 +1032,10 @@ onts/type1/public/cm-super/sfrm0900.pfb><c:/texlive/2013/texmf-dist/fonts/type1
 -super/sfrm1200.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sft
 i0900.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb>
 <c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on dolgozat.pdf (67 pages, 6565419 bytes).
+Output written on dolgozat.pdf (67 pages, 6507920 bytes).
 PDF statistics:
- 1134 PDF objects out of 1200 (max. 8388607)
+ 1136 PDF objects out of 1200 (max. 8388607)
  946 compressed objects within 10 object streams
  228 named destinations out of 1000 (max. 500000)
- 587 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 592 words of extra memory for PDF output out of 10000 (max. 10000000)
 

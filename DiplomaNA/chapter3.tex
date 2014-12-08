@@ -35,7 +35,8 @@ s(k)& : \text{A $k$. pontban az addig megtett távolság}\notag\\
 v(k)& : \text{A $k$. pontban a robot sebességének nagysága}\notag\\
 \omega(k)& : \text{A $k$. pontban a robot szögsebességének nagysága}\notag\\
 a_{t}(k)& : \text{A $k$. pontban a robot tangenciális gyorsulásának nagysága}\notag\\
-c(k)& : \text{A $k$. pontban a görbület nagysága}\notag\\
+r(k)& : \text{A $k$. pontban a pálya görbületi sugara a robot középpontjához viszonyítva}\notag\\
+c(k)& : \text{A $k$. pontban a pálya görbületének nagysága, a görbületi sugár reciproka}\notag\\
 N& : \text{A pálya pontjainak száma}
 \end{align}
 
@@ -121,7 +122,7 @@ ahol $a_{c}(k)$ a kerék centripetális gyorsulása, $a_{t}(k)$ a kerék tangenciáli
 
 %TODO átfogalmazni
 \par
-Fontos megjegyezni, hogy a kerékgyorsulás korlátokat lassulásnál is alkalmazzuk. Tehát a kerék gyorsulásának abszolút értékét korlátozzák ezek a korlátozások. Így azt tesszük fel, hogy a kerekek viselkedése gyorsulás és lassulás esetében megegyezik. A robot sebességénél viszont nem engedünk elõjelváltást, úgy vesszük, hogy a robot végig egy irányba halad. A tervezõ viszont megadhat olyan pályát, ahol tolatnia kell a robotnak, vagy egy helyben megfordulnia, de ezt a pályatervezõ algoritmus kezeli.
+Fontos megjegyezni, hogy a kerékgyorsulás korlátokat lassulásnál is alkalmazzuk, tehát a kerék gyorsulásának abszolút értékét korlátozzák ezek a korlátozások. Így azt tesszük fel, hogy a kerekek viselkedése gyorsulás és lassulás esetében megegyezik. A robot sebességénél viszont nem engedünk elõjelváltást: úgy vesszük, hogy a robot végig egy irányba halad. A tervezõ viszont megadhat olyan pályát, ahol tolatnia kell a robotnak, vagy egyhelyben megfordulnia, de ezt a pályatervezõ algoritmus kezeli.
 
 %----------------------------------------------------------------------------
 \section{Geometriai sebességprofil}
@@ -132,7 +133,7 @@ Az idõparaméterezés elsõ lépéseként a geometriai pályapontokhoz rendelünk a korl
 A pályamenti sebességeket úgy határozzuk meg, hogy a robot pályamenti gyorsulása a lehetõ legnagyobb legyen. {\Aref{eq:diffRobotAccel}}. egyenlet alapján ezt megtehetjük úgy, hogy a robot kerekeinek tangenciális gyorsulását maximalizáljuk. Több hatás miatt azonban nem tudjuk a kerekek gyorsulását folyamatosan növelni. 
 
 \par
-Egyrészt a robot sebesség és szögsebesség korlátját nem sérthetjük meg. Ebbõl a két korlátból a pálya minden pontjára kiszámolhatunk egy maximális sebességet függetlenül az elõzõ pályapont sebességétõl:
+Egyrészt a robot sebesség és szögsebesség korlátját nem sérthetjük meg. Ebbõl a két korlátból a pálya minden pontjára kiszámolhatunk egy maximális sebességet, függetlenül az elõzõ pályapont sebességétõl:
 
 \begin{align}\label{eq:vmax}
 v^{max}(k)& = \min \left( v^{max}, \frac{\omega^{max}}{c(k)} \right)
@@ -165,7 +166,7 @@ Eddig a két kerék gyorsulását teljesen függetlenül tárgyaltuk, azonban mindkét g
 \label{eq:ar/al2}
 \frac{{a_{l}}_{t}(k)}{{a_{r}}_{t}(k)} &= \frac{r(k) - \frac{W}{2}}{r(k) + \frac{W}{2}} = \frac{p_l(k)}{p_r(k)},
 \end{align}
-ahol $\beta(k)$ a robot szöggyorsulása, $r(k)$ a pálya görbületi sugara a robot középpontjához viszonyítva (\aref{eq:diffRobotWheel}. egyenlet alapján következik, hogy a sebességek aránya is ugyanez lesz).
+ahol $\beta(k)$ a robot szöggyorsulása (\aref{eq:diffRobotWheel}. egyenlet alapján következik, hogy a sebességek aránya is ugyanez lesz).
 
 \par
 \Aref{eq:ar/al2}. és \aref{eq:alr}. egyenletek alapján 2-2 lehetséges kerék gyorsulást tudunk számolni. Ezek közül azt a gyorsulás párt fogjuk választani, amelyiknek egyik eleme sem sérti \aref{eq:alr}. egyenletek által meghatározott korlátokat. 
@@ -178,7 +179,7 @@ Miután kiszámoltuk, hogy az adott pályapontnál mekkora legyen a robot kerekeinek
 \begin{align}\label{eq:a}
 a_{t}(k) &= \frac{{a_{l}}_{t}(k) + {a_{r}}_{t}(k)} {2}\\
 \label{eq:v}
-v(k+1) &= \min \left( v^{max}(k+1), \sqrt{v(k) + 2 \cdot a_{t}(k) \cdot \Delta s_{c}(k)} \right)
+v(k+1) &= \min \left( v^{max}(k+1), \sqrt{v(k)^2 + 2 \cdot a_{t}(k) \cdot \Delta s_{c}(k)} \right)
 \end{align}
 
 %----------------------------------------------------------------------------
@@ -288,7 +289,7 @@ Tehát \aref{eq:backacp10} feltétel alapján \aref{eq:backacp9}. egyenlõtlenség mi
 Miután meghatároztuk $v^e(k)$ és $v^t(k)$ értékeit mindkét kerékre (összesen 4 érték), $v(k)$ értéke ezek közül a legkisebb lesz, hiszen így biztosíthatjuk, hogy a robot egyik kereke sem fogja megsérteni a két gyorsulás korlátot.
 
 \par
-A visszaterjesztés során a sebesség és szögsebesség korlátokkal nem kell foglalkoznunk, hiszen mindkét esetben, mikor módosítjuk a sebességet, csökkentjük az értékét, és ezáltal ezektõl a korlátoktól távolodunk.
+A visszaterjesztés során a sebesség és szögsebesség korlátokkal nem kell foglalkoznunk, hiszen mikor visszaterjesztés közben csökkentjük a sebességet, ezektõl a korlátoktól távolodunk.
 
 
 %----------------------------------------------------------------------------

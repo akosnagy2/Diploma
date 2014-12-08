@@ -32,48 +32,48 @@ A következõ lépésben megpróbáljuk a $q_{rand}$ és a $q_{near}$ konfigurációkat i
 Anholonom rendszerek esetén is használható az RRT eljárás. Ekkor az összekötésnél egyszerû interpolációt nem lehet alkalmazni, mert az azt feltételezné, hogy a robot minden irányba szabadon képes mozogni. Ehelyett az összekötést egy lokális tervezõ segítségével kell  megoldani, vagy egyszerûbb esetben itt is használható az a módszer, hogy csak egy adott $\Delta q$ értékkel közelítünk $q_{rand}$ irányába. Ehhez megfelelõ beavatkozó jelet ($\Delta u$) kell választanunk, amit $\Delta t$ ideig alkalmazva elérhetõ $\Delta q$ állapotváltozás. A $\Delta u$ beavatkozójel például differenciális robot esetén, a két kerék sebessége.
 
 \par
-Az elõbb ismertetett fázisok alkotják a fa terjesztésének egy lépését. Több fa esetén természetesen mindegyiknél végre kell hajtani a fázisokat. A terjesztést addig kell folytatni, amíg el nem érjük a kívánt konfigurációt, vagy több fa esetében, amíg a fák nem kapcsolhatók össze.
+Az elõbb ismertetett fázisok alkotják a fa terjesztésének egy lépését. Természetesen, több fa esetén mindegyiknél végre kell hajtani a fázisokat. A terjesztést addig kell folytatni, amíg el nem érjük a kívánt konfigurációt, vagy több fa esetében, amíg a fák nem kapcsolhatók össze.
 
 %----------------------------------------------------------------------------
 \section{RTR algoritmus}
 %----------------------------------------------------------------------------
-Ha differenciális robotnál használunk valamilyen $\Delta u$ beavatkozójelet az összekötõ fázisban, akkor a fa csúcspontjai között görbék lesznek. Ez nehézséget okozhat, ha olyan \emph{csomópont-választó eljárást} alkalmazunk, ami köztes konfigurációt ad vissza. Természetesen alkalmazhatjuk azt az eljárást, hogy csak az élek végpontjait választjuk ki, köztük nem interpolálunk. Ehhez viszont kis távolságú élek szükségesek, ami növeli a fa csomópontjainak számát és ezzel összefüggésben a csomópont kiválasztások számát is.
+Ha differenciális robotnál használunk valamilyen $\Delta u$ beavatkozójelet az összekötõ fázisban, akkor a fa csúcspontjai között görbék lesznek. Ez nehézséget okozhat, ha olyan \emph{csomópont-választó eljárást} alkalmazunk, ami köztes konfigurációt ad vissza. Természetesen, alkalmazhatjuk azt az eljárást, hogy csak az élek végpontjait választjuk ki, köztük nem interpolálunk. Ehhez viszont kis távolságú élek szükségesek, ami növeli a fa csomópontjainak számát és ezzel összefüggésben a csomópont kiválasztások számát is.
 
 \par
 Lehetõségünk van differenciális robotnál is lokális tervezõt alkalmazni két konfiguráció közti állapotváltozásra. A legegyszerûbb lokális tervezõ három lépésbõl áll:
 
 \begin{itemize}
-\item Egy helyben fordulás a kívánt konfiguráció irányába (R).
+\item Egyhelyben fordulás a kívánt konfiguráció irányába (R).
 \item Mozgás egyenes pályán a célpozícióba (T).
-\item Egy helyben fordulás a célkonfiguráció irányába (R).
+\item Egyhelyben fordulás a célkonfiguráció irányába (R).
 \end{itemize}
 
 \par
 Ennek a tervezõnek az az elõnye, hogy a fa élei egyenes pályák lesznek, így egyszerûen tudjuk meghatározni a köztes konfigurációkat.
 
 \par
-A jelenleg ismertetett módon alkalmazva az RRT algoritmust, szûk folyosók esetében rendkívül nehezen találna megoldást az eljárás, abban az esetben is, ha mind a kezdeti-, mind a célkonfigurációból növesztünk egy-egy fát. A problémát az okozza, hogy az \emph{összekötés fázisa} gyakran nem ad eredményt, ezért a fák nem nõnek megfelelõen. Ennek az az oka, hogy a lokális tervezõ használatakor, fal vagy egyéb akadályok közelében az elsõ egy helyben fordulásnál már ütközne a robot. Mivel az összeköttetés fázisa addig tart, amíg nem érjük el $q_{rand}$-ot, vagy amíg nem ütközik a robot, így a fa további terjesztése nélkül választunk új $q_{rand}$ értéket. A lokális tervezõ második lépése eredményezné a fa tényleges terjesztését.
+A jelenleg ismertetett módon alkalmazva az RRT algoritmust, szûk folyosók esetében rendkívül nehezen találna megoldást az eljárás, abban az esetben is, ha mind a kezdeti-, mind a célkonfigurációból növesztünk egy-egy fát. A problémát az okozza, hogy az \emph{összekötés fázisa} gyakran nem ad eredményt, ezért a fák nem nõnek megfelelõen. Ennek az az oka, hogy a lokális tervezõ használatakor, fal vagy egyéb akadályok közelében az elsõ egyhelyben fordulásnál már ütközne a robot. Mivel az összeköttetés fázisa addig tart, amíg nem érjük el $q_{rand}$-ot, vagy amíg nem ütközik a robot, így a fa további terjesztése nélkül választunk új $q_{rand}$ értéket. A lokális tervezõ második lépése eredményezné a fa tényleges terjesztését.
 
 \par
 Az RTR algoritmus, felhasználva az RRT eljárás elõnyös tulajdonságait, igyekszik az elõbbi problémára egy lehetséges megoldást bemutatni. Mind a kezdeti, mind a célkonfigurációból növeszt egy-egy fát, az összekötõ fázisban a fent ismertetett lokális tervezõt alkalmazza. Az RRT eljárás mindhárom fázisa módosításra kerül az RTR tervezõ esetében.
 
-Az RTR algoritmusnál alkalmazott fa struktúrában, az RRT-hez hasonlóan a csomópontokban konfigurációk találhatóak, az élek pedig transzlációs mozgást (TCI - Translation Configuration Interval) vagy egy helyben fordulást írnak le (Rotational Configuration Interval). Egy adott TCI vagy RCI leírható két konfigurációval és TCI esetén a köztük lévõ távolsággal, míg RCI esetén a köztük lévõ szögtávolsággal. Természetesen RCI esetén a két konfiguráció pozíciója megegyezik, TCI esetén pedig a két konfiguráció iránya egyezik meg. Fontos észrevennünk, hogy mindkét éltípust egzakt módon írjuk le, mintavételezés nélkül.
+Az RTR algoritmusnál alkalmazott fa struktúrában, az RRT-hez hasonlóan a csomópontokban konfigurációk találhatóak, az élek pedig transzlációs mozgást (TCI - Translation Configuration Interval) vagy egyhelyben fordulást írnak le (Rotational Configuration Interval). Egy adott TCI vagy RCI leírható két konfigurációval és TCI esetén a köztük lévõ távolsággal, míg RCI esetén a köztük lévõ szögtávolsággal. Természetesen RCI esetén a két konfiguráció pozíciója megegyezik, TCI esetén pedig a két konfiguráció iránya egyezik meg. Fontos észrevennünk, hogy mindkét éltípust egzakt módon írjuk le, mintavételezés nélkül.
 
 %----------------------------------------------------------------------------
 \subsection{Mintavételezés}
 %----------------------------------------------------------------------------
 
 \par
-A mintavételezés fázisában különbséget jelent az eredeti RRT algoritmushoz képest, hogy a mi esetünkben a $q_{rand}$-nak megfelelõ véletlen minta nem egy konfiguráció lesz, hanem egy pozíció a térben ($p_G$). Ezt a pozíciót tekinthetjük egy folytonos, egy dimenziós konfigurációs listának, amelynek bármelyik eleme megfelelõ célkonfiguráció lehet.
+A mintavételezés fázisában különbséget jelent az eredeti RRT algoritmushoz képest, hogy a mi esetünkben a $q_{rand}$-nak megfelelõ véletlen minta nem egy konfiguráció lesz, hanem egy pozíció a térben ($p_G$). Ezt a pozíciót tekinthetjük egy folytonos, egydimenziós konfigurációs listának, amelynek bármelyik eleme megfelelõ célkonfiguráció lehet.
 
 \par
-A mintavételezést kiegészíthetjük a pálya háromszög cellafelbontásából kapott mintákkal (\ref{sect:fade2d}. fejezet). Ezek a minták az akadályoktól természetszerûleg viszonylag távol találhatóak, és szûk folyosók esetén is segítenek terjeszteni a fákat. 
+A mintavételezést kiegészíthetjük a pálya háromszög cellafelbontásából kapott mintákkal (\ref{sect:fade2d}. fejezet). Természetszerûleg ezek a minták az akadályoktól viszonylag távol találhatóak, és szûk folyosók esetén is segítenek terjeszteni a fákat. 
 %TODO ezt rendesen vagy itt vagy ott
 
 %----------------------------------------------------------------------------
 \subsection{Csomópont kiválasztás} \label{sect:ALC}
 %----------------------------------------------------------------------------
-Mivel a mintavételezésnél pozíciót használunk és nem konfigurációt, ezért a \emph{csomópont kiválasztás} egyszerûbb lesz. Az eljárás lényege, hogy az adott $p_G$ esetén végigmegyünk a fa élein és meghatározzuk a legkisebb távolságot a $p_G$ pont és az adott él között. TCI él esetében ez távolságot jelent, RCI esetében pedig szögtávolságot. Így minden egyes élnél kapunk egy konfigurációt, amely esetében a távolság a $p_G$-tõl minimális. A kapott konfigurációk közül azt választjuk, amelyiknél legkisebb a távolság $p_G$-hez képest, és ha így több megoldást is kapunk, akkor pedig azt a konfigurációt választjuk, amelynél a szögtávolság a legkisebb. Így egyértelmûen meghatároztuk $q_{near}$-t.
+Mivel a mintavételezésnél pozíciót használunk és nem konfigurációt, ezért a \emph{csomópont kiválasztás} egyszerûbb lesz. Az eljárás lényege, hogy az adott $p_G$ esetén végigmegyünk a fa élein és meghatározzuk a legkisebb távolságot a $p_G$ pont és az adott él között. TCI él esetében ez távolságot jelent, RCI esetében pedig szögtávolságot. Így minden egyes élnél kapunk egy konfigurációt, amely esetében a távolság a $p_G$-tõl minimális. A kapott konfigurációk közül azt választjuk, amelyiknél legkisebb a távolság $p_G$-hez képest. Abban az esetben, ha így több megoldást is kapunk, akkor azt a konfigurációt választjuk, amelynél a szögtávolság a legkisebb. Így egyértelmûen meghatároztuk $q_{near}$-t.
 
 \begin{figure}[H]
 \centering
@@ -93,7 +93,7 @@ Egy adott TCI és $p_G$ esetén a legkisebb távolsághoz tartozó konfigurációt a kö
 \end{figure}
 
 \par
-RCI esetén a legkisebb (szög)távolságú konfiguráció kiválasztása \aref{fig:rci_gp}. ábrán látható. Elõször kiszámoljuk a $p_G$ pont és az RCI pozíciójának irányát. Ha a kapott irány az RCI (szög)tartományába beleesik, akkor köztes konfigurációról van szó (bal oldali ábra) és ekkor a legközelebbi konfiguráció az RCI pozíciója és az elõbb kiszámolt orientáció lesz. Abban az esetben, amikor a kapott irány nem esik bele az RCI tartományába, akkor az RCI irányban közelebbi szélsõ konfigurációját választjuk (jobb oldali ábra).
+RCI esetén a legkisebb (szög)távolságú konfiguráció kiválasztása \aref{fig:rci_gp}. ábrán látható. Elõször kiszámoljuk a $p_G$ pont és az RCI pozíciójának irányát. Ha a kapott irány az RCI (szög)tartományába beleesik, akkor köztes konfigurációról van szó (bal oldali ábra) és ekkor a legközelebbi konfiguráció az RCI pozíciója és az elõbb kiszámolt orientáció lesz. Abban az esetben, amikor a kapott irány nem esik bele az RCI tartományába, akkor az RCI irányban közelebbi, szélsõ konfigurációját választjuk (jobb oldali ábra).
 
 %----------------------------------------------------------------------------
 \subsection{Kiterjesztés}
@@ -120,7 +120,7 @@ A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a célkonfiguráció f
 %----------------------------------------------------------------------------
 \subsubsection{Ütközésdetektálás transzlációs kiterjesztés esetén} \label{sect:tci}
 %----------------------------------------------------------------------------
-A robot transzlációs kiterjesztése elõre- és hátrafelé is a következõk szerint történik. Minden egyes akadály esetén, beleértve a pályát határoló téglalapot is, végigmegyünk a robot alakját leíró polygon összes csúcspontján. Adott csúcspont esetén megvizsgáljuk, hogy a kiterjesztés irányában metszi-e a vizsgált akadály oldalát, és ha igen, akkor eltároljuk az ütközésig megtehetõ távolságot. Ezután megvizsgáljuk, hogy az adott akadály csúcspontjai a mozgás során metszik-e a robot éleit, és szintén eltároljuk az ütközésig lévõ távolságot. A minimális távolság a letárolt távolságok minimuma lesz. 
+A robot transzlációs kiterjesztése elõre- és hátrafelé is a következõk szerint történik. Minden egyes akadály esetén, beleértve a pályát határoló téglalapot is, végigmegyünk a robot alakját leíró polygon összes csúcspontján. Adott csúcspont esetén megvizsgáljuk, hogy a kiterjesztés irányában metszi-e a vizsgált akadály oldalát: ha igen, akkor eltároljuk az ütközésig megtehetõ távolságot. Ezután megvizsgáljuk, hogy az adott akadály csúcspontjai a mozgás során metszik-e a robot éleit: ha igen, akkor szintén eltároljuk az ütközésig lévõ távolságot. A minimális távolság a letárolt távolságok minimuma lesz. 
 
 \par
 A fent leírtaknál minden esetben egy egyenes és egy szakasz metszetét kell kiszámítanunk, majd megvizsgálni, hogy a metszéspont a mozgás irányában található-e. A szakasz a robot vagy az akadály egyik éle, az egyenes pedig az akadály vagy a robot egyik csúcspontja a transzláció irányában. \Aref{fig:tci_coll}. ábra mutatja a kiterjesztést egy adott akadály és a robot között.
@@ -146,7 +146,7 @@ Különbséget jelent, hogy itt egy körív és egy szakasz közti metszéspontot kell s
 Az RTR algoritmus sikeres futásához szükséges, hogy a kezdõ és a célkonfigurációból terjesztett fák kapcsolódjanak egymáshoz. Ezért minden iteráció végén ellenõrizzük, hogy a legutóbb felvett TCI-k és a másik fa között létesíthetõ-e ütközésmentes kapcsolat egy RCI segítségével. Ha ez lehetséges, akkor a metszéspontból vissza kell mennünk a fák kezdõpontjáig, és így megkapjuk a keresett útvonalat a kezdõ konfigurációból a célkonfigurációig. A kapott útvonalat egy TCI-ket és RCI-ket tartalmazó listaként képzelhetjük el.
 
 \par
-Egy TCI és egy fa összekapcsolásának vizsgálata során a fát Breadth-First szélességi keresés segítségével járjuk be \cite{BFS}. Az algoritmus egy FIFO szerkezetû tárolót használ, amely kezdetben a fa forrásainak gyerekeit tartalmazza. Ezután kivesszük a tárolóból az elsõ elemet és ha az TCI, akkor megvizsgáljuk, hogy összevonható-e a vizsgált TCI-vel. Ha összevonható, akkor befejeztük a vizsgálatot, ha nem akkor pedig a TCI gyerekeit berakjuk a tárolóba. Ha RCI volt a kivett elem, akkor egyszerûen a gyerekeit berakjuk a tárolóba. Az algoritmust addig futtatjuk, amíg a tároló nem ürül ki vagy nem találtunk összevonható TCI-ket. Abban az esetben ha üres lesz a tároló, a vizsgált TCI és a fa nem vonható össze.
+Egy TCI és egy fa összekapcsolásának vizsgálata során a fát Breadth-First szélességi keresés segítségével járjuk be \cite{BFS}. Az algoritmus egy FIFO szerkezetû tárolót használ, amely kezdetben a fa forrásainak gyerekeit tartalmazza. Ezután kivesszük a tárolóból az elsõ elemet: ha az TCI, akkor megvizsgáljuk, hogy összevonható-e a vizsgált TCI-vel. Ha összevonható, akkor befejeztük a vizsgálatot, ha nem akkor pedig a TCI gyerekeit berakjuk a tárolóba. Ha RCI volt a kivett elem, akkor egyszerûen a gyerekeit berakjuk a tárolóba. Az algoritmust addig futtatjuk, amíg a tároló nem ürül ki vagy nem találtunk összevonható TCI-ket. Abban az esetben ha üres lesz a tároló, a vizsgált TCI és a fa nem vonható össze.
 
 \par
 Azt, hogy két TCI összevonható-e, egyszerûen eldönthetjük. Fogjuk a két TCI által leírt szakaszokat és megnézzük, hogy van-e metszéspontjuk. Ha nincsen, akkor biztosak lehetünk benne, hogy nem vonhatóak össze. Ha van metszéspontjuk, meg kell vizsgálnunk, hogy a metszéspontból találunk-e egy RCI-t, amely a két szakasz között ütközésmentes mozgást biztosít. Itt ugyanúgy járhatunk el, ahogy a kiterjesztés fázisában tettük \aref{sect:rci}. részben. Ha nem sikerül ütközésmentes forgatást találnunk, ellentétes körüljárás szerint is megpróbálunk RCI-t keresni, ha így sem találunk, akkor a két TCI nem összevonható.
@@ -230,13 +230,13 @@ Ezenkívül természetesen külön osztályt alkotnak a konfigurációk, a különbözõ geo
 
 Mind a két folyamatosan növesztett fát \emph{TreeElement}-ekbõl álló dinamikus tömbben tárolom, amire a C++ nyelv \emph{Vector} tároló típusát használom. A \emph{Vector} típus egy tömbben, folytonos memória területen tárolja az elemeket. A dinamikus memória foglalást és felszabadítást a tároló automatikusan elvégzi.
 
-Kipróbáltam más tárolókat is, mint például \emph{List} típust. A \emph{List} egy kétszeresen láncolt lista. Adott elem törlése és beszúrása \emph{List} esetén gyorsabb, mint \emph{Vector} esetében. A mi esetünkben azonban nem szükséges a tömbbe közbülsõ elemeket beszúrni, az új elemek a tömb végére kerülnek.
+Kipróbáltam más tárolókat is, mint például a \emph{List} típust. A \emph{List} egy kétszeresen láncolt lista. Adott elem törlése és beszúrása \emph{List} esetén gyorsabb, mint \emph{Vector} esetében. A mi esetünkben azonban nem szükséges a tömbbe közbülsõ elemeket beszúrni, az új elemek a tömb végére kerülnek.
 
-A \emph{Deque} típus hasonló a \emph{Vector}-hoz, csak ennél a tárolónál a tömb elejére is hatékonyan lehet elemeket beszúrni és törölni, nemcsak a tömb végére. Viszont a tárolásra nem folytonos memória területet használ.
+A \emph{Deque} típus hasonló a \emph{Vector}-hoz, csak ennél a tárolónál a tömb elejére is hatékonyan lehet elemeket beszúrni és törölni, nemcsak a tömb végére. Viszont, a tárolásra nem folytonos memória területet használ.
 
 Az elõbb említett három tároló típust egy mérés segítségével is összehasonlítottam. A mérés során fixen 10000 iterációig futott az algoritmus és a \emph{IterateTree} függvény futási idejét mértem mindkét fa esetében. Amennyiben futás közben talált volna megfelelõ útvonalat az algoritmus, akkor sem fejezte be a futást, 10000 iterációit mindenképpen végrehajtott. A \emph{MergeTreesGetPath} függvényt azért nem mértem a teszt során, mivel a gyakorlatban csak addig fut az algoritmus, amíg nem lesz meg az elsõ megfelelõ út, és ez a tény jelentõsen befolyásolja a \emph{MergeTreesGetPath} függvény futási idejét.
 
-A mérés elvégzéséhez a C++ nyelvben található \emph{high\_resolution\_clock} osztályt használtam, amely a C++11 szabvány része, és kifejezetten idõmérésre lett kialakítva. 
+A mérés elvégzéséhez a C++ nyelvben található, kifejezetten idõmérésre kialakított \emph{high\_resolution\_clock} osztályt használtam, amely a C++11 szabvány része.
 
 \begin{figure}[H]
 \centering
@@ -245,11 +245,11 @@ A mérés elvégzéséhez a C++ nyelvben található \emph{high\_resolution\_clock} osz
 \label{fig:measureDataTypes}
 \end{figure}
 
-A mérés ábráján (\ref{fig:measureDataTypes}. ábra) látható, hogy mekkora különbséget okozz a választott tároló típus. A mérés alapján úgy gondolom, jó választás volt a \emph{Vector} használata, mert a többi tároló esetében nagyobb futási idõ adódik, ha a különbség nem is túlságosan nagy. Általánosságban azt tanácsolják, hogy célszerû \emph{Vector} típust használni tároláshoz, az esetek nagy részében így kapjuk a leghatékonyabb programkódot.
+A mérés ábráján (\ref{fig:measureDataTypes}. ábra) látható, hogy mekkora különbséget okoz a választott tároló típus. A mérés alapján úgy gondolom, jó választás volt a \emph{Vector} használata, mert a többi tároló esetében nagyobb futási idõ adódik, ha a különbség nem is túlságosan nagy. Általánosságban azt tanácsolják, hogy célszerû \emph{Vector} típust használni tároláshoz, az esetek nagy részében így kapjuk a leghatékonyabb programkódot.
 
-Az ábráról az is leolvasható, hogy a iterációk számának növekedésével (fa terjesztésével) egy iteráció futási ideje lineárisan nõ. Ez azért van így, mert a \emph{GetALC} függvénynek végig kell mennie a teljes fán, hogy megállapítsa, hogy melyik konfiguráció van a mintavételezett pozícióhoz legközelebb. Ez az egy függvény okozza azt, hogy lineárisan nõ a futási idõ a fa növekedésével.  Ha azt vizsgáljuk, hogy adott számú iteráció futásához mennyi idõ szükséges, akkor az négyzetesen fog nõni az iteráció szám növelésével.
+Az ábráról az is leolvasható, hogy a iterációk számának növekedésével (fa terjesztésével) egy iteráció futási ideje lineárisan nõ. Ez azért van így, mert a \emph{GetALC} függvénynek végig kell mennie a teljes fán, hogy megállapítsa, hogy melyik konfiguráció van a mintavételezett pozícióhoz legközelebb. Ez az egy függvény okozza azt, hogy a fa növekedésével lineárisan nõ a futási idõ.  Ha azt vizsgáljuk, hogy adott számú iteráció futásához mennyi idõ szükséges, akkor az négyzetesen fog nõni az iteráció szám növelésével.
 
-Az algoritmus futási idejét a Microsoft Visual Studio beépített Profiler eszközével is megvizsgáltam. A Profiler a program futása során mintákat gyûjt (ezt jelöli \aref{table:Prof}. táblázat \emph{Mintavétel} oszlopa), és eltárolja minden mintához, hogy a program melyik része futott. Ennél a tesztnél már a teljes algoritmust használtam, nemcsak az \emph{IterateTree} függvényt, és az algoritmus akkor fejezte be futását, ha talált utat a kezdõ és cél konfiguráció között.
+Az algoritmus futási idejét a Microsoft Visual Studio beépített Profiler eszközével is megvizsgáltam. A Profiler a program futása során mintákat gyûjt (ezt jelöli \aref{table:Prof}. táblázat \emph{Mintavétel} oszlopa), és eltárolja minden mintához, hogy a program melyik része futott. Ennél a tesztnél már a teljes algoritmust használtam, nemcsak az \emph{IterateTree} függvényt. Az algoritmus akkor fejezte be futását, ha talált utat a kezdõ és cél konfiguráció között.
 
 \begin{table}
 \centering
@@ -266,7 +266,7 @@ OptimizePath     			& 2 	& 0.04 		& 0.01\\
 \label{table:Prof}
 \end{table}
  
-A Profiler eredményeit \aref{table:Prof}. táblázat mutatja be. Az eredmények megfelelnek a várakozásainknak, mivel az idõ nagy részében a \emph{GetALC} függvény fut. Ezenkívül a \emph{MergeTreesGetPath} függvényhez tartozik jelentõs processzor idõ. Ez logikus, hiszen ennél a függvénynél is végig kell menni a teljes fákon, hogy eldöntsük a két fa összevonhatóságát.
+A Profiler eredményeit \aref{table:Prof}. táblázat mutatja be. Az eredmények megfelelnek a várakozásainknak, mivel az idõ nagy részében a \emph{GetALC} függvény fut. Ezenkívül a \emph{MergeTreesGetPath} függvényhez tartozik jelentõs processzor idõ. Ez logikus, hiszen ennél a függvénynél is végig kell menni a teljes, két fán, hogy eldöntsük a két fa összevonhatóságát.
 
 %----------------------------------------------------------------------------
 \subsection{Optimalizálások}
@@ -274,11 +274,11 @@ A Profiler eredményeit \aref{table:Prof}. táblázat mutatja be. Az eredmények meg
 
 Megvizsgálva az algoritmust, a következõ egyszerûbb optimalizálásokat végezhetjük el a programon. Mivel a \emph{GetALC} függvény (csomópont kiválasztás) a legkritikusabb függvény, ezért próbáljuk meg elsõsorban ezen optimalizálni.
 
-A csomópont kiválasztás lényege, hogy megkeressük a legközelebbi konfigurációt a mintavételezett pozícióhoz ($p_G$). Legközelebbi konfiguráció alatt távolságban legközelebbit értjük, abban az esetben, ha több ilyen konfigurációt találunk, az elfordulásban közelebbi konfigurációt választjuk. Ennek a menetét \aref{sect:ALC}. fejezetben tárgyaltuk részletesen. A csomópont kiválasztást gyorsíthatjuk, ha az adott TCI/RCI és a $p_G$ pont közötti vizsgálatot abbahagyjuk, ha a kapott távolság biztosan nagyobb lesz, mint az addigi minimális távolságú konfiguráció esetén. Ezzel TCI és RCI esetén nem szükséges kiszámolni a $p_G$ és a konfiguráció közti szögtávolságot, ami jelentõs javulást eredményez, mivel a szögtávolság meghatározásához \emph{atan2} mûveletet kell használunk.
+A csomópont kiválasztás lényege, hogy megkeressük a legközelebbi konfigurációt a mintavételezett pozícióhoz ($p_G$). Legközelebbi konfiguráción távolságban legközelebbit értjük. Abban az esetben, ha több ilyen konfigurációt találunk, az elfordulásban közelebbi konfigurációt választjuk. Ennek a menetét \aref{sect:ALC}. fejezetben tárgyaltuk részletesen. A csomópont kiválasztást gyorsíthatjuk, ha az adott TCI/RCI és a $p_G$ pont közötti vizsgálatot abbahagyjuk, ha a kapott távolság biztosan nagyobb lesz, mint az addigi minimális távolságú konfiguráció esetén. Ezzel TCI és RCI esetén nem szükséges kiszámolni a $p_G$ és a konfiguráció közti szögtávolságot, ami jelentõs javulást eredményez, mivel a szögtávolság meghatározásához \emph{atan2} mûveletet kell használunk.
 
 Az algoritmusnál gyakran elõfordul, hogy távolságokat kell összehasonlítanunk (\emph{GetALC} esetén is). Ezeknél a részeknél élhetünk azzal a triviális optimalizálással, hogy távolságnégyzetet számolunk, tehát megspórolunk egy négyzetgyökvonást.
 
-Megvizsgálva \aref{sect:rci}. fejezetekben tárgyalt ütközésvizsgálatot, a következõ optimalizálást végezhetjük el. Amennyiben a robot egy akadálytól messze található, akkor értelmetlen az egy helyben fordulásnál ütközésdetektálást végezni. Annak az eldöntése, hogy a robot messze található egy adott akadálytól, a következõképpen történik. Kiszámoljuk az RTR algoritmus elején, hogy mekkora a robot fordulási körének sugara és mekkora az akadályokat leíró sokszögek köré írható körének sugara. E körök segítségével meg tudjuk határozni egy akadályról, hogy messze található-e a robot aktuális pozíciójától. Ez a megoldás a \emph{MergeTreesGetPath} függvény futási idejét is csökkenti.
+Megvizsgálva \aref{sect:rci}. fejezetekben tárgyalt ütközésvizsgálatot, a következõ optimalizálást végezhetjük el. Amennyiben a robot egy akadálytól messze található, akkor értelmetlen az egyhelyben fordulásnál ütközésdetektálást végezni. Annak az eldöntése, hogy a robot messze található egy adott akadálytól, a következõképpen történik. Kiszámoljuk az RTR algoritmus elején, hogy mekkora a robot fordulási körének sugara és mekkora az akadályokat leíró sokszögek köré írható körének sugara. E körök segítségével meg tudjuk határozni egy akadályról, hogy messze található-e a robot aktuális pozíciójától. Ez a megoldás a \emph{MergeTreesGetPath} függvény futási idejét is csökkenti.
 
 \begin{table}
 \centering
@@ -295,11 +295,11 @@ OptimizePath     			& 3 	& 0.11 		& 0.01\\
 \label{table:Prof2}
 \end{table}
 
-Az ismertetett egyszerûbb optimalizálásokkal \aref{table:Prof2}. táblázatban látható futási eredményeket kapjuk a Profiler program alapján. A táblázat értékei alapján elmondhatjuk, hogy sikerült az algoritmus futási idejét az adott pálya esetében felére csökkenteni. Ezenkívül szembetûnõ különbség az optimalizálás elõtti eredményhez képest, hogy a \emph{GetALC} függvény futása 60\%-ról 40\%-ra csökkent. Tehát a csomópont kiválasztásnál alkalmazott optimalizálások, egyszerûségük ellenére igen hatásosak voltak.
+Az ismertetett egyszerûbb optimalizálásokkal \aref{table:Prof2}. táblázatban látható futási eredményeket kapjuk a Profiler program alapján. A táblázat értékei alapján elmondhatjuk, hogy sikerült az algoritmus futási idejét az adott pálya esetében felére csökkenteni. Ezenkívül szembetûnõ különbség az optimalizálás elõtti eredményhez képest, hogy a \emph{GetALC} függvény futása 60\%-ról 40\%-ra csökkent. Tehát a csomópont kiválasztásnál alkalmazott optimalizálások, egyszerûségük ellenére, igen hatásosak voltak.
 
 Az algoritmus futási idejét összehasonlíthatjuk az implementálás alapjául szolgáló MATLAB szkript futási idejével. Egy konkrét pálya esetében a Matlab szkriptben megvalósított algoritmus átlagosan ~24 s alatt futott le, míg a C++ nyelvû megvalósítás esetén ~21 ms alatt. Tehát körülbelül 3 nagyságrenddel lett gyorsabb a C++ változat. 
 
-Természetesen a MATLAB szkriptben megírt változat elsõdleges feladata az algoritmus bemutatása, és nem a minél rövidebb futási idõ elérése volt. Azonban bonyolultabb pályák esetében igazán hasznos a három nagyságrenddel rövidebb futási idõ, például a Profiler által az elõbbiekben tesztelt pálya esetében MATLAB szkript esetén hozzávetõleg két és fél óra lenne a futási idõ.
+Természetesen a MATLAB szkriptben megírt változat elsõdleges feladata az algoritmus bemutatása, nem a minél rövidebb futási idõ elérése volt. Azonban bonyolultabb pályák esetében igazán hasznos a három nagyságrenddel rövidebb futási idõ, például a Profiler által az elõbbiekben tesztelt pálya esetében MATLAB szkript esetén hozzávetõleg két és fél óra lenne a futási idõ.
 
 Véleményem szerint a két megvalósítás közötti különbség legfõképpen abból adódik, hogy MATLAB esetében interpretált módon hajtjuk végre a programkódot, míg a C++ nyelvnél a programkód fordításra kerül, ráadásul a fordító optimalizálás után készíti el a processzor által végrehajtandó gépi kódot.
 
@@ -318,7 +318,7 @@ Szimulációs eredmények alapján belátható, hogy az RTR tervezõ szûk folyosókat ta
 \label{fig:rtr_path}
 \end{figure}
 
-Bonyolultabb környezet esetén felerõsödik a véletlen mintavételezés szerepe, az egymás utáni futtatások között nagyobb eltérés mutatkozhat. \Aref{fig:rtr_path2}. ábrán látható útvonalat 35 iteráció után találta meg az RTR tervezõ, de elõfordult, hogy egy hasonló úthoz 130 iterációra volt szüksége ugyanennél a pályánál. Ennél a pályánál a kezdõ és végkonfigurációból terjesztett fákat is ábrázoltuk.
+Bonyolultabb környezet esetén felerõsödik a véletlen mintavételezés szerepe, az egymás utáni futtatások között nagyobb eltérés mutatkozhat. Az RTR tervezõ \aref{fig:rtr_path2}. ábrán látható útvonalat 35 iteráció után találta meg, de elõfordult, hogy ugyanennél a pályánál, egy hasonló úthoz 130 iterációra volt szüksége. Ebben az esetben a kezdõ és végkonfigurációból terjesztett fákat is ábrázoltuk.
 
 \begin{figure}[H]
 \centering
@@ -327,7 +327,7 @@ Bonyolultabb környezet esetén felerõsödik a véletlen mintavételezés szerepe, az 
 \label{fig:rtr_path2}
 \end{figure}
 
-\Aref{fig:rtr_path3}. ábrán látható pálya esetében vizsgáltuk az RTR algoritmus futási eredményeit \aref{table:Prof}. és a \aref{table:Prof2}. táblázatoknál. Látható, hogy a pálya két részén igen szûk kanyarban kell elfordulnia a robotnak. Ekkor a robot nagyon kis (1 milliméter alatti) mozgásokat hajt végre. Összehasonlításképpen a pálya 6 méter széles és 2.5 méter magas. Ezen pálya megtalálásához 3000-5000 iterációra volt szükség, teljesen véletlen mintavételezés esetén, tehát nem használjuk fel a celladekompozíció által adott pontokat.
+\Aref{fig:rtr_path3}. ábrán látható pálya esetében vizsgáltuk az RTR algoritmus futási eredményeit \aref{table:Prof}. és a \aref{table:Prof2}. táblázatoknál. Látható, hogy a pálya két részén igen szûk kanyarban kell elfordulnia a robotnak. Ekkor a robot nagyon kis (1 milliméter alatti) mozgásokat hajt végre. Összehasonlításképpen a pálya 6 méter hosszú és 2.5 méter széles. Ezen pálya megtalálásához 3000-5000 iterációra volt szükség, teljesen véletlen mintavételezés esetén, tehát nem használjuk fel a celladekompozíció által adott pontokat.
 
 \begin{figure}[H]
 \centering

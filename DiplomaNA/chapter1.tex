@@ -5,7 +5,7 @@
 %----------------------------------------------------------------------------
 \section{Problémafelvetés}
 %----------------------------------------------------------------------------
-A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb amikor a robot környezetében akadályok is találhatóak. 
+A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb, amikor a robot környezetében akadályok is találhatóak. 
 
 \par
 Célunk azon megközelítések és módszerek áttekintése, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetünk, ezeket szimulátoron és valós roboton is implementáltam, illetve teszteltem. A pályatervezéshez szorosan kapcsolódó téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
@@ -30,7 +30,7 @@ Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér}
 \begin{figure}[H]
 \centering
 \includegraphics[width=130mm, keepaspectratio]{figures/config.png}
-\caption{Konfigurációs tér szemléltetése egy adott útvonal során. A konfigurációs térben a piros vonal jelzi a robot útját a célpontja felé \cite{dkiss12ppee}.} 
+\caption{Konfigurációs tér szemléltetése egy adott útvonal során (bal oldali ábra). A konfigurációs térben a piros vonal jelzi a robot útját a célpontja felé. A síkbeli robot mozgása felülnézetbõl a jobb oldalon látható \cite{dkiss12ppee}.} 
 \label{fig:ConfigSpace}
 \end{figure}
 
@@ -64,7 +64,7 @@ ahol $v$ a robot sebessége, $v_r$ a robot jobb kerekének sebessége, $v_l$ a robo
 \end{align}
 
 \par
-Ezt a robot típust gyakran alkalmazzák, mivel egyszerû felépítésû és anholonom mivolta ellenére könnyedén irányítható. Ahogyan \aref{eq:diffRobot}. egyenletekbõl is következik, a robot képes egy helyben megfordulni, ami sok esetben elõnyös, például párhuzamos parkolás esetén.
+Ezt a robot típust gyakran alkalmazzák, mivel egyszerû felépítésû és anholonom mivolta ellenére könnyedén irányítható. Ahogyan \aref{eq:diffRobot}. egyenletekbõl is következik, a robot képes egyhelyben megfordulni, ami sok esetben elõnyös, például párhuzamos parkolás esetén.
 
 %----------------------------------------------------------------------------
 \subsection{Pályatervezõk osztályozása}
@@ -106,7 +106,7 @@ Kombinatorikus globális tervezõk közé tartoznak például a celladekompozíción ala
 %----------------------------------------------------------------------------
 \subsubsection{Irányított rendszer szerinti csoportosítás} \label{chapter:intro}
 %----------------------------------------------------------------------------
-A robotok, mint irányított rendszerek esetén megkülönböztetjük az anholonom és holonom rendszereket a pályatervezõk csoportosítása esetén is. Anholonom rendszerek esetén önmagában a robot állapotváltoztatása sem triviális feladat. Azokat az eljárásokat, amelyek képesek egy anholonom rendszert egy kezdõ konfigurációból egy cél konfigurációba eljuttatni az akadáyok figyelembe vétele nélkül, \emph{lokális tervezõknek} hívjuk \cite{LaValle2}.
+A robotok, mint irányított rendszerek esetén megkülönböztetjük az anholonom és holonom rendszereket a pályatervezõk csoportosítása esetén is. Anholonom rendszerek esetén önmagában a robot állapotváltoztatása sem triviális feladat. Azokat az eljárásokat, amelyek képesek egy anholonom rendszert egy kezdõ konfigurációból egy cél konfigurációba eljuttatni az akadályok figyelembe vétele nélkül, \emph{lokális tervezõknek} hívjuk \cite{LaValle2}.
 
 \par
 Gyakran már a globális tervezõ figyelembe veszi a robot korlátozásait, és ennek megfelelõ geometriai primitíveket használ, vagy esetleg egy lokális tervezõt használ minden állapotváltoztatásra.

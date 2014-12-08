@@ -39,11 +39,11 @@
 \select@language {magyar} \contentsline {subsection}{\numberline {4.2.4}T\'ulhalad\'as probl\'em\'aja}{47}{subsection.4.2.4}
 \select@language {magyar} \contentsline {subsection}{\numberline {4.2.5}Orient\'aci\'oszab\'alyoz\'as szegmens v\'egpontj\'an\'al}{48}{subsection.4.2.5}
 \select@language {magyar} \contentsline {section}{\numberline {4.3}Eredm\'enyek}{49}{section.4.3}
-\select@language {magyar} \contentsline {chapter}{\numberline {5}Rendszer implement\'al\'asa}{51}{chapter.5}
+\select@language {magyar} \contentsline {chapter}{\numberline {5}Rendszer implement\'aci\'oja}{51}{chapter.5}
 \select@language {magyar} \contentsline {section}{\numberline {5.1}C*CS p\'alyatervez\H o}{51}{section.5.1}
 \select@language {magyar} \contentsline {section}{\numberline {5.2}V-REP robotszimul\'ator}{52}{section.5.2}
 \select@language {magyar} \contentsline {subsection}{\numberline {5.2.1}Keretrendszer}{52}{subsection.5.2.1}
-\select@language {magyar} \contentsline {subsubsection}{Kliens program}{53}{section*.42}
+\select@language {magyar} \contentsline {subsubsection}{Kliensprogram}{53}{section*.42}
 \select@language {magyar} \contentsline {subsection}{\numberline {5.2.2}Szimul\'aci\'os eredm\'enyek}{54}{subsection.5.2.2}
 \select@language {magyar} \contentsline {section}{\numberline {5.3}Val\'os robot}{56}{section.5.3}
 \select@language {magyar} \contentsline {subsection}{\numberline {5.3.1}A robot ir\'any\IeC {\'\i }t\'orendszere}{57}{subsection.5.3.1}

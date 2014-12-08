@@ -44,7 +44,7 @@ C.~Sprunk, {\em Planning Motion Trajectories for Mobile Robots Using Splines}.
 \newblock Albert-Ludwigs-Universitat Freiburg, 2008.
 
 \bibitem{Curv2D}
-D.-J. Kroon, ``{2D} {Line} {Curvature} and {Normals}.''
+{Dirk-Jan Kroon}, ``{2D} {Line} {Curvature} and {Normals}.''
   \url{http://www.mathworks.com/matlabcentral/fileexchange/32696-2d-line-curvature-and-normals/content/LineCurvature2D.m}.
 
 \bibitem{Bezi}
@@ -52,6 +52,6 @@ D.-J. Kroon, ``{2D} {Line} {Curvature} and {Normals}.''
 \newblock BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék, 2013.
 
 \bibitem{VREP}
-{Coppelia Robotics}, ``V-rep.'' \url{http://www.coppeliarobotics.com/}.
+{Coppelia Robotics}, ``{V-REP}.'' \url{http://www.coppeliarobotics.com/}.
 
 \end{thebibliography}

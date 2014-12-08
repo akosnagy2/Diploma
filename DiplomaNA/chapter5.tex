@@ -1,41 +1,44 @@
 %----------------------------------------------------------------------------
-\chapter{Rendszer implementálása} 
+\chapter{Rendszer implementációja} 
 %------------------------------------------------------------------------
 
-A fejezet elején röviden bemutatunk egy újabb pályatervezõ algoritmust, majd a szimulációs környezetet, amelyben a dolgozatban ismertetett algoritmusokat teszteltem, végül áttérünk a valós robot bemutatására. Alapvetõ célom volt, hogy a szimulációnál használt programokat minél kevesebb változtatással tudjam a valós roboton is alkalmazni. Ezenkívül a fejezetben megvizsgáljuk a szimulátorban és valós roboton elért eredményeket.
+A fejezet elején röviden bemutatunk egy újabb pályatervezõ algoritmust, majd a szimulációs környezetet, amelyben a dolgozatban ismertetett algoritmusokat teszteltem. Végül áttérünk a valós robot bemutatására. Alapvetõ célom volt, hogy a szimulációnál használt programokat minél kevesebb változtatással tudjam a valós roboton is alkalmazni. Ezenkívül a fejezetben megvizsgáljuk a szimulátorban és valós roboton elért eredményeket.
 
 %----------------------------------------------------------------------------
 \section{C*CS pályatervezõ} \label{chapter:implement}
 %----------------------------------------------------------------------------
 
-Mivel az RTR tervezõ egyenes és egy helyben fordulás primitívekkel dolgozik, ezért sok esetben a differenciális robot gyorsabban is végre tudná hajtani a pályát, amennyiben nem kellene minden egyenes szakasz végén megállnia. A most bemutatásra kerülõ lokális pályatervezõ segítségével gyorsabban végrehajtható pályát kapunk.
+Mivel az RTR tervezõ egyenes és egyhelyben fordulás primitívekkel dolgozik, ezért sok esetben a differenciális robot gyorsabban is végre tudná hajtani a pályát, amennyiben nem kellene minden egyenes szakasz végén megállnia. A most bemutatásra kerülõ lokális pályatervezõ segítségével gyorsabban végrehajtható pályát kapunk.
 
 \Aref{chapter:intro}. fejezetben már ismertettük az úgynevezett approximációs pályatervezési módszert. A módszer lényege, hogy a globális tervezõ által tervezett pályát egy lokális tervezõ segítségével közelítjük. Jelen esetben a bemutatott RTR tervezõt használjuk, mint globális tervezõt. Lokális tervezõnek pedig az úgynevezett \emph{C*CS} tervezõt használjuk, amelyet szintén Kiss Domokos dolgozott ki, ahogyan az RTR tervezõt is. A \emph{C*CS} algoritmust Csorvási Gábor implementálta C++ nyelven, az õ megoldását használtam fel a dolgozatomban. 
 
+A \emph{C*CS} egy autók számára kifejlesztett algoritmus. Az autókra jellemzõ, hogy van minimális fordulási sugaruk. Mivel a differenciális robotok fordulási sugara nulla (képesek egyhelyben fordulni), végre tudják hajtani az autók számára tervezett pályát is.
+
 A \emph{C*CS} algoritmus lényege, hogy körívek és egyenesek segítségével közelítjük a globális tervezõ által tervezett pályát. Az algoritmus nevében szereplõ \emph{C} betû körívre utal, az \emph{S} egyenesre és a \emph{C*} pedig olyan körívre, amelynek sugara végtelen is lehet (egyenes).
+
+Az RTR tervezõ és a \emph{C*CS} tervezõ együttes alkalmazását \aref{fig:ccsSolution}. ábrán láthatjuk. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[height=80mm, keepaspectratio]{figures/frame6.png}
-\caption{A C*CS algoritmus megoldása sárga színnel látható, míg a globális pálya zöld színnel.} 
+\includegraphics[height=70mm, keepaspectratio]{figures/RTR_CCS_CAR.png}
+\includegraphics[height=70mm, keepaspectratio]{figures/RTR_CCS_DIFF.png}
+\caption{A bal oldalon autószerû robot esetében látható egy szituáció, míg a jobb oldalon differenciális robot esetében. A C*CS algoritmus megoldása piros színnel látható, míg a globális pálya (RTR) zöld színnel.} 
 \label{fig:ccsSolution}
 \end{figure}
-
-\Aref{fig:ccsSolution}. ábrán látható egy adott környezet esetén az \emph{C*CS} által tervezett pálya.
 
 %----------------------------------------------------------------------------
 \section{V-REP robotszimulátor}
 %----------------------------------------------------------------------------
 
-A pályatervezõ, idõparaméterezõ és pályakövetõ algoritmusok tesztelésére a V-REP robotszimulátort használtam. A programot a Coppelia Robotics cég fejleszti, és a szimulátor oktatási célra ingyenesen letölthetõ, használható \cite{VREP}. A program széles körûen használható a robotika minden ágában. Szimulálhatóak benne ipari szerelõrobotok, ahogyan \aref{fig:vrep}. ábrán is látható, de mobil robotok esetében is igen hasznos eszköz. Valós robotok programozására is alkalmas. A szimulátor mûködése jól dokumentált, sok oktató anyagot, példaprogramot készítettek a fejlesztõk hozzá, és ezenkívül folyamatosan frissítik, új funkciókkal bõvítik.
+A pályatervezõ, idõparaméterezõ és pályakövetõ algoritmusok tesztelésére a V-REP robotszimulátort használtam. A programot a Coppelia Robotics cég fejleszti. A szimulátor oktatási célra ingyenesen letölthetõ, használható \cite{VREP}. A program széles körûen használható a robotika minden ágában. Szimulálhatóak benne ipari szerelõrobotok, ahogyan \aref{fig:vrep}. ábrán is látható, de mobil robotok esetében is igen hasznos eszköz. Valós robotok programozására is alkalmas. A szimulátor mûködése jól dokumentált, sok oktató anyagot, példaprogramot készítettek a fejlesztõk hozzá, és ezenkívül folyamatosan frissítik, új funkciókkal bõvítik.
 
 %----------------------------------------------------------------------------
 \subsection{Keretrendszer}
 %----------------------------------------------------------------------------
 
-A V-REP mûködése több módon is kiegészíthetõ. Csorvási Gáborral közösen a következõ keretrendszert dolgoztuk ki. A keretrendszer része egy általunk készített szerver és egy kliens program. A V-REP-hez készítettünk egy Lua szkriptet, amely kapcsolódik a szerver programhoz, elküldi számára a szimuláció paramétereit, majd a szervertõl kapott adatok alapján mozgatja a robotot, kirajzolja a megtervezett pályát, esetleg egyéb hasznos információkat jelenít meg. A szerver programhoz kapcsolódik a kliens programunk is. A kliens program futtatja a pályatervezõ, idõparaméterezõ és a pályatervezõ algoritmusokat. Az algoritmusok paramétereit a Lua szkript határozza meg a szerveren keresztül. A szerver mûködése teljesen transzparens, az alkalmazás tekinthetõ a szimulátor részének. A keretrendszer felépítését \aref{fig:vrepBlock}. ábra szemlélteti.
+A V-REP mûködése több módon is kiegészíthetõ. Csorvási Gáborral közösen egy keretrendszert dolgoztuk ki. A keretrendszer része az általunk készített szerver és a kliensprogram. A V-REP-hez készítettünk egy Lua szkriptet, amely kapcsolódik a szerver programhoz, elküldi számára a szimuláció paramétereit, majd a szervertõl kapott adatok alapján mozgatja a robotot, kirajzolja a megtervezett pályát, esetleg egyéb hasznos információkat jelenít meg. A szerver programhoz kapcsolódik a kliensprogramunk is. A kliensprogram futtatja a pályatervezõ, idõparaméterezõ és a pályatervezõ algoritmusokat. Az algoritmusok paramétereit a Lua szkript határozza meg a szerveren keresztül. A szerver mûködése teljesen transzparens, az alkalmazás tekinthetõ a szimulátor részének. A keretrendszer felépítését \aref{fig:vrepBlock}. ábra szemlélteti.
 
-A keretrendszer felépítése azért is elõnyös, mert a kliens program helyett akár a valós robot vezérlõszoftvere is kapcsolódhat a szerverhez. Így a V-REP-ben a valós robot aktuális konfigurációját láthatjuk, a valós roboton futó algoritmusok beállításai szintén a Lua szkriptbõl megadhatóak.
+A keretrendszer felépítése azért is elõnyös, mert a kliensprogram helyett akár a valós robot vezérlõszoftvere is kapcsolódhat a szerverhez. Így a V-REP-ben a valós robot aktuális konfigurációját láthatjuk. A valós roboton futó algoritmusok beállításai szintén a Lua szkriptbõl megadhatóak.
 
 Mivel Csorvási Gábor témája hasonlóan pályatervezéssel és pályakövetéssel kapcsolatos, de nem differenciális robot, hanem autószerû robot esetén, így fontosnak tartottuk úgy elkészíteni a keretrendszer elemeit, hogy függetlenek legyenek a robot típusától. A Lua szkriptben megadható, hogy a szimuláció vagy a valós roboton végzett mérés differenciális vagy autószerû roboton fusson. A két robottípushoz más paraméterek tartoznak, és csak az adott típushoz tartozó paramétereket kapja meg a szerver és a kliensalkalmazás.
 
@@ -47,9 +50,9 @@ Mivel Csorvási Gábor témája hasonlóan pályatervezéssel és pályakövetéssel kapcso
 \end{figure}
 
 %----------------------------------------------------------------------------
-\subsubsection{Kliens program}
+\subsubsection{Kliensprogram}
 %----------------------------------------------------------------------------
-A kliens program alapvetõen két módban futtatható. Az egyik módban az idõparaméterezõ és a pályakövetõ szabályozás tesztelhetõ. Ekkor a kliens a szimulátortól fogad egy elõre elkészített pályát, majd ezt az idõparaméterezõ algoritmus segítségével újramintavételezi és a kapott pályát visszaküldi a V-REP-nek, amely megjeleníti azt. Innentõl a pályakövetõ algoritmus kerül elõtérbe. A szimulátor kezdetben elküldi a robot aktuális pozícióját a kliensnek, majd minden szabályozási ciklusban a pályakövetõ eljárás elküldi a szervernek az aktuális beavatkozó jeleket, amely alapján megtörténik a robot konfigurációjának kijelzése. A szimulátor és a kliens alkalmazás mûködése szinkronizálva van, azaz megvárják egymást a következõ lépéssel.
+A kliensprogram alapvetõen két módban futtatható. Az egyik módban az idõparaméterezõ és a pályakövetõ szabályozás tesztelhetõ. Ekkor a kliens a szimulátortól fogad egy elõre elkészített pályát, majd ezt az idõparaméterezõ algoritmus segítségével újramintavételezi és a kapott pályát visszaküldi a V-REP-nek, amely megjeleníti azt. Innentõl a pályakövetõ algoritmus kerül elõtérbe. A szimulátor kezdetben elküldi a robot aktuális pozícióját a kliensnek, majd minden szabályozási ciklusban a pályakövetõ eljárás elküldi a szervernek az aktuális beavatkozó jeleket, amely alapján megtörténik a robot konfigurációjának kijelzése. A szimulátor és a kliens alkalmazás mûködése szinkronizálva van, azaz megvárják egymást a következõ lépéssel.
 
 \begin{figure}[H]
 \centering
@@ -58,21 +61,21 @@ A kliens program alapvetõen két módban futtatható. Az egyik módban az idõparamét
 \label{fig:vrepBlock}
 \end{figure}
 
-A kliens másik módja a pályatervezés teszteléséhez használható. Ebben az esetben a kliens nem kap elõre elkészített pályát, hanem egy környezetet kap. Környezet alatt értjük az akadályok leírását, beleértve a környezet határvonalait is. Emellett a pályatervezéshez szükséges egy kezdõ- és célkonfiguráció, és a robot alakjának leírása is. Ezeket szintén megkapja a kliens a szimulátortól. A pályatervezés után a kliens mûködése megegyezik a pályakövetõ módnál leírtakkal, csak a követendõ pályát most nem a V-REP szolgáltatja, hanem a pályakövetõ algoritmus.
+A kliens másik módja a pályatervezés teszteléséhez használható. Ebben az esetben a kliens nem kap elõre elkészített pályát, hanem egy környezetet kap. Környezeten értjük az akadályok leírását, beleértve a környezet határvonalait is. Emellett a pályatervezéshez szükséges egy kezdõ- és célkonfiguráció, és a robot alakjának leírása is. Ezeket szintén megkapja a kliens a szimulátortól. A pályatervezés után a kliens mûködése megegyezik a pályakövetõ módnál leírtakkal, csak a követendõ pályát most nem a V-REP szolgáltatja, hanem a pályatervezõ algoritmus.
 
 Ahogyan az algoritmusokat, úgy a klienst is C++ nyelven implementáltuk. A C++ nyelv azért is volt elõnyös választás, mivel így valós roboton, beágyazott környezetben is könnyedén használhatóak az algoritmusok. A beágyazott környezet miatt igyekeztünk kerülni bármiféle olyan külsõ szoftvercsomag használatát, aminek a használata problémás lehet a valós roboton. 
 
 %----------------------------------------------------------------------------
 \subsection{Szimulációs eredmények}
 %----------------------------------------------------------------------------
-A bemutatott algoritmusok szimulációs környezetben a várakozásaimnak megfelelõen mûködtek. Az eredmények a következõ ábrákon láthatóak. A képek a V-REP szimulátorról készültek, az akadályokat és a pálya határait színes sokszögek jelzik, a pályatervezõ által generált pályát kék színnel jelöljük, míg a robot által bejárt pályát sárgával. A robot alatt található sokszög jelzi a tervezés során ténylegesen figyelembe vett robot alakot.
+A szimulációs környezetben bemutatott algoritmusok a várakozásaimnak megfelelõen mûködtek. Az eredmények a következõ ábrákon láthatóak. A képek a V-REP szimulátorról készültek, az akadályokat és a pálya határait színes sokszögek jelzik, a pályatervezõ által generált pályát kék színnel jelöljük, míg a robot által bejárt pályát sárgával. A robot alatt található sokszög jelzi a tervezés során ténylegesen figyelembe vett robot alakot.
 
 A szimulációnál a képek jobb oldalán található két grafikon. A felsõ grafikon a robot sebességét (piros) és gyorsulását mutatja (sárga), az alsó grafikon a referenciaponttól vett távolságot (piros) és az orientációs referenciaponttól vett távolságot láthatjuk (zöld). A felsõ grafikonon $m/s$ és $m^2/s$ mértékegységben szerepelnek a mennyiségek, míg az alsó grafikonon $mm$-ben.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath0RTR.png}
-\caption{Ez a pálya differenciális robot esetében viszonylag egyszerûen teljesíthetõ, mivel a robot képes egy helyben fordulni. A pályát az RTR tervezõ generálta.} 
+\caption{Ez a pálya differenciális robot esetében viszonylag egyszerûen teljesíthetõ, mivel a robot képes egyhelyben fordulni. A pályát az RTR tervezõ generálta.} 
 \label{fig:DiffSimRobot1RTR}
 \end{figure}
 
@@ -116,11 +119,11 @@ A dolgozatban bemutatott algoritmusokat az Eurobot 2013 nemzetközi robotversenyr
 
 A robot irányítórendszere alapvetõen két szintbõl áll. A robot alsó szintû vezérlése elosztott modulokkal történik. Ezek a modulok felelnek a robot tápellátásért, a robot különbözõ beavatkozószerveinek vezérléséért és a robot mérõ- és érzékelõszerveitõl érkezõ jelek fogadásáért (beleértve a robot pozíciójának mérését, odometria segítségével). A modulok CAN buszon kommunikálnak egymással és egy CAN-Ethetnet átjáró segítségével a felsõ szintû irányítórendszerrel. Minden modul két részbõl áll, egy feladat specifikus kártyából és egy általános DSP kártyából, amely a modul szoftverét tartalmazza.
 
-Az egyik modul felelõs a robot mozgatásáért, így a dolgozatban bemutatott algoritmusok egy részét a modulon található DSP processzoron kellett implementálnom. Mivel a DSP processzorokat elsõsorban jelfeldolgozási feladatokra használják, alapvetõen a pályakövetõ algoritmust implementáltam ezen az alsó szinten. A pályatervezõ és a hozzá kapcsolódó idõparaméterezõ eljárást értelmetlen lett volna a mozgatásért felelõs modulon implementálni, mivel a modul nem rendelkezik minden információval a pályatervezéshez, és a modulon használt DSP teljesítménye nem megfelelõ a pályatervezés megvalósításához. A DSP processzor a Texas Instruments által gyártott TMS320F2809 32 bites fixpontos processzor.
+Az egyik modul felelõs a robot mozgatásáért, így a dolgozatban bemutatott algoritmusok egy részét a modulon található DSP processzoron kellett implementálnom. Mivel a DSP processzorokat elsõsorban jelfeldolgozási feladatokra használják, alapvetõen a pályakövetõ algoritmust implementáltam ezen az alsó szinten. A pályatervezõ és a hozzá kapcsolódó idõparaméterezõ eljárást értelmetlen lett volna a mozgatásért felelõs modulon implementálni, mivel a modul nem rendelkezik minden információval a pályatervezéshez, és a modulon használt DSP teljesítménye nem megfelelõ a pályatervezés megvalósításához. A DSP a Texas Instruments által gyártott TMS320F2809 32 bites fixpontos processzor.
 
-A robot felsõ szintû vezérlõegysége felelõs a robot stratégiájának autonóm megvalósításért. A stratégia alatt elsõsorban valamilyen összetett feladat elvégzését értem, amelynek szerves része a pályatervezés, akadályelkerülés. Tehát a pályatervezõ és idõparaméterezõ algoritmusokat ezen a szinten implementáltam a valós robot esetében. 
+A robot felsõ szintû vezérlõegysége felelõs a robot stratégiájának autonóm megvalósításért. A stratégián elsõsorban valamilyen összetett feladat elvégzését értem, amelynek szerves része a pályatervezés, akadályelkerülés. A valós robot esetében, a pályatervezõ és idõparaméterezõ algoritmusokat ezért ezen a szinten implementáltam. 
 
-A robot felsõ szintû vezérlõegysége egy C++ program, amely TCP/IP protokollon keresztül kapcsolódik az alsó szintû kártyákhoz. Ebbõl következik, hogy ez az úgynevezett RobotPilot szoftver akár különbözõ architektúrákon is futhat, hiszen csak egy TCP kapcsolatra van szüksége a robot vezérléséhez. Én egyrészt laptopon futtattam a szoftvert, és ekkor egy UTP kábel biztosította a kapcsolatot a robot alsó szintjéhez. Másrészt egy beágyazott számítógépre is lefordítottam a RobotPilot szoftvert, amelyet a roboton helyeztem el. A beágyazott számítógép a Texas Instruments AM335x Starter Kit kártyája volt. Ez a kártya nagy teljesítményû ARM Cortex-A8 processzort, érintõképernyõt és igen sokféle perifériát tartalmaz. A perifériák közül az Ethernet és a WIFI modult használtam elsõsorban. Az Ethernet modul segítségével kapcsolódott a robot alsó szintjéhez a kártya, WIFI-n keresztül pedig a V-REP-et futtató számítógéphez. 
+A robot felsõ szintû vezérlõegysége egy C++ program, amely TCP/IP protokollon keresztül kapcsolódik az alsó szintû kártyákhoz. Ebbõl következik, hogy ez az úgynevezett RobotPilot szoftver akár különbözõ architektúrákon is futhat, hiszen csak egy TCP kapcsolatra van szüksége a robot vezérléséhez. Én egyrészt asztali számítógépen futtattam a szoftvert, és ekkor egy UTP kábel biztosította a kapcsolatot a robot alsó szintjéhez. Másrészt egy beágyazott számítógépre is lefordítottam a RobotPilot szoftvert, amelyet a roboton helyeztem el. A beágyazott számítógép a Texas Instruments AM335x Starter Kit kártyája volt. Ez a kártya nagy teljesítményû ARM Cortex-A8 processzort, érintõképernyõt és igen sokféle perifériát tartalmaz. A perifériák közül az Ethernet és a WIFI modult használtam elsõsorban. Az Ethernet modul segítségével kapcsolódott a robot alsó szintjéhez a kártya, WIFI-n keresztül pedig a V-REP-et futtató számítógéphez. 
 
 \begin{figure}[H]
 \centering
@@ -129,7 +132,7 @@ A robot felsõ szintû vezérlõegysége egy C++ program, amely TCP/IP protokollon ke
 \label{fig:Sitara}
 \end{figure}
 
-Mind laptop, mind beágyazott számítógép esetében a RobotPilot csatlakozik a V-REP-hez tartozó szerver alkalmazáshoz, és így a V-REP-ben megjelenik a robot aktuális konfigurációja, valamint a V-REP segítségével a pályatervezõ és pályakövetõ algoritmusok paraméterei megadhatóak, ahogyan szimuláció esetén is.
+Mind asztali, mind beágyazott számítógép esetében a RobotPilot csatlakozik a V-REP-hez tartozó szerver alkalmazáshoz, így a V-REP-ben megjelenik a robot aktuális konfigurációja. Ugyanakkor a V-REP segítségével a pályatervezõ és pályakövetõ algoritmusok paraméterei megadhatóak, ahogyan szimuláció esetén is.
 
 %----------------------------------------------------------------------------
 \subsection{Valós eredmények}
@@ -151,14 +154,14 @@ A pályákat a robot a következõ paraméterekkel hajtotta végre:
 \begin{figure}[H]
 \centering
 \includegraphics[width=120mm, keepaspectratio]{figures/RealTest/Env2_200.png}
-\caption{Ez a pálya már szerepelt a szimulációs eredmények között is. Valós robot számára sem okoz problémát a megtervezett pálya lekövetése.} 
+\caption{Ez a környezet már szerepelt a szimulációs eredmények között is. Valós robot számára sem okoz problémát a megtervezett pálya lekövetése.} 
 \label{fig:DiffRealRobot1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=110mm, keepaspectratio]{figures/RealTest/Env1_200.png}
-\caption{Ennél a pályánál a C*CS tervezõ igen szép pályát tervezett.} 
+\caption{Ebben az esetben a C*CS tervezõ igen szép pályát tervezett.} 
 \label{fig:DiffRealRobot2}
 \end{figure}
 
@@ -176,6 +179,6 @@ A pályákat a robot a következõ paraméterekkel hajtotta végre:
 \label{fig:DiffRealRobot4}
 \end{figure}
 
-A pályakövetés valós robot esetén is megfelelõen mûködött, ahogyan a szimulációnál is. Az adott robot esetében, a mérésekhez használt paraméterek mellet biztonságosan végre tudta hajtani a pályákat, a mérés során egyszer sem ütközött akadályba. 
+A pályakövetés valós robot esetén is megfelelõen mûködött, ahogyan a szimulációnál is. Az adott robot esetében, a mérésekhez használt paraméterek mellett biztonságosan végre tudta hajtani a pályákat, a mérés során egyszer sem ütközött akadályba. 
 
-Az a véleményen, hogy amennyiben ezzel a robottal nagyobb sebességgel és gyorsulással szeretnénk végrehajtani a megtervezett pályát, elsõsorban a robot mechanikáján kellene változtatni. A robot hajtásrendszere, beleértve a kerekek kialakítását nem megfelelõek nagyobb sebességû pályakövetéshez. Gyakran elõfordult, hogy mozgás során a robot kerekei megakadtak, amit a sebességszabályozók ugyan kikompenzáltak, de ez ettõl függetlenül lengést eredményezett a pályakövetésben. Elõfordult, hogy nagyobb gyorsulás esetén a kerék gumiborítása lejött a kerékrõl. Ezeken a zavaró hatásokon valamennyit sikerült javítanom a fejlesztés során, de még így sem sikerült megközelíteni az 1 $m/s$ sebességhatárt.
+Az a véleményem, hogy amennyiben ezzel a robottal nagyobb sebességgel és gyorsulással szeretnénk végrehajtani a megtervezett pályát, elsõsorban a robot mechanikáján kellene változtatni. A robot hajtásrendszere, beleértve a kerekek kialakítását, nem megfelelõek nagyobb sebességû pályakövetéshez. Gyakran elõfordult, hogy mozgás során a robot kerekei megakadtak, amit a sebességszabályozók ugyan kikompenzáltak, de ez ettõl függetlenül lengést eredményezett a pályakövetésben. Elõfordult, hogy nagyobb gyorsulás esetén a kerék gumiborítása lejött a kerékrõl. Ezeken a zavaró hatásokon sikerült javítanom a fejlesztés során, de csak a robot hajtásrendszerének módosításával lehetne megközelíteni az 1 $m/s$ sebességhatárt, amelyre a robot motorjai és meghajtása egyébként képes volna.

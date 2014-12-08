@@ -1,7 +1,7 @@
 %----------------------------------------------------------------------------
 \chapter{Pályakövetõ szabályozás}
 %----------------------------------------------------------------------------
-A pályakövetés ismertetése elõtt tekintsük át, hogy pontosan mit értünk pálya alatt, amelyet követni szeretnénk.
+A pályakövetés ismertetése elõtt tekintsük át, hogy pontosan mit értünk pályán, amelyet követni szeretnénk.
 
 A követendõ pályát szegmensekre bontjuk fel. Egy szegmensen belül a robot megállás nélkül halad elõre vagy hátra a pálya mentén. Ebbõl következik, hogy egy szegmens a haladás irányából és a pálya idõben egyenletesen mintavételezett koordinátáiból áll. Két szegmens között a robot egy helyben fordul a következõ szegmens kezdeti irányába. Az elõbb leírtak alapján két alapvetõ mozgásprimitívvel dolgozunk: egy helyben fordulás adott irányba és pályakövetés. Azt, hogy az adott szegmensnél a robot elõre vagy hátrafelé halad, a pályatervezõ algoritmus dönti el, ahogyan a szegmenshatárokat is a pályatervezõ adja meg. 
 
@@ -31,7 +31,7 @@ A kérdés megválaszolásához kövessük végig az alábbi gondolatmenetet. Jelenleg a 
 ahol $\theta(i)$ a robot orientációja $i$. idõpontban.
 
 \par
-Vizsgáljuk meg, hogy mi történne ha a következõ mintavételkor ($i+1$). idõpontban a maximális szöggyorsulással elkezdenénk lassítani a fordulást:
+Vizsgáljuk meg, hogy mi történne, ha a következõ mintavételkor ($i+1$). idõpontban a maximális szöggyorsulással elkezdenénk lassítani a fordulást:
 
 \begin{align} 
 \omega(i+1) &= \omega(i) - \beta^{max} \cdot \Delta t \\ \notag
@@ -85,13 +85,13 @@ Az egy helyben fordulásnál szögsebesség beavatkozójelet határozunk meg, míg a pá
 %----------------------------------------------------------------------------
 \subsection{Sebességszabályozás}
 %----------------------------------------------------------------------------
-Alacsony szinten, a keréksebességeknél történik a sebességszabályozás. Az általunk használt valós robot két hajtott kerékkel rendelkezik, mindkét kerék esetén egy-egy DC motor gondoskodik a robot mozgatásáról. A DC motorok tengelyéhez egy-egy inkrementális adó csatlakozik, amely biztosítja a sebességszabályozás számára a visszacsatolást. Ahogyan a feszültségvezérelt egyenáramú motorok esetében gyakran lenni szokott, mi is PI szabályozókat használunk sebességszabályozásra.
+Alacsony szinten, a keréksebességeknél történik a sebességszabályozás. Az általam használt valós robot két hajtott kerékkel rendelkezik, mindkét kerék esetén egy-egy DC motor gondoskodik a robot mozgatásáról. A DC motorok tengelyéhez egy-egy inkrementális adó csatlakozik, amely biztosítja a sebességszabályozás számára a visszacsatolást. Feszültségvezérelt egyenáramú motorok esetében széleskörûen alkalmazott gyakorlat PI szabályozók használata, így sebességszabályozásra én is PI szabályozókat használok
 
 \par
 A PI szabályozók esetében gyakran elõforduló probléma az elintegrálódás \cite{Bezi}. Az elintegrálódás a rendszerben lévõ beavatkozószerv telítései miatt lép fel, kiküszöbölése történhet többféleképpen szabályozó típustól függõen. Esetünkben az integrátor visszaállításával elõzzük meg az elintegrálódást.
 
 \par
-Az általunk implementált sebességszabályozók figyelembe veszik a motor és az áttételek nemlinearitását is. Ehhez felvettük mindkét kerék esetén a rendszer karakterisztikáját, tehát, hogy adott feszültség mellett mekkora sebességet ér el a kerék (\ref{fig:wheelCh}. ábra). Ennek a karakterisztikának az inverzét beépítettük a rendszer modelljébe, így elméletileg a nemlinearitást kiejtettük.
+Az általam implementált sebességszabályozók figyelembe veszik a motor és az áttételek nemlinearitását is. Ehhez felvettük mindkét kerék esetén a rendszer karakterisztikáját, tehát, hogy adott feszültség mellett mekkora sebességet ér el a kerék (\ref{fig:wheelCh}. ábra). Ennek a karakterisztikának az inverzét beépítettük a rendszer modelljébe, így elméletileg a nemlinearitást kiejtettük.
 
 \begin{figure}[H]
 \centering
@@ -135,7 +135,7 @@ Az orientációszabályozás feladata szögsebesség alapjel biztosítása a pályaköveté
 \end{figure}
 
 \par
-Fontos kérdés, hogy a pálya mely pontját válasszuk az alapjelszámoláshoz. Mindenképp a sebességszabályozónál használt referenciapontnál távolabbi pontot keresünk, hiszen a referenciapont van a robothoz legközelebb, és nem akarjuk, hogy az orientációszabályozás a pályán visszafelé irányítsa a robotot. 
+Fontos kérdés, hogy a pálya mely pontját választjuk az alapjelszámoláshoz. Mindenképp a sebességszabályozónál használt referenciapontnál távolabbi pontot keresünk, hiszen a referenciapont van a robothoz legközelebb, és nem akarjuk, hogy az orientációszabályozás a pályán visszafelé irányítsa a robotot. 
 
 \par
 Alapvetõen két megközelítést alkalmazhatunk. Egyrészt használhatunk konstans távolságú elõretekintést, ekkor mindig a referenciaponttól egy adott távolságra lévõ pályapontot használunk az orientációszabályzáshoz. A másik megközelítésnél pedig konstans idejû elõretekintést alkalmazunk. Ennél a módszernél a referenciaponthoz képest adott számú mintavétellel elõbbre lévõ pályapont lesz $p_{ori}$.
@@ -152,7 +152,7 @@ A pályakövetés valós roboton történõ tesztelése során egy eddig nem tárgyalt pro
 \begin{figure}[H]
 \centering
 \includegraphics[width=120mm, keepaspectratio]{figures/VREPStart.png}
-\caption{A túlszaladás problémája szimulátorban. A robot alakját nem mutatja az ábra, csak a határolóvonalait.} 
+\caption{A túlszaladás problémáját bemutató szituáció szimulátorban. A robot alakját nem mutatja az ábra, csak a határolóvonalait. A zöld görbe a követendõ pálya.} 
 \label{fig:robotStart}
 \end{figure}
 
