@@ -146,7 +146,7 @@ Miután kiszámoltuk, hogy az adott pályapontnál mekkora legyen a robot kerekeinek
 \begin{align}\label{eq:a}
 a_{t}(k) &= \frac{{a_{w}}_{t}(k)}{p(k)}\\
 \label{eq:v}
-v(k+1) &= \min \left( v^{max}(k+1), \sqrt{v(k) + 2 \cdot a_{t}(k) \cdot \Delta s_{c}(k)} \right)
+v(k+1) &= \min \left( v^{max}(k+1), \sqrt{v(k)^2 + 2 \cdot a_{t}(k) \cdot \Delta s_{c}(k)} \right)
 \end{align}
 
 \subsubsection{Profil visszaterjesztés}
@@ -168,7 +168,7 @@ a_{wt}(k) &= \frac{v(k+1)^2 - v(k)^2}{2\cdot\Delta s(k)} \cdot p(k) = \sqrt{(a_{
 ezt kifejezve $v(k)$-ra a lentebb látható negyedfokú egyenletet kapjuk:
 
 \begin{align} \label{eq:backacp}
-d(k) &= \frac{p(k)^2}{4 \cdot \Delta s(k)^2} + c(k) \cdot p(k)^2 \notag \\
+d(k) &= \frac{p(k)^2}{4 \cdot \Delta s(k)^2} + c(k) (\cdot p(k))^2 \notag \\
 e(k) &= -\frac{2 \cdot v(k+1)^2 \cdot p(k)^2} {4 \cdot \Delta s(k)^2} \notag\\
 f(k) &= \frac{v(k+1)^4 \cdot p(k)^2}{4 \cdot \Delta s(k)^2} - {a_{max}}^2 \notag \\
 0 &= v(k)^4 \cdot d(k) + v(k)^2 \cdot e(k) + f(k)
