@@ -3,7 +3,7 @@
 %----------------------------------------------------------------------------
 A pályatervezõ által elkészített ütközésmentes pálya nem tartalmaz semmilyen idõvel kapcsolatos információt. Ebben a fejezetben a pálya pontjaihoz sebesség értékeket rendelünk hozzá. Ezt a többlet információt a pályakövetõ algoritmus használja fel, hogy mozgás során a robot kinematikai korlátai ne okozzanak problémát. Tehát az idõparaméterezés elsõsorban a robot korlátait használja fel, de arra is alkalmas, hogy meghatározzuk a pálya bejárásának idejét.
 
-A módszert Nagy Ákos dolgozta ki differenciális robotokhoz, majd én módosítottam autószerû robotok számára. Az elveket végül úgy alakítottuk ki közösen, hogy az ne függjön a robot típusától, így az alkalmazható legyen bármilyen kerekeken mozgó robottípusra.
+A módszert Nagy Ákos dolgozta ki differenciális robotokhoz, majd módosítottam autószerû robotok számára \cite{Akos}. Az elveket végül úgy alakítottuk ki közösen, hogy az ne függjön a robot típusától, így az alkalmazható legyen bármilyen kerekeken mozgó robottípusra.
 
 %----------------------------------------------------------------------------
 \section{Idõparaméterezés}
@@ -49,6 +49,13 @@ Fontos megjegyezni, hogy a $\Delta{s}(k)$ távolságot úgy kell értelmezni, hogy a
 %----------------------------------------------------------------------------
 A robot mozgását általános esetben \aref{fig:velocityProfileModel}. ábra mutatja be. Az idõparaméterezés során figyelembe vesszük a robot pályamenti sebességét és szögsebességét valamint a robot kerekeinek tangenciális és eredõ gyorsulását.
 
+\begin{figure}
+\centering
+\includegraphics[width=120mm, keepaspectratio]{figures/carModel.pdf}
+\caption{Autószerû robot mozgása köríven} 
+\label{fig:velocityProfileModel}
+\end{figure}
+
 A sebességprofil létrehozásakor rendelkezésünkre áll a pálya görbülete, azaz az autó referenciapontja által bejárt kör sugara ($\rho$). Ebbõl a hátsó kerekek fordulókörének sugara a következõképpen számolható:
 
 \begin{align}\label{eq:carLikeRearRadiuses}
@@ -83,14 +90,6 @@ p(k) &= \frac{\rho_w(k)}{\rho(k)} = \frac{v_W(k)}{v(k)}
 \end{align}
 
 ahol $W$ jelzi a kerékre vonatkozó mennyiségeket. Látható, hogy ha a maximális keréksebességet keressük, akkor elegendõ csak a maximális abszolút értékû fordulókör sugarat megkeresni. Az \eqref{carLikeRearRadiuses} egyenletek alapján következik, hogy ez mindig a külsõ kerék esetén teljesül. Az \eqref{carLikeFrontRadiuses} egyenletek alapján pedig belátható, hogy az elsõ kerekek sebessége mindig nagyobb lesz a hátsóéknál, mivel $|\cos \phi| \leq 1$. Azaz jobbra kanyarodás esetén a bal elsõ kerék sebessége a legnagyobb és vice versa.
-
-%TODO kocsi kereiei és gyorsulásainak ábrája
-%\begin{figure}[H]
-%\centering
-%\includegraphics[width=150mm, keepaspectratio]{figures/robot.png}
-%\caption{Differenciális hajtású robot mozgása köríven.} 
-%\label{fig:velocityProfileModel}
-%\end{figure}
 
 A sebességprofil készítésekor egy adott robot esetében ezekre a mennyiségekre határozunk meg korlátozásokat:
 
@@ -174,7 +173,7 @@ f(k) &= \frac{v(k+1)^4 \cdot p(k)^2}{4 \cdot \Delta s(k)^2} - {a_{max}}^2 \notag
 0 &= v(k)^4 \cdot d(k) + v(k)^2 \cdot e(k) + f(k)
 \end{align}
 
-A \eqref{backacp} egyenlet valós, pozitív megoldásait keressük. Felmerülhet a kérdés, hogy mi garantálja, hogy mindig lesz ilyen megoldás. A {Vi\`ete}-formula felírásával belátható, hogy mindig pozitív megoldása van az egyenletnek, a másodfokú egyenlet diszkriminánsának felírásával pedig, hogy lesz valós megoldás. Amennyiben több pozitív valós megoldása van az egyenletnek, akkor a legnagyobb megoldást választjuk. Végül erre az értékre kell módosítanunk a sebességet, majd visszalépni, hogy ezzel a módosítással nem sértünk-e újabb értéket.
+A \eqref{backacp} egyenlet valós, pozitív megoldásait keressük. Felmerülhet a kérdés, hogy mi garantálja, hogy mindig lesz ilyen megoldás. A {Vi\`ete}-formula felírásával belátható, hogy mindig pozitív megoldása van az egyenletnek, a másodfokú egyenlet diszkriminánsának felírásával pedig, hogy lesz valós megoldás. Amennyiben több pozitív valós megoldása van az egyenletnek, akkor a legnagyobb megoldást választjuk. Végül erre az értékre kell módosítanunk a sebességet, majd visszalépni, hogy ezzel a módosítással nem sértünk-e újabb értéket. \footnote{Általános esetben bevezethetõ egy tangenciális gyorsulás korlát is, de az autószerû robot esetén ezt nem alkalmaztuk.}
 
 A visszaterjesztés során a sebesség és szögsebesség korlátokkal nem kell foglalkoznunk, hiszen mindkét esetben, mikor módosítjuk a sebességet, csökkentjük az értékét.
 
