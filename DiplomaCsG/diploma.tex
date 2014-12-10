@@ -21,6 +21,8 @@
 \usepackage[hang]{caption}
 \usepackage[unicode]{hyperref}
 \usepackage{float}
+\usepackage{pdfpages}
+\usepackage{etoolbox}
 
 %--------------------------------------------------------------------------------------
 % Main variables
@@ -144,7 +146,8 @@ aboveskip=10pt}
 \begin{document}
 \singlespacing
 %\include{guideline}
-\include{project}
+%\include{project}
+\includepdf[pages={1}]{feladatkiiras.pdf}
 
 \pagenumbering{arabic}
 \onehalfspacing
@@ -163,6 +166,7 @@ aboveskip=10pt}
 %\listoffigures\addcontentsline{toc}{chapter}{Ábrák jegyzéke}
 %\listoftables\addcontentsline{toc}{chapter}{Táblázatok jegyzéke}
 
+\apptocmd{\thebibliography}{\raggedright}{}{}
 \bibliography{IEEEabrv,mybib}
 \addcontentsline{toc}{chapter}{Irodalomjegyzék}
 %\bibliographystyle{plain}

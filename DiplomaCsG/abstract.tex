@@ -2,8 +2,17 @@
 % Abstract in hungarian
 %----------------------------------------------------------------------------
 \chapter*{Kivonat}\addcontentsline{toc}{chapter}{Kivonat}
+A mobil robotok manapság egyre inkább feltörekvõben vannak. Már nem csak az ipar fedezi fel õket, hanem lassan a mindennapi életünk részévé válnak. Azonban még rengeteg elméleti és gyakorlati kérdés vár megoldásra, hogy az ilyen robotokkal rendszeresen találkozzunk. A mobil robotika egyik legalapvetõbb kérdése az akadályok jelenlétében történõ mozgástervezés és mozgásvégrehajtás. A dolgozatban ezt a kérdéskört járom körül, foglalkozok a globális és lokális geometriai pályatervezéssel, pályamenti sebességprofil kialakításával, valamint pályakövetõ szabályozással. Ezeket egy kerekeken guruló robotmodellre alkalmazom, mind szimulált, mind valós környezetben.
 
-Jelen dokumentum egy diplomaterv sablon, amely formai keretet ad a BME Villamosmérnöki és Informatikai Karán végzõ hallgatók által elkészítendõ szakdolgozatnak és diplomatervnek. A sablon használata opcionális. Ez a sablon \LaTeX~alapú, a \emph{TeXLive} \TeX-implementációval és a PDF-\LaTeX~fordítóval mûködõképes.
+A dolgozatban bemutatom a leggyakrabban használt pályatervezési algoritmusokat, és az ezekhez kapcsolódó elõnyöket és problémákat. Külön kitérek az általam vizsgált  robotmodellnél felmerülõ kinematikai korlátozásokra, és ezek hatásaira a pályatervezésben. Egy approximációs pályatervezési megközelítést mutatok be a dolgozatunkban, amely egy globális és egy lokális tervezõ algoritmus együttes használatán alapszik.
+
+Az általam alkalmazott C*CS lokális tervezõ, és approximációs módszer, az irodalomban jól ismert, az autószerû robotok esetén alkalmazott Reeds-Shepp pályákon alapszik. Az algoritmus körívek (C) és egyenes szakaszok (S) kombinációjából állít elõ, autókkal is lekövethetõ pályákat. Ehhez szükség van egy globális tervezõ által elõállított pályára. A dolgozatomban bemutatok egy egyszerû celladekompozíciós eljárást amely ezt elvégzi, majd ennek segítségével bemutatom a C*CS algoritmus mûködését. Végül bemutatok egy új globális tervezõ algoritmust (RTR), mely a differenciális robotok számára készült, de kiküszöböli a celladekompozíciós eljárás hibáit.
+
+A megtervezett geometriai pálya még nem tartalmaz információt a mozgás idõparaméterezésére (a robot sebességére, gyorsulására vagy szögsebességére) nézve. Ezért bemutatok egy  algoritmust a pályamenti sebességprofil meghatározására. Ez a profil a robot maximális sebessége, maximális gyorsulása, maximális szögsebessége és a robot kerekeinek maximális gyorsulása alapján számolható ki. Az így kialakuló pályát ezután újramintavételezzük, hogy idõben egyenletes mintavételû pálya álljon rendelkezésre a pályakövetõ szabályozás számára.
+
+A pályakövetõ algoritmus a robot pályamenti sebességét és az orientációját függetlenül szabályozza. A szétcsatolt rendszer sebesség és kormányszög beavatkozó jelei, a robot kinematikai egyenletei alapján, közvetlenül képzik a beavatkozó jeleket. A sebesség-szabályozási kört a robotban található PI szabályozó valósítja meg. Az orientációszabályozás egy mozgás közbeni korrekciót hajt végre, amelynek alapját a robot késõbbi elõírt pozíciói képezik.
+
+Az algoritmusokat a V-REP robotszimulációs környezetben implementáltam és teszteltem, majd mûködésüket valós roboton is vizsgáltam. Végül bemutatom a felhasznált autószerû robotot és annak mûködését, kitérek az elkészítés közben felmerült nehézségekre, és a jövõbeli tervekre is. 
 \vfill
 
 %----------------------------------------------------------------------------
@@ -11,6 +20,16 @@ Jelen dokumentum egy diplomaterv sablon, amely formai keretet ad a BME Villamosm
 %----------------------------------------------------------------------------
 \chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
 
-This document is a \LaTeX-based skeleton for BSc/MSc~theses of students at the Electrical Engineering and Informatics Faculty, Budapest University of Technology and Economics. The usage of this skeleton is optional. It has been tested with the \emph{TeXLive} \TeX~implementation, and it requires the PDF-\LaTeX~compiler.
+The research and application of mobile robots is nowadays increasingly widespread. Beyond industrial applications they are getting popular in personal usage as well.  However, there are a lot of theoretical and practical issues to be resolved. One of the most fundamental aspects of mobile robotics is motion planning and control in environment populated with obstacles. In this paper we discuss global and local geometric path planning, velocity profile generation and motion control along the path. We simulated the investigated methods and tested with a car-like robot.
+
+In this paper we present the most commonly used path planning algorithms, and their benefits and disadvantages. We discuss the kinematic constraints for the tested robot model and the consequences of these constraints. We present an approximation method for path planning, which is based on a global and a local planner algorithm.
+
+We use the C*CS local planner method, which is based on the well-known Reeds-Shepp method. The algorithym uses arcs (C) and straigth segments (S) to provide a path for car-like robots. To reach this, a global planner method is presented. After the global path is generated the C*CS local planner is used to approximate the global path. At the end of this section a new global planner method is presented, to correct the flaws of the previously shown method.
+
+The path generated previously does not contain any information about the robot's velocity, acceleration and angular velocity. Therefore, we present an algorithm developed to determine the velocity profile. The profile is based on parameters such as the robot's maximum velocity, maximum acceleration, maximum angular velocity along the path and the maximum acceleration of the robot's wheels. After velocity profile generation the geometric path needs to be re-sampled to obtain a path having uniform time-sampling for the motion controller.
+
+The path following algorithm controls the robot translational velocity and orientation in two independent control loops. The velocity and steering angle control signals of the decoupled system passed directly to the robot, based on the kinematic equations of the robot. The velocity control loops implemented on the robot by a PI controller. The orientation controller is based on orientation error between the current robot configuration and a future path point.
+
+We have implemented and tested the algorithms in V-REP robot simulation framework and with real robot as well. Finally we present the structure of the used real robot, and the difficulties during the developement and implementation, and the future plans.
 \vfill
 
