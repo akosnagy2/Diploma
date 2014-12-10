@@ -1,10 +1,14 @@
 %----------------------------------------------------------------------------
 \chapter{Megvalósítás valós roboton}
 %----------------------------------------------------------------------------
+Az elkészült algoritmusok elméleti szinten és a szimulátorban is a vártnak megfelelõen mûködtek. A szimuláció során használt modelleket próbáltam minél inkább a valósághoz igazítani, de a valósággal teljes mértékben megegyezõ modell megalkotása természetesen nem lehetséges, így az elkészült algoritmusokat valós roboton is kipróbáltam. Ebben a fejezetben az elkészült robotról, a fejlesztés és az implementálás közben felmerült nehézségekrõl, és a jövõbeli tervekrõl fogok beszélni.
 
 %----------------------------------------------------------------------------
 \section{Felépítés}
 %----------------------------------------------------------------------------
+A robot elkészítése a szakmai gyakorlatom keretében valósult meg. A fejlesztés során a célom egy olyan autószerû mobilrobot készítése volt, amely a környezet ismeretében képes a pályatervezõ algoritmusok futtatására, és egy elkészült pálya követésére.
+
+A kész rendszer két részre bontható a feladat jellegébõl fakadóan. Az alacsonyabb szintû feladatok, mint a motor vezérlése, szabályozása, kormányzás és szenzorfúzió egy beágyazott mikrokontroller feladatai közé tartoznak. Beépítésre került egy bluetooth modul, hibakeresési céllal. Ezen felül ez a modul lehetõvé teszi, hogy ezt az alrendszert leválasszuk, így az erõforrásigényesebb algoritmusok fejlesztése, mint például a pályatervezés és követés, máshol is megtörténhessen. 
 
 %----------------------------------------------------------------------------
 \section{Nehézségek}

@@ -24,6 +24,11 @@
 \usepackage{pdfpages}
 \usepackage{etoolbox}
 
+%--------
+% URL túllógás
+%--------
+\apptocmd{\thebibliography}{\raggedright}{}{}
+
 %--------------------------------------------------------------------------------------
 % Main variables
 %--------------------------------------------------------------------------------------
@@ -166,7 +171,6 @@ aboveskip=10pt}
 %\listoffigures\addcontentsline{toc}{chapter}{Ábrák jegyzéke}
 %\listoftables\addcontentsline{toc}{chapter}{Táblázatok jegyzéke}
 
-\apptocmd{\thebibliography}{\raggedright}{}{}
 \bibliography{IEEEabrv,mybib}
 \addcontentsline{toc}{chapter}{Irodalomjegyzék}
 %\bibliographystyle{plain}
