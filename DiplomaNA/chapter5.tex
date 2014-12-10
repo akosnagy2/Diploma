@@ -10,7 +10,7 @@ A fejezet elején röviden bemutatunk egy újabb pályatervezõ algoritmust, majd a s
 
 Mivel az RTR tervezõ egyenes és egyhelyben fordulás primitívekkel dolgozik, ezért sok esetben a differenciális robot gyorsabban is végre tudná hajtani a pályát, amennyiben nem kellene minden egyenes szakasz végén megállnia. A most bemutatásra kerülõ lokális pályatervezõ segítségével gyorsabban végrehajtható pályát kapunk.
 
-\Aref{chapter:intro}. fejezetben már ismertettük az úgynevezett approximációs pályatervezési módszert. A módszer lényege, hogy a globális tervezõ által tervezett pályát egy lokális tervezõ segítségével közelítjük. Jelen esetben a bemutatott RTR tervezõt használjuk, mint globális tervezõt. Lokális tervezõnek pedig az úgynevezett \emph{C*CS} tervezõt használjuk, amelyet szintén Kiss Domokos dolgozott ki, ahogyan az RTR tervezõt is. A \emph{C*CS} algoritmust Csorvási Gábor implementálta C++ nyelven, az õ megoldását használtam fel a dolgozatomban. 
+\Aref{chapter:intro}. fejezetben már ismertettük az úgynevezett approximációs pályatervezési módszert. A módszer lényege, hogy a globális tervezõ által tervezett pályát egy lokális tervezõ segítségével közelítjük. Jelen esetben a bemutatott RTR tervezõt használjuk, mint globális tervezõt. Lokális tervezõnek pedig az úgynevezett \emph{C*CS} tervezõt használjuk, amelyet szintén Kiss Domokos dolgozott ki, ahogyan az RTR tervezõt is. A \emph{C*CS} algoritmust Csorvási Gábor implementálta C++ nyelven, az õ megoldását használtam fel a dolgozatomban \cite{Gabor}. 
 
 A \emph{C*CS} egy autók számára kifejlesztett algoritmus. Az autókra jellemzõ, hogy van minimális fordulási sugaruk. Mivel a differenciális robotok fordulási sugara nulla (képesek egyhelyben fordulni), végre tudják hajtani az autók számára tervezett pályát is.
 
@@ -68,34 +68,34 @@ Ahogyan az algoritmusokat, úgy a klienst is C++ nyelven implementáltuk. A C++ ny
 %----------------------------------------------------------------------------
 \subsection{Szimulációs eredmények}
 %----------------------------------------------------------------------------
-A szimulációs környezetben bemutatott algoritmusok a várakozásaimnak megfelelõen mûködtek. Az eredmények a következõ ábrákon láthatóak. A képek a V-REP szimulátorról készültek, az akadályokat és a pálya határait színes sokszögek jelzik, a pályatervezõ által generált pályát kék színnel jelöljük, míg a robot által bejárt pályát sárgával. A robot alatt található sokszög jelzi a tervezés során ténylegesen figyelembe vett robot alakot.
+A szimulációs környezetben bemutatott algoritmusok a várakozásaimnak megfelelõen mûködtek. Az eredmények a következõ ábrákon láthatóak. A képek a V-REP szimulátorról készültek, az akadályokat szürke sokszögek jelzik, a pályatervezõ által generált pályát kék színnel jelöljük, míg a robot által bejárt pályát pirossal. A robot alatt található sokszög jelzi a tervezés során ténylegesen figyelembe vett robot alakot.
 
-A szimulációnál a képek jobb oldalán található két grafikon. A felsõ grafikon a robot sebességét (piros) és gyorsulását mutatja (sárga), az alsó grafikon a referenciaponttól vett távolságot (piros) és az orientációs referenciaponttól vett távolságot láthatjuk (zöld). A felsõ grafikonon $m/s$ és $m^2/s$ mértékegységben szerepelnek a mennyiségek, míg az alsó grafikonon $mm$-ben.
+%A szimulációnál a képek jobb oldalán található két grafikon. A felsõ grafikon a robot sebességét (piros) és gyorsulását mutatja (sárga), az alsó grafikon a referenciaponttól vett távolságot (piros) és az orientációs referenciaponttól vett távolságot láthatjuk (zöld). A felsõ grafikonon $m/s$ és $m^2/s$ mértékegységben szerepelnek a mennyiségek, míg az alsó grafikonon $mm$-ben.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath0RTR.png}
+\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath0RTRb.png}
 \caption{Ez a pálya differenciális robot esetében viszonylag egyszerûen teljesíthetõ, mivel a robot képes egyhelyben fordulni. A pályát az RTR tervezõ generálta.} 
 \label{fig:DiffSimRobot1RTR}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath0.png}
+\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath0b.png}
 \caption{Az elõzõ pálya RTR és C*CS tervezõ együttes használatával.} 
 \label{fig:DiffSimRobot1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath1.png}
+\includegraphics[width=100mm, keepaspectratio]{figures/DiffSimPath1b.png}
 \caption{Itt is szép megoldást eredményezett az RTR és C*CS tervezõk közös használta.} 
 \label{fig:DiffSimRobot2}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath2.png}
+\includegraphics[width=140mm, keepaspectratio]{figures/DiffSimPath2b.png}
 \caption{Más alakú akadályok sem jelentenek problémát.} 
 \label{fig:DiffSimRobot3}
 \end{figure}
@@ -138,7 +138,7 @@ Mind asztali, mind beágyazott számítógép esetében a RobotPilot csatlakozik a V-R
 \subsection{Valós eredmények}
 %----------------------------------------------------------------------------
 
-A most következõ ábrákon a valós roboton végzett tesztelés eredményei láthatóak. Ezek a képek is a V-REP robotszimulátorról készültek, ahogyan a szimulációs eredmények is. Most az akadályokat szürke sokszögek jelzik, a pályatervezõ által generált pályát zöld színnel jelöljük, míg a robot által bejárt pályát sárgával. A robot kiindulási pozícióját egy piros pont jelöli a pályán. Itt is a robot alatt található sokszög jelzi a tervezés során ténylegesen figyelembe vett robot alakot, amely közelítõleg megegyezik a valós robot alakjával.
+A most következõ ábrákon a valós roboton végzett tesztelés eredményei láthatóak. Ezek a képek is a V-REP robotszimulátorról készültek, ahogyan a szimulációs eredmények is. Az akadályokat szürke sokszögek jelzik, a pályatervezõ által generált pályát zöld színnel jelöljük, míg a robot által bejárt pályát narancssárgával. A robot kiindulási pozícióját egy piros pont jelöli a pályán. Itt is a robot alatt található sokszög jelzi a tervezés során ténylegesen figyelembe vett robot alakot, amely közelítõleg megegyezik a valós robot alakjával.
 
 A pályákat a robot a következõ paraméterekkel hajtotta végre:
 

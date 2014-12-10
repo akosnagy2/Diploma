@@ -88,10 +88,10 @@ Az egy helyben fordulásnál szögsebesség beavatkozójelet határozunk meg, míg a pá
 Alacsony szinten, a keréksebességeknél történik a sebességszabályozás. Az általam használt valós robot két hajtott kerékkel rendelkezik, mindkét kerék esetén egy-egy DC motor gondoskodik a robot mozgatásáról. A DC motorok tengelyéhez egy-egy inkrementális adó csatlakozik, amely biztosítja a sebességszabályozás számára a visszacsatolást. Feszültségvezérelt egyenáramú motorok esetében széleskörûen alkalmazott gyakorlat PI szabályozók használata, így sebességszabályozásra én is PI szabályozókat használok
 
 \par
-A PI szabályozók esetében gyakran elõforduló probléma az elintegrálódás \cite{Bezi}. Az elintegrálódás a rendszerben lévõ beavatkozószerv telítései miatt lép fel, kiküszöbölése történhet többféleképpen szabályozó típustól függõen. Esetünkben az integrátor visszaállításával elõzzük meg az elintegrálódást.
+A PI szabályozók esetében gyakran elõforduló probléma az elintegrálódás \cite{Bezi}. Az elintegrálódás a rendszerben lévõ beavatkozószerv telítései miatt lép fel, kiküszöbölése történhet többféleképpen szabályozó típustól függõen. Esetemben az integrátor visszaállításával elõzöm meg az elintegrálódást.
 
 \par
-Az általam implementált sebességszabályozók figyelembe veszik a motor és az áttételek nemlinearitását is. Ehhez felvettük mindkét kerék esetén a rendszer karakterisztikáját, tehát, hogy adott feszültség mellett mekkora sebességet ér el a kerék (\ref{fig:wheelCh}. ábra). Ennek a karakterisztikának az inverzét beépítettük a rendszer modelljébe, így elméletileg a nemlinearitást kiejtettük.
+Az általam implementált sebességszabályozók figyelembe veszik a motor és az áttételek nemlinearitását is. Ehhez felvettem mindkét kerék esetén a rendszer karakterisztikáját, tehát, hogy adott feszültség mellett mekkora sebességet ér el a kerék (\ref{fig:wheelCh}. ábra). Ennek a karakterisztikának az inverzét beépítettem a rendszer modelljébe, így elméletileg a nemlinearitást kiejtettem.
 
 \begin{figure}[H]
 \centering
@@ -100,7 +100,7 @@ Az általam implementált sebességszabályozók figyelembe veszik a motor és az átté
 \label{fig:wheelCh}
 \end{figure}
 
-A karakterisztikát a következõk szerint vettük fel. A robot két kerekére ugyanazt a feszültséget adtuk ki beavatkozójelnek majd megmértük, hogy mekkora állandósult sebességet érnek el a kerekek. Ezt több feszültségnél megismételve, kiadódik a rendszer karakterisztikája a két kerék esetén. A feszültségvezérlés impulzusszélesség-modulációval (PWM) történik, \aref{fig:wheelCh}. ábra x tengelyén a PWM jel kitöltési tényezõje látható.
+A karakterisztikát a következõk szerint vettem fel. A robot két kerekére ugyanazt a feszültséget adtam ki beavatkozójelnek majd megmértem, hogy mekkora állandósult sebességet érnek el a kerekek. Ezt több feszültségnél megismételve, kiadódik a rendszer karakterisztikája a két kerék esetén. A feszültségvezérlés impulzusszélesség-modulációval (PWM) történik, \aref{fig:wheelCh}. ábra x tengelyén a PWM jel kitöltési tényezõje látható.
 
 %----------------------------------------------------------------------------
 \subsection{Referenciapont-választás}
@@ -111,10 +111,10 @@ A sebességszabályozók számára a sebesség alapjelet a pálya biztosítja, hiszen az
 Már csak azt kell eldöntenünk, hogy a pálya melyik pontjához tartozó sebesség alapjelet alkalmazzuk az adott mintavételnél. Ezt hívjuk \emph{referenciapont-választásnak}. Az eljárás igen egyszerû, a pálya pontjai közül a robot pozíciójához legközelebbi pályapontot választjuk referenciapontnak, és így már egyértelmûen adódik a sebesség alapjelünk is.
 
 \par
-A fejlesztés egy korai stádiumában felmerült, hogy ezt a referenciapontot ne így határozzuk meg, hanem folyamatosan léptessük a pálya mentén. Ezzel kvázi elõírtuk, hogy  a robot adott idõpontban a pálya mely pontjában tartózkodjon. Mivel nem biztos, hogy a robot ténylegesen a kívánt pozícióban található, egy külön alapjelmódosító szabályozó segítéségével korrigáltuk a pályába kódolt sebesség alapjelet, hogy a robot elérje a referenciapontot. 
+A fejlesztés egy korai stádiumában felmerült, hogy ezt a referenciapontot ne így határozzam meg, hanem folyamatosan léptessem a pálya mentén. Ezzel kvázi elõírtam, hogy  a robot adott idõpontban a pálya mely pontjában tartózkodjon. Mivel nem biztos, hogy a robot ténylegesen a kívánt pozícióban található, egy külön alapjelmódosító szabályozó segítéségével korrigáltam a pályába kódolt sebesség alapjelet, hogy a robot elérje a referenciapontot. 
 
 \par
-Amennyiben nem ideális modellt használtunk, a megoldás nem mûködött, a rendszer instabillá vált. Késõbb beláttuk, hogy a megoldás problémája az volt, hogy egyrészt elõírtuk a robot számára, hogy mekkora sebességgel haladjon a pálya mentén, másrészt a referenciaponton keresztül azt is, hogy hol tartózkodjon az adott idõpontban. Ez már azért sem lehetséges, mivel, ha a robot a referenciaponthoz képest lemaradásban van (általában ez történik), akkor a sebességalapjel korrekció növelné a sebességet, pedig azt már eleve úgy írtuk elõ, hogy a lehetõ leggyorsabban haladjon a robot a pálya mentén. Tehát az alapjelmódosító szabályozóval arra kényszerítenénk a rendszert, hogy szegje meg a saját korlátozásait.
+Amennyiben nem ideális modellt használtam, a megoldás nem mûködött, a rendszer instabillá vált. Késõbb kiderült, hogy a megoldás problémája az volt, hogy egyrészt elõírtam a robot számára, hogy mekkora sebességgel haladjon a pálya mentén, másrészt a referenciaponton keresztül azt is, hogy hol tartózkodjon az adott idõpontban. Ez már azért sem lehetséges, mivel, ha a robot a referenciaponthoz képest lemaradásban van (általában ez történik), akkor a sebességalapjel korrekció növelné a sebességet, pedig azt már eleve úgy írtuk elõ, hogy a lehetõ leggyorsabban haladjon a robot a pálya mentén. Tehát az alapjelmódosító szabályozóval arra kényszeríteném a rendszert, hogy szegje meg a saját korlátozásait.
 
 \par
 A végleges megoldásnál ezzel szemben a referenciapontot alakítjuk a robothoz, nem pedig fordítva. Ez azt jelenti, hogy nem írjuk elõ, hogy a robot a pályát mennyi idõ alatt járja be, csak azt, hogy a pálya adott pontjában mekkora sebességgel avatkozzunk be.
@@ -141,26 +141,26 @@ Fontos kérdés, hogy a pálya mely pontját választjuk az alapjelszámoláshoz. Minde
 Alapvetõen két megközelítést alkalmazhatunk. Egyrészt használhatunk konstans távolságú elõretekintést, ekkor mindig a referenciaponttól egy adott távolságra lévõ pályapontot használunk az orientációszabályzáshoz. A másik megközelítésnél pedig konstans idejû elõretekintést alkalmazunk. Ennél a módszernél a referenciaponthoz képest adott számú mintavétellel elõbbre lévõ pályapont lesz $p_{ori}$.
 
 \par
-Az algoritmust úgy készítettük el, hogy mindkét módszert lehet alkalmazni, akár a kettõt egyszerre is, a következõ módon. A konstans távolságú elõretekintéssel elérhetõ, hogy a robothoz ne kerüljön túlságosan közel $p_{ori}$, a konstans idejû elõretekintés pedig lehetõvé teszi, hogy egyenes részeken, ahol nagyobb sebességgel mozog a robot, távolabb tekintsünk.
+Az algoritmust úgy készítettem el, hogy mindkét módszert lehet alkalmazni, akár a kettõt egyszerre is, a következõ módon. A konstans távolságú elõretekintéssel elérhetõ, hogy a robothoz ne kerüljön túlságosan közel $p_{ori}$, a konstans idejû elõretekintés pedig lehetõvé teszi, hogy egyenes részeken, ahol nagyobb sebességgel mozog a robot, távolabb tekintsünk.
 
 %----------------------------------------------------------------------------
 \subsection{Túlhaladás problémája}
 %----------------------------------------------------------------------------
 
-A pályakövetés valós roboton történõ tesztelése során egy eddig nem tárgyalt problémát vettünk észre. Amennyiben a robot egy pályaszegmensen túlmegy, tehát nem pontosan a szegmens utolsó pontjánál áll meg, akkor a sebességalapjel kiválasztása nem megfelelõ. A probléma akkor is jelentkezik, ha a robot kezdõpontja hátrébb található, mint a pályaszegmens elsõ pontja. Ez az eset látható \aref{fig:robotStart}. ábrán.
+A pályakövetés valós roboton történõ tesztelése során egy eddig nem tárgyalt problémát vettem észre. Amennyiben a robot egy pályaszegmensen túlmegy, tehát nem pontosan a szegmens utolsó pontjánál áll meg, akkor a sebességalapjel kiválasztása nem megfelelõ. A probléma akkor is jelentkezik, ha a robot kezdõpontja hátrébb található, mint a pályaszegmens elsõ pontja. Ez az eset látható \aref{fig:robotStart}. ábrán.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=120mm, keepaspectratio]{figures/VREPStart.png}
-\caption{A túlszaladás problémáját bemutató szituáció szimulátorban. A robot alakját nem mutatja az ábra, csak a határolóvonalait. A zöld görbe a követendõ pálya.} 
+\caption{A túlhaladás problémáját bemutató szituáció szimulátorban. A robot alakját nem mutatja az ábra, csak a határolóvonalait. A zöld görbe a követendõ pálya.} 
 \label{fig:robotStart}
 \end{figure}
 
 A probléma az ezekben a szituációkban, hogy a referenciapont-választás alapján a szegmens elsõ pontjához tartozó sebesség értéket választja a pályakövetõ algoritmus alapjelnek, mivel ez a pont található a legközelebb a robot aktuális pozíciójához. Ez a sebesség viszont igen alacsony, mivel azt feltételezi, hogy a robot éppen elindul és amíg a robot nem éri el a pálya második pontját, végig ezzel az alacsony sebességgel fog haladni. 
 
-A probléma elkerülése érdekében amíg a pályaszegmens elsõ pontja van a legközelebb a robot aktuális pozíciójához, addig nem a pályába kódolt sebességet használjuk, hanem a robot gyorsulás- és sebességkorlátja alapján választunk robotsebességet.
+A probléma elkerülése érdekében amíg a pályaszegmens elsõ pontja van a legközelebb a robot aktuális pozíciójához, addig nem a pályába kódolt sebességet használom, hanem a robot gyorsulás- és sebességkorlátja alapján választok robotsebességet.
 
-A valóságban nem \aref{fig:robotStart}. ábrán látható esett szokott elõfordulni, mivel a pályát eleve a robot pozíciójából tervezzük. Ezzel szemben két szegmens között nem garantált, hogy a második szegmens kezdõpontja megegyezik a robot aktuális pozíciójával. Fontos megjegyezni, hogy valós robotnál a túlhaladás mértéke, megfelelõ korlátok esetén, nem akkora, mint ahogy \aref{fig:robotStart}. ábrán ábrázoltuk.
+A valóságban nem \aref{fig:robotStart}. ábrán látható esett szokott elõfordulni, mivel a pályát eleve a robot pozíciójából tervezzük. Ezzel szemben két szegmens között nem garantált, hogy a második szegmens kezdõpontja megegyezik a robot aktuális pozíciójával. Fontos megjegyezni, hogy valós robotnál a túlhaladás mértéke, megfelelõ korlátok esetén, nem akkora, mint ahogy \aref{fig:robotStart}. ábrán látható..
 
 %----------------------------------------------------------------------------
 \subsection{Orientációszabályozás szegmens végpontjánál}

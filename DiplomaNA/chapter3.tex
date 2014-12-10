@@ -20,7 +20,7 @@ A szakirodalomban nem sok idõparaméterezéssel kapcsolatos munka található. Egy, 
 Az idõparaméterezés során nem használjuk ki az elõzõ fejezetben bemutatott pályatervezõ által tervezett pálya speciális tulajdonságait, a célunk egy olyan algoritmus készítése, amely tetszõleges geometriai pályából képes sebesség információval ellátott, idõben egyenletes mintavételû pályát készíteni. Emiatt nem építhetünk a pályatervezõ által használt geometriai elemekre és ezek speciális tulajdonságaira.
 
 \par
-A geometriai elemek egyik legalapvetõbb tulajdonsága az lenne, hogy a görbületüket analitikusan ki tudnánk számolni (ami a konkrét elemek esetében ráadásul triviális). Általános esetben azonban nem tudjuk a pálya görbületét analitikusan meghatározni, így görbület becslést kell alkalmaznunk. A szakirodalomban sok cikket találhatunk görbület becslésrõl, fõleg képfeldolgozással kapcsolatos témákban, azonban dolgozatunknak nem ez a témája. Az algoritmus fejlesztésekor több becslõt is kipróbáltunk, ezeket úgy teszteltük, hogy olyan pályát adtunk meg nekik, amelynek a görbülete analitikusan is számolható, így össze tudtuk hasonlítani az ideális megoldással a becslést. Ez alapján választottunk egy eljárást \cite{Curv2D}. Természetesen abban az esetben, ha a pályatervezõ rendelkezik már a pálya görbületével, az idõparaméterezõ algoritmus azt fogja használni a becslés helyett.
+A geometriai elemek egyik legalapvetõbb tulajdonsága az lenne, hogy a görbületüket analitikusan ki tudnánk számolni (ami a konkrét elemek esetében ráadásul triviális). Általános esetben azonban nem tudjuk a pálya görbületét analitikusan meghatározni, így görbület becslést kell alkalmaznunk. A szakirodalomban sok cikket találhatunk görbület becslésrõl, fõleg képfeldolgozással kapcsolatos témákban, azonban dolgozatomnak nem ez a témája. Az algoritmus fejlesztésekor több becslõt is kipróbáltam, ezeket úgy teszteltem, hogy olyan pályát adtam meg nekik, amelynek a görbülete analitikusan is számolható, így össze tudtam hasonlítani az ideális megoldással a becslést. Ez alapján választottam egy eljárást \cite{Curv2D}. Természetesen abban az esetben, ha a pályatervezõ rendelkezik már a pálya görbületével, az idõparaméterezõ algoritmus azt fogja használni a becslés helyett.
 
 %----------------------------------------------------------------------------
 \section{Jelölések}
@@ -185,7 +185,7 @@ v(k+1) &= \min \left( v^{max}(k+1), \sqrt{v(k)^2 + 2 \cdot a_{t}(k) \cdot \Delta
 %----------------------------------------------------------------------------
 \subsection{Profil visszaterjesztés}
 %----------------------------------------------------------------------------
-Két esetben elõfordulhat, hogy az elõzõ pályaponthoz meghatározott sebességértéket módosítani kell. Egyrészt, ha a centripetális gyorsulás önmagában meghaladja a megengedhetõ maximális gyorsulást, akkor az elõzõ pályaponthoz tartozó sebességet mindenképp csökkenteni kell. Másrészt \aref{eq:v}. egyenlet esetében elõfordulhat, hogy a robot gyorsulás korlátját megsértjük, és így módosítani kell az elõzõ ponthoz tartozó sebességet. Ez például a pálya végpontjában fordulhat elõ, ahol elõírjuk, hogy a robot álljon meg, tehát $v^{max}(N)=0$. Ha nem terjesztenénk vissza a profilt, akkor az utolsó pontnál lévõ fékezés meghaladhatja az elõírt korlátot, hiszen az elõzõ pontokban nem tudtuk, hogy meg kell állni a robotnak.
+Két esetben elõfordulhat, hogy az elõzõ pályaponthoz meghatározott sebességértéket módosítani kell. Egyrészt, ha a centripetális gyorsulás önmagában meghaladja a megengedhetõ maximális gyorsulást, akkor az elõzõ pályaponthoz tartozó sebességet mindenképp csökkenteni kell. Másrészt \aref{eq:v}. egyenlet esetében elõfordulhat, hogy a robot gyorsulás korlátját megsértjük, és így módosítani kell az elõzõ ponthoz tartozó sebességet. Ez például a pálya végpontjában fordulhat elõ, ahol elõírjuk, hogy a robot álljon meg, tehát $v^{max}(N)=0$. Ha nem terjesztenénk vissza a profilt, akkor az utolsó pontnál lévõ fékezés meghaladhatja az elõírt korlátot, hiszen az elõzõ pontokban nem tudtuk, hogy késõbb meg kell állni a robotnak.
 
 \par
 Mindkét esetben ugyanazt az eljárást alkalmazhatjuk a visszaterjesztéshez. Azért beszélünk visszaterjesztésrõl, mivel addig kell visszafelé haladni a pályán, amíg minden korlátot betartunk.
@@ -204,7 +204,7 @@ Kezdetnek kiszámoljuk, hogy a megváltozott sebesség következtében hogyan alakuln
 Amennyiben a kapott tangenciális gyorsulások megsértik a tangenciális vagy eredõ gyorsulásra vonatkozó korlátokat, kiszámoljuk, hogy mekkora robotsebesség esetében teljesülnének a korlátok. Ezt mindkét kerék esetén megtesszük, és a szigorúbb sebesség korlátot fogjuk választani, mint robotsebesség. Ezt az eljárást mindaddig megtesszük visszafelé a pályán, amíg azt nem kapjuk, hogy egyik kerék sem sérti meg a korlátokat. 
 
 \par
-Most vizsgáljuk meg, hogy ha a kerékgyorsulás egy adott korlátot megsért, akkor hogyan kapjuk meg belõle azt a robotsebességet, amely esetében még nem sértjük meg a korlátot. Elõször tekintsük a tangenciális gyorsulásra vonatkozó korlátot. \aref{eq:at}. egyenletet fejezzük ki $v(k)$-ra mindkét kerék esetén:
+Most vizsgáljuk meg, hogy ha a kerékgyorsulás egy adott korlátot megsért, akkor hogyan kapjuk meg belõle azt a robotsebességet, amely esetében még nem sértjük meg a korlátot. Elõször tekintsük a tangenciális gyorsulásra vonatkozó korlátot. \Aref{eq:at}. egyenletet fejezzük ki $v(k)$-ra mindkét kerék esetén:
 
 \begin{align} \label{eq:backat}
 {v_l}^{t}(k) &= \sqrt{ v(k+1)^2 + \frac{ 2 \cdot {{a_{l}}_t}^{max} \Delta s_{l}(k)} {p_l(k)^2} } \\ \notag
@@ -224,7 +224,7 @@ Az eredõ gyorsulásra vonatkozó korlát esetén pedig \aref{eq:backacp}. összefüggé
 ahol a ${v_w}^{e}(k)$ jelölés arra utal, hogy a sebesség az eredõ gyorsulásra vonatkozó korlátból adódik. 
 
 \par
-\Aref{eq:backacp}. egyenletet kifejezhetjük ${v_w}^{e}(k)$-re. Ekkor egy negyedfokú egyenletet kapunk, ami a következõképpen épül fel:
+A keresett robotsebesség érdekében, fejezzük ki \aref{eq:backacp}. egyenletet ${v_w}^{e}(k)$-re. Ekkor egy negyedfokú egyenletet kapunk, ami a következõképpen épül fel:
 
 \begin{align} \label{eq:backacp2}
 d(k) &= \frac{p_w(k)^4}{4 \cdot \Delta s_w(k)^2} + c(k)^2 \cdot p_w(k)^2	 \\
@@ -283,7 +283,7 @@ Mivel $\frac{c(k)}{p_w(k)} = c_w(k)$ és ${{a_w}_c}(k) = v_w(k)^2 \cdot c_w(k)$, 
 0 \leq {{a_w}_t}(k+1)^2  &\leq {a_{max}}^2 - {{a_w}_c}(k+1)^2
 \end{align}
 
-Tehát \aref{eq:backacp10} feltétel alapján \aref{eq:backacp9}. egyenlõtlenség minden esetben teljesül és így biztosak lehetünk benne, hogy \aref{eq:backacp3}. egyenletnek lesz valós megoldása.
+Tehát \aref{eq:backacp10} feltétel alapján \aref{eq:backacp9}. egyenlõtlenség elsõ két tagja biztosan nem negatív, és mivel az egyenlõtlenség többi tagja is biztosan nem negatív, így biztosak lehetünk benne, hogy \aref{eq:backacp3}. egyenletnek lesz valós megoldása.
 
 \par
 Miután meghatároztuk $v^e(k)$ és $v^t(k)$ értékeit mindkét kerékre (összesen 4 érték), $v(k)$ értéke ezek közül a legkisebb lesz, hiszen így biztosíthatjuk, hogy a robot egyik kereke sem fogja megsérteni a két gyorsulás korlátot.

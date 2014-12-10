@@ -45,9 +45,11 @@
 \select@language {magyar} \contentsline {subsection}{\numberline {5.2.1}Keretrendszer}{52}{subsection.5.2.1}
 \select@language {magyar} \contentsline {subsubsection}{Kliensprogram}{53}{section*.42}
 \select@language {magyar} \contentsline {subsection}{\numberline {5.2.2}Szimul\'aci\'os eredm\'enyek}{54}{subsection.5.2.2}
-\select@language {magyar} \contentsline {section}{\numberline {5.3}Val\'os robot}{56}{section.5.3}
-\select@language {magyar} \contentsline {subsection}{\numberline {5.3.1}A robot ir\'any\IeC {\'\i }t\'orendszere}{57}{subsection.5.3.1}
-\select@language {magyar} \contentsline {subsection}{\numberline {5.3.2}Val\'os eredm\'enyek}{58}{subsection.5.3.2}
-\select@language {magyar} \contentsline {chapter}{\numberline {6}\"Osszegz\'es}{64}{chapter.6}
-\select@language {magyar} \contentsline {chapter}{K\"osz\"onetnyilv\'an\IeC {\'\i }t\'as}{65}{chapter*.54}
-\select@language {magyar} \contentsline {chapter}{Irodalomjegyz\'ek}{66}{chapter*.55}
+\select@language {magyar} \contentsline {section}{\numberline {5.3}Val\'os robot}{57}{section.5.3}
+\select@language {magyar} \contentsline {subsection}{\numberline {5.3.1}A robot ir\'any\IeC {\'\i }t\'orendszere}{58}{subsection.5.3.1}
+\select@language {magyar} \contentsline {subsection}{\numberline {5.3.2}Val\'os eredm\'enyek}{59}{subsection.5.3.2}
+\select@language {magyar} \contentsline {chapter}{\numberline {6}\"Osszegz\'es}{65}{chapter.6}
+\select@language {magyar} \contentsline {chapter}{K\"osz\"onetnyilv\'an\IeC {\'\i }t\'as}{66}{chapter*.54}
+\select@language {magyar} \contentsline {chapter}{Irodalomjegyz\'ek}{68}{chapter*.55}
+\select@language {magyar} \contentsline {chapter}{F\"uggel\'ek}{69}{appendix*.56}
+\select@language {magyar} \contentsline {section}{\numberline {F.1}Megjegyz\'es a CD mell\'eklettel kapcsolatban}{69}{section.F.1}

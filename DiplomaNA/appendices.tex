@@ -10,28 +10,48 @@
 %\numberwithin{tabular}{section}
 
 %----------------------------------------------------------------------------
-\section{A TeXnicCenter felülete}
+\section{Megjegyzés a CD melléklettel kapcsolatban}
 %----------------------------------------------------------------------------
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=150mm, keepaspectratio]{figures/TeXnicCenter.png}
-\caption{A TeXnicCenter Windows alapú \LaTeX-szerkesztõ.} 
-\end{figure}
 
-%----------------------------------------------------------------------------
-\clearpage\section{Válasz az ,,Élet, a világmindenség, meg minden'' kérdésére}
-%----------------------------------------------------------------------------
-A Pitagorasz-tételbõl levezetve
-\begin{align}
-c^2=a^2+b^2=42.
-\end{align}
-A Faraday-indukciós törvénybõl levezetve
-\begin{align}
-\rot E=-\frac{dB}{dt}\hspace{1cm}\longrightarrow \hspace{1cm}
-U_i=\oint\limits_\mathbf{L}{\mathbf{E}\mathbf{dl}}=-\frac{d}{dt}\int\limits_A{\mathbf{B}\mathbf{da}}=42.
-\end{align}
+A dolgozat mellékletében megtalálhatóak az általam készített forráskódok, és egy videófelvétel is a valós robotról. A következõ könyvtárak találhatóak a dolgozat mellékletében:
 
+\dirtree{%
+.1 /.
+.2 Source.
+.3 nodeSW.
+.4 nodeDCWheel.
+.3 Robotpilot.
+.4 PathPlanner.
+.4 PathProfile.
+.4 VREPServer.
+.4 Pilot.
+.3 RobotSolution.
+.4 Frame.
+.4 PathPlannerApp.
+.4 RobotCommonLib.
+.4 ServerVrepApp.
+.4 VREP.
+.2 Video.
+}
 
+\begin{description}
+\item Source: \hfill \\ Forráskódok.
 
+\item nodeSW: \hfill \\TMS320F2809 DSP-n futó programkód, az általam fejlesztett node-ot tartalmazza és néhány közös függvényt.
+\item nodeDCWheel:\hfill \\ DCWheel node felel a hajtásért, ezt teljes egészében én fejlesztettem.
 
+\item Robotpilot:\hfill \\ A robot felsõ irányítórendszere, teljes programkód. Robo2BME csapattal közösen fejlesztve.
+\item PathPlanner:\hfill \\ Az RTR, C*CS pályatervezõk forráskódja.
+\item PathProfile:\hfill \\ Az idõparaméterezõ forráskódja.
+\item VREPServer:\hfill \\ V-REP Server-hez kapcsolódó kliens kódja.
+\item Pilot:\hfill \\ A robot stratégiáját leíró Lua szkriptek.
 
+\item RobotSolution:\hfill \\ A keretrendszer forráskódja, szimulációhoz elsõsorban. Csorvási Gáborral közösen fejlesztve.
+\item Frame:\hfill \\ Példa környezetek.
+\item PathPlannerApp:\hfill \\ Kliens program.
+\item RobotCommonLib:\hfill \\ Több program által használt közös kódok.
+\item ServerVrepApp:\hfill \\ Szerver program.
+\item VREP:\hfill \\ V-REP környezetek.
+
+\item Video:\hfill \\ Egy adott környezetrõl készült videófelvétel.
+\end{description}

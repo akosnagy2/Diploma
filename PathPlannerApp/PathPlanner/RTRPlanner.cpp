@@ -49,7 +49,7 @@ void Scene::DrawPath()
 	Visualizer2 vis("path.ps");
 	
 	//Draw field
-	DrawPolygon(field, vis, Color(0.0, 0.0, 1.0, 2.0));
+	DrawPolygon(field, vis, Color(0.0, 0.0, 0.0, 2.0));
 
 	/*
 	for (int i = 0; i < envsxC.size(); i++)
@@ -59,29 +59,29 @@ void Scene::DrawPath()
 
 	//Draw obstacles
 	for (auto &elem : envs)
-		DrawPolygon(elem, vis, Color(0.0, 0.0, 1.0, 2.0));
-	
+		DrawPolygon(elem, vis, Color(0.0, 0.0, 0.0, 2.0));
+	/*
 	//Draw start tree TCIs
 	for (auto &elem : startTree.xtree)
 	{		
 		//DrawRobot(robotShape, elem.ci.q1, vis, Color(1.0, 1.0, 0.0, 1.0));
-		DrawCI(elem.ci, vis, Color(1.0, 0.0, 0.0, 2.0));
+		DrawCI(elem.ci, vis, Color(0.8, 0.0, 0.0, 2.0));
 	}
 
 	//Draw goal tree TCIs
 	for (auto &elem : goalTree.xtree)
 	{
 		//DrawRobot(robotShape, elem.ci.q1, vis, Color(0.0, 1.0, 1.0, 1.0));
-		DrawCI(elem.ci, vis, Color(0.0, 1.0, 0.0, 2.0));			
+		DrawCI(elem.ci, vis, Color(0.0, 0.8, 0.0, 2.0));			
 	}
-	
-	DrawRobot(robotShape, pathCI.front().q0, vis, Color(1.0, 0.0, 0.0, 2.0));
+	*/	
 	for (auto &elem : pathCI)
 	{
-		DrawRobot(robotShape, elem.q1, vis, Color(0.25, 0.9, 0.91, 2.0));
+		DrawRobot(robotShape, elem.q1, vis, Color(0.0, 0.0, 0.8, 2.0));
 		DrawCI(elem, vis, Color(0.0, 0.0, 0.0, 2.0)); 
-	}	
-	DrawRobot(robotShape, pathCI.back().q1, vis, Color(0.0, 1.0, 0.0, 2.0));
+	}
+	DrawRobot(robotShape, pathCI.front().q0, vis, Color(0.8, 0.0, 0.0, 2.0));
+	DrawRobot(robotShape, pathCI.back().q1, vis, Color(0.0, 0.8, 0.0, 2.0));
 
 	vis.writeFile();
 }

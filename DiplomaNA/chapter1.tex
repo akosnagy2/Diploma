@@ -8,7 +8,7 @@
 A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb, amikor a robot környezetében akadályok is találhatóak. 
 
 \par
-Célunk azon megközelítések és módszerek áttekintése, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetünk, ezeket szimulátoron és valós roboton is implementáltam, illetve teszteltem. A pályatervezéshez szorosan kapcsolódó téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
+Célom azon megközelítések és módszerek áttekintése, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetek, ezeket szimulátoron és valós roboton is implementáltam, illetve teszteltem. A pályatervezéshez szorosan kapcsolódó téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
 
 %----------------------------------------------------------------------------
 \section{Pályatervezés elmélete}
@@ -49,7 +49,7 @@ Az általunk vizsgált robot típus, a \emph{differenciális robot} is anholonom ren
 %----------------------------------------------------------------------------
 \subsubsection{Robotmodell}
 %----------------------------------------------------------------------------
-A differenciális robotot egy közös tengelyen lévõ két kerék segítségével mozgatjuk, így a differenciális meghajtásra utal a differenciális robot elnevezés. A mozgás kinematikai leírását \aref{eq:diffRobot}. egyenletek adják meg.
+A differenciális robotot egy közös tengelyen lévõ két kerék segítségével mozgatjuk, így a differenciális meghajtásra utal a differenciális robot elnevezés. A mozgás kinematikai leírását \aref{eq:diffRobot}. egyenletek adják meg \cite{Domi}.
 
 \begin{align}\label{eq:diffRobot}
 v &= \frac{v_{r}+v_{l}}{2} \\ \notag
@@ -83,13 +83,13 @@ A globális tervezõk esetében a konfigurációs tér egészét figyelembe vesszük a te
 A reaktív tervezõk esetében a robot alakját körrel szokták közelíteni, ezzel is egyszerûsítve a tervezés folyamatát. Ezzel szemben globális algoritmusok a robot pontos alakját figyelembe veszik, aminek nagy jelentõsége van szûk folyosókat tartalmazó pálya esetén. Az általunk bemutatott algoritmusok esetén mi is figyelembe vesszük a robot pontos alakját.
 
 \par
-A globális tervezõk esetén megkülönböztetünk mintavételes és kombinatorikus módszereket \cite{LaValle2}. A mintavételes módszerek a konfigurációs teret véletlenszerûen mintavételezik és ez alapján próbálnak utat keresni a célpontba, sok-sok iterációs keresztül. Ellenben a kombinatorikus módszerek direkt módon, a környezet pontos geometriai modellje alapján terveznek utat. Ennek az az elõnye a mintavételes módszerrel szemben, hogy képesek megállapítani, hogy létezik-e egyáltalán megoldás az adott környezetben. A mintavételes tervezõk esetén viszont nem tudjuk ezt eldönteni.
+A globális tervezõk esetén megkülönböztetünk mintavételes és kombinatorikus módszereket \cite{LaValle2}. A mintavételes módszerek a konfigurációs teret véletlenszerûen mintavételezik és ez alapján próbálnak utat keresni a célpontba, sok-sok iteráción keresztül. Ellenben a kombinatorikus módszerek direkt módon, a környezet pontos geometriai modellje alapján terveznek utat. Ennek az az elõnye a mintavételes módszerrel szemben, hogy képesek megállapítani, hogy létezik-e egyáltalán megoldás az adott környezetben. A mintavételes tervezõk esetén viszont nem tudjuk ezt eldönteni.
 
 \par
 A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) használnak a konfigurációs tér struktúrájának leírásához \cite{kavraki96prm, LaValle}. Az általunk bemutatott globális tervezõ, az RTR algoritmus is ezt a megközelítést alkalmazza. A gráfok (ill. fák) csomópontjai a konfigurációs térbõl vett minták, élei pedig az ezeket összekötõ ütközésmentes pályaszakaszok.
 
 \par
-Kombinatorikus globális tervezõk közé tartoznak például a celladekompozíción alapuló megoldások. Ezeknél az algoritmusoknál a szabad konfigurációs teret cellákra bontjuk fel, és e cellák alapján felépítünk egy a konfigurációs teret leíró gráfot. Az RTR algoritmusnál mi is használunk celladekompozíciót, a mi esetünkben a cellák háromszögek és a háromszögek oldalfelezõ pontjai alkotják a gráf csúcspontjait. A celladekompozíciót megvalósító algoritmushoz Bernhard Kornberger munkáját használtuk fel \cite{fade2d}.
+Kombinatorikus globális tervezõk közé tartoznak például a celladekompozíción alapuló megoldások. Ezeknél az algoritmusoknál a szabad konfigurációs teret cellákra bontjuk fel, és e cellák alapján felépítünk egy a konfigurációs teret leíró gráfot. Az RTR algoritmusnál én is használok celladekompozíciót, a esetemben a cellák háromszögek, és a háromszögek oldalfelezõ pontjai alkotják a gráf csúcspontjait. A celladekompozíciót megvalósító algoritmushoz Bernhard Kornberger munkáját használtam fel \cite{fade2d}.
 
 \begin{figure}[H]
 \centering

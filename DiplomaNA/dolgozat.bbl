@@ -14,6 +14,11 @@ D.~Kiss and G.~Tevesz, ``A model predictive navigation approach considering
   mobile robot shape and dynamics,'' {\em Periodica Polytechnica - Electrical
   Engineering}, vol.~56, pp.~43--50, 2012.
 
+\bibitem{Domi}
+{Kiss Domokos}, {\em Autonóm robot fejlesztése az Eurobot 2007 versenyre,
+  Diplomaterv}.
+\newblock BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék, 2007.
+
 \bibitem{kavraki96prm}
 L.~E. Kavraki, P.~Svetska, J.-C. Latombe, and M.~H. Overmars, ``Probabilistic
   roadmaps for path planning in high-dimensional configuration spaces,'' {\em
@@ -50,6 +55,11 @@ C.~Sprunk, {\em Planning Motion Trajectories for Mobile Robots Using Splines}.
 \bibitem{Bezi}
 {Bézi István}, {\em Robotirányítás rendszertechnikája 3. fejezet}.
 \newblock BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék, 2013.
+
+\bibitem{Gabor}
+{Csorvási Gábor}, {\em Pályatervezési és pályakövetõ szabályozási algoritmusok
+  fejlesztése robotautóhoz, Diplomaterv}.
+\newblock BME-VIK Automatizálási és Alkalmazott Informatikai Tanszék, 2014.
 
 \bibitem{VREP}
 {Coppelia Robotics}, ``{V-REP}.'' \url{http://www.coppeliarobotics.com/}.

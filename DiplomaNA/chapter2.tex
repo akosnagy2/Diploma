@@ -115,7 +115,7 @@ Lényeges különbség az is, ahogyan a két algoritmus az ütközést kezeli. Az RTR te
 Amennyiben forgatás közben történik ütközés a helyzet bonyolultabb, mivel ilyenkor nem sikerült kiterjeszteni még a fát. Ekkor az ütközési orientációnál elõre és hátra terjesztjük ki a fát. Ezután a célorientációt megpróbáljuk másik körüljárás szerint elérni. Függetlenül attól, hogy sikerült-e a második forgatással elérni a célkonfigurációt vagy ütközött a robot, ebben az állapotban megint kiterjesztjük a fát elõre és hátra is. Amennyiben ütközés történt megint az ütközési orientációnál alkalmazzuk a kiterjesztést, különben pedig a célkonfiguráció irányában terjesztjük ki a fát. A folyamat \aref{fig:rtr_rci}. ábrán látható.
 
 \par
-A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a célkonfiguráció felé haladjunk, másrészt pedig, hogy minél nagyobb szabad területet bejárjunk.
+A fa terjesztésnél alapvetõen két célunk van, egyrészt, hogy a célkonfiguráció felé haladjunk, másrészt pedig, hogy minél nagyobb szabad területet járjunk be.
 
 %----------------------------------------------------------------------------
 \subsubsection{Ütközésdetektálás transzlációs kiterjesztés esetén} \label{sect:tci}
@@ -295,7 +295,7 @@ OptimizePath     			& 3 	& 0.11 		& 0.01\\
 \label{table:Prof2}
 \end{table}
 
-Az ismertetett egyszerûbb optimalizálásokkal \aref{table:Prof2}. táblázatban látható futási eredményeket kapjuk a Profiler program alapján. A táblázat értékei alapján elmondhatjuk, hogy sikerült az algoritmus futási idejét az adott pálya esetében felére csökkenteni. Ezenkívül szembetûnõ különbség az optimalizálás elõtti eredményhez képest, hogy a \emph{GetALC} függvény futása 60\%-ról 40\%-ra csökkent. Tehát a csomópont kiválasztásnál alkalmazott optimalizálások, egyszerûségük ellenére, igen hatásosak voltak.
+Az ismertetett egyszerûbb optimalizálásokkal \aref{table:Prof2}. táblázatban látható futási eredményeket kapjuk a Profiler program segítségével. A táblázat értékei alapján elmondhatjuk, hogy sikerült az algoritmus futási idejét az adott pálya esetében felére csökkenteni. Ezenkívül szembetûnõ különbség az optimalizálás elõtti eredményhez képest, hogy a \emph{GetALC} függvény futása 60\%-ról 40\%-ra csökkent. Tehát a csomópont kiválasztásnál alkalmazott optimalizálások, egyszerûségük ellenére, igen hatásosak voltak.
 
 Az algoritmus futási idejét összehasonlíthatjuk az implementálás alapjául szolgáló MATLAB szkript futási idejével. Egy konkrét pálya esetében a Matlab szkriptben megvalósított algoritmus átlagosan ~24 s alatt futott le, míg a C++ nyelvû megvalósítás esetén ~21 ms alatt. Tehát körülbelül 3 nagyságrenddel lett gyorsabb a C++ változat. 
 
@@ -327,7 +327,7 @@ Bonyolultabb környezet esetén felerõsödik a véletlen mintavételezés szerepe, az 
 \label{fig:rtr_path2}
 \end{figure}
 
-\Aref{fig:rtr_path3}. ábrán látható pálya esetében vizsgáltuk az RTR algoritmus futási eredményeit \aref{table:Prof}. és a \aref{table:Prof2}. táblázatoknál. Látható, hogy a pálya két részén igen szûk kanyarban kell elfordulnia a robotnak. Ekkor a robot nagyon kis (1 milliméter alatti) mozgásokat hajt végre. Összehasonlításképpen a pálya 6 méter hosszú és 2.5 méter széles. Ezen pálya megtalálásához 3000-5000 iterációra volt szükség, teljesen véletlen mintavételezés esetén, tehát nem használjuk fel a celladekompozíció által adott pontokat.
+Az RTR algoritmus futási eredményeit (\aref{table:Prof}. és a \aref{table:Prof2}. táblázat), \aref{fig:rtr_path3}. ábrán látható pálya esetében vizsgáltuk. Látható, hogy a pálya két részén igen szûk kanyarban kell elfordulnia a robotnak. Ekkor a robot nagyon kis (1 milliméter alatti) mozgásokat hajt végre. Összehasonlításképpen a pálya 6 méter hosszú és 2.5 méter széles. Ezen pálya megtalálásához 3000-5000 iterációra volt szükség, teljesen véletlen mintavételezés esetén, tehát nem használjuk fel a celladekompozíció által adott pontokat.
 
 \begin{figure}[H]
 \centering

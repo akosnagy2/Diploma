@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  8 DEC 2014 18:00
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/W32TeX) (format=pdflatex 2014.4.19)  10 DEC 2014 13:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -464,43 +464,65 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip62
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
+) (c:/texlive/2013/texmf-dist/tex/generic/dirtree/dirtree.sty
+Package: dirtree 2012/12/11 v0.32 package wrapper for dirtree
+
+(c:/texlive/2013/texmf-dist/tex/generic/dirtree/dirtree.tex
+`dirtree' v0.32, 2012/12/11 (jcc)
+\DT@offset=\dimen149
+\DT@width=\dimen150
+\DT@sep=\dimen151
+\DT@all=\dimen152
+\DT@rulewidth=\dimen153
+\DT@dotwidth=\dimen154
+\DTbaselineskip=\dimen155
+\DT@counti=\count140
+\DT@countii=\count141
+\DT@countiii=\count142
+\DT@countiv=\count143
+\DT@indent=\dimen156
+\DT@parskip=\dimen157
+\DT@baselineskip=\dimen158
 )
-Package hyperref Info: Option `pdfnewwindow' set `true' on input line 82.
-Package hyperref Info: Option `colorlinks' set `true' on input line 82.
- (./dolgozat.aux (./titlepage.aux) (./declaration.aux) (./abstract.aux)
-(./introduction.aux) (./chapter1.aux) (./chapter2.aux) (./chapter3.aux)
-(./chapter4.aux) (./chapter5.aux) (./chapter6.aux) (./acknowledgement.aux))
+File: dirtree.tex 2012/12/11 v0.32 `dirtree' (jcc)
+)
+Package hyperref Info: Option `pdfnewwindow' set `true' on input line 83.
+Package hyperref Info: Option `colorlinks' set `true' on input line 83.
+ (./dolgozat.aux (./titlepage.aux)
+(./declaration.aux) (./abstract.aux) (./introduction.aux) (./chapter1.aux)
+(./chapter2.aux) (./chapter3.aux) (./chapter4.aux) (./chapter5.aux)
+(./chapter6.aux) (./acknowledgement.aux) (./appendices.aux))
 \openout1 = `dolgozat.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 154.
-LaTeX Font Info:    ... okay on input line 154.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 154.
-LaTeX Font Info:    ... okay on input line 154.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 154.
-LaTeX Font Info:    ... okay on input line 154.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 154.
-LaTeX Font Info:    ... okay on input line 154.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 154.
-LaTeX Font Info:    ... okay on input line 154.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 154.
-LaTeX Font Info:    ... okay on input line 154.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 154.
-LaTeX Font Info:    ... okay on input line 154.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 154.
-LaTeX Font Info:    ... okay on input line 154.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
 
 (c:/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count140
-\scratchdimen=\dimen149
+\scratchcounter=\count144
+\scratchdimen=\dimen159
 \scratchbox=\box32
-\nofMPsegments=\count141
-\nofMParguments=\count142
+\nofMPsegments=\count145
+\nofMParguments=\count146
 \everyMPshowfont=\toks45
-\MPscratchCnt=\count143
-\MPscratchDim=\dimen150
-\MPnumerator=\count144
-\makeMPintoPDFobject=\count145
+\MPscratchCnt=\count147
+\MPscratchDim=\dimen160
+\MPnumerator=\count148
+\makeMPintoPDFobject=\count149
 \everyMPtoPDFconversion=\toks46
 ) (c:/texlive/2013/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
@@ -517,19 +539,19 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\c@lstlisting=\count146
+\c@lstlisting=\count150
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             http://www.ctan.org/tex-archive/ 
 (lastpage)             macros/latex/contrib/pageslts/ 
 (lastpage)             or
 (lastpage)             http://www.ctan.org/tex-archive/ 
 (lastpage)             install/macros/latex/contrib/pageslts.tds.zip
-(lastpage)             ! on input line 154.
+(lastpage)             ! on input line 155.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
 \AtBeginShipoutBox=\box33
-Package hyperref Info: Link coloring ON on input line 154.
+Package hyperref Info: Link coloring ON on input line 155.
 
 (c:/texlive/2013/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -537,11 +559,11 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 (c:/texlive/2013/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count147
+\c@section@level=\count151
 )
-LaTeX Info: Redefining \ref on input line 154.
-LaTeX Info: Redefining \pageref on input line 154.
-LaTeX Info: Redefining \nameref on input line 154.
+LaTeX Info: Redefining \ref on input line 155.
+LaTeX Info: Redefining \pageref on input line 155.
+LaTeX Info: Redefining \nameref on input line 155.
 
 (./dolgozat.out) (./dolgozat.out)
 \@outlinefile=\write3
@@ -555,7 +577,7 @@ LaTeX Info: Redefining \mit on input line 587.
 \openout2 = `titlepage.aux'.
 
  (./titlepage.tex
-<figures/BMElogo.png, id=192, 975.645pt x 273.02pt>
+<figures/BMElogo.png, id=200, 975.645pt x 273.02pt>
 File: figures/BMElogo.png Graphic file (type png)
  <use figures/BMElogo.png>
 Package pdftex.def Info: figures/BMElogo.png used on input line 6.
@@ -618,7 +640,7 @@ pdfTeX warning: pdflatex.exe: pop empty color page stack 0
 
  (./chapter1.tex
 1. fejezet.
-<figures/config.png, id=282, 1003.75pt x 487.8225pt>
+<figures/config.png, id=292, 1003.75pt x 487.8225pt>
 File: figures/config.png Graphic file (type png)
  <use figures/config.png>
 Package pdftex.def Info: figures/config.png used on input line 32.
@@ -629,7 +651,7 @@ Package pdftex.def Info: figures/config.png used on input line 32.
 
 
 ] [8 <./figures/config.png>] [9]
-<figures/celladekomp.png, id=320, 442.65375pt x 298.11375pt>
+<figures/celladekomp.png, id=333, 442.65375pt x 298.11375pt>
 File: figures/celladekomp.png Graphic file (type png)
 
 <use figures/celladekomp.png>
@@ -641,7 +663,7 @@ Package pdftex.def Info: figures/celladekomp.png used on input line 96.
 
 (./chapter2.tex
 2. fejezet.
-<figures/RRT.png, id=342, 989.19562pt x 325.215pt>
+<figures/RRT.png, id=354, 989.19562pt x 325.215pt>
 File: figures/RRT.png Graphic file (type png)
  <use figures/RRT.png>
 Package pdftex.def Info: figures/RRT.png used on input line 20.
@@ -660,27 +682,27 @@ File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 46.
  [13]
-<figures/tci_gp.png, id=357, 920.238pt x 281.1303pt>
+<figures/tci_gp.png, id=369, 920.238pt x 281.1303pt>
 File: figures/tci_gp.png Graphic file (type png)
  <use figures/tci_gp.png>
 Package pdftex.def Info: figures/tci_gp.png used on input line 80.
 (pdftex.def)             Requested size: 369.88582pt x 112.9992pt.
 
-[14] <figures/rci_gp.png, id=363, 1284.7197pt x 577.1964pt>
+[14] <figures/rci_gp.png, id=375, 1284.7197pt x 577.1964pt>
 File: figures/rci_gp.png Graphic file (type png)
 
 <use figures/rci_gp.png>
 Package pdftex.def Info: figures/rci_gp.png used on input line 90.
 (pdftex.def)             Requested size: 369.88582pt x 166.18488pt.
  [15 <./figures/tci_gp.png> <./figures/rci_gp.png>]
-<figures/rtr_rci.png, id=374, 472.76625pt x 277.78781pt>
+<figures/rtr_rci.png, id=386, 472.76625pt x 277.78781pt>
 File: figures/rtr_rci.png Graphic file (type png)
 
 <use figures/rtr_rci.png>
 Package pdftex.def Info: figures/rtr_rci.png used on input line 109.
 (pdftex.def)             Requested size: 227.62204pt x 133.74777pt.
 
-<figures/tci_coll2.png, id=379, 645.1302pt x 391.7034pt>
+<figures/tci_coll2.png, id=391, 645.1302pt x 391.7034pt>
 File: figures/tci_coll2.png Graphic file (type png)
 
 <use figures/tci_coll2.png>
@@ -689,39 +711,39 @@ Package pdftex.def Info: figures/tci_coll2.png used on input line 130.
  [16 <./figures/rtr_rci.png>] [17 <./figures/tci_coll2.png>]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 179.
- [18] [19] <figures/measureData.pdf, id=413, 1446.40375pt x 726.715pt>
+ [18] [19] <figures/measureData.pdf, id=425, 1446.40375pt x 726.715pt>
 File: figures/measureData.pdf Graphic file (type pdf)
 
 <use figures/measureData.pdf>
 Package pdftex.def Info: figures/measureData.pdf used on input line 243.
 (pdftex.def)             Requested size: 384.1122pt x 192.98883pt.
  [20 <./figures/measureData.pdf>] [21]
-<figures/rtr_path0.png, id=440, 723.45282pt x 617.30624pt>
+<figures/rtr_path0.png, id=452, 807.7678pt x 688.07062pt>
 File: figures/rtr_path0.png Graphic file (type png)
 
 <use figures/rtr_path0.png>
 Package pdftex.def Info: figures/rtr_path0.png used on input line 316.
-(pdftex.def)             Requested size: 227.62204pt x 194.22643pt.
+(pdftex.def)             Requested size: 227.62204pt x 193.88686pt.
  [22]
-<figures/rtr_path1.png, id=448, 580.41844pt x 578.16pt>
+<figures/rtr_path1.png, id=461, 697.8572pt x 695.59875pt>
 File: figures/rtr_path1.png Graphic file (type png)
 
 <use figures/rtr_path1.png>
 Package pdftex.def Info: figures/rtr_path1.png used on input line 325.
-(pdftex.def)             Requested size: 256.0748pt x 255.0793pt.
+(pdftex.def)             Requested size: 256.0748pt x 255.24472pt.
  [23 <./figures/rtr_path0.png> <./figures/rtr_path1.png>] <figures/rtr_path2.pn
-g, id=460, 1176.64594pt x 501.37312pt>
+g, id=472, 1180.41pt x 501.37312pt>
 File: figures/rtr_path2.png Graphic file (type png)
 
 <use figures/rtr_path2.png>
 Package pdftex.def Info: figures/rtr_path2.png used on input line 334.
-(pdftex.def)             Requested size: 398.33858pt x 169.73016pt.
+(pdftex.def)             Requested size: 398.33858pt x 169.187pt.
 ) [24 <./figures/rtr_path2.png>]
 \openout2 = `chapter3.aux'.
 
  (./chapter3.tex
 3. fejezet.
-<figures/path.pdf, id=467, 1446.40375pt x 726.715pt>
+<figures/path.pdf, id=479, 1446.40375pt x 726.715pt>
 File: figures/path.pdf Graphic file (type pdf)
  <use figures/path.pdf>
 Package pdftex.def Info: figures/path.pdf used on input line 11.
@@ -732,63 +754,63 @@ Package pdftex.def Info: figures/path.pdf used on input line 11.
 
 
  <./figures/path.pdf>] [26]
-<figures/robot.png, id=491, 396.0396pt x 234.3957pt>
+<figures/robot.png, id=503, 396.0396pt x 234.3957pt>
 File: figures/robot.png Graphic file (type png)
  <use figures/robot.png>
 Package pdftex.def Info: figures/robot.png used on input line 87.
 (pdftex.def)             Requested size: 426.79134pt x 252.59995pt.
 
 [27] [28 <./figures/robot.png>] [29] [30] [31] [32] [33]
-<figures/geo_sampl.pdf, id=585, 1446.40375pt x 726.715pt>
+<figures/geo_sampl.pdf, id=597, 1446.40375pt x 726.715pt>
 File: figures/geo_sampl.pdf Graphic file (type pdf)
 
 <use figures/geo_sampl.pdf>
 Package pdftex.def Info: figures/geo_sampl.pdf used on input line 343.
 (pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
  [34 <./figures/geo_sampl.pdf>]
-<figures/circle_circle.png, id=602, 656.4525pt x 603.75563pt>
+<figures/circle_circle.png, id=614, 656.4525pt x 603.75563pt>
 File: figures/circle_circle.png Graphic file (type png)
 
 <use figures/circle_circle.png>
 Package pdftex.def Info: figures/circle_circle.png used on input line 366.
 (pdftex.def)             Requested size: 369.88582pt x 340.1921pt.
  [35 <./figures/circle_circle.png>] [36]
-<figures/back_check2.pdf, id=624, 1446.40375pt x 726.715pt>
+<figures/back_check2.pdf, id=636, 1446.40375pt x 726.715pt>
 File: figures/back_check2.pdf Graphic file (type pdf)
 
 <use figures/back_check2.pdf>
 Package pdftex.def Info: figures/back_check2.pdf used on input line 414.
 (pdftex.def)             Requested size: 398.33858pt x 200.13pt.
 
-<figures/back_check.pdf, id=626, 1446.40375pt x 726.715pt>
+<figures/back_check.pdf, id=638, 1446.40375pt x 726.715pt>
 File: figures/back_check.pdf Graphic file (type pdf)
 
 <use figures/back_check.pdf>
 Package pdftex.def Info: figures/back_check.pdf used on input line 430.
 (pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
  [37 <./figures/back_check2.pdf>] [38 <./figures/back_check.pdf>] <figures/prof
-ilePath.pdf, id=649, 1446.40375pt x 726.715pt>
+ilePath.pdf, id=661, 1446.40375pt x 726.715pt>
 File: figures/profilePath.pdf Graphic file (type pdf)
 
 <use figures/profilePath.pdf>
 Package pdftex.def Info: figures/profilePath.pdf used on input line 458.
 (pdftex.def)             Requested size: 407.727pt x 204.85983pt.
 
-<figures/profileVA.pdf, id=651, 1446.40375pt x 726.715pt>
+<figures/profileVA.pdf, id=663, 1446.40375pt x 726.715pt>
 File: figures/profileVA.pdf Graphic file (type pdf)
 
 <use figures/profileVA.pdf>
 Package pdftex.def Info: figures/profileVA.pdf used on input line 474.
 (pdftex.def)             Requested size: 407.727pt x 204.85983pt.
  [39 <./figures/profilePath.pdf>]
-<figures/profileW.pdf, id=664, 1446.40375pt x 726.715pt>
+<figures/profileW.pdf, id=676, 1446.40375pt x 726.715pt>
 File: figures/profileW.pdf Graphic file (type pdf)
 
 <use figures/profileW.pdf>
 Package pdftex.def Info: figures/profileW.pdf used on input line 484.
 (pdftex.def)             Requested size: 407.727pt x 204.85983pt.
 
-<figures/profileALR.pdf, id=666, 1446.40375pt x 726.715pt>
+<figures/profileALR.pdf, id=678, 1446.40375pt x 726.715pt>
 File: figures/profileALR.pdf Graphic file (type pdf)
 
 <use figures/profileALR.pdf>
@@ -804,48 +826,48 @@ eALR.pdf>]
 
 
 
-] [43] <figures/hajtas.pdf, id=718, 747.54282pt x 618.81187pt>
+] [43] <figures/hajtas.pdf, id=730, 747.54282pt x 618.81187pt>
 File: figures/hajtas.pdf Graphic file (type pdf)
 
 <use figures/hajtas.pdf>
 Package pdftex.def Info: figures/hajtas.pdf used on input line 78.
 (pdftex.def)             Requested size: 426.79134pt x 353.29297pt.
  [44 <./figures/hajtas.pdf>]
-<figures/wheelC.pdf, id=785, 1446.40375pt x 726.715pt>
+<figures/wheelC.pdf, id=797, 1446.40375pt x 726.715pt>
 File: figures/wheelC.pdf Graphic file (type pdf)
 
 <use figures/wheelC.pdf>
 Package pdftex.def Info: figures/wheelC.pdf used on input line 98.
 (pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
  [45 <./figures/wheelC.pdf>]
-<figures/oriPD.png, id=800, 231.0231pt x 262.3401pt>
+<figures/oriPD.png, id=812, 231.0231pt x 262.3401pt>
 File: figures/oriPD.png Graphic file (type png)
  <use figures/oriPD.png>
 Package pdftex.def Info: figures/oriPD.png used on input line 132.
 (pdftex.def)             Requested size: 284.52756pt x 323.12872pt.
 
-[46] <figures/VREPStart.png, id=807, 965.10562pt x 591.71063pt>
+[46] <figures/VREPStart.png, id=820, 965.10562pt x 591.71063pt>
 File: figures/VREPStart.png Graphic file (type png)
 
 <use figures/VREPStart.png>
 Package pdftex.def Info: figures/VREPStart.png used on input line 154.
 (pdftex.def)             Requested size: 341.43306pt x 209.33192pt.
  [47 <./figures/oriPD.png>]
-<figures/oriPD2.png, id=818, 630.10406pt x 504.38437pt>
+<figures/oriPD2.png, id=829, 630.10406pt x 504.38437pt>
 File: figures/oriPD2.png Graphic file (type png)
 
 <use figures/oriPD2.png>
 Package pdftex.def Info: figures/oriPD2.png used on input line 175.
 (pdftex.def)             Requested size: 284.52756pt x 227.75589pt.
  [48 <./figures/VREPStart.png>]
-<figures/pathfollowP.pdf, id=827, 1446.40375pt x 726.715pt>
+<figures/pathfollowP.pdf, id=839, 1446.40375pt x 726.715pt>
 File: figures/pathfollowP.pdf Graphic file (type pdf)
 
 <use figures/pathfollowP.pdf>
 Package pdftex.def Info: figures/pathfollowP.pdf used on input line 194.
 (pdftex.def)             Requested size: 426.79134pt x 214.43451pt.
  [49 <./figures/oriPD2.png> <./figures/pathfollowP.pdf>] <figures/pathfollowA.p
-df, id=842, 1446.40375pt x 726.715pt>
+df, id=854, 1446.40375pt x 726.715pt>
 File: figures/pathfollowA.pdf Graphic file (type pdf)
 
 <use figures/pathfollowA.pdf>
@@ -856,14 +878,14 @@ Package pdftex.def Info: figures/pathfollowA.pdf used on input line 205.
 
  (./chapter5.tex
 5. fejezet.
-<figures/RTR_CCS_CAR.png, id=856, 615.0478pt x 613.54219pt>
+<figures/RTR_CCS_CAR.png, id=869, 615.0478pt x 613.54219pt>
 File: figures/RTR_CCS_CAR.png Graphic file (type png)
 
 <use figures/RTR_CCS_CAR.png>
 Package pdftex.def Info: figures/RTR_CCS_CAR.png used on input line 23.
 (pdftex.def)             Requested size: 199.65355pt x 199.16928pt.
 
-<figures/RTR_CCS_DIFF.png, id=857, 605.26125pt x 604.50844pt>
+<figures/RTR_CCS_DIFF.png, id=870, 605.26125pt x 604.50844pt>
 File: figures/RTR_CCS_DIFF.png Graphic file (type png)
 
 <use figures/RTR_CCS_DIFF.png>
@@ -874,104 +896,103 @@ Package pdftex.def Info: figures/RTR_CCS_DIFF.png used on input line 24.
 
 
 ] [52 <./figures/RTR_CCS_CAR.png> <./figures/RTR_CCS_DIFF.png>] <figures/vrep.p
-ng, id=875, 1284.8pt x 983.675pt>
+ng, id=889, 1284.8pt x 983.675pt>
 File: figures/vrep.png Graphic file (type png)
 
 <use figures/vrep.png>
 Package pdftex.def Info: figures/vrep.png used on input line 47.
 (pdftex.def)             Requested size: 426.79134pt x 326.76013pt.
 
-<figures/vrepSystem.pdf, id=876, 536.75531pt x 387.69844pt>
+<figures/vrepSystem.pdf, id=890, 536.75531pt x 387.69844pt>
 File: figures/vrepSystem.pdf Graphic file (type pdf)
 
 <use figures/vrepSystem.pdf>
 Package pdftex.def Info: figures/vrepSystem.pdf used on input line 59.
 (pdftex.def)             Requested size: 398.33858pt x 287.72055pt.
- [53 <./figures/vrep.png>] [54 <./figures/vrepSystem.pdf>] <figures/DiffSimPath
-0RTR.png, id=919, 1075.01625pt x 690.32906pt>
-File: figures/DiffSimPath0RTR.png Graphic file (type png)
+ [53 <./figures/vrep.png>]
+<figures/DiffSimPath0RTRb.png, id=896, 689.57625pt x 689.57625pt>
+File: figures/DiffSimPath0RTRb.png Graphic file (type png)
 
-<use figures/DiffSimPath0RTR.png>
-Package pdftex.def Info: figures/DiffSimPath0RTR.png used on input line 77.
-(pdftex.def)             Requested size: 369.88582pt x 237.52124pt.
+<use figures/DiffSimPath0RTRb.png>
+Package pdftex.def Info: figures/DiffSimPath0RTRb.png used on input line 77.
+(pdftex.def)             Requested size: 369.88582pt x 369.88242pt.
+ [54 <./figures/vrepSystem.pdf>]
+<figures/DiffSimPath0b.png, id=934, 656.4525pt x 658.71094pt>
+File: figures/DiffSimPath0b.png Graphic file (type png)
 
-<figures/DiffSimPath0.png, id=920, 1075.01625pt x 690.32906pt>
-File: figures/DiffSimPath0.png Graphic file (type png)
+<use figures/DiffSimPath0b.png>
+Package pdftex.def Info: figures/DiffSimPath0b.png used on input line 84.
+(pdftex.def)             Requested size: 369.88582pt x 371.15721pt.
+ [55 <./figures/DiffSimPath0RTRb.png>]
+<figures/DiffSimPath1b.png, id=942, 727.21687pt x 618.81187pt>
+File: figures/DiffSimPath1b.png Graphic file (type png)
 
-<use figures/DiffSimPath0.png>
-Package pdftex.def Info: figures/DiffSimPath0.png used on input line 84.
-(pdftex.def)             Requested size: 369.88582pt x 237.52124pt.
+<use figures/DiffSimPath1b.png>
+Package pdftex.def Info: figures/DiffSimPath1b.png used on input line 91.
+(pdftex.def)             Requested size: 284.52756pt x 242.11937pt.
 
-<figures/DiffSimPath1.png, id=921, 1076.52188pt x 692.5875pt>
-File: figures/DiffSimPath1.png Graphic file (type png)
+<figures/DiffSimPath2b.png, id=943, 1030.60031pt x 440.39531pt>
+File: figures/DiffSimPath2b.png Graphic file (type png)
 
-<use figures/DiffSimPath1.png>
-Package pdftex.def Info: figures/DiffSimPath1.png used on input line 91.
-(pdftex.def)             Requested size: 369.88582pt x 237.97069pt.
- [55 <./figures/DiffSimPath0RTR.png> <./figures/DiffSimPath0.png>] <figures/Dif
-fSimPath2.png, id=930, 1156.32pt x 690.32906pt>
-File: figures/DiffSimPath2.png Graphic file (type png)
-
-<use figures/DiffSimPath2.png>
-Package pdftex.def Info: figures/DiffSimPath2.png used on input line 98.
-(pdftex.def)             Requested size: 369.88582pt x 220.815pt.
-
-<figures/Eurobot.png, id=931, 406.51875pt x 556.32843pt>
+<use figures/DiffSimPath2b.png>
+Package pdftex.def Info: figures/DiffSimPath2b.png used on input line 98.
+(pdftex.def)             Requested size: 398.33858pt x 170.21461pt.
+ [56 <./figures/DiffSimPath0b.png> <./figures/DiffSimPath1b.png>] <figures/Euro
+bot.png, id=952, 406.51875pt x 556.32843pt>
 File: figures/Eurobot.png Graphic file (type png)
 
 <use figures/Eurobot.png>
 Package pdftex.def Info: figures/Eurobot.png used on input line 111.
 (pdftex.def)             Requested size: 227.62204pt x 311.49934pt.
- [56 <./figures/DiffSimPath1.png> <./figures/DiffSimPath2.png>] [57 <./figures/
-Eurobot.png>]
-<figures/Sitara.png, id=946, 476.982pt x 335.8146pt>
+ [57 <./figures/DiffSimPath2b.png> <./figures/Eurobot.png>] <figures/Sitara.png
+, id=960, 476.982pt x 335.8146pt>
 File: figures/Sitara.png Graphic file (type png)
- <use figures/Sitara.png>
+
+<use figures/Sitara.png>
 Package pdftex.def Info: figures/Sitara.png used on input line 130.
 (pdftex.def)             Requested size: 284.52756pt x 200.322pt.
-
-[58 <./figures/Sitara.png>]
-<figures/RealTest/Env2_200.png, id=954, 679.03688pt x 679.78969pt>
+ [58]
+<figures/RealTest/Env2_200.png, id=966, 679.03688pt x 679.78969pt>
 File: figures/RealTest/Env2_200.png Graphic file (type png)
 
 <use figures/RealTest/Env2_200.png>
 Package pdftex.def Info: figures/RealTest/Env2_200.png used on input line 156.
 (pdftex.def)             Requested size: 341.43306pt x 341.81296pt.
-
-<figures/RealTest/Env1_200.png, id=955, 379.4175pt x 679.03688pt>
+ [59 <./figures/Sitara.png>]
+<figures/RealTest/Env1_200.png, id=974, 379.4175pt x 679.03688pt>
 File: figures/RealTest/Env1_200.png Graphic file (type png)
 
 <use figures/RealTest/Env1_200.png>
 Package pdftex.def Info: figures/RealTest/Env1_200.png used on input line 163.
 (pdftex.def)             Requested size: 312.9803pt x 560.15016pt.
- [59 <./figures/RealTest/Env2_200.png>]
-<figures/RealTest/Env0_200.png, id=963, 358.33875pt x 641.39626pt>
+ [60 <./figures/RealTest/Env2_200.png>]
+<figures/RealTest/Env0_200.png, id=982, 358.33875pt x 641.39626pt>
 File: figures/RealTest/Env0_200.png Graphic file (type png)
 
 <use figures/RealTest/Env0_200.png>
 Package pdftex.def Info: figures/RealTest/Env0_200.png used on input line 170.
 (pdftex.def)             Requested size: 312.9803pt x 560.24165pt.
- [60 <./figures/RealTest/Env1_200.png>]
-<figures/RealTest/Env0_400.png, id=971, 383.93437pt x 682.80093pt>
+ [61 <./figures/RealTest/Env1_200.png>]
+<figures/RealTest/Env0_400.png, id=989, 383.93437pt x 682.80093pt>
 File: figures/RealTest/Env0_400.png Graphic file (type png)
 
 <use figures/RealTest/Env0_400.png>
 Package pdftex.def Info: figures/RealTest/Env0_400.png used on input line 177.
 (pdftex.def)             Requested size: 312.9803pt x 556.64975pt.
- [61 <./figures/RealTest/Env0_200.png>])
-[62 <./figures/RealTest/Env0_400.png>] [63]
+ [62 <./figures/RealTest/Env0_200.png>])
+[63 <./figures/RealTest/Env0_400.png>] [64]
 \openout2 = `chapter6.aux'.
 
  (./chapter6.tex
 6. fejezet.
-) [64
+) [65
 
 
 
 ]
 \openout2 = `acknowledgement.aux'.
 
- (./acknowledgement.tex) [65
+ (./acknowledgement.tex) [66
 
 
 
@@ -980,33 +1001,39 @@ LaTeX Font Info:    Try loading font information for T1+cmtt on input line 6.
 
 (c:/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-))
+) [67
+
+
+]) [68]
+\openout2 = `appendices.aux'.
+
+
+(./appendices.tex [69
+
+
+]) [70]
 \tf@thm=\write5
 \openout5 = `dolgozat.thm'.
 
-
-
+ 
 AED: lastpage setting LastPage
-[66
-
-
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 185.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 185.
- (./dolgozat.aux (./titlepage.aux) (./declaration.aux) (./abstract.aux)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 186.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 186.
+(./dolgozat.aux (./titlepage.aux) (./declaration.aux) (./abstract.aux)
 (./introduction.aux) (./chapter1.aux) (./chapter2.aux) (./chapter3.aux)
-(./chapter4.aux) (./chapter5.aux) (./chapter6.aux) (./acknowledgement.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 185.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 185.
+(./chapter4.aux) (./chapter5.aux) (./chapter6.aux) (./acknowledgement.aux)
+(./appendices.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 186.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 186.
 Package rerunfilecheck Info: File `dolgozat.out' has not changed.
-(rerunfilecheck)             Checksum: 9A5DC238F0B85B6D3049F97CDF48C961;7233.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 185.
+(rerunfilecheck)             Checksum: 3ACAFDD5A5276EC7C06C5638E758AF15;7607.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 186.
  ) 
 Here is how much of TeX's memory you used:
- 15730 strings out of 493308
- 230240 string characters out of 6141367
- 327729 words of memory out of 5000000
- 18639 multiletter control sequences out of 15000+600000
+ 15834 strings out of 493308
+ 231624 string characters out of 6141367
+ 330341 words of memory out of 5000000
+ 18722 multiletter control sequences out of 15000+600000
  27316 words of font info for 67 fonts, out of 8000000 for 9000
  961 hyphenation exceptions out of 8191
  36i,13n,43p,999b,580s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1032,10 +1059,10 @@ onts/type1/public/cm-super/sfrm0900.pfb><c:/texlive/2013/texmf-dist/fonts/type1
 -super/sfrm1200.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sft
 i0900.pfb><c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb>
 <c:/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on dolgozat.pdf (67 pages, 6507920 bytes).
+Output written on dolgozat.pdf (71 pages, 6420766 bytes).
 PDF statistics:
- 1136 PDF objects out of 1200 (max. 8388607)
- 946 compressed objects within 10 object streams
- 228 named destinations out of 1000 (max. 500000)
- 592 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1168 PDF objects out of 1200 (max. 8388607)
+ 974 compressed objects within 10 object streams
+ 236 named destinations out of 1000 (max. 500000)
+ 608 words of extra memory for PDF output out of 10000 (max. 10000000)
 
