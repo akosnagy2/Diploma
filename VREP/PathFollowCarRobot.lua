@@ -39,7 +39,8 @@ function PathFollowSimulationLoop()
 		rabitPos[2] = returnData[7] / 1000
 		rabitPos[3] = 0.1 -- fix
 		
-		simSetGraphUserData(trackGraphHandle, "Steering_Angle", returnData[8]) 
+		simSetGraphUserData(trackGraphHandle, "Steering_Angle", fi*100) 
+		simSetGraphUserData(trackGraphHandle, "Track_Error", returnData[8]) 
 
 		if(consoleHandle ~= nil) then
 			simAuxiliaryConsolePrint(consoleHandle,NULL) 
@@ -93,10 +94,10 @@ function PathFollowCarRobot()
 	local portNb = getPort()
 
 	-- Start Server
-	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
+	result=simLaunchExecutable('ServerVrepApp',portNb,0) -- set the last argument to 1 to see the console of the launched server
 
 	-- Start Client
-	--result2=simLaunchExecutable('PathPlannerApp',"",0) -- set the last argument to 1 to see the console of the launched server
+	result2=simLaunchExecutable('PathPlannerApp',"",0) -- set the last argument to 1 to see the console of the launched server
 
 	if ((result == -1) or (result2 == -1)) then
 		-- The executable could not be launched!
@@ -136,7 +137,11 @@ function PathFollowCarRobot()
 								randomSeed,
 								envFile,
 								minimumRadius,
-								ds		
+								ds,
+								reversePenaltyFactor,
+								useIntermediateS,
+								insertCount,
+								dx
 								}
 				pars=simPackFloats(pars)
 				writeSocketData(client,pars)

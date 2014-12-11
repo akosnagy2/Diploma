@@ -24,7 +24,7 @@ lineFollower(lf)
 
 	for(auto &ps : paths) {
 		PathShifter shifter(ps, car);
-		frontPath.push_back(shifter.getShiftedPath());
+		frontPath.push_back(shifter.getShiftedPath(predict));
 	}
 
 	trackError = 0.0f;

@@ -216,9 +216,11 @@ void CarSimulationLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnecti
 		followPars.motor.motorSmoothFactor, followPars.motor.motorMultFactor,
 		followPars.MaxSteerSpeed, followPars.TimeStep);
 	car.setAxisDistance(followPars.AxisDistance);
-	car.setFiMax(followPars.FiMax * 1.3f);
+	car.setFiMax(followPars.FiMax);
 	car.setWheelDiameter(followPars.WheelDiameter);
 	car.setWheelDistance(followPars.WheelDistance);
+
+	std::ofstream posLog("poslog.txt");
 
 	// This is the server loop
 	while(true) {
@@ -258,5 +260,7 @@ void CarSimulationLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnecti
 		//Send data to V-Rep Client
 		if(SendRobotData(connection, car.getModelSpeed(), car.getModelSteer(), car.getPosition(), rabit_msg.pos, info_msg.values))
 			break;
+
+		posLog << car.getPosition().p.x << " " << car.getPosition().p.y << std::endl;
 	}
 }
