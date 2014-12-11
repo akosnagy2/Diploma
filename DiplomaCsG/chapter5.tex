@@ -8,12 +8,73 @@ Az elkészült algoritmusok elméleti szinten és a szimulátorban is a vártnak megfe
 %----------------------------------------------------------------------------
 A robot elkészítése a szakmai gyakorlatom keretében valósult meg. A fejlesztés során a célom egy olyan autószerû mobilrobot készítése volt, amely a környezet ismeretében képes a pályatervezõ algoritmusok futtatására, és egy elkészült pálya követésére.
 
-A kész rendszer két részre bontható a feladat jellegébõl fakadóan. Az alacsonyabb szintû feladatok, mint a motor vezérlése, szabályozása, kormányzás és szenzorfúzió egy beágyazott mikrokontroller feladatai közé tartoznak. Beépítésre került egy bluetooth modul, hibakeresési céllal. Ezen felül ez a modul lehetõvé teszi, hogy ezt az alrendszert leválasszuk, így az erõforrásigényesebb algoritmusok fejlesztése, mint például a pályatervezés és követés, máshol is megtörténhessen. 
+Az elkészült rendszer két részre bontható a feladat jellegébõl fakadóan. Az alacsonyabb szintû feladatok, mint a motor vezérlése, szabályozása, kormányzás és szenzorfúzió egy beágyazott mikrokontroller feladatai közé tartoznak. Emellett beépítésre került egy bluetooth modul, amely segíti a hibakeresést. Ezen felül ez a modul lehetõvé teszi, hogy ezt az alacsonyabb szintû alrendszert leválasszuk, az erõforrásigényesebb algoritmusok fejlesztése során.
+
+\begin{figure}
+\centering
+\includegraphics[width=125mm, keepaspectratio]{figures/carReal.jpg}
+\caption{Az elkészült robotautó} 
+\label{fig:carReal}
+\end{figure}
+
+A magasabb szintû feladatok, mint például a pályatervezés és követés, már egy Raspberry PI  mikroszámítógép feladata. Ezen a számítógépen mûködhet a robot felügyeleti szerve is, illetve ez teszi lehetõvé vezeték nélküli hálózathoz való csatlakozást is.
 
 %----------------------------------------------------------------------------
 \section{Nehézségek}
 %----------------------------------------------------------------------------
+A robot fejlesztése és az algoritmusok valós roboton való végrehajtása közben számos problémával kellett megküzdenem, az alábbiakban bemutatom a legjelentõsebbeket.
+
+\subsection{Helymeghatározás}
+Az eredeti tervekben a robot helymeghatározása, így a pályakövetés visszacsatolása, egy kamerás látórendszer feladata lett volna. A kamera képfeldolgozásáért egy a RoboCup versenyre készült látórendszert használtam volna. Ennek a módszernek a pozíció meghatározási pontossági igen jó, de az orientáció meghatározása igen nagy hibával történik. Ezen felül, mivel a program kifejezetten a robotfoci pályához készült, kalibrálása igen nehézkes, és a mért adatok kinyerése is bonyolult lett volna.
+
+Egy késõbbi tervben a tanszéken elkészült helymeghatározó rendszer használata merült fel. Ez a rendszer ultrahangos adó és vevõegységek segítségével végzi a pozíció meghatározását. Az orientáció mérése pedig optikai úton történik, az ultrahangos háromszögelõ eljáráshoz nagyon hasonló módon. A robot hardver tervébe bekerült egy illesztõ áramkör, és egy csatlakozó is, hogy ezzel a rendszerrel együtt lehessen használni. Ez a módszer igen jó pontossággal mûködik, és abszolút helymeghatározásra képes. Hátránya, hogy csak egy korlátozott területen belül képes az objektum érzékelésére. Végül mielõtt a robot mûködésbe lépett volna a rendszer meghibásodott, így ezt a módszert is el kellett vetni.
+
+\subsection{Odometria}
+Végsõ megoldásként a rendelkezésre álló inkrementális adó és a giroszkóp adatait feldolgozva dead-reckoning segítségével határoztam meg a robot pozícióját. Ehhez 
+az \eqref{carLikeRobot} egyenletet kell felhasználnunk. A pozíció meghatározásához szükségünk van az autó orientációjára $\theta$, és a sebességére $v_r$. A sebességmérést az inkrementális adó segítségével végeztem el. Az adó felbontása megfelelõ, az ebbõl fakadó hiba $1 \frac{m}{s}$ sebességnél 1\%-os.
+
+Mivel a kormányszög mérésére nincs lehetõségünk az orientációt egy giroszkóppal mérjük, A giroszkóp a szögsebesség mérésére képes. A szögsebességbõl egy egyszerû integrálás segítségével számítható az orientáció. Sajnos a giroszkóp IC paraméterei nem megfelelõek, így az általa szolgáltatott információt szûrnünk kell. Ehhez bekapcsoláskor egy egyszerû átlagolással kiszámíthatjuk a driftet, azaz a mért értékek konstans eltolódását. Majd az algoritmus futása közben egy szûrõ algoritmus segítségével közvetlenül az orientációt kapjuk \cite{Madgwick}.
+
+Mivel a dead-reckoning során integrálás segítségével számítunk pozíciót, így a maradó hiba idõben növekvõ mértékû lesz. Az esetünkben a giroszkóp hibája a jelentõs, de ez az általam használt pályaméretek és követési idõk esetén még elhanyagolható.
+
+\subsection{Kotyogás}
+A sebességszabályozás alacsony sebességek esetén nem megfelelõen mûködik. A hibás mûködés oka ez erõátviteli rendszer kotyogása. Ez abból fakad, hogy a sebesség visszacsatolás a motorral szorosabb összeköttetésben lévõ kardántengely segítségével történik, amely a motor  elfordulásának hatására könnyen elfordul, de a kerekek még állva maradnak.
+
+Ebben az esetben az inkrementális adó viszonylag nagy sebességet jelez, míg valós elmozdulás nem történik. A hirtelen indítás a PI szabályozó arányos tagjának következménye, mivel ilyenkor az ugrásszerû beavatkozójel nagy hibát okoz. A szabályozás a következõ szabályozási ciklusban egy hasonlóan nagy, de ellenkezõ irányú beavatkozójellel próbálja a hibásan mért nagy sebességet ellensúlyozni. Ez a hatás oszcillációt okoz a szabályozásban.
+
+A kotyogás a rendszer egy nemlineáris hatása, amit nehéz kiküszöbölni. Ipari eszközökben a hajtás lecserélése egyszerû fogaskerekekrõl hullámhajtómûre megoldást jelent, de erre jelen esetben nincs lehetõség. A szabályozás szempontjából ezt több módon is lehet kezelni, de tökéletes megoldást nehéz találni.
+
+Az egyik lehetséges módszer a PI szabályozó hangolása oly módon, hogy az integráló hatást megnöveljük, míg az arányos tagot lecsökkentjük. A módszer behangolása igen idõigényes, és nem is minden esetben érhetõ el vele a várt eredmény. Ezen felül rendelkezik egy egyértelmû hibával, a rendszer válaszának jellege erõsen megváltozik, sok esetben lelassul, ami más problémákat hozhat elõ.
+
+Egy másik módszer az inkrementális adó sebességjelének szûrése. Ezt megtehetjük egy egyszerû alul-áteresztõ szûrõ segítségével, de ez jelentõs holtidõt vihet a rendszerbe, vagy bonyolultabb szûrõalgoritmusokat is használhatunk, például egy Kálmán-szûrõt, de ennek implementálása, és hangolása idõ, és erõforrásigényes feladat.
+
+Lehetséges a program módosítása, kiegészítése, például csak nemnegatív beavatkozójel kiadása, vagy alacsony sebességeken más szabályozó paraméterek használata, vagy a nemlinearitás figyelembe vétele, mint ahogy azt tettük a holtsáv kiküszöbölésekor, de a kotyogás egy ezzel ellentétes folyamat, ami megbonyolítja az implementálást.
 
 %----------------------------------------------------------------------------
-\section{További tervek}
+\section{Jövõbeli tervek}
 %----------------------------------------------------------------------------
+A jövõben szeretnék egy egységes programkönyvtárat kialakítani, ami megkönnyíteni a különbözõ pályatervezõ algoritmusok implementálást, azok eredményeinek összevetését. Ezen felül a valós roboton egy általános interfész kialakítása, mely bármely általános tervezõalgoritmus számára elérhetõ tenné a használatát, is a jövõ feladata.
+
+A dolgozatom elkészítése során több helyen is modelleket használtam. Ezeket a modelleket szeretném kibõvíteni, finomítani, ahol ezzel jelentõs eredményeket lehet elérni, például az idõparaméterezés során újabb korlátozások figyelembe vétele, vagy dinamikai modell alkalmazása, vagy a tervezés és követés során a kormányszög beállási idejének figyelembe vételével.
+
+Továbbá célom újabb robottípusok és algoritmusok megismerés, implementálása. A robotautó átalakítása, hogy a RobonAUT 2015 versenyen mint safety car mûködjön, és hosszabb távon szeretném, ha a tervezõ algoritmusokat a versenyen is használhatnák.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

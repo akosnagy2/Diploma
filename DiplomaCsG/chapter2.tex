@@ -89,13 +89,14 @@ A különbözõ keréksebességek arányosak a referenciapont sebességével, ez az arány
 p(k) &= \frac{\rho_w(k)}{\rho(k)} = \frac{v_W(k)}{v(k)}
 \end{align}
 
-ahol $W$ jelzi a kerékre vonatkozó mennyiségeket. Látható, hogy ha a maximális keréksebességet keressük, akkor elegendõ csak a maximális abszolút értékû fordulókör sugarat megkeresni. Az \eqref{carLikeRearRadiuses} egyenletek alapján következik, hogy ez mindig a külsõ kerék esetén teljesül. Az \eqref{carLikeFrontRadiuses} egyenletek alapján pedig belátható, hogy az elsõ kerekek sebessége mindig nagyobb lesz a hátsóéknál, mivel $|\cos \phi| \leq 1$. Azaz jobbra kanyarodás esetén a bal elsõ kerék sebessége a legnagyobb és vice versa.
+ahol $w$ jelzi a kerékre vonatkozó mennyiségeket. Látható, hogy ha a maximális keréksebességet keressük, akkor elegendõ csak a maximális abszolút értékû fordulókör sugarat megkeresni. Az \eqref{carLikeRearRadiuses} egyenletek alapján következik, hogy ez mindig a külsõ kerék esetén teljesül. Az \eqref{carLikeFrontRadiuses} egyenletek alapján pedig belátható, hogy az elsõ kerekek sebessége mindig nagyobb lesz a hátsóéknál, mivel $|\cos \phi| \leq 1$. Azaz jobbra kanyarodás esetén a bal elsõ kerék sebessége a legnagyobb és vice versa.
 
 A sebességprofil készítésekor egy adott robot esetében ezekre a mennyiségekre határozunk meg korlátozásokat:
 
 \begin{align}\label{eq:constraints}
 v^{max}& : \text{A robot pályamenti sebesség korlátja}\\
-\omega^{max}& : \text{A robot szögsebesség korlátja}\notag\\
+\phi^{max}& : \text{A robot maximális kormányszöge, mint fizikai korlátozás}\notag\\
+\omega^{max}& : \text{A robot maximális szögsebessége}\notag\\
 {a_w}^{max}& : \text{A robot egy kerekének maximális gyorsulás korlátja}\notag\\
 \end{align}
 

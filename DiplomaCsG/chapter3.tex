@@ -46,6 +46,13 @@ A végleges megoldásnál ezzel szemben a referenciapontot alakítjuk a robothoz, ne
 
 A pályakövetõ algoritmusnál lényeges szempont a futási idõ, mivel valós roboton is mûködnie kell. Ezért a referenciapont meghatározásánál nem megyünk végig a pálya összes pontján. A legközelebbi pont keresését az elõzõ iterációban használt referenciapontnál kezdjük, és csak egy bizonyos számú pontot vizsgálunk meg. Ha a robot korlátai megfelelõen lettek beállítva, akkor az egymás utáni referenciapontok között körülbelül egy pályapont különbségnek kell lennie. Ezért teljesen felesleges a pálya összes pontját megvizsgálnunk.
 
+\subsection{Túlhaladás problémája}
+A pályakövetés valós roboton való tesztelése során egy érdekes jelenséget tapasztaltunk, miszerint néha a pálya közepén megállt a robot és nem indult tovább. Késõbbi elemzés során kiderült, hogy ez abban az esetben történik, mikor túlhalad egy szegmensen, tehát nem pontosan a szegmens utolsó pontjában áll meg a robot.
+
+A probléma ebben az esetben az, hogy a referenciapont-választás alapján a következõ szegmens legelsõ pontját találja meg, és az ehhez tartozó sebességérték viszont igen alacsony. Míg el nem éri a pálya kezdetét, addig ezt a sebességet tartja a robot.
+
+A probléma elkerülését úgy oldottuk meg, hogy amíg a pályaszakasz elsõ pontja van legközelebb a robot pozíciójához, addig nem a pályába kódolt sebességet továbbítjuk az alsóbb szintû szabályozónak, hanem a gyorsulás és sebességkorlát alapján növeljük a robot sebességét. A valóságban ez csak köztes szakaszok váltásánál jelentkezik, mivel a pályát eleve a robot kezdõpozíciójából tervezzük. Ezzel szemben két szegmens közt nem garantált a pálya pontos követése, mivel nem pozíciószabályozást használunk.
+
 %----------------------------------------------------------------------------
 \section{Virtuális vonalkövetõ szabályozás}
 %----------------------------------------------------------------------------
@@ -102,6 +109,11 @@ s_{1,2} = -\omega_{0}\xi \pm j\omega_{0}\sqrt{1-\xi^{2}}
 ahol $\omega_{0}$ a rendszer csillapítatlan sajátfrekvenciája és $\xi$ a csillapítási tényezõ. Ha túllendülés mentes rendszert szeretnénk, de a lehetõ leggyorsabb beállási idõvel, akkor $\xi = 1$-et kell választanunk. Az $\omega_{0}$ megválasztására nincsen hasonló korlátozásunk, ezt az aktuális pályához tudjuk igazítani.
 
 Az algoritmust úgy készítettem el, hogy az inicializálási fázisban a kívánt pólusoknak megfelelõen, az Ackermann-képlet \cite{Lantos} segítségével kiszámítja az erõsítési tényezõket, és késõbb ezt használja fel a szabályozási fázisban. Az eredmények azt mutatták, hogy az így készült szabályozóval a szimulációban a robot trajektóriája a kanyarokat levágta. Ez az eredmény egyáltalán nem meglepõ, mivel a szabályozást úgy írtuk fel, hogy az autó eleje kövesse a pályát, de a pályatervezés során a robot referenciapontjának pályáját terveztük meg. Szerencsére ezt egyszerûen orvosolhatjuk, ha a mintavételezett pálya minden pontját eltoljuk az autó hosszával.
+
+%----------------------------------------------------------------------------
+\section{Eredmények}
+%----------------------------------------------------------------------------
+
 
 %----------------------------------------------------------------------------
 %\section{Vonalkövetés valós roboton}
