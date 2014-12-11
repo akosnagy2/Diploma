@@ -152,7 +152,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 		robotData.setAxisDistance((float) parMsg.values[10]);
 		robotData.setFiMax((float) parMsg.values[11]);
 		robotData.setWheelDistance(wheelDistance);
-		sc.SetRobotMinimumRadius(robotData.getAxisDistance() / tan(robotData.getFiMax() * 0.9f));
+		sc.SetRobotMinimumRadius(robotData.getAxisDistance() / tan(robotData.getFiMax()));
 
 		//PathPlanner params
 		sc.SetRTRParameters((int)parMsg.values[12], (float)parMsg.values[13], (float)parMsg.values[14], (int)parMsg.values[15]);

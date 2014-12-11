@@ -58,7 +58,7 @@ int CarRobotPilotServer(deque<float> &pars, CSimpleInConnection &connection, tcp
 void CarRobotPilotLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnection &connection, tcp::iostream &client, ofstream &logFile)
 {
 	bool init = true;
-	SimpleSerial serial("COM6", 115200);
+	SimpleSerial serial("COM5", 115200);
 
 	// This is the server loop
 	while(true)
