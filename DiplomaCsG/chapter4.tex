@@ -10,9 +10,9 @@ Autószerû robot esetén a követendõ pályát szakaszokra bontjuk fel. Egy szegmense
 
 A pályakövetõ szabályozás alapvetõen két szintre oszlik, ahogyan ez a \figref{PathFollow} ábrán is látható. A felsõbb szinten a pályába kódolt sebesség és pozíció követése a cél, a robot aktuális pozíciója alapján, míg az alsóbb szinten az így számolt sebesség és kormányszög alapjel szabályozása történik. Ez a szabályozás az algoritmusok szintjén is elkülönül, míg az alacsonyabb szintû szabályozások magán a roboton, a vezérlésén (esetleg szimulátorán) végrehajthatók, addig a magasabb szintû szabályozás külön helyen hajtódik végre.
 
-A pályakövetés alapja a szétcsatolt sebesség és orientáció szabályozás. A szétcsatolás következménye, hogy egyszerûbb, lineáris szabályozókat használhatunk a követés során. Hátránya, hogy ez a modell nem minden esetben követi megfelelõen a valóságot.
+A pályakövetés alapja a szétcsatolt sebesség- és orientációszabályozás. A szétcsatolás következménye, hogy egyszerûbb, lineáris szabályozókat használhatunk a követés során. Hátránya, hogy ez a modell nem minden esetben követi megfelelõen a valóságot.
 
-\subsection{Sebesség szabályozás}
+\subsection{Sebességszabályozás}
 Alacsony szinten a robotsebességénél történik meg a sebességszabályozás. Az általam használt valós robot négy kerék meghajtású, egyetlen DC motor gondoskodik a robot mozgatásáról. A robot középsõ erõátviteli tengelyére csatlakozik egy inkrementális adó, mely biztosítja a sebességszabályozás számára a visszacsatolást. Ahogyan a feszültségvezérelt egyenáramú motorok esetén gyakran lenni szokott, én is egy módosított PI szabályozót használtam sebességszabályozásra.
 
 \begin{figure}[H]
@@ -115,7 +115,7 @@ Az algoritmust úgy készítettem el, hogy az inicializálási fázisban a kívánt pólu
 %----------------------------------------------------------------------------
 Most pedig tekintsük át a pályakövetés alakulását különbözõ paraméterek esetén. A sebességszabályozásnál láttuk, hogy egy újabb szabályozás bevezetése csak hibát okoz a rendszerünkben, így csak az alacsony szintû PI szabályozó paramétereivel tudjuk módosítani a sebességprofil követésének minõségét.
 
-Az orientáció szabályozás esetén az elõírt pólusok értékein kívül a szenzorsor pozíciójával is lehetõségünk van módosítani a szabályozás minõségét. Intuitívan beláthatjuk, hogy minél elõrébb tekintünk, annál gyorsabban tudunk reagálni, így alacsonyabb beavatkozójel szükséges a szabályozás során. Ezt a következõképpen írhatjuk le \cite{RobonAUTszem}:
+Az orientációszabályozás esetén az elõírt pólusok értékein kívül a szenzorsor pozíciójával is lehetõségünk van módosítani a szabályozás minõségét. Intuitívan beláthatjuk, hogy minél elõrébb tekintünk, annál gyorsabban tudunk reagálni, így alacsonyabb beavatkozójel szükséges a szabályozás során. Ezt a következõképpen írhatjuk le \cite{RobonAUTszem}:
 
 \begin{align}\label{eq:predict}
 \tan \phi = \tan \phi \cdot \frac{L}{L+d},

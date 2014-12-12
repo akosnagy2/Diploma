@@ -6,7 +6,7 @@ Ebben a fejezetben az algoritmusok megvalósításáról, és az azokhoz használt eszk
 %----------------------------------------------------------------------------
 \section{Szimuláció -- V-REP}
 %----------------------------------------------------------------------------
-A robot mozgásának szimulálására a V-REP robotszimulátort használtam. A program a Coppelia Robotics terméke \cite{VREP}, amely oktatási célból ingyenesen letölthetõ és használható. Nagyon széleskörûen használható program, a robotika minden ágában. Tesztelhetõ benne ipari szerelõrobotok mûködése, ahogyan az \aref{fig:vrep} ábrán is látható, felhasználható ilyen robotok programozásának oktatására is, de a mobil robotok területén is kifejezetten praktikus eszköz. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
+A robot mozgásának szimulálására a V-REP robotszimulátort használtam. A program a Coppelia Robotics terméke \cite{VREP}, amely oktatási célból ingyenesen letölthetõ és használható. Nagyon széleskörûen használható program a robotika minden ágában. Tesztelhetõ benne ipari szerelõrobotok mûködése, ahogyan az \aref{fig:vrep} ábrán is látható, felhasználható ilyen robotok programozásának oktatására is, de a mobil robotok területén is kifejezetten praktikus eszköz. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
 
 \begin{figure}[H]
 \centering
@@ -28,7 +28,7 @@ A szimuláció indulásakor a lua szkript elküldi a szimuláció módját, és a hozzá t
 \end{figure}
 
 \subsection{Kliens program}
-A különbözõ kliensprogramok más-más paramétereket várnak, ezt biztosítja a szerver alkalmazás. Az idõparaméterezõ és a pályakövetõ szabályozás teszteléséhez készült egy kliens, mely a szimulátortól fogad egy elõre elkészített pályát, majd ezt újramintavételezi. Az így készült pályát visszaküldi a szimulátornak, ami kirajzolja az új pályát, majd elküldi a robot aktuális pozícióját. Innen átveszi a mûködést a pályakövetõ algoritmus, a kapott pozíciót feldolgozza és ez alapján az elõzõ fejezetben részletezett módon kiszámítja a beavatkozó jeleket, amit visszaküld a szimulátornak. A szimulátor és a pályakövetõ alkalmazás mûködése szinkronizálva van, azaz megvárják egymást a következõ lépéssel.
+A különbözõ kliensprogramok más-más paramétereket várnak, ezt biztosítja a szerver alkalmazás. Az idõparaméterezõ és a pályakövetõ szabályozás teszteléséhez készült egy kliens, mely a szimulátortól fogad egy elõre elkészített pályát, majd ezt újramintavételezi. Az így készült pályát visszaküldi a szimulátornak, ami kirajzolja az új pályát, majd elküldi a robot aktuális pozícióját. Innen átveszi a mûködést a pályakövetõ algoritmus, a kapott pozíciót feldolgozza, és ez alapján az elõzõ fejezetben részletezett módon kiszámítja a beavatkozó jeleket, amit visszaküld a szimulátornak. A szimulátor és a pályakövetõ alkalmazás mûködése szinkronizálva van, azaz megvárják egymást a következõ lépéssel.
 
 A másik elkészült kliens alkalmazás a pályatervezõ program. Ez nem vár pályára a szimulátortól, csak az elõre meghatározott környezet nevére. Itt kompromisszumot kellett kötnünk, mivel a szimulátor speciális fájlformátumot tud csak kezelni, ezért közös fájlokkal dolgozik a két program, de a pályatervezõ más forrásból is elfogad pályát, így továbbra is lecserélhetõ marad a szimulátor. A pályatervezés után a mûködése teljesen megegyezik a pályakövetõtõ kliensprogramnál leírtakkal, azzal a különbséggel, hogy a pályát itt a tervezõ szolgáltatja.
 

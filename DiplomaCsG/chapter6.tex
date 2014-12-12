@@ -1,12 +1,12 @@
 %----------------------------------------------------------------------------
 \chapter{Megvalósítás valós roboton}
 %----------------------------------------------------------------------------
-Az elkészült algoritmusok elméleti szinten és a szimulátorban is a vártnak megfelelõen mûködtek. A szimuláció során használt modelleket próbáltam minél inkább a valósághoz igazítani, de a valósággal teljes mértékben megegyezõ modell megalkotása természetesen nem lehetséges, így az elkészült algoritmusokat valós roboton is kipróbáltam. Ebben a fejezetben az elkészült robotról, a fejlesztés és az implementálás közben felmerült nehézségekrõl, és a jövõbeli tervekrõl fogok beszélni.
+Az elkészült algoritmusok elméleti szinten és a szimulátorban is a vártnak megfelelõen mûködtek. A szimuláció során használt modelleket próbáltam minél inkább a valósághoz igazítani, de a valósággal teljes mértékben megegyezõ modell megalkotása természetesen nem lehetséges, így az elkészült algoritmusokat valós roboton is kipróbáltam. Ebben a fejezetben az elkészült robotról, a fejlesztés és az implementálás közben felmerült nehézségekrõl és a jövõbeli tervekrõl fogok beszélni.
 
 %----------------------------------------------------------------------------
 \section{Felépítés}
 %----------------------------------------------------------------------------
-A robot elkészítése a szakmai gyakorlatom keretében valósult meg. A fejlesztés során a célom egy olyan autószerû mobilrobot készítése volt, amely a környezet ismeretében képes a pályatervezõ algoritmusok futtatására, és egy elkészült pálya követésére.
+A robot elkészítése a szakmai gyakorlatom keretében valósult meg. A fejlesztés során a célom egy olyan autószerû mobilrobot készítése volt, amely a környezet ismeretében képes a pályatervezõ algoritmusok futtatására és egy elkészült pálya követésére.
 
 \begin{figure}
 \centering
@@ -25,7 +25,7 @@ A magasabb szintû feladatok, mint például a pályatervezés és követés, már egy Ra
 A robot fejlesztése és az algoritmusok valós roboton való végrehajtása közben számos problémával kellett megküzdenem, az alábbiakban bemutatom a legjelentõsebbeket.
 
 \subsection{Helymeghatározás}
-Az eredeti tervekben a robot helymeghatározása, így a pályakövetés visszacsatolása, egy kamerás látórendszer feladata lett volna. A kamera képfeldolgozásáért egy a RoboCup versenyre készült látórendszert használtam volna. Ennek a módszernek a pozíció meghatározási pontossági igen jó, de az orientáció meghatározása igen nagy hibával történik. Ezen felül, mivel a program kifejezetten a robotfoci pályához készült, kalibrálása igen nehézkes, és a mért adatok kinyerése is bonyolult lett volna.
+Az eredeti tervekben a robot helymeghatározása, így a pályakövetés visszacsatolása egy kamerás látórendszer feladata lett volna. A kamera képfeldolgozásáért egy a RoboCup versenyre készült látórendszert használtam volna. Ennek a módszernek a pozíció meghatározási pontossági igen jó, de az orientáció meghatározása igen nagy hibával történik. Ezen felül, mivel a program kifejezetten a robotfoci pályához készült, kalibrálása igen nehézkes, és a mért adatok kinyerése is bonyolult lett volna.
 
 Egy késõbbi tervben a tanszéken elkészült helymeghatározó rendszer használata merült fel. Ez a rendszer ultrahangos adó és vevõegységek segítségével végzi a pozíció meghatározását. Az orientáció mérése pedig optikai úton történik, az ultrahangos háromszögelõ eljáráshoz nagyon hasonló módon. A robot hardver tervébe bekerült egy illesztõ áramkör, és egy csatlakozó is, hogy ezzel a rendszerrel együtt lehessen használni. Ez a módszer igen jó pontossággal mûködik, és abszolút helymeghatározásra képes. Hátránya, hogy csak egy korlátozott területen belül képes az objektum érzékelésére. Végül mielõtt a robot mûködésbe lépett volna a rendszer meghibásodott, így ezt a módszert is el kellett vetni.
 
@@ -60,7 +60,7 @@ Lehetséges a program módosítása, kiegészítése, például csak nemnegatív beavatkoz
 %----------------------------------------------------------------------------
 \section{Jövõbeli tervek}
 %----------------------------------------------------------------------------
-A jövõben szeretnék egy egységes programkönyvtárat kialakítani, ami megkönnyíteni a különbözõ pályatervezõ algoritmusok implementálást, azok eredményeinek összevetését. Ezen felül a valós roboton egy általános interfész kialakítása, mely bármely általános tervezõalgoritmus számára elérhetõ tenné a használatát, is a jövõ feladata.
+A jövõben szeretnék egy egységes programkönyvtárat kialakítani, ami megkönnyíteni a különbözõ pályatervezõ algoritmusok implementálást, azok eredményeinek összevetését. Ezen felül a valós roboton egy általános interfész kialakítása, mely bármely általános tervezõalgoritmus számára elérhetõ tenné a használatát, is célom.
 
 A dolgozatom elkészítése során több helyen is modelleket használtam. Ezeket a modelleket szeretném kibõvíteni, finomítani, ahol ezzel jelentõs eredményeket lehet elérni, például az idõparaméterezés során újabb korlátozások figyelembe vétele, vagy dinamikai modell alkalmazása, vagy a tervezés és követés során a kormányszög beállási idejének figyelembe vételével.
 

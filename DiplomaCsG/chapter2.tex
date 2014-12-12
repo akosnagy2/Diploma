@@ -50,10 +50,10 @@ Mi erre a célra egy celladekompozíción alapuló algoritmust használtunk. Ez az el
 	\label{fig:ccs_triang}
 \end{figure}
 
-Ennek a megoldásnak az elõnye, hogy a szabad terület közepén alkot pályát, így ha az autó ezt követi, akkor bármilyen irányú manõverezésre lesz lehetõsége, ha a pálya ezt megengedi. További elõnye, hogy ez egy kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Az eljárás egyik fõ hibája, hogy a háromszögelés miatt, csak sokszögekkel leírható akadályokkal képes dolgozni, és még ebben a formájában nem veszi figyelembe az autó kiterjedését. Ezen könnyen lehet segíteni, ha figyelembe vesszük az oldalfelezõ pontok közötti szakaszok távolságát az akadályoktól, és ha a pálya- és az akadályél túl közel vannak egymáshoz, akkor töröljük az élt a gráfból. Sajnos az eljárás egyéb negatívumokkal is bír, amirõl a fejezet végén még szót ejtek.
+Ennek a megoldásnak az elõnye, hogy a szabad terület közepén alkot pályát, így ha az autó ezt követi, akkor bármilyen irányú manõverezésre lesz lehetõsége, ha a pálya ezt megengedi. További elõnye, hogy ez egy kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Az eljárás egyik fõ hibája, hogy a háromszögelés miatt csak sokszögekkel leírható akadályokkal képes dolgozni, és még ebben a formájában nem veszi figyelembe az autó kiterjedését. Ezen könnyen lehet segíteni, ha figyelembe vesszük az oldalfelezõ pontok közötti szakaszok távolságát az akadályoktól, és ha a pálya- és az akadályél túl közel vannak egymáshoz, akkor töröljük az élt a gráfból. Sajnos az eljárás egyéb negatívumokkal is bír, amirõl a fejezet végén még szót ejtek.
 
 \subsection{Lokális tervezõ alkalmazása}
-Ha a globális tervezõ tudott visszaadni megoldást, akkor az algoritmus tovább folytatódik a következõképpen: Az elõzetes pálya két konfigurációját kiválasztjuk, és a fentebb említett C*CS pályákat keresünk köztük. Az eljárás elõször a pálya két végpontja közt keres útvonalat, ami egyszerû esetekben akár rögtön megoldásra is vezethet, felgyorsítva az algoritmus mûködését. Ha ez a keresés nem járt sikerrel, akkor az elõzetes pályát megfelezi az algoritmus, és az elsõ konfiguráció, valamint az új célkonfiguráció közt keres megoldást. Ezt egészen addig ismétli, míg van köztes konfigurációs pont, ha elfogyott, további pontokat illeszt a pályába.
+Ha a globális tervezõ tudott visszaadni megoldást, akkor az algoritmus tovább folytatódik a következõképpen: Az elõzetes pálya két konfigurációját kiválasztjuk, és a fentebb említett C*CS pályákat keresünk köztük. Az eljárás elõször a pálya két végpontja közt keres útvonalat, ami egyszerû esetekben akár rögtön megoldásra is vezethet, felgyorsítva az algoritmus mûködését. Ha ez a keresés nem járt sikerrel, akkor az elõzetes pályát megfelezi az algoritmus, és az elsõ konfiguráció, valamint az új célkonfiguráció közt keres megoldást. Ezt egészen addig ismétli, míg van köztes konfigurációs pont. Ha elfogyott, további pontokat illeszt a pályába.
 
 Az elõzõekben láthattuk, hogy a C*CS végtelen sok megoldást nyújt. Lokális esetben ez nem feltétlen hasznos, de akadályok jelenlétében ez megváltozik, mivel így sokkal nagyobb valószínûséggel találhatunk végrehajtható pályát. Természetesen az összes megoldást nincs lehetõségünk kipróbálni, így ezt a problémát valamilyen mintavételezõ eljárással kell megoldanunk.
 
@@ -128,7 +128,7 @@ Az esetek nagy többségében a celladekompozíciós eljárással tervezett globális pá
 A fejlesztés során a fentebb felsorolt problémák miatt a globális tervezõt lecseréltem az RTR nevû algoritmusra. Ez is Kiss Domokos munkája \cite{DomiRTR}, az implementációját Nagy Ákos végezte el \cite{Akos}.
 
 \subsection{RRT}
-A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) használnak a konfigurációs tér struktúrájának leírásához \cite{kavraki96prm}. A szakirodalomban egyik leggyakrabban használt ilyen algoritmus a \emph{Rapidly Exploring Random Trees} \cite{LaValle}. Ennek a lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben. A fa csomópontjaiban konfigurációk találhatóak és a fa terjesztését úgy irányítjuk, hogy a kívánt célkonfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a célkonfigurációba már könnyedén megkaphatjuk.
+A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) használnak a konfigurációs tér struktúrájának leírásához \cite{kavraki96prm}. A szakirodalomban egyik leggyakrabban használt ilyen algoritmus a \emph{Rapidly Exploring Random Trees} \cite{LaValle}. Ennek a lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben. A fa csomópontjaiban konfigurációk találhatóak, és a fa terjesztését úgy irányítjuk, hogy a kívánt célkonfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a célkonfigurációba már könnyedén megkaphatjuk.
 
 \begin{figure}[H]
 \centering
@@ -143,8 +143,8 @@ Az \emph{Rotate-Translate-Rotate} algoritmus a fentebb látott RRT algoritmus egy
 \begin{figure}[b]
 \centering
 \includegraphics[width=110mm, keepaspectratio]{figures/rtr_path2.pdf}
-\caption{Az RTR algoritmus; piros a kezdõ, kék a célkonfigurációból indított fa. \cite{Akos}} %TODO ide is kell a hivatkozás
+\caption{Az RTR algoritmus; piros a kezdõ, kék a célkonfigurációból indított fa. \cite{Akos}}
 \label{fig:rtr_path2}
 \end{figure}
 
-Számomra ez az algoritmus azért elõnyös, mert a celladekompozíciós eljárás hibát kiküszöböli. Tehát két szûk folyosó találkozásánál csak akkor ad megoldást, ha van hely az elfordulásra. Mivel a keresés során két fát épít, így a párhuzamos parkolás esetén is segíti a megoldás megtalálását.
+Ez az algoritmus azért elõnyös, mert a celladekompozíciós eljárás hibát kiküszöböli. Tehát két szûk folyosó találkozásánál csak akkor ad megoldást, ha van hely az elfordulásra. Mivel a keresés során két fát épít, így a párhuzamos parkolás esetén is segíti a megoldás megtalálását.
