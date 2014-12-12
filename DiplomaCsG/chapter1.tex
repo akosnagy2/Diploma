@@ -1,152 +1,80 @@
 %----------------------------------------------------------------------------
-\chapter{Útvonaltervezés C*CS pályákkal}
+\chapter{Bevezetõ}
 %----------------------------------------------------------------------------
-A C*CS és a $c\overline{c}S$ algoritmus Kiss Domokos munkája \cite{CCSTopologicalProp}. Az algoritmusok elsõdlegesen autószerû robotok számára terveznek pályát, de az így tervezett pálya egy differenciális robot számára is végrehajtható. Feladatom az algoritmus implementálása volt C++ nyelven, majd annak tesztelése szimulációs, illetve valós környezetben.
-A fejezetet az algoritmus ismertetésével kezdem, majd kitérek az implementációs problémákra, és az elért eredményekre is.
+\section{Problémafelvetés}
+%----------------------------------------------------------------------------
+A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb amikor a robot környezetében akadályok is találhatóak. 
+
+Célom azon megközelítések és módszerek áttekintése, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetek, ezeket szimulátoron és valós robotokon is implementáltam, illetve teszteltem. A pályatervezéshez szorosan kapcsoló téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
 
 %----------------------------------------------------------------------------
-\section{Reeds-Shepp lokális pályák}
+\section{Pályatervezés elmélete}
 %----------------------------------------------------------------------------
-Az anholonom rendszerek irányítása akadályoktól mentes környezetben is egy igen bonyolult feladat. Sok esetben nem adható meg általános algoritmus, csak néhány speciális rendszer esetén. Szerencsére ilyen rendszerek közé tartoznak a differenciális robotok, az autószerû robotok, amelyek csak elõre mozoghatnak (Dubins autó), és azok amelyek elõre és hátra is képesek mozogni.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=130mm, keepaspectratio]{figures/dubins-reeds-shepp.png}
-\caption{Dubins és Reeds-Shepp megoldások \cite{LaValle2}} 
-\label{fig:reeds_shepp}
-\end{figure}
-
-Az utóbbi típusú robotokat hívjuk Reeds-Shepp autóknak, melyeknél bizonyított, hogy bármely kezdõ- és célkonfiguráció közt a legrövidebb utat megtalálhatjuk 48 lehetséges megoldás közül, amelybõl kettõ látható \aref{fig:reeds_shepp} ábrán. Ezek a megoldások maximum öt egyenes vagy körív kombinációjából állhatnak, és a pályák maximum két csúcsot tartalmazhatnak, azaz ennyiszer lehet irányt változtatni a végrehajtás közben \cite{ReedsShepp}. A megoldások száma egyéb megkötések árán tovább csökkenthetõ.
-
-Mint látható akadályoktól mentes környezetben találhatunk optimális útvonalat, de ennek hátránya, hogy mindig minimális sugarú pályákat feltételez, mely egy valós esetben nem életszerû, illetve a pályák lehetnek igen bonyolultak is. De ha elvetjük az optimalitás igényét, amit egyébként is meg kell tennünk, ha egy globális tervezõ részeként alkalmazzuk a módszert, akkor a lehetséges megoldásokon jelentõs mértékben egyszerûsíthetünk.
+Az elmúlt idõszakban a pályatervezéssel kapcsolatban igen sok kutatás foglalkozott \cite{LaValle2}. Ahhoz, hogy ezeket az algoritmusokat ismertessük, be kell vezetnünk néhány alapvetõ fogalmat. 
 
 %----------------------------------------------------------------------------
-\section{C*CS lokális pályák}\label{CCSlocal}
+\subsection{Alapvetõ fogalmak}
 %----------------------------------------------------------------------------
-A lokális tervezõk bármely kezdõ- és célkonfiguráció páros esetén megoldást kell nyújtsanak, de megfelelõ koordináta-rendszer választásával egyszerûsíthetünk a számításokon. Tegyük fel hogy egy ilyen választás mellett adódott $q_{I} = (x_{I},y_{I},\theta_{I})$ kezdõ és $q_{G} = (0,0,0)$ célkonfiguráció. Ha eltekintünk a minimális fordulási sugár korlátozásától, és feltesszük, hogy $\theta_{I} \neq 0$, akkor könnyen belátható, hogy egy kör és egy egyenes segítségével elérhetõ a célkonfiguráció. Elõször egy érintõ körön elfordulunk a $\tilde{q_{G}} = (\tilde{x_{G}},0,0)$ köztes célkonfigurációba, majd egy egyenes mentén végighaladunk a célig. Az ehhez tartozó kör sugarát a következõ egyenlet segítségével számíthatjuk:
-\begin{align}\label{eq:middleRadius}
-\rho_{I,\tilde{G}} = \frac{y_{I}}{1 - \cos \theta_{I}}
+A pályatervezés során a robot pillanatnyi állapotát a \emph{konfigurációjával} írhatjuk le. Síkban mozgó robotok esetében a konfiguráció a következõket tartalmazza \cite{Springer}:
+
+\begin{align}
+q &= (x,y,\theta),
 \end{align}
+ahol $q$ a robot konfigurációja, $x,y$ határozza meg a robot pozícióját a síkon és $\theta$ határozza meg a robot orientációját.
 
-%TODO ide egy ábrát az elõzõ dolgokról
-
-Ha a kiadódó sugár kisebb mint a minimálisan megengedett ($|\rho_{I,\tilde{G}}| < \rho_{min}$), esetleg $\theta_{I} = 0$, akkor egy egyenes vagy egy kör segítségével egy köztes kezdõkonfigurációba ($\tilde{q_{I}} = (\tilde{x_{I}},\tilde{y_{I}},\tilde{\theta_{I}})$) kell eljutnunk, ahol biztosított, hogy $\tilde{\theta_{I}} \neq 0$ és, hogy $\rho_{\tilde{I},\tilde{G}} \geq \rho_{min}$. Megjegyzendõ, hogy az elsõ szakasz nem lehet egyenes, ha $\theta_{I} = 0$, $\theta_{I} = \pi$ vagy $|y_{I}| < 2\rho_{min}$. Bebizonyítható \cite{CCSTopologicalProp}, hogy $\tilde{q_I}$ köztes konfigurációt végtelen sokféleképpen megválaszthatjuk.
-
-Hogy egyszerûsítsük a jelöléseket, a továbbiakban az egyenes szakaszokra $S$ a körívekre pedig a $C$ betûk segítségével hivatkozunk. Ezt felhasználva belátható hogy a célpontba egy $SCS$, vagy egy $CCS$ pálya segítségével eljuthatunk. Könnyen belátható, hogy ha egy körív ($C$) sugarával a végtelenbe tartunk, akkor a szakasz az egyeneshez tart. Az olyan speciális köríveket, amelyek sugara végtelen is lehet, $C^{*}$-gal jelöljük. Innen a módszer neve a $C^{*}CS$.
-
-
-%----------------------------------------------------------------------------
-\section{C*CS approximációs módszer}
-%----------------------------------------------------------------------------
-Az általam használt algoritmus egy approximációs módszert alkot, mely egy elõzetes globális pályát rekurzív módon felbont kisebb szakaszokra, majd ezekre próbál illeszteni egy-egy fentebb bemutatott C*CS pályát.\footnote{Bár a lokális tervezõ algoritmus neve a C*CS, de a végeredményben kialakult pálya összességében is körök és egyenesek kombinációjából áll, így ez a név ráragadt az approximációs módszerre is.} A végeredményül elkészült, az algoritmus által visszaadott pálya autószerû robotok számára könnyedén lekövethetõ, mivel elsõdlegesen ezek számára lett kialakítva. Ennek ellenére a megoldást természetesen egy differenciális robot is képes lekövetni, mivel az nem rendelkezik korlátozással a forduló kör sugarát illetõen.
-
-\subsection{Globális tervezõ}
-A szükséges elõzetes pálya bármilyen globális tervezõ eredménye lehet. Elsõdleges célja egy mankó nyújtása a késõbbi tervezõ számára. A végsõ megoldásnak nem feltétele, hogy az elõzetes pálya akár egyetlen pontját is tartalmazza.
-
-Mi erre a célra egy celladekompozíción alapuló algoritmust használtunk. Ez az eljárás a környezetet háromszögekre bontja, majd ezeknek a háromszögeknek az oldalfelezõ pontjait összekötve gráfot alkot. Ebbe beszúrja a kezdõ- és célkonfigurációt, majd ezeket összeköti a legközelebb álló néhány ponttal. Az éleket a pontok egymástól való távolságával súlyozzuk, majd ebben a gráfban a Dijkstra-algoritmus \cite{BFS} segítségével megkeressük a legrövidebb utat. Erre egy példát \aref{fig:ccs_triang} ábrán láthatunk.
+Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér} adja meg, amit $C$-vel jelölünk. A konfigurációs tér azon részhalmazát, amely esetében a robot a környezetben található akadályokkal nem ütközik, \emph{szabad (konfigurációs) térnek} nevezünk ($C_{free}$). E halmaz komplementere azokat a konfigurációkat tartalmazza, amelyek esetén a robot ütközne az akadályokkal ($C_{obs} = C \backslash C_{obs}$). A konfigurációs teret \aref{fig:ConfigSpace}. ábrán szemléltetjük.
 
 \begin{figure}
-	\centering
-	\includegraphics[width=130mm, keepaspectratio]{figures/ccs_prepath.png}
-	\caption{Elõzetes pálya tervezése, folytonos vonal jelzi a felbontást, pontozott vonal a gráfot, szaggatott pedig az elkészült elõzetes pályát} 
-	\label{fig:ccs_triang}
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/config.png}
+\caption{Konfigurációs tér szemléltetése egy adott útvonal során. A konfigurációs térben a piros vonal jelzi a robot útját a célpontja felé \cite{dkiss12ppee}.} 
+\label{fig:ConfigSpace}
 \end{figure}
 
-Ennek a megoldásnak az elõnye, hogy a szabad terület közepén alkot pályát, így ha az autó ezt követi, akkor bármilyen irányú manõverezésre lesz lehetõsége, ha a pálya ezt megengedi. További elõnye, hogy ez egy kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Az eljárás egyik fõ hibája, hogy a háromszögelés miatt, csak sokszögekkel leírható akadályokkal képes dolgozni, és még ebben a formájában nem veszi figyelembe az autó kiterjedését. Ezen könnyen lehet segíteni, ha figyelembe vesszük az oldalfelezõ pontok közötti szakaszok távolságát az akadályoktól, és ha a pálya- és az akadályél túl közel vannak egymáshoz, akkor töröljük az élt a gráfból. Sajnos az eljárás egyéb negatívumokkal is bír, amirõl a fejezet végén még szót ejtek.
+A korlátozások ismerete alapvetõ fontosságú a pályatervezés és mozgásirányítás során. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál-egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). Dolgozatomban csak kinematikai korlátozásokkal fogok foglalkozni, dinamikai korlátokkal nem.
 
-\subsection{Lokális tervezõ alkalmazása}
-Ha a globális tervezõ tudott visszaadni megoldást, akkor az algoritmus tovább folytatódik a következõképpen: Az elõzetes pálya két konfigurációját kiválasztjuk, és a fentebb említett C*CS pályákat keresünk köztük. Az eljárás elõször a pálya két végpontja közt keres útvonalat, ami egyszerû esetekben akár rögtön megoldásra is vezethet, felgyorsítva az algoritmus mûködését. Ha ez a keresés nem járt sikerrel, akkor az elõzetes pályát megfelezi az algoritmus, és az elsõ konfiguráció valamint az új célkonfiguráció közt keres megoldást. Ezt egészen addig ismétli, míg van köztes konfigurációs pont, ha elfogyott, további pontokat illeszt a pályába.
+Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, habár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Az anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciál egyenlettel írható le, amely nem integrálható.
 
-Az elõzõekben láthattuk, hogy a C*CS végtelen sok megoldást nyújt. Lokális esetben ez nem feltétlen hasznos, de akadályok jelenlétében ez megváltozik, mivel így sokkal nagyobb valószínûséggel találhatunk végrehajtható pályát. Természetesen az összes megoldást nincs lehetõségünk kipróbálni, így ezt a problémát valamilyen mintavételezõ eljárással kell megoldanunk.
+Az általam vizsgált robottípus az \emph{autószerû robot}, egy anholonom rendszer. Viszont léteznek olyan robotok, amelyek nem rendelkeznek anholonom korlátozásokkal (holonom rendszerek), ilyenek például az omnidirekcionális robotok. Egy omnidirekcionális robot képes bármilyen konfigurációból a tér bármely irányába elmozdulni.
 
-\begin{figure}[H]
+%----------------------------------------------------------------------------
+\subsubsection{Robotmodell}
+%----------------------------------------------------------------------------
+Az általam vizsgált robot típust, az autószerû robotot mindenki jól ismeri és elterjedtsége megkérdõjelezhetetlen, de a kinematikai leírása már kevésbé ismert, ellenben az \figref{carLikeRobotModel} ábra segítségével könnyedén levezethetõ:
+
+\begin{align} \label{eq:carLikeRobot}
+\dot{x} &= v_r \cos \theta \notag \\ 
+\dot{y} &= v_r \sin \theta \notag \\ 
+\dot{\theta} &= \frac {v_r} {L} \tan \phi, 
+\end{align}
+ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, amelyet a robot referenciapontjának nevezünk. 
+
+\begin{figure}
 \centering
-\includegraphics[width=75mm, keepaspectratio]{figures/CCS.pdf}
-\caption{$q_{\tilde{I}}$ megválasztása } 
-\label{fig:infCCS}
-\end{figure}
-
-A végtelen sok megoldást a $\tilde{q_{I}}$ kiválasztásának szabadsága okozza. Erre egy példa látható \aref{fig:infCCS} ábrán. Ezért az algoritmus összegyûjti azokat a konfigurációkat, melyeket a $q_{I}$ konfigurációból ütközés nélkül elérhetünk. Ehhez a környezetet fel kell osszuk egységnyi távolságokra, mivel így véges sok lehetõséget kapunk. A kiszámítás ideje természetesen függ a választott távolságegységtõl és a környezet méretétõl. Az eredmények azt mutatják, hogy a teljes algoritmus futásának ez a leghosszabb része, ami nem meglepõ, mivel a körívek kiszámítása komplex mûvelet, és ezt egy adott pont esetén a robot testének minden csúcsára ki kell számoljuk, hogy ütközést tudjunk detektálni. A mûvelet hatékonyságán több módon lehet javítani, például nagyobb távolságegység megválasztásával. Másik javítási lehetõség, ha elõre elkészítünk egy foglaltsági mátrixot, ami megmondja az adott pont akadályon beül van-e, így ezekre a pontokra nem kell a számítást elvégezni. Mivel az így kapott körívek egy adott kezdõkonfigurációhoz tartoznak, további gyorsításra ad lehetõséget, ha az approximációs lépésben inkább a célkonfiguráció pontját mozgatjuk, így nem kell újra és újra kiszámolni a köríven elérhetõ sokaságot.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=90mm, keepaspectratio]{figures/CS.pdf}
-\caption{Középsõ körív számítása érintõ körrel} 
-\label{fig:erintoKor}
-\end{figure}
-
-Az algoritmus további részében \aref{CCSlocal} pontban említett módon, a hátralévõ körív, és egyenes szakasz kiszámítása a feladat. Egy irányított kör esetén ez két lehetséges pályát jelent, amint az látható \aref{fig:erintoKor} ábrán. Ezek után nem elég csak a körívek végrehajthatóságát ellenõriznünk, hanem meg kell nézzük ezt a hátralévõ egyenes szakaszokra is. Ugyan a globális pálya tervezésekor ellenõriztük ezeket, de az érintõ körök keresésekor nem volt feltétel, hogy az érintési pontok ezeken a szakaszokon belül helyezkedjenek el.
-
-Végül az így keletkezõ végrehajtható pályák sokasága közül ki kell választanunk egyet. Ezt többféleképpen megtehetjük. Talán a legkézenfekvõbb a legrövidebb megoldás kikeresése és beillesztése az elõzetes pályába. Itt érdemes megemlíteni, hogy a végeredmény akkor fog igazán hasonlítani a valósághoz, ha lecsökkentjük a tolatások számát, mivel az emberek nagy többsége nem szeret tolatva közlekedni. Hogy ezt megtehessük, az algoritmus opcionálisan elfogad egy súlytényezõt, mellyel a tolató szakaszok ``hosszát'' tudjuk megnövelni.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=130mm, keepaspectratio]{figures/ccs_middle.png}
-\caption{A C*CS algoritmus mûködés közben} 
-\label{fig:CCSonline}
+\includegraphics[width=65mm, keepaspectratio]{figures/carLikeRobot.png}
+\caption{Autószerû robot modellje.} 
+\label{fig:carLikeRobotModel}
 \end{figure}
 
 %----------------------------------------------------------------------------
-\section{ \texorpdfstring{\boldmath{$c\overline{c}S$}}{ccS} }
+\subsection{Pályatervezõk osztályozása}
 %----------------------------------------------------------------------------
-Ha az elõzõekben látottak nem vezetnek megoldásra, tehát nincs olyan C*CS pálya, mely végrehajtható lenne, akkor egy kisebb szakaszt kell választanunk a globális pályából. Ezt viszont nem tehetjük meg végtelenségig, mivel a globális pálya általában egyenes szakaszok együttesébõl áll. Ezek a szakaszok határozzák meg az $S$ szakasz egyenesét, így tovább bontani nincs értelme, mert nem változtatja meg a tervezett pályát. Ezért az új konfigurációkat a töréspontokban kell elhelyezni, viszont önmagában ez még nem biztosítja, hogy találunk megoldást. Valahogy biztosítanunk kell azt, hogy az algoritmusunk konvergáljon a megoldás felé, amihez olyan lokális tervezõre van szükségünk, mely teljesíti a topológiai feltételt \cite{CCSTopologicalProp}. Ha ezt biztosítani tudjuk, akkor az approximációs algoritmusunk teljes lesz. A teljesség itt azt jelenti, hogy az algoritmus minden olyan esetben megoldással tér vissza, mikor a globális tervezõ érvényes pályát ad vissza. Azaz a körívekkel való közelítés nem csökkenti a megoldás létezésének esélyét.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=130mm, keepaspectratio]{figures/cc_S.png}
-\caption{A $c\overline{c}S$ algoritmus megoldásai különbözõ $y_{I}$ esetén\cite{CCSTopologicalProp}} 
-\label{fig:cc_S}
-\end{figure}
-
-Olyan esetekben, amikor a globális pályát tovább kellene bontanunk, átváltunk a $c\overline{c}S$ algoritmusra, mely a topológiai feltételt teljesíti. Ez az algoritmus a C*CS algoritmus egy módosított változata, mely csak egy megoldást ad egy konfiguráció párra. Az eljárás lényege, hogy az elsõ két kör sugara megegyezõ, de ellentétes elõjelû, tehát a másik irányba kell forgassuk a kormányt. A komplementer jelölés jelzi az elõjel változását. Ahogy \aref{fig:cc_S} ábrán látható, ha $q_{I}$ túl közel van a $q_{G}$ egyeneséhez, akkor a körök egymás mellett elcsúsznak, és két megoldást is adnak.
-
-Bár a $c\overline{c}S$ egy megoldást ad, a végrehajtásakor több lehetséges megoldást is ``eldob''. A módszer implementációját úgy készítettem el, hogy minden ilyen megoldást ellenõrizzen, ha esetleg a legrövidebb nem lenne végrehajtható, akkor válasszon másikat. Jogosan felmerülhet a kérdés, hogy ha ez az algoritmus minden esetben nyújt megoldást, akkor miért nem ezt használjuk a C*CS helyett? Bár valóban a $c\overline{c}S$ mindig használható, a C*CS több lehetséges megoldás közül választ, így a gyakorlatban természetesebb pályákat ad eredményül.
+Mielõtt belekezdenék az általam megvizsgált pályatervezõ algoritmusok részletesebb ismertetésébe, tekintsük át az irodalomban használatos módszereket.
 
 %----------------------------------------------------------------------------
-\section{Eredmények}
+\subsubsection{Geometriai tervezés szerinti csoportosítás}
 %----------------------------------------------------------------------------
-A feladatom megvalósításához rendelkezésre állt a C*CS algoritmus egy MATLAB scriptben megírt változata, ellenben ez csak demonstrációs céllal szolgált, a feladatot lassan hajtotta végre, valószínûleg az interpretált mûködés következtében, ezért vált szükségessé egy C++ implementáció.
+A pályatervezõk geometriai módszerei szerint alapvetõen két csoportot különböztetünk meg: a \emph{globális tervezõk} és a \emph{reaktív tervezõk} csoportját \cite{Springer}.
 
-\begin{figure}[H]
-\centering
-\includegraphics[height=60mm, keepaspectratio]{figures/frame3.png}
-\includegraphics[height=60mm, keepaspectratio]{figures/frame6.png}
-\caption{A C*CS algoritmus megoldása különféle környezetekben} 
-\label{fig:ccssolutions}
-\end{figure}
+A globális tervezõk esetében a konfigurációs tér egészét figyelembe vesszük a tervezéskor, míg a reaktív tervezõk csupán a robot környezetében lévõ szûkebb tér ismeretére építenek. A globális tervezõk elõnye, hogy képesek akár optimális megoldást is találni, míg a reaktív tervezõk egy lokális minimumhelyen ragadhatnak, nem garantálható, hogy a robot eljut a célponthoz. A globális tervezés hátránya azonban a lényegesen nagyobb futási idõ, ezért gyakran változó vagy ismeretlen környezet esetén elõnyösebb lehet a reaktív tervezõk használata.
 
-%TODO ide kéne pár mérés, hogy ne csak a levegõbe beszéljek
-\subsection{Mérések}
-Pontos méréseket nem végeztünk, de nagyságrendileg százszoros gyorsulást sikerült elérnünk, és a legbonyolultabb környezetben is egy másodpercen belül sikerült megoldást találnia az algoritmusnak\footnote{Intel Core 2 Duo E8400 @ 3.0GHz, 4GB RAM}. Ez egy igen nagy elõrelépés, így valószínû, hogy egy kisebb teljesítményû beágyazott számítógépen is elfogadható idõn belül végez.
+A reaktív tervezõk esetében a robot alakját körrel szokták közelíteni, ezzel is egyszerûsítve a tervezés folyamatát. Ezzel szemben globális algoritmusok a robot pontos alakját figyelembe veszik, aminek nagy jelentõsége van szûk folyosókat tartalmazó pálya esetén. Az általam bemutatott algoritmusok is figyelembe veszik a robot pontos alakját.
 
-\subsection{Fejlesztési lehetõségek}
-A fejlesztés során odafigyeltem, hogy hol lehetne gyorsítani, módosítani a mûködésen. Ahol ez egyszerûen megvalósítható volt, ott ezeket megtettem, de maradtak további fejlesztési lehetõségek is a programban, például számos helyen lehetne a futást párhuzamosítani.
-
-Az esetek nagy többségében a celladekompozíciós eljárással tervezett globális pálya jó eredménnyel szolgál, de néhány speciális esetben, ilyen két szûk merõleges folyosó találkozása, nem található megoldás. Részben hasonló probléma mikor a célkonfiguráció és az utolsó szakasz iránya pont ellentétes, ilyen probléma merül fel a párhuzamos parkolás esetén is. Ezek elkerülésére egy másik globális tervezõt kell használnunk.
+A globális tervezõk esetén megkülönböztetünk mintavételes és kombinatorikus módszereket \cite{LaValle2}. A mintavételes módszerek a konfigurációs teret véletlenszerûen mintavételezik és ez alapján próbálnak utat keresni a célpontba. Ellenben a kombinatorikus módszerek a környezet pontos geometriai modellje alapján terveznek utat. Ezen algoritmusok elõnye, hogy ha nem létezik megoldás, akkor ezt véges idõn belül képesek eldönteni, ám a mintavételes tervezõk ezt nem tudják véges idõn belül megtenni.
 
 %----------------------------------------------------------------------------
-\section{Új globális tervezõ}
+\subsubsection{Irányított rendszer szerinti csoportosítás}
 %----------------------------------------------------------------------------
-A fejlesztés során a fentebb felsorolt problémák miatt a globális tervezõt lecseréltem az RTR nevû algoritmusra. Ez is Kiss Domokos munkája \cite{DomiRTR}, az implementációját Nagy Ákos végezte el \cite{Akos}.
+A robotok, mint irányított rendszerek esetén megkülönböztetjük az anholonom és holonom rendszereket a pályatervezõk csoportosítása esetén is. Anholonom rendszerek esetén önmagában a robot állapotváltoztatása sem triviális feladat. Azokat az eljárásokat, amelyek képesek egy anholonom rendszert egy kezdõ konfigurációból egy cél konfigurációba eljuttatni az akadályok figyelembe vétele nélkül, \emph{lokális tervezõknek} hívjuk \cite{LaValle2}.
 
-\subsection{RRT}
-A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) használnak a konfigurációs tér struktúrájának leírásához \cite{kavraki96prm}. A szakirodalomban egyik leggyakrabban használt ilyen algoritmus a \emph{Rapidly Exploring Random Trees} \cite{LaValle}. Ennek a lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben. A fa csomópontjaiban konfigurációk találhatóak és a fa terjesztését úgy irányítjuk, hogy a kívánt célkonfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a célkonfigurációba már könnyedén megkaphatjuk.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=130mm, keepaspectratio]{figures/RRT.png}
-\caption{Az RRT algoritmus három különbözõ iterációnál \cite{LaValle}.} 
-\label{fig:RRT}
-\end{figure}
-
-\subsection{RTR}
-Az \emph{Rotate-Translate-Rotate} algoritmus a fentebb látott RRT algoritmus egy módosított változata. Elsõdlegesen differenciális robotok számára tervez pályát, de jó alapot szolgáltat a C*CS algoritmusnak is. Nevét a benne használt mozgási primitívekrõl kapta, azaz a $R$, mint fordulás, a $T$ pedig az egyenesen haladást jelöli. Az RRT algoritmustól eltérõen itt az algoritmus két fát épít, egyet a kezdõ, egyet pedig a célkonfigurációból. Másik fontos különbség, hogy ütközés esetén a pályát minden irányba továbbterjeszti, így növelve a megoldás megtalálásának lehetõségét.
-
-\begin{figure}[b]
-\centering
-\includegraphics[width=110mm, keepaspectratio]{figures/rtr_path2.pdf}
-\caption{Az RTR algoritmus, piros a kezdõ, kék a célkonfigurációból indított fa. Fekete a megoldást jelöli.} %TODO ide is kell a hivatkozás
-\label{fig:rtr_path2}
-\end{figure}
-
-Számomra ez az algoritmus azért elõnyös, mert celladekompozíciós eljárás hibát kiküszöböli. Tehát két szûk folyosó találkozásánál csak akkor ad megoldást, ha van hely az elfordulásra. Mivel a keresés során két fát épít, így a párhuzamos parkolás esetén is segíti a megoldás megtalálását.
+Gyakran már a globális tervezõ figyelembe veszi a robot korlátozásait és ennek megfelelõ geometriai primitíveket használ, de a globális tervezõ által megtervezett pályát közelíthetjük egy lokális tervezõvel is, ha az anholonom robotunk közvetlenül nem tudná lekövetni a globális pályát. Ezt az eljárást, approximációs módszernek nevezik. Egy ilyen algoritmusra látunk példát a következõ fejezetben.

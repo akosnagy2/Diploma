@@ -1,80 +1,124 @@
 %----------------------------------------------------------------------------
-\chapter{Algoritmusok megvalósítása}
+\chapter{Pályakövetõ szabályozás}
 %----------------------------------------------------------------------------
-Ebben a fejezetben az algoritmusok megvalósításáról, és az azokhoz használt eszközökrõl beszélek. Bemutatom a használt szimulációs környezetet, és a köré készült programok mûködését, majd leírom a szimulátorban és a valós robotokon elért eredményeimet.
+Ebben a fejezetben az elkészült, idõben egyenletesen mintavételezett pálya követésének problémáját, majd az ehhez készült szabályozási algoritmusokat mutatom be.
 
 %----------------------------------------------------------------------------
-\section{Szimuláció -- V-REP}
+\section{Pályakövetés}
 %----------------------------------------------------------------------------
-A robot mozgásának szimulálására a V-REP robotszimulátort használtam. A program a Coppelia Robotics terméke \cite{VREP}, amely oktatási célból ingyenesen letölthetõ és használható. Nagyon széleskörûen használható program, a robotika minden ágában. Tesztelhetõ benne ipari szerelõrobotok mûködése, ahogyan az \aref{fig:vrep} ábrán is látható, felhasználható ilyen robotok programozásának oktatására is, de a mobil robotok területén is kifejezetten praktikus eszköz. Jól dokumentált, sok oktató anyaggal, példaprogramokkal együtt. Folyamatosan frissítik és új funkciókkal bõvítik a programot.
+Autószerû robot esetén a követendõ pályát szakaszokra bontjuk fel. Egy szegmensen belül a robot megállás nélkül halad elõre vagy hátra a pálya mentén. Ebbõl következik, hogy egy szegmens a haladási irányból, és a pálya idõben egyenletesen mintavételezett pontjaiból áll. Két szakasz közt a robotnak nem szükséges semmilyen speciális feladatot végrehajtani, közvetlenül folytatja a következõ szegmens végrehajtásával\footnote{Ellentétben a differenciális robottal, amely képes egy helyben való elfordulásra, így akár törtszakaszok követésére is.}. Ilyenkor van lehetõség az irány módosítására. Ebbõl következik, hogy a teljes útvonal szegmensekre bontását irányváltoztatások jelzik, az azonos irányú pályaelemeket, mint például amik a C*CS esetén is keletkezhetnek, egy szakaszba egyesíti az algoritmus.
+
+A pályakövetõ szabályozás alapvetõen két szintre oszlik, ahogyan ez a \figref{PathFollow} ábrán is látható. A felsõbb szinten a pályába kódolt sebesség és pozíció követése a cél, a robot aktuális pozíciója alapján, míg az alsóbb szinten az így számolt sebesség és kormányszög alapjel szabályozása történik. Ez a szabályozás az algoritmusok szintjén is elkülönül, míg az alacsonyabb szintû szabályozások magán a roboton, a vezérlésén (esetleg szimulátorán) végrehajthatók, addig a magasabb szintû szabályozás külön helyen hajtódik végre.
+
+A pályakövetés alapja a szétcsatolt sebesség és orientáció szabályozás. A szétcsatolás következménye, hogy egyszerûbb, lineáris szabályozókat használhatunk a követés során. Hátránya, hogy ez a modell nem minden esetben követi megfelelõen a valóságot.
+
+\subsection{Sebesség szabályozás}
+Alacsony szinten a robotsebességénél történik meg a sebességszabályozás. Az általam használt valós robot négy kerék meghajtású, egyetlen DC motor gondoskodik a robot mozgatásáról. A robot középsõ erõátviteli tengelyére csatlakozik egy inkrementális adó, mely biztosítja a sebességszabályozás számára a visszacsatolást. Ahogyan a feszültségvezérelt egyenáramú motorok esetén gyakran lenni szokott, én is egy módosított PI szabályozót használtam sebességszabályozásra.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=115mm, keepaspectratio]{figures/vrep.png}
-\caption{A V-REP szimulációs program} 
-\label{fig:vrep}
+\includegraphics[width=145mm, keepaspectratio]{figures/palyakovetes.pdf}
+\caption{A pályakövetés áttekintõ blokkdiagramja.} 
+\label{fig:PathFollow}
 \end{figure}
 
-\subsection{Szerver program}
-Több módon is kiegészíthetõ a program mûködése. A megoldásunkban egy szerver programot hoztunk létre, mely kommunikál a V-REP egy lua szkriptjével, majd a kapott üzenet alapján mozgatja a szimulált robotot. A szerver nem csak a szimulátorral áll kapcsolatban, hanem hozzá csatlakozhatnak a különbözõ egyéb algoritmusok, ahogy az \aref{fig:vrepserver} ábrán is látható. A fejlesztés során próbáltuk  a szimulációt a robot típusától függetlenné tenni, ezt a következõképpen valósítottuk meg:
+A PI szabályozók esetében gyakran elõforduló probléma az elintegrálódás \cite{Bezi}. Az elintegrálódás a rendszerben lévõ beavatkozószerv telítése miatt lép fel, kiküszöbölése történhet többféleképpen, szabályozó típusától függõen. Esetünkben egy FOXBORO struktúra segítségével elõzzük meg az elintegrálódást.
 
-A szimuláció indulásakor a lua szkript elküldi a szimuláció módját, és a hozzá tartozó paramétereket. Innen a szerver alkalmazás eldönti milyen paraméterek és egyéb adatok érkezhetnek, illetve, hogy melyik kliensre kell várjon. Ha a kapcsolat létrejött a kliens alkalmazással, akkor az a paramétereknek megfelelõen végzi a feladatát, majd az eredményt a szerver alkalmazáson keresztül elküldi a szimulátornak. Ez a struktúra elsõ ránézésre igen bonyolultnak tûnik, de ez a módszer biztosítja, hogy a szimulátort egyszerûen lecserélhessük egy valós robotra, vagy akár párhuzamosan is mûködhessen vele. A szerver mûködése teljes mértékben transzparens, a késõbbiekben ennek mûködését a szimulátor részének tekinthetem.
+Az általam implementált szabályozó figyelembe veszi a motor és mechanika nemlinearitását is. Ehhez fel kellett vegyem a rendszer karakterisztikáját, tehát, hogy egy adott kimeneti feszültség mekkora végsebességet jelent. Ennek a karakterisztikának az inverzét építettük be a rendszer modelljébe, így elméletileg a nemlinearitást kiejtettük.
+
+\subsection{Referenciapont-választás}
+A sebességszabályozók számára a sebesség alapjelet a pálya biztosítja, hiszen az idõparaméterezés során olyan pálya készült, amely idõben egyenletesen mintavételezett, és így a pályapontok közötti távolságból a robot sebessége kiszámolható. 
+
+Már csak azt kell eldöntenünk, hogy a pálya melyik pontjához tartozó sebesség alapjelet alkalmazzuk az adott mintavételnél. Ezt hívjuk \emph{referenciapont-választásnak}. Az eljárás elsõ közelítésben igen egyszerû, a pálya pontjai közül a robot pozíciójához legközelebbi pályapontot választjuk referenciapontnak, és így már egyértelmûen adódik a sebesség alapjelünk is.
+
+A fejlesztés egy korai stádiumában felmerült, hogy ezt a referenciapontot ne így határozzam meg, hanem folyamatosan léptessem a pálya mentén. Ezzel kvázi elõírtuk, hogy  a robot adott idõpontban a pálya mely pontjában tartózkodjon. Mivel nem biztos, hogy a robot ténylegesen a kívánt pozícióban található, egy külön szabályozó segítéségével korrigáltam a pályába kódolt sebesség alapjelet, hogy a robot elérje a referenciapontot. 
+
+Amennyiben nem ideális modellt használtunk, a megoldás nem mûködött, a rendszer instabillá vált. Késõbb beláttam, hogy a megoldás problémája az volt, hogy nem csak azt írtuk elõ a robot számára, hogy mekkora sebességgel haladjon a pálya mentén, hanem a referenciaponton keresztül azt is, hogy hol tartózkodjon az adott idõpontban. Ez már azért sem lehetséges, mivel, ha a robot a referenciaponthoz képest lemaradásban van (általában ez történik), akkor a sebességalapjel korrekció növelné a sebességet, pedig azt már alapból úgy írtuk elõ, hogy a lehetõ leggyorsabban haladjon a robot a pálya mentén. Tehát az alapjel módosító szabályozóval arra kényszerítenénk a rendszert, hogy szegje meg a saját korlátozásait.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=140mm, keepaspectratio]{figures/vrepserver.pdf}
-\caption{Az elkészült keretrendszer blokkvázlata} 
-\label{fig:vrepserver}
+\includegraphics[height=75mm, keepaspectratio]{figures/ferdevonal.png}
+\caption{Ferde vonal és robot modellje \cite{RobonAUTszem}} 
+\label{fig:ferdevonal}
 \end{figure}
 
-\subsection{Kliens program}
-A különbözõ kliensprogramok más-más paramétereket várnak, ezt biztosítja a szerver alkalmazás. Az idõparaméterezõ és a pályakövetõ szabályozás teszteléséhez készült egy kliens, mely a szimulátortól fogad egy elõre elkészített pályát, majd ezt újramintavételezi. Az így készült pályát visszaküldi a szimulátornak, ami kirajzolja az új pályát, majd elküldi a robot aktuális pozícióját. Innen átveszi átveszi a mûködést a pályakövetõ algoritmus, a kapott pozíciót feldolgozza és ez alapján az elõzõ fejezetben részletezett módon kiszámítja a beavatkozó jeleket, amit visszaküld a szimulátornak. A szimulátor és a pályakövetõ alkalmazás mûködése szinkronizálva van, azaz megvárják egymást a következõ lépéssel.
+A végleges megoldásnál ezzel szemben a referenciapontot alakítjuk a robothoz, nem pedig fordítva. Ez azt jelenti, hogy nem írjuk elõ, hogy a robot a pályát mennyi idõ alatt járja be, csak azt, hogy a pálya adott pontjában mekkora sebességgel avatkozzunk be.
 
-A másik elkészült kliens alkalmazás a pályatervezõ program. Ez nem vár pályára a szimulátortól, csak az elõre meghatározott környezet nevére. Itt kompromisszumot kellett kötnünk, mivel a szimulátor speciális fájlformátumot tud csak kezelni, ezért közös fájlokkal dolgozik a két program, de a pályatervezõ más forrásból is elfogad pályát, így továbbra is lecserélhetõ marad a szimulátor. A pályatervezés után a mûködése teljesen megegyezik a pályakövetõtõ kliensprogramnál leírtakkal, azzal a különbséggel, hogy a pályát itt a tervezõ szolgáltatja.
+A pályakövetõ algoritmusnál lényeges szempont a futási idõ, mivel a roboton valós idõben kell mûködnie, ezért a referenciapont meghatározásánál nem megyünk végig a pálya összes pontján. Hogy ezt megtegyük, a legközelebbi pont keresését az elõzõ iterációban használt referenciapontnál kezdjük, és csak egy bizonyos számú pontot vizsgálunk meg. Ha a robot korlátai megfelelõen lettek beállítva, akkor az egymás utáni referenciapontoknak idõben sorban kell következniük. Ezért teljesen felesleges a pálya összes pontját megvizsgálnunk.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=130mm, keepaspectratio]{figures/DiffSimPath0RTR.png}
-\caption{Az elkészült keretrendszer mûködés közben. Az ábrán az RTR algoritmus által tervezett pályán halad a differenciális robot.} 
-\label{fig:DiffSimRobot1RTR}
-\end{figure}
+\subsection{Túlhaladás problémája}
+A pályakövetés valós roboton való tesztelése során egy érdekes jelenséget tapasztaltunk, miszerint néha a pálya közepén megállt a robot és nem indult tovább. Késõbbi elemzés során kiderült, hogy ez abban az esetben történik, mikor túlhalad egy szegmensen, tehát nem pontosan a szegmens utolsó pontjában áll meg a robot.
 
-\subsection{Implementáció}
-A programokat a C++ nyelvet készítettem el. Azért esett a választásom erre a programozási nyelvre, mert a valós roboton, beágyazott rendszerben is könnyedén használható. A beágyazott környezet miatt igyekeztem kerülni bármiféle olyan külsõ szoftvercsomag használatát, aminek a használata problémás lehet a valós roboton. 
+A probléma ebben az esetben az, hogy a referenciapont-választás alapján a következõ szegmens legelsõ pontját találja meg, és az ehhez tartozó sebességérték viszont igen alacsony. Míg el nem éri a pálya kezdetét, addig ezt a sebességet tartja a robot.
 
-\begin{figure}
-\centering
-\includegraphics[height=75mm, keepaspectratio]{figures/frame2vrep.png}
-\caption{A C*CS alkalmazása autószerû robotok esetén, szimulációs környezetben} 
-\label{fig:frame2vrep}
-\end{figure}
-
-Ezek mellet a fejlesztés során igen fontos volt az objektum-orientált szemléletmód, mivel így biztosítható a legjobban a modularitás, és a késõbbi egyszerû fejlesztés, módosítás. Az implementálás során egyéb elõnyös tulajdonságát is ki tudtuk használni, ezek közül a legjelentõsebb az újrafelhasználhatóság volt. A programozás elõrehaladtával a fejlesztés sebessége is nõtt, mivel az elõzõleg elkészített kódrészleteket egyszerûen újra tudtuk használni.
+A probléma elkerülését úgy oldottuk meg, hogy amíg a pályaszakasz elsõ pontja van legközelebb a robot pozíciójához, addig nem a pályába kódolt sebességet továbbítjuk az alsóbb szintû szabályozónak, hanem a gyorsulás és sebességkorlát alapján növeljük a robot sebességét. A valóságban ez csak köztes szakaszok váltásánál jelentkezik, mivel a pályát eleve a robot kezdõpozíciójából tervezzük. Ezzel szemben két szegmens közt nem garantált a pálya pontos követése, mivel nem pozíciószabályozást használunk.
 
 %----------------------------------------------------------------------------
-\section{Szimulációs eredmények}
+\section{Virtuális vonalkövetõ szabályozás}
 %----------------------------------------------------------------------------
-Az általam ismertetett algoritmusok szimulációs környezetben a várakozásomnak megfelelõen mûködtek. Az eredmények a következõ ábrákon láthatóak. A képek a V-REP szimulátorról készültek, az akadályokat és a pálya határait színes polygonok jelzik, a pályatervezõ által generált pályát kék színnel jelöltem, míg a robot által bejárt pályát sárgával. A robot alatt található polygon jelzi a tervezés során ténylegesen figyelembe vett robot méretét.
+Az orientációszabályozás feladata a kormányszög alapjel biztosítása a pályakövetés során. Erre a célra egy virtuális vonalkövetést valósítottam meg. A vonalkövetõ autók rendszermodelljénél és szabályozásánál azzal a feltételezéssel élünk, hogy az autó elsõ keréktengelye alatt egy keresztirányú, egydimenziós vonalszenzor helyezkedik el. A jelenlegi esetben a pályakövetõ szabályozás elvét egy ehhez hasonló ``virtuális szenzor'' segítségével fogalmaztam meg. Ez a módszer nagyon hasonló a RobonAUT \cite{RobonAUTszem} versenyen is látott vonalkövetõ autók szabályozására, azzal az elõnnyel, hogy itt sokkal pontosabban ismert a ``vonal'' helye és orientációja.
 
-\begin{figure}
-\centering
-\includegraphics[height=75mm, keepaspectratio]{figures/CarSimPath1.png}
-\caption{\Aref{fig:CCSonline}. ábrán látható pálya RTR globális tervezõ esetén.} 
-\label{fig:frame3vrep}
-\end{figure}
+Mivel egy ilyen vonalkövetõ autó esetén a vonalszenzor mozgására van szükségünk, így módosítani kell a robotunk modelljét (\eqref{carLikeRobot}), amit a következõképpen tehetünk meg:
 
-A robotautó szimulálásakor jobb oldalt középen a sebesség és a gyorsulás profil látható, alatta pedig a kormányszög értéke. A felsõ grafikon itt is $m/s$ és $m^2/s$ mértékegységben szerepelnek a mennyiségek, míg a kormányszög radiánban. A grafikonok felett az autó elejére szerelt szimulált kamera képét látjuk.
+\begin{align}\label{eq:carLikeRobotMod}
+\dot{x} &= v_r \frac{\cos (\theta + \phi)}{\cos \phi} \notag \\
+\dot{y} &= v_r \frac{\sin(\theta + \phi)}{\cos \phi} \notag \\
+\dot{\theta} &= v_r \frac{\tan \phi}{L},
+\end{align}
 
-\begin{figure}[H]
-\centering
-\includegraphics[height=75mm, keepaspectratio]{figures/CarSimPath2.png}
-\caption{Szûk folyosók. Autószerû robot esetén igen bonyolult pálya adódik.} 
-\label{fig:frame4vrep}
-\end{figure}
+ahol a jelölések megegyeznek \aref{eq:carLikeRobot} esetén használtakkal, de a továbbiakban a sebességet egyszerûen csak $v$-vel jelöljük. Ezen egyenletek és  \aref{fig:ferdevonal} ábra modellezésével a következõ egyenleteket kapjuk: \cite{RobonAUTszem}
 
-\begin{figure}[H]
-\centering
-\includegraphics[height=75mm, keepaspectratio]{figures/CarSimPath3.png}
-\caption{A tervezett pálya igen hasonló egy valós esetben végrehajtott parkoláshoz} 
-\label{fig:frame5vrep}
-\end{figure}
+\begin{align}\label{eq:deltaAndp}
+\dot{\delta} &= -v \frac{\tan \phi}{L} \notag \\
+\dot{p} &= v \cdot \tan \delta - v \cdot \tan \phi - v \cdot \frac{p}{L} \tan \delta \tan \phi
+\end{align}
+
+Látható, hogy ez egy nem lineáris rendszer, de a szabályzótervezéshez ezt linearizálnunk kell. Mivel az a célunk, hogy a robot a vonalon, és azzal párhuzamosan helyezkedjen el, így a munkapont, amely körül a linearizálást elvégezzük a $p = 0$, $\phi = 0$ és a $\delta = 0$. Így a következõ egyenletekkel számolhatunk:
+
+\begin{align}\label{eq:linearizedModel}
+\dot{\delta} &= - \frac{v}{L} \phi \notag \\
+\dot{p} &= v(\delta - \phi - 0)
+\end{align}
+
+A linearizálás egyszerû, mert a tangens 0 környezetében jól közelíthetõ az argumentumával. Látható, hogy a $\dot{p}$ esetén az utolsó tagot elhanyagoljuk, mivel a két kis szög szorzata annyira kis számot eredményez, hogy ez gond nélkül megtehetõ. Ha ezt kicsit más formában írjuk fel, rögtön megkapjuk a linearizált rendszer állapotteres leírását:
+
+\begin{align}\label{eq:stateSpace}
+x &= [\delta \quad p]^{T} \\ \notag
+\dot{x} &= \begin{bmatrix}
+0 & 0 \\
+v & 0
+\end{bmatrix}x + \begin{bmatrix}
+-v/L \\
+-v
+\end{bmatrix} \phi \\ \notag
+p &= [0 \quad 1]x + 0 \cdot \phi
+\end{align}
+
+Ellentétben egy valós vonalkövetõ autóval, viszonylag pontosan meg tudjuk határozni a rendszer állapotváltozóit. Így célszerû közvetlenül ezek visszacsatolása, mivel  így szabadon megválaszthatóak a visszacsatolt rendszer pólusai. Ezt érdemes úgy megtenni, hogy minimálisra csökkentsük a túllendülést. Ha a rendszer válaszát kéttárolós lengõtaggal közelítjük, akkor annak átviteli függvénye a következõ:
+
+\begin{align}\label{eq:kettarolosLengo}
+W(s) = \frac{\omega_{0}^{2}}{\omega_{0}^{2} + 2\xi\omega_{0}s+s^{2}},
+\end{align}
+
+ahonnan a pólusok:
+
+\begin{align}\label{eq:polusok}
+s_{1,2} = -\omega_{0}\xi \pm j\omega_{0}\sqrt{1-\xi^{2}},
+\end{align}
+
+ahol $\omega_{0}$ a rendszer csillapítatlan sajátfrekvenciája és $\xi$ a csillapítási tényezõ. Ha túllendülés mentes rendszert szeretnénk, de a lehetõ leggyorsabb beállási idõvel, akkor $\xi = 1$-et kell választanunk. Az $\omega_{0}$ megválasztására nincsen hasonló korlátozásunk, ezt az aktuális pályához tudjuk igazítani.
+
+Az algoritmust úgy készítettem el, hogy az inicializálási fázisban a kívánt pólusoknak megfelelõen, az Ackermann-képlet \cite{Lantos} segítségével kiszámítja az erõsítési tényezõket, és késõbb ezt használja fel a szabályozási fázisban. Az eredmények azt mutatták, hogy az így készült szabályozóval a szimulációban a robot trajektóriája a kanyarokat levágta. Ez az eredmény egyáltalán nem meglepõ, mivel a szabályozást úgy írtuk fel, hogy az autó eleje kövesse a pályát, de a pályatervezés során a robot referenciapontjának pályáját terveztük meg. Szerencsére ezt egyszerûen orvosolhatjuk, ha a mintavételezett pálya minden pontját eltoljuk az autó hosszával.
+
+%----------------------------------------------------------------------------
+\section{Eredmények}
+%----------------------------------------------------------------------------
+Most pedig tekintsük át a pályakövetés alakulását különbözõ paraméterek esetén. A sebességszabályozásnál láttuk, hogy egy újabb szabályozás bevezetése csak hibát okoz a rendszerünkben, így csak az alacsony szintû PI szabályozó paramétereivel tudjuk módosítani a sebességprofil követésének minõségét.
+
+Az orientáció szabályozás esetén az elõírt pólusok értékein kívül a szenzorsor pozíciójával is lehetõségünk van módosítani a szabályozás minõségét. Intuitívan beláthatjuk, hogy minél elõrébb tekintünk, annál gyorsabban tudunk reagálni, így alacsonyabb beavatkozójel szükséges a szabályozás során. Ezt a következõképpen írhatjuk le \cite{RobonAUTszem}:
+
+\begin{align}\label{eq:predict}
+\tan \phi = \tan \phi \cdot \frac{L}{L+d},
+\end{align}
+
+ahol $d$ az elõretekintés távolsága az eredeti szenzorpozíciótól, $\gamma$ a számított beavatkozójel, $\phi$ a valós kormányszög. Természetesen az elõretekintés mértékének túl nagyra választása azt eredményezi, hogy a kanyarokat hajlamos a robot levágni. Mégis jelentõs elõnnyel rendelkezik, mivel így részben kiküszöbölhetõ a kormányszervó nem nulla beállási ideje.
