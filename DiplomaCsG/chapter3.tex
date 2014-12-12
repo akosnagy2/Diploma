@@ -19,7 +19,7 @@ Az idõparaméterezés két fõ lépésbõl áll. Elsõként a kapott geometriai pályához s
 
 A szakirodalomban nem sok idõparaméterezéssel kapcsolatos munka található. Egy hasonló megközelítést Christoph Sprunk munkájában olvashatunk \cite{Sprunk}. A legfontosabb eltérés, hogy Sprunk külön korlátozza a robot tangenciális és centripetális gyorsulását, míg mi a robot kerekeinek eredõ gyorsulását korlátozzuk. Ez a megoldás a valóságot jobban közelíti, hiszen attól, hogy a gyorsulás két komponense a korlátok alatt marad, nem biztos, hogy az eredõ gyorsulás sem haladja meg a korlátot.
 
-Az idõparaméterezés során nem használjuk ki az elõzõ fejezetekben bemutatott pályatervezõ által tervezett pálya speciális tulajdonságait, a célunk egy olyan algoritmus készítése, amely tetszõleges geometriai pályából képes sebesség információval ellátott, idõben egyenletes mintavételû pályát készíteni. Emiatt nem építhetünk a pályatervezõ által használt geometriai elemekre (körív, egyenes) és ezek speciális tulajdonságaira.
+Az idõparaméterezés során nem használjuk ki az elõzõ fejezetekben bemutatott pályatervezõ által tervezett pálya speciális tulajdonságait, a célunk egy olyan algoritmus készítése, amely tetszõleges geometriai pályából képes sebesség információval ellátott, idõben egyenletes mintavételû pályát készíteni. Emiatt nem építhetünk a pályatervezõ által használt geometriai elemekre (körív, egyenes), és ezek speciális tulajdonságaira.
 
 Általános esetben nem tudjuk analitikusan meghatározni a pálya görbületét, így görbület becslést kell alkalmaznunk \cite{Curv2D}. Természetesen abban az esetben, ha a pályatervezõ rendelkezik már a pálya görbületével, az idõparaméterezõ algoritmus azt fogja használni a becslés helyett, mivel így pontosabb eredményt érhetünk el, és gyorsítja is a végrehajtást.
 
@@ -174,7 +174,7 @@ f(k) &= \frac{v(k+1)^4 \cdot p(k)^2}{4 \cdot \Delta s(k)^2} - {a_{max}}^2 \notag
 0 &= v(k)^4 \cdot d(k) + v(k)^2 \cdot e(k) + f(k).
 \end{align}
 
-A \eqref{backacp} egyenlet valós, pozitív megoldásait keressük. Felmerülhet a kérdés, hogy mi garantálja, hogy mindig lesz ilyen megoldás. A {Vi\`ete}-formula felírásával belátható, hogy mindig pozitív megoldása van az egyenletnek, a másodfokú egyenlet diszkriminánsának felírásával pedig, hogy lesz valós megoldás. Amennyiben több pozitív valós megoldása van az egyenletnek, akkor a legnagyobb megoldást választjuk. Végül erre az értékre kell módosítanunk a sebességet, majd visszalépni, hogy ezzel a módosítással nem sértünk-e újabb értéket. \footnote{Általános esetben bevezethetõ egy tangenciális gyorsulás korlát is, de az autószerû robot esetén ezt nem alkalmaztuk.}
+A \eqref{backacp} egyenlet valós, pozitív megoldásait keressük. Felmerülhet a kérdés, hogy mi garantálja, hogy mindig lesz ilyen megoldás. A {Vi\`ete}-formula felírásával belátható, hogy mindig pozitív megoldása van az egyenletnek, a másodfokú egyenlet diszkriminánsának felírásával pedig, hogy lesz valós megoldás. Amennyiben több pozitív valós megoldása van az egyenletnek, akkor a legnagyobb megoldást választjuk. Végül erre az értékre kell módosítanunk a sebességet, majd visszalépni, hogy ezzel a módosítással nem sértünk-e újabb értéket\footnote{Általános esetben bevezethetõ egy tangenciális gyorsulás korlát is, de az autószerû robot esetén ezt nem alkalmaztuk.}. 
 
 A visszaterjesztés során a sebesség és szögsebesség korlátokkal nem kell foglalkoznunk, hiszen mindkét esetben, mikor módosítjuk a sebességet, csökkentjük az értékét.
 
@@ -224,7 +224,7 @@ s^{s+1}(k)& = s^{s}(k) + \Delta{s}^{s}(k)
 Így már rendelkezésünkre áll a robot kívánt sebessége, a megtett út, valamint az idõ a mintavételezett pálya összes pontjában. Már csupán a pályapontjainak koordinátáit kell ezek alapján meghatároznunk.
 
 Mivel ismerjük a pályapontok közötti távolságot ($\Delta{s}^{s}(k)$), iteratív eljárással az elõzõ pályapont koordinátái alapján az aktuális pontról tudjuk, hogy egy körön helyezkedik el. További feltételünk, hogy a pont az eredeti, geometriai pályán rajta legyen. Ha vesszük a geometriai pálya pontjai közötti görbületbõl adódó köríveket, akkor az ívek és a kör metszéspontjai közül kell kiválasztanunk a keresett pontot. A kiválasztás egyszerû, ha megjegyezzük, hogy az elõzõ pontnál melyik szakasz alapján találtuk meg a pontot, így csak attól a szakasztól kezdve kell keresni a metszéspontokat. Az algoritmus menete látható \aref{fig:samplPoint}. ábrán.
-Minden vizsgált szakasznál arra kell figyelni, hogy a metszéspont a szakasz határpontjai között helyezkedjen el. Az elsõ szakasz vizsgálatánál még az is fontos, hogy az elõzõ pont elõtti metszéspontot ne vegyük figyelembe. Az ábrán a $Ps(1)$ pontban ezért nem választhatjuk a másik metszéspontot.
+Minden vizsgált szakasznál arra kell figyelni, hogy a metszéspont a szakasz határpontjai között helyezkedjen el. Az elsõ szakasz vizsgálatánál még az is fontos, hogy az elõzõ pont elõtti metszéspontot ne vegyük figyelembe. Az ábrán a $Ps(1)$ pontban, ezért nem választhatjuk a másik metszéspontot.
 A legelsõ mintavételezett pontot a geometriai pálya elsõ pontjába helyezzük el.
 
 \begin{figure}[H]
