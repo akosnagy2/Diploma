@@ -2,3 +2,50 @@
 \appendix
 %----------------------------------------------------------------------------
 \chapter*{Függelék}\addcontentsline{toc}{chapter}{Függelék}
+\setcounter{chapter}{6}  % a fofejezet-szamlalo az angol ABC 6. betuje (F) lesz
+\setcounter{equation}{0} % a fofejezet-szamlalo az angol ABC 6. betuje (F) lesz
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{lstlisting}{section}
+%\numberwithin{tabular}{section}
+
+%----------------------------------------------------------------------------
+\section{Megjegyzés a CD melléklettel kapcsolatban}
+%----------------------------------------------------------------------------
+
+A dolgozat mellékletében megtalálhatóak az általam készített forráskódok, és egy videófelvétel is a valós robotról a következõ könyvtárstruktúrában:
+
+\dirtree{%
+.1 /.
+.2 Aramkor.
+.2 Diplomaterv.
+.2 Source.
+.3 RobotFirmware.
+.3 RobotSolution.
+.4 Frame.
+.4 PathPlannerApp.
+.4 RobotCommonLib.
+.4 ServerVrepApp.
+.4 VREP.
+.2 Video.
+}
+
+\begin{description}
+
+\item Aramkor: \hfill \\ Az autószerû robot vezérlõáramköre.
+
+\item Diplomaterv: \hfill \\ Jelen dokumentum forrása.
+
+\item Source: \hfill \\ Forráskódok.
+
+\item RobotFirmware:\hfill \\ A roboton található beágyazott rendszer programkódja.
+
+\item RobotSolution:\hfill \\ A keretrendszer forráskódja, Nagy Ákossal közösen fejlesztve.
+\item Frame:\hfill \\ Példa környezetek.
+\item PathPlannerApp:\hfill \\ Kliens program.
+\item RobotCommonLib:\hfill \\ Több program által használt közös kódok.
+\item ServerVrepApp:\hfill \\ Szerver program.
+\item VREP:\hfill \\ V-REP környezetek.
+
+\item Video:\hfill \\ Egy adott környezetrõl készült videófelvétel.
+\end{description}
