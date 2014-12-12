@@ -1,304 +1,150 @@
 %----------------------------------------------------------------------------
-\chapter{Pálya idõparaméterezése}
+\chapter{Útvonaltervezés C*CS pályákkal}
 %----------------------------------------------------------------------------
-A pályatervezõ által elkészített ütközésmentes pálya nem tartalmaz semmilyen idõvel kapcsolatos információt. Ebben a fejezetben a pálya pontjaihoz sebesség értékeket rendelünk hozzá. Ezt a többlet információt a pályakövetõ algoritmus használja fel, hogy mozgás során a robot kinematikai korlátai ne okozzanak problémát. Tehát az idõparaméterezés elsõsorban a robot korlátait használja fel, de arra is alkalmas, hogy meghatározzuk a pálya bejárásának idejét.
+A C*CS és a $c\overline{c}S$ algoritmus Kiss Domokos munkája \cite{CCSTopologicalProp}. Az algoritmusok elsõdlegesen autószerû robotok számára terveznek pályát, de az így tervezett pálya egy differenciális robot számára is végrehajtható. Feladatom az algoritmus implementálása volt C++ nyelven, majd annak tesztelése szimulációs, illetve valós környezetben.
+A fejezetet az algoritmus ismertetésével kezdem, majd kitérek az implementációs problémákra, és az elért eredményekre is.
 
-A módszert Nagy Ákos dolgozta ki differenciális robotokhoz, majd módosítottam autószerû robotok számára \cite{Akos}. Az elveket végül úgy alakítottuk ki közösen, hogy az ne függjön a robot típusától, így az alkalmazható legyen bármilyen kerekeken mozgó robottípusra.
-
 %----------------------------------------------------------------------------
-\section{Idõparaméterezés}
+\section{Reeds-Shepp lokális pályák}
 %----------------------------------------------------------------------------
-Az idõparaméterezés két fõ lépésbõl áll. Elsõként a kapott geometriai pályához sebesség értékeket rendelünk hozzá, majd ezután újramintavételezzük a pályát. Az újramintavételezés után a pálya idõben egyenletes lesz, tehát az egymást követõ pályapontok között azonos idõ telik el. A mintavételezés idejét a pályakövetõ algoritmus mintavételi ideje határozza meg. A geometriai pályát általában távolságban egyenletesen mintavételezzük, de ez nem kötelezõ feltétel az idõparaméterezéshez. 
+Az anholonom rendszerek irányítása akadályoktól mentes környezetben is egy igen bonyolult feladat. Sok esetben nem adható meg általános algoritmus, csak néhány speciális rendszer esetén. Szerencsére ilyen rendszerek közé tartoznak a differenciális robotok, az autószerû robotok, amelyek csak elõre mozoghatnak (Dubins autó), és azok amelyek elõre és hátra is képesek mozogni.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/path.pdf}
-\caption{A pálya idõparaméterezése.} 
-\label{fig:Path}
+\includegraphics[width=130mm, keepaspectratio]{figures/dubins-reeds-shepp.png}
+\caption{Dubins és Reeds-Shepp megoldások \cite{LaValle2}} 
+\label{fig:reeds_shepp}
 \end{figure}
 
-A szakirodalomban nem sok idõparaméterezéssel kapcsolatos munka található. Egy hasonló megközelítést Christoph Sprunk munkájában olvashatunk \cite{Sprunk}. A legfontosabb eltérés, hogy Sprunk külön korlátozza a robot tangenciális és centripetális gyorsulását, míg mi a robot kerekeinek eredõ gyorsulását korlátozzuk. Ez a megoldás a valóságot jobban közelíti, hiszen attól, hogy a gyorsulás két komponense a korlátok alatt marad, nem biztos, hogy az eredõ gyorsulás sem haladja meg a korlátot.
+Az utóbbi típusú robotokat hívjuk Reeds-Shepp autóknak, melyeknél bizonyított, hogy bármely kezdõ- és célkonfiguráció közt a legrövidebb utat megtalálhatjuk 48 lehetséges megoldás közül, amelybõl kettõ látható \aref{fig:reeds_shepp} ábrán. Ezek a megoldások maximum öt egyenes vagy körív kombinációjából állhatnak, és a pályák maximum két csúcsot tartalmazhatnak, azaz ennyiszer lehet irányt változtatni a végrehajtás közben \cite{ReedsShepp}. A megoldások száma egyéb megkötések árán tovább csökkenthetõ.
 
-Az idõparaméterezés során nem használjuk ki az elõzõ fejezetekben bemutatott pályatervezõ által tervezett pálya speciális tulajdonságait, a célunk egy olyan algoritmus készítése, amely tetszõleges geometriai pályából képes sebesség információval ellátott, idõben egyenletes mintavételû pályát készíteni. Emiatt nem építhetünk a pályatervezõ által használt geometriai elemekre (körív, egyenes) és ezek speciális tulajdonságaira.
-
-Általános esetben nem tudjuk analitikusan meghatározni a pálya görbületét, így görbület becslést kell alkalmaznunk \cite{Curv2D}. Természetesen abban az esetben, ha a pályatervezõ rendelkezik már a pálya görbületével, az idõparaméterezõ algoritmus azt fogja használni a becslés helyett, mivel így pontosabb eredményt érhetünk el, és gyorsítja is a végrehajtást.
+Mint látható akadályoktól mentes környezetben találhatunk optimális útvonalat, de ennek hátránya, hogy mindig minimális sugarú pályákat feltételez, mely egy valós esetben nem életszerû, illetve a pályák lehetnek igen bonyolultak is. Azonban ha elvetjük az optimalitás igényét - amit egyébként is meg kell tennünk, ha egy globális tervezõ részeként alkalmazzuk a módszert - akkor a lehetséges megoldásokon jelentõs mértékben egyszerûsíthetünk.
 
 %----------------------------------------------------------------------------
-\section{Jelölések}
+\section{C*CS lokális pályák}\label{CCSlocal}
 %----------------------------------------------------------------------------
-Ebben a fejezetben a \eqref{pars} táblázatban megadott jelöléseket fogjuk használni. Azokban az esetekben, ahol fontos megkülönböztetni a geometriai pályát és az (újra)mintavételezett pályát, ott a felsõ indexben található $\mathbf{g}$ betû a geometriai pályát jelöli, az $\mathbf{s}$ betû pedig a mintavételezett pályát. A pálya pontjait 1-tõl számozzuk.
-
-\begin{align}\label{eq:pars}
-\Delta{t}(k)& : \text{A $k$ és a $k+1$ pontok között eltelt idõ} \notag\\
-t(k)& : \text{A $k$. pontban az addig eltelt idõ}\notag\\
-\Delta{s}(k)& : \text{A $k$ és a $k+1$ pontok közti távolság}\notag\\
-s(k)& : \text{A $k$. pontban az addig megtett távolság}\notag\\
-v(k)& : \text{A $k$. pontban a robot sebességének nagysága}\notag\\
-\omega(k)& : \text{A $k$. pontban a robot szögsebességének nagysága}\notag\\
-a_{t}(k)& : \text{A $k$. pontban a robot tangenciális gyorsulásának nagysága}\notag\\
-c(k)& : \text{A $k$. pontban a görbület nagysága}\notag\\
-N& : \text{A pálya pontjainak száma}
+A lokális tervezõk bármely kezdõ- és célkonfiguráció páros esetén megoldást kell nyújtsanak, de megfelelõ koordináta-rendszer választásával egyszerûsíthetünk a számításokon. Tegyük fel, hogy egy ilyen választás mellett adódott $q_{I} = (x_{I},y_{I},\theta_{I})$ kezdõ és $q_{G} = (0,0,0)$ célkonfiguráció. Ha eltekintünk a minimális fordulási sugár korlátozásától, és feltesszük, hogy $\theta_{I} \neq 0$, akkor könnyen belátható, hogy egy kör és egy egyenes segítségével elérhetõ a célkonfiguráció. Elõször egy érintõ körön elfordulunk a $\tilde{q_{G}} = (\tilde{x_{G}},0,0)$ köztes célkonfigurációba, majd egy egyenes mentén végighaladunk a célig. Az ehhez tartozó kör sugarát a következõ egyenlet segítségével számíthatjuk:
+\begin{align}\label{eq:middleRadius}
+\rho_{I,\tilde{G}} = \frac{y_{I}}{1 - \cos \theta_{I}}
 \end{align}
 
-Azokat az eseteket külön jelöljük, amikor a robot egyik kerekére vonatkozó mennyiségekrõl beszélünk. Elsõ indexben azt, hogy elsõ ($f$) vagy hátsó ($r$) kerék, utána, hogy bal ($l$), jobb ($r$), kerékrõl van szó. Ezenkívül a kerekeknél megkülönböztetjük, hogy tangenciális ($a_{t}$), centripetális ($a_{c}$) vagy eredõ ($a$) gyorsulásról beszélünk.
+Ha a kiadódó sugár kisebb, mint a minimálisan megengedett ($|\rho_{I,\tilde{G}}| < \rho_{min}$), esetleg $\theta_{I} = 0$, akkor egy egyenes vagy egy kör segítségével egy köztes kezdõkonfigurációba ($\tilde{q_{I}} = (\tilde{x_{I}},\tilde{y_{I}},\tilde{\theta_{I}})$) kell eljutnunk, ahol biztosított, hogy $\tilde{\theta_{I}} \neq 0$ és, hogy $\rho_{\tilde{I},\tilde{G}} \geq \rho_{min}$. Megjegyzendõ, hogy az elsõ szakasz nem lehet egyenes, ha $\theta_{I} = 0$, $\theta_{I} = \pi$ vagy $|y_{I}| < 2\rho_{min}$. Bebizonyítható \cite{CCSTopologicalProp}, hogy $\tilde{q_I}$ köztes konfigurációt végtelen sokféleképpen megválaszthatjuk.
 
-Fontos megjegyezni, hogy a $\Delta{s}(k)$ távolságot úgy kell értelmezni, hogy a $k$. és $k+1$. pont között egy körív található, és az ezen mért távolság lesz $\Delta{s}(k)$. A körívet a $c(k)$ görbület határozza meg. Ha nem köríveket használnánk, hanem egyenessel kötnénk össze a pályapontokat, akkor a görbületnek szükségszerûen nullának kellene lennie.
+Hogy egyszerûsítsük a jelöléseket, a továbbiakban az egyenes szakaszokra $S$ a körívekre pedig a $C$ betûk segítségével hivatkozunk. Ezt felhasználva belátható, hogy a célpontba egy $SCS$, vagy egy $CCS$ pálya segítségével eljuthatunk. Könnyen belátható, hogy ha egy körív ($C$) sugarával a végtelenbe tartunk, akkor a szakasz az egyeneshez tart. Az olyan speciális köríveket, amelyek sugara végtelen is lehet, $C^{*}$-gal jelöljük. Innen a módszer neve a $C^{*}CS$.
+
 
 %----------------------------------------------------------------------------
-\section{Korlátozások}
+\section{C*CS approximációs módszer}
 %----------------------------------------------------------------------------
-A robot mozgását általános esetben \aref{fig:velocityProfileModel}. ábra mutatja be. Az idõparaméterezés során figyelembe vesszük a robot pályamenti sebességét és szögsebességét valamint a robot kerekeinek tangenciális és eredõ gyorsulását.
+Az általam használt algoritmus egy approximációs módszert alkot, mely egy elõzetes globális pályát rekurzív módon felbont kisebb szakaszokra, majd ezekre próbál illeszteni egy-egy fentebb bemutatott C*CS pályát.\footnote{Bár a lokális tervezõ algoritmus neve a C*CS, de a végeredményben kialakult pálya összességében is körök és egyenesek kombinációjából áll, így ez a név ráragadt az approximációs módszerre is.} A végeredményül elkészült, az algoritmus által visszaadott pálya autószerû robotokkal könnyedén lekövethetõ, mivel elsõdlegesen ezek számára lett kialakítva. Ennek ellenére a megoldást természetesen egy differenciális robot is képes lekövetni, mivel az nem rendelkezik korlátozással a forduló kör sugarát illetõen.
+
+\subsection{Globális tervezõ}
+A szükséges elõzetes pálya bármilyen globális tervezõ eredménye lehet. Elsõdleges célja egy mankó nyújtása a késõbbi tervezõ számára. A végsõ megoldásnak nem feltétele, hogy az elõzetes pálya akár egyetlen pontját is tartalmazza.
+
+Mi erre a célra egy celladekompozíción alapuló algoritmust használtunk. Ez az eljárás a környezetet háromszögekre bontja \cite{fade2d}, majd ezeknek a háromszögeknek az oldalfelezõ pontjait összekötve gráfot alkot. Ebbe beszúrja a kezdõ- és célkonfigurációt, majd ezeket összeköti a legközelebb álló néhány ponttal. Az éleket a pontok egymástól való távolságával súlyozzuk, majd ebben a gráfban a Dijkstra-algoritmus \cite{BFS} segítségével megkeressük a legrövidebb utat. Erre egy példát \aref{fig:ccs_triang} ábrán láthatunk.
 
 \begin{figure}
-\centering
-\includegraphics[width=120mm, keepaspectratio]{figures/carModel.pdf}
-\caption{Autószerû robot mozgása köríven} 
-\label{fig:velocityProfileModel}
+	\centering
+	\includegraphics[width=130mm, keepaspectratio]{figures/ccs_prepath.png}
+	\caption{Elõzetes pálya tervezése, folytonos vonal jelzi a felbontást, pontozott vonal a gráfot, szaggatott pedig az elkészült elõzetes pályát} 
+	\label{fig:ccs_triang}
 \end{figure}
 
-A sebességprofil létrehozásakor rendelkezésünkre áll a pálya görbülete, azaz az autó referenciapontja által bejárt kör sugara ($\rho$). Ebbõl a hátsó kerekek fordulókörének sugara a következõképpen számolható:
+Ennek a megoldásnak az elõnye, hogy a szabad terület közepén alkot pályát, így ha az autó ezt követi, akkor bármilyen irányú manõverezésre lesz lehetõsége, ha a pálya ezt megengedi. További elõnye, hogy ez egy kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Az eljárás egyik fõ hibája, hogy a háromszögelés miatt, csak sokszögekkel leírható akadályokkal képes dolgozni, és még ebben a formájában nem veszi figyelembe az autó kiterjedését. Ezen könnyen lehet segíteni, ha figyelembe vesszük az oldalfelezõ pontok közötti szakaszok távolságát az akadályoktól, és ha a pálya- és az akadályél túl közel vannak egymáshoz, akkor töröljük az élt a gráfból. Sajnos az eljárás egyéb negatívumokkal is bír, amirõl a fejezet végén még szót ejtek.
 
-\begin{align}\label{eq:carLikeRearRadiuses}
-\rho_{rl} &= \rho - \frac{d}{2} \\ \notag
-\rho_{rr} &= \rho + \frac{d}{2},
-\end{align}
+\subsection{Lokális tervezõ alkalmazása}
+Ha a globális tervezõ tudott visszaadni megoldást, akkor az algoritmus tovább folytatódik a következõképpen: Az elõzetes pálya két konfigurációját kiválasztjuk, és a fentebb említett C*CS pályákat keresünk köztük. Az eljárás elõször a pálya két végpontja közt keres útvonalat, ami egyszerû esetekben akár rögtön megoldásra is vezethet, felgyorsítva az algoritmus mûködését. Ha ez a keresés nem járt sikerrel, akkor az elõzetes pályát megfelezi az algoritmus, és az elsõ konfiguráció, valamint az új célkonfiguráció közt keres megoldást. Ezt egészen addig ismétli, míg van köztes konfigurációs pont, ha elfogyott, további pontokat illeszt a pályába.
 
-Fontos megemlíteni, hogy itt $\rho$ elõjeles sugarat jelöl. Ami esetünkben pozitív körülfordulási irányban pozitív (balra fordulás). Az elsõ kerekek esetén nincs ilyen könnyû dolgunk. Ahhoz hogy az elsõ kerekek fordulás közben ne csússzanak meg oldalirányba, a két keréknek különbözõ szögben kell elfordulnia, ezt nevezzük Ackermann-hajtásnak. Ez azzal áll kapcsolatban, hogy a kerekeknek különbözõ köríven kell elfordulniuk. Hogy ezt kiszámítsuk, elõször írjuk fel az összefüggést a sugár és a kormányszög között, kerékpár modellt feltételezve. Ehhez használjuk fel az \eqref{carLikeRobot} egyenletet:
+Az elõzõekben láthattuk, hogy a C*CS végtelen sok megoldást nyújt. Lokális esetben ez nem feltétlen hasznos, de akadályok jelenlétében ez megváltozik, mivel így sokkal nagyobb valószínûséggel találhatunk végrehajtható pályát. Természetesen az összes megoldást nincs lehetõségünk kipróbálni, így ezt a problémát valamilyen mintavételezõ eljárással kell megoldanunk.
 
-\begin{align}\label{eq:carRadius}
-\rho = \frac{L}{\tan \phi}
-\end{align}
+\begin{figure}[H]
+\centering
+\includegraphics[width=75mm, keepaspectratio]{figures/CCS.pdf}
+\caption{$q_{\tilde{I}}$ megválasztása } 
+\label{fig:infCCS}
+\end{figure}
 
-a sugár elõjele konzekvens a kormányszög elõjelével. Innen az Ackermann-hajtás szerint a kerekek kormányszöge:
+A végtelen sok megoldást a $\tilde{q_{I}}$ kiválasztásának szabadsága okozza. Erre egy példa látható \aref{fig:infCCS} ábrán. Ezért az algoritmus összegyûjti azokat a konfigurációkat, melyeket a $q_{I}$ konfigurációból ütközés nélkül elérhetünk. Ehhez a környezetet fel kell osszuk egységnyi távolságokra, mivel így véges sok lehetõséget kapunk. A kiszámítás ideje természetesen függ a választott távolságegységtõl és a környezet méretétõl. Az eredmények azt mutatják, hogy a teljes algoritmus futásának ez a leghosszabb része, ami nem meglepõ, mivel a körívek kiszámítása komplex mûvelet, és ezt egy adott pont esetén a robot testének minden csúcsára ki kell számoljuk, hogy ütközést tudjunk detektálni. A mûvelet hatékonyságán több módon lehet javítani, például nagyobb távolságegység megválasztásával. Másik javítási lehetõség, ha elõre elkészítünk egy foglaltsági mátrixot, ami megmondja az adott pont akadályon beül van-e, így ezekre a pontokra nem kell a számítást elvégezni. Mivel az így kapott körívek egy adott kezdõkonfigurációhoz tartoznak, további gyorsításra ad lehetõséget, ha az approximációs lépésben inkább a célkonfiguráció pontját mozgatjuk, így nem kell újra és újra kiszámolni a köríven elérhetõ sokaságot.
 
-\begin{align}\label{eq:carAckermannAngles}
-\phi_{l} &= \arctan \left( \frac{L}{\rho - \frac{d}{2}} \right) \\ \notag
-\phi_{r} &= \arctan \left( \frac{L}{\rho + \frac{d}{2}} \right)
-\end{align}
+\begin{figure}[H]
+\centering
+\includegraphics[width=90mm, keepaspectratio]{figures/CS.pdf}
+\caption{Középsõ körív számítása érintõ körrel} 
+\label{fig:erintoKor}
+\end{figure}
 
-ezek és a \eqref{carLikeRearRadiuses} egyenletek segítségével számítható az elsõ kerekek által bejárt körök sugarai:
+Az algoritmus további részében \aref{CCSlocal} pontban említett módon, a hátralévõ körív, és egyenes szakasz kiszámítása a feladat. Egy irányított kör esetén ez két lehetséges pályát jelent, amint az látható \aref{fig:erintoKor} ábrán. Ezek után nem elég csak a körívek végrehajthatóságát ellenõriznünk, hanem meg kell nézzük ezt a hátralévõ egyenes szakaszokra is. Ugyan a globális pálya tervezésekor ellenõriztük ezeket, de az érintõ körök keresésekor nem volt feltétel, hogy az érintési pontok ezeken a szakaszokon belül helyezkedjenek el.
 
-\begin{align}\label{eq:carLikeFrontRadiuses}
-\rho_{fl} &= \frac{\rho_{rl}}{\cos \phi_{l}} \\ \notag
-\rho_{fr} &= \frac{\rho_{rr}}{\cos \phi_{r}}
-\end{align}
+Végül az így keletkezõ végrehajtható pályák sokasága közül ki kell választanunk egyet. Ezt többféleképpen megtehetjük. Talán a legkézenfekvõbb a legrövidebb megoldás kikeresése és beillesztése az elõzetes pályába. Itt érdemes megemlíteni, hogy a végeredmény akkor fog igazán hasonlítani a valósághoz, ha lecsökkentjük a tolatások számát, mivel az emberek nagy többsége nem szeret tolatva közlekedni. Hogy ezt megtehessük, az algoritmus opcionálisan elfogad egy súlytényezõt, mellyel a tolató szakaszok ``hosszát'' tudjuk megnövelni.
 
-A különbözõ keréksebességek arányosak a referenciapont sebességével, ez az arány pedig a sugarak arányaival írható fel:
-
-\begin{align} \label{eq:carWheelVelo}
-p(k) &= \frac{\rho_w(k)}{\rho(k)} = \frac{v_W(k)}{v(k)}
-\end{align}
-
-ahol $w$ jelzi a kerékre vonatkozó mennyiségeket. Látható, hogy ha a maximális keréksebességet keressük, akkor elegendõ csak a maximális abszolút értékû fordulókör sugarat megkeresni. Az \eqref{carLikeRearRadiuses} egyenletek alapján következik, hogy ez mindig a külsõ kerék esetén teljesül. Az \eqref{carLikeFrontRadiuses} egyenletek alapján pedig belátható, hogy az elsõ kerekek sebessége mindig nagyobb lesz a hátsóéknál, mivel $|\cos \phi| \leq 1$. Azaz jobbra kanyarodás esetén a bal elsõ kerék sebessége a legnagyobb és vice versa.
-
-A sebességprofil készítésekor egy adott robot esetében ezekre a mennyiségekre határozunk meg korlátozásokat:
-
-\begin{align}\label{eq:constraints}
-v^{max}& : \text{A robot pályamenti sebesség korlátja}\\
-\phi^{max}& : \text{A robot maximális kormányszöge, mint fizikai korlátozás}\notag\\
-\omega^{max}& : \text{A robot maximális szögsebessége}\notag\\
-{a_w}^{max}& : \text{A robot egy kerekének maximális gyorsulás korlátja}\notag\\
-\end{align}
-
-A gyorsulás korlátját elég egyetlen kerékre meghatározni, feltéve, hogy a kerekek tapadási tényezõje megegyezik. A kerekek maximális eredõ gyorsulását a tapadási súrlódási együttható ($\mu_{tap}$) határozza meg, amelynél a robot kerekei még nem csúsznak meg. A maximális gyorsulás és a tapadási együttható között a következõ egyszerû összefüggés áll fent:
-
-\begin{align}\label{eq:mu}
-a_{max} &=\mu_{tap_{max}} \cdot g,
-\end{align}
-
-ahol $g$ a nehézségi gyorsulás. Írjuk fel egy kerék gyorsulását:
-
-\begin{align}\label{eq:velocityProfileF}
-a(k) &= \sqrt{a_{wc}(k)^2 + a_{wt}(k)^2} \leq g  \cdot \mu_{tap},
-\end{align}
-
-ahol $a_{wc}(k)$ egy kerék centripetális gyorsulása és $a_{wt}(k)$ a tangenciális gyorsulása. Az \eqref{velocityProfileF} egyenletben azzal a feltevéssel élünk, hogy a robot kerekei és a talaj között a tapadási súrlódási együttható állandó és nem függ az erõ irányától. Az általunk használt robotoknál ez a közelítés megengedhetõ, mivel a gumikerekek homogénnek tekinthetõk. Ha barázdákat tartalmaznának, akkor már nagyobb eltérést okozna ez a közelítés.
-
-Fontos megjegyezni, hogy a kerékgyorsulás korlátokat lassulásnál is alkalmazzuk. Tehát a kerék gyorsulásának abszolút értékét korlátozzák ezek a megkötések. Így azt tételezzük fel, hogy a kerekek viselkedése gyorsulás és lassulás esetében megegyezik. A robot sebességénél viszont nem engedünk negatív értékeket, a robot végig elõre haladhat. A tervezõ viszont megadhat olyan pályát ahol tolatnia kell a robotnak, vagy egy helyben megfordulnia, de ezt a pályatervezõ algoritmus kezeli.
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/ccs_middle.png}
+\caption{A C*CS algoritmus mûködés közben} 
+\label{fig:CCSonline}
+\end{figure}
 
 %----------------------------------------------------------------------------
-\section{Geometriai sebességprofil}
+\section{ \texorpdfstring{\boldmath{$c\overline{c}S$}}{ccS} }
 %----------------------------------------------------------------------------
-Elsõ lépésként a geometriai pályapontokhoz rendelünk a korlátoknak megfelelõ sebességeket és a késõbbiekben ezt a sebességprofilt használjuk fel a pálya újramintavételezéséhez.
+Ha az elõzõekben látottak nem vezetnek megoldásra, tehát nincs olyan C*CS pálya, mely végrehajtható lenne, akkor egy kisebb szakaszt kell választanunk a globális pályából. Ezt viszont nem tehetjük meg végtelenségig, mivel a globális pálya általában egyenes szakaszok együttesébõl áll. Ezek a szakaszok határozzák meg az $S$ szakasz egyenesét, így tovább bontani nincs értelme, mert nem változtatja meg a tervezett pályát. Ezért az új konfigurációkat a töréspontokban kell elhelyezni, viszont önmagában ez még nem biztosítja, hogy találunk megoldást. Valahogy biztosítanunk kell azt, hogy az algoritmusunk konvergáljon a megoldás felé, amihez olyan lokális tervezõre van szükségünk, mely teljesíti a topológiai feltételt \cite{CCSTopologicalProp}. Ha ezt biztosítani tudjuk, akkor az approximációs algoritmusunk teljes lesz. A teljesség itt azt jelenti, hogy az algoritmus minden olyan esetben megoldással tér vissza, mikor a globális tervezõ érvényes pályát szolgáltatott. Tehát a körívekkel való közelítés nem csökkenti a megoldás létezésének esélyét.
 
-A pályamenti sebességeket úgy határozzuk meg, hogy a robot pályamenti gyorsulása a lehetõ legnagyobb legyen. Ezt megtehetjük úgy, hogy a robot kerekeinek tangenciális gyorsulását maximalizáljuk, azonban több hatás miatt nem tudjuk a kerekek gyorsulását folyamatosan növelni. 
+\begin{figure}[H]
+\centering
+\includegraphics[width=130mm, keepaspectratio]{figures/cc_S.png}
+\caption{A $c\overline{c}S$ algoritmus megoldásai különbözõ $y_{I}$ esetén\cite{CCSTopologicalProp}} 
+\label{fig:cc_S}
+\end{figure}
 
-Egyrészt a robot sebesség és szögsebesség korlátját nem sérthetjük meg. Ebbõl a két korlátból a pálya minden pontjára kiszámolhatunk egy maximális sebességet függetlenül az elõzõ pályapont sebességétõl:
+Olyan esetekben, amikor a globális pályát tovább kellene bontanunk, átváltunk a $c\overline{c}S$ algoritmusra, mely a topológiai feltételt teljesíti. Ez az algoritmus a C*CS algoritmus egy módosított változata, mely csak egy megoldást ad egy konfiguráció párra. Az eljárás lényege, hogy az elsõ két kör sugara megegyezõ, de ellentétes elõjelû, tehát a másik irányba kell forgassuk a kormányt. A komplementer jelölés jelzi az elõjel változását. Ahogy \aref{fig:cc_S} ábrán látható, ha $q_{I}$ túl közel van a $q_{G}$ egyeneséhez, akkor a körök egymás mellett elcsúsznak, és két megoldást is adnak.
 
-\begin{align}\label{eq:vmax}
-v^{max}(k)&= \min \left( v^{max}, \frac{\omega^{max}}{c(k)} \right)
-\end{align}
-
-A szögsebesség korlátját autószerû robot esetén számíthatjuk a maximális sebesség és a minimális fordulókör sugár segítségével, természetesen ebben az esetben az egyenlet leegyszerûsödik: $v^{max}(k)= v^{max}$. Valamint a kerekek centripetális gyorsulása nem haladhatja meg az elõírt eredõ gyorsuláskorlátot, különben a robot kereke megcsúszna. A pálya adott $k$. pontjában a kerekek centripetális gyorsulását a következõképpen számolhatjuk ki:
-
-\begin{align}\label{eq:acplr}
-{a_{w}}_{c}(k) &= v_w(k)^2 \cdot c(k) = v(k)^2 \cdot c(k) \cdot p(k)
-\end{align}
-
-ahol $p$ tehát a referenciapont és a maximális fordulási körrel rendelkezõ kerék sugarának aránya. Fontos ezen kívül megjegyezni, hogy mivel a robot gyorsulását határozzuk meg a $k$. pontban, így a $v(k)$ már rendelkezésünkre áll a $k-1$. pontban számított gyorsulásból. Amennyiben a kiszámolt centripetális gyorsulások már önmagukban is meghaladják az elõírt eredõ gyorsuláskorlátot, úgy $v(k)$ értékét addig kell csökkenteni, hogy a centripetális gyorsulás az eredõ gyorsuláskorlátot már ne haladja meg. Ezután a kerekek tangenciális gyorsulását \eqref{alr} egyenlet alapján határozhatjuk meg.
-
-\begin{align}\label{eq:alr}
-{a_{w}}_{t}(k) &= \sqrt{(a_{max})^2 - {a_{wc}(k)}^2}
-\end{align}
-
-Miután kiszámoltuk, hogy az adott pályapontnál mekkora legyen a robot kerekeinek tangenciális gyorsulása már könnyedén számolható a robot gyorsulása és sebessége:
-
-\begin{align}\label{eq:a}
-a_{t}(k) &= \frac{{a_{w}}_{t}(k)}{p(k)}\\
-\label{eq:v}
-v(k+1) &= \min \left( v^{max}(k+1), \sqrt{v(k)^2 + 2 \cdot a_{t}(k) \cdot \Delta s_{c}(k)} \right)
-\end{align}
-
-\subsubsection{Profil visszaterjesztés}
-Két esetben elõfordulhat, hogy az elõzõ pályaponthoz meghatározott sebességértéket módosítani kell. Egyrészt, ha a centripetális gyorsulás önmagában meghaladja a megengedhetõ maximális gyorsulást, másrészt, ha a \eqref{v} egyenletben megsértjük a robot gyorsuláskorlátját. Az elõbbi eset a kanyar elõtti fékezést fogja meghatározni, utóbbi a pálya végén lévõt, hisz ott elõírjuk, hogy $v^{max}(N)=0$. Ha nem tennénk meg a módosítást, akkor a fékezés következtében fellépõ gyorsulás (lassítás) abszolút értéke meghaladhatná az megengedettet, hiszen az elõzõ pontokban nem tudtuk, hogy lassítani kell a robotnak. Ezt a módosítást hívjuk a profil visszaterjesztésének, mivel itt addig kell visszafelé haladva ellenõrizni, amíg a kiszámolt értékek már nem sértik meg a korlátokat.
-
-Ahhoz hogy ezt megtegyük, kezdetnek számoljuk ki, hogy a megváltozott sebesség következtében mekkora lesz a leginkább terhelt kerék tangenciális gyorsulása.
-
-\begin{align}\label{eq:at}
-a_{wt}(k) = \frac{v_w(k+1)^2 - v_w(k)^2}{2 \cdot \Delta s_w(k)} = \frac{v(k+1)^2 - v(k)^2}{2\cdot\Delta s(k)} \cdot p(k)
-\end{align}
-
-Amennyiben a kapott tangenciális gyorsulás megsérti a gyorsulásra vonatkozó korlátot az elõzõ pont sebességét is csökkentenünk kell. Ehhez használjuk fel a \eqref{alr} és a \eqref{at} egyenleteket:
-
-\begin{align}
-a_{wt}(k) &= \frac{v(k+1)^2 - v(k)^2}{2\cdot\Delta s(k)} \cdot p(k) = \sqrt{(a_{max})^2 - {a_{wc}(k)}^2} \notag \\
-&= \sqrt{(a_{max})^2 - \left( \left(v(k) \cdot p(k)\right)^2 \cdot c(k) \right)^2}
-\end{align}
-
-ezt kifejezve $v(k)$-ra a lentebb látható negyedfokú egyenletet kapjuk:
-
-\begin{align} \label{eq:backacp}
-d(k) &= \frac{p(k)^2}{4 \cdot \Delta s(k)^2} + c(k) (\cdot p(k))^2 \notag \\
-e(k) &= -\frac{2 \cdot v(k+1)^2 \cdot p(k)^2} {4 \cdot \Delta s(k)^2} \notag\\
-f(k) &= \frac{v(k+1)^4 \cdot p(k)^2}{4 \cdot \Delta s(k)^2} - {a_{max}}^2 \notag \\
-0 &= v(k)^4 \cdot d(k) + v(k)^2 \cdot e(k) + f(k)
-\end{align}
-
-A \eqref{backacp} egyenlet valós, pozitív megoldásait keressük. Felmerülhet a kérdés, hogy mi garantálja, hogy mindig lesz ilyen megoldás. A {Vi\`ete}-formula felírásával belátható, hogy mindig pozitív megoldása van az egyenletnek, a másodfokú egyenlet diszkriminánsának felírásával pedig, hogy lesz valós megoldás. Amennyiben több pozitív valós megoldása van az egyenletnek, akkor a legnagyobb megoldást választjuk. Végül erre az értékre kell módosítanunk a sebességet, majd visszalépni, hogy ezzel a módosítással nem sértünk-e újabb értéket. \footnote{Általános esetben bevezethetõ egy tangenciális gyorsulás korlát is, de az autószerû robot esetén ezt nem alkalmaztuk.}
-
-A visszaterjesztés során a sebesség és szögsebesség korlátokkal nem kell foglalkoznunk, hiszen mindkét esetben, mikor módosítjuk a sebességet, csökkentjük az értékét.
+Bár a $c\overline{c}S$ egy megoldást ad, a végrehajtásakor több lehetséges megoldást is ``eldob''. A módszer implementációját úgy készítettem el, hogy minden ilyen megoldást ellenõrizzen, ha esetleg a legrövidebb nem lenne végrehajtható, akkor válasszon másikat. Jogosan felmerülhet a kérdés, hogy ha ez az algoritmus minden esetben nyújt megoldást, akkor miért nem ezt használjuk a C*CS helyett? Bár valóban a $c\overline{c}S$ mindig használható, a C*CS több lehetséges megoldás közül választ, így a gyakorlatban természetesebb pályákat ad eredményül.
 
 %----------------------------------------------------------------------------
-\section{Újramintavételezés}
+\section{Eredmények}
 %----------------------------------------------------------------------------
-Miután elkészítettük a geometriai pályához tartozó sebességprofilt, létrehozzuk a végleges pályát, amit majd a pályakövetõ egység bemenetként megkap. Ez a végleges pálya már idõben egyenletesen lesz mintavételezve (mintavételezett pálya). Ehhez elõször számoljuk ki az eltelt idõt a geometriai pálya mentén, amelynek alapja, hogy két pályapont között a robot állandó gyorsulással halad.
-
-\begin{align}\label{eq:time}
-\Delta{t}^{g}(k)& = \frac{2 \Delta{s}^{g}(k)}{v^{g}(k) + v^{g}(k+1)} \\
-t^{g}(k+1)& = t^{g}(k) + \Delta{t}^{g}(k)
-\end{align}
-
-A következõ lépésben meghatározzuk, hogy az újramintavételezett pályánk hány pontból álljon. Ezt könnyedén megtehetjük, hiszen adott számunkra a kívánt mintavételi idõ($t_s$). Így a következõ képlet adódik a mintavételezett pályához tartozó pontok számának meghatározására:
-
-\begin{align}\label{eq:pathSamplLength}
-N^{s}& = \lceil{t^{g}(N^{g})/t_s}\rceil + 1
-\end{align}
-
-A pontok számába beleértjük a kezdõ és végpontot is. A \eqref{pathSamplLength}. egyenletbõl következik, hogy amennyiben $t(N^{g})$ és $t_s$ nem egymás többszörösei, a mintavételezett pálya utolsó pontjához olyan idõpont tartozik, amely nagyobb mint $t(N^{g})$. A pálya végpontját még a késõbbiekben tárgyaljuk, akkor visszatérünk erre az eltérésre is.
-%TODO Ide lehetne egy ábrát rakni.
-
-Most pedig határozzuk meg a mintavételezett pálya pontjaiban a sebességet. Ezt a geometriai pálya alapján tesszük, figyelembe véve, hogy a mintavételezett pálya esetén is két pont között állandó gyorsulást feltételezünk. A számítás egy egyszerû lineáris interpolációt valósít meg:
-
-\begin{align}\label{eq:pathInterVel}
-v^{s}(k)& = v^{g}(j) + v^{g}(j+1) \cdot it(k) \\
-it(k)& = \frac{t^{s}(k) - t^{g}(j)}{t^{g}(j+1) - t^{g}(j)},
-\end{align}
-
-ahol $j$ jelöli a legkisebb indexet amelyre teljesül, hogy $t^{s}(k) < t^{g}(j)$. A lineáris interpoláció miatt teljesül az a feltétel, hogy két pont között állandó gyorsulással mozogjon a robot.
+A feladatom megvalósításához rendelkezésre állt a C*CS algoritmus egy MATLAB scriptben megírt változata, ellenben ez csak demonstrációs céllal szolgált, a feladatot lassan hajtotta végre, valószínûleg az interpretált mûködés következtében, ezért vált szükségessé egy C++ implementáció.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=150mm, keepaspectratio]{figures/geo_sampl2.pdf}
-\caption{A geometriai (kék) és mintavételezett(piros) sebességprofil.} 
-\label{fig:samplVelocityProfile}
+\includegraphics[height=60mm, keepaspectratio]{figures/frame3.png}
+\includegraphics[height=60mm, keepaspectratio]{figures/frame6.png}
+\caption{A C*CS algoritmus megoldása különféle környezetekben} 
+\label{fig:ccssolutions}
 \end{figure}
 
-A kiszámított sebességprofil alapján könnyedén adódik a megtett út is:
+%TODO ide kéne pár mérés, hogy ne csak a levegõbe beszéljek
+\subsection{Mérések}
+Pontos méréseket nem végeztünk, de nagyságrendileg százszoros gyorsulást sikerült elérnünk, és a legbonyolultabb környezetben is egy másodpercen belül sikerült megoldást találnia az algoritmusnak\footnote{Intel Core 2 Duo E8400 @ 3.0GHz, 4GB RAM}. Ez egy igen nagy elõrelépés, így valószínû, hogy egy kisebb teljesítményû beágyazott számítógépen is elfogadható idõn belül végez.
 
-\begin{align}\label{eq:samplS}
-\Delta{s}^{s}(k)& = \frac{v^{s}(k) + v^{s}(k+1)}{2} \cdot t_s \\
-s^{s+1}(k)& = s^{s}(k) + \Delta{s}^{s}(k)
-\end{align}
+\subsection{Fejlesztési lehetõségek}
+A fejlesztés során odafigyeltem, hogy hol lehetne gyorsítani, módosítani a mûködésen. Ahol ez egyszerûen megvalósítható volt, ott ezeket megtettem, de maradtak további fejlesztési lehetõségek is a programban, például számos helyen lehetne a futást párhuzamosítani.
 
+Az esetek nagy többségében a celladekompozíciós eljárással tervezett globális pálya jó eredménnyel szolgál, de néhány speciális esetben -- ilyen két szûk merõleges folyosó találkozása, nem található megoldás. Részben hasonló probléma mikor a célkonfiguráció és az utolsó szakasz iránya pont ellentétes -- ilyen probléma merül fel a párhuzamos parkolás esetén is. Ezek elkerülésére egy másik globális tervezõt kell használnunk.
 
-Így már rendelkezésünkre áll a robot kívánt sebessége, a megtett út, valamint az idõ a mintavételezett pálya összes pontjában. Már csupán a pályapontjainak koordinátáit kell ezek alapján meghatároznunk.
+%----------------------------------------------------------------------------
+\section{Új globális tervezõ}
+%----------------------------------------------------------------------------
+A fejlesztés során a fentebb felsorolt problémák miatt a globális tervezõt lecseréltem az RTR nevû algoritmusra. Ez is Kiss Domokos munkája \cite{DomiRTR}, az implementációját Nagy Ákos végezte el \cite{Akos}.
 
-Mivel ismerjük a pályapontok közötti távolságot ($\Delta{s}^{s}(k)$), iteratív eljárással az elõzõ pályapont koordinátái alapján az aktuális pontról tudjuk, hogy egy körön helyezkedik el. További feltételünk, hogy a pont az eredeti, geometriai pályán rajta legyen. Ha vesszük a geometriai pálya pontjai közötti görbületbõl adódó köríveket, akkor az ívek és a kör metszéspontjai közül kell kiválasztanunk a keresett pontot. A kiválasztás egyszerû, ha megjegyezzük, hogy az elõzõ pontnál melyik szakasz alapján találtuk meg a pontot, így csak attól a szakasztól kezdve kell keresni a metszéspontokat. Az algoritmus menete látható \aref{fig:samplPoint}. ábrán.
-Minden vizsgált szakasznál arra kell figyelni, hogy a metszéspont a szakasz határpontjai között helyezkedjen el. Az elsõ szakasz vizsgálatánál még az is fontos, hogy az elõzõ pont elõtti metszéspontot ne vegyük figyelembe. Az ábrán a $Ps(1)$ pontban ezért nem választhatjuk a másik metszéspontot.
-A legelsõ mintavételezett pontot a geometriai pálya elsõ pontjába helyezzük el.
+\subsection{RRT}
+A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) használnak a konfigurációs tér struktúrájának leírásához \cite{kavraki96prm}. A szakirodalomban egyik leggyakrabban használt ilyen algoritmus a \emph{Rapidly Exploring Random Trees} \cite{LaValle}. Ennek a lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben. A fa csomópontjaiban konfigurációk találhatóak és a fa terjesztését úgy irányítjuk, hogy a kívánt célkonfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a célkonfigurációba már könnyedén megkaphatjuk.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/circle_circle.png}
-\caption{A mintavételezett pontok meghatározása. $P(x)$ a geometriai pálya pontjait jelöli, $Ps(y)$ pedig a keletkezõ mintavételezett pályát.} 
-\label{fig:samplPoint}
+\includegraphics[width=130mm, keepaspectratio]{figures/RRT.png}
+\caption{Az RRT algoritmus három különbözõ iterációnál \cite{LaValle}.} 
+\label{fig:RRT}
 \end{figure}
 
-\subsubsection{Mintavételezett pálya végpontja} \label{sect:back_check}
-Az lenne az optimális eset, ha a mintavételezett pálya utolsó pontja egybeesne az eredeti pálya végpontjával, ahogyan a kezdõpontjaik ténylegesen egybeesnek. Alapvetõen úgy hozzuk létre a mintavételezett pályát, hogy az a geometriai pálya sebességprofiljának megfeleljen, ez viszont nem garantálja az elõzõ feltétel teljesülését.
+\subsection{RTR}
+Az \emph{Rotate-Translate-Rotate} algoritmus a fentebb látott RRT algoritmus egy módosított változata. Elsõdlegesen differenciális robotok számára tervez pályát, de jó alapot szolgáltat a C*CS algoritmusnak is. Nevét a benne használt mozgási primitívekrõl kapta, azaz a $R$, mint fordulás, a $T$ pedig az egyenesen haladást jelöli. Az RRT algoritmustól eltérõen itt az algoritmus két fát épít, egyet a kezdõ, egyet pedig a célkonfigurációból. Másik fontos különbség, hogy ütközés esetén a pályát minden irányba továbbterjeszti, így növelve a megoldás megtalálásának lehetõségét.
 
-
-\begin{figure}[H]
+\begin{figure}[b]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/circle_line2.png}
-\caption{A mintavételezett pontok meghatározásánál keletkezõ hiba.} 
-\label{fig:samplPoint2}
+\includegraphics[width=110mm, keepaspectratio]{figures/rtr_path2.pdf}
+\caption{Az RTR algoritmus; piros a kezdõ, kék a célkonfigurációból indított fa. \cite{Akos}} %TODO ide is kell a hivatkozás
+\label{fig:rtr_path2}
 \end{figure}
 
-Három hatás azt eredményezi, hogy nem fog teljesülni ez a feltétel a pálya utolsó pontjára:
-\begin{enumerate}
-  \item Ahogy már említettük korábban, nem biztos, hogy a két pályát ugyanannyi idõ alatt járja be a robot. Ez maximum $t_s$ idõkülönbséget okozhat, és minden esetben távolabbi végpontot eredményez, mint az eredeti végpont.
-  \item A mintavételezett pálya sebességprofiljának elkészítésekor nem tökéletesen követi az eredeti sebességet a robot a mintavételezésbõl adódóan. Ez látszik \aref{fig:samplVelocityProfile}. ábrán is. A hiba megegyezik a két görbe alatti terület közötti különbséggel,ami okozhat távolabbi és közelebbi végpontot is. 
-  \item A harmadik hiba a koordináták meghatározásánál keletkezik. Ez a hatás is mindig távolabbi végpontot okoz.
-\end{enumerate}
-
-A legtöbb esetben célszerû, ha a végpontok egybeesnek, így ezt a mintavételezett pálya meghatározásánál biztosítanunk kell. Ha egyszerûen az utolsó pályapontot az eredeti pálya végpontjába tesszük, nem biztos, hogy betartjuk a robot gyorsulás korlátait, így más módszerhez kell folyamodnunk.
-
-\par
-Az általunk használt algoritmus lényege, hogy a sebességprofilnak egy részét egy adott sebességgel eltoljuk úgy, hogy a két pálya végpontja pontosan egybeessen. Az eltolás mértékét ($\Delta{v_{corr}}$) a következõ képlettel kapjuk meg:
-
-\begin{align}\label{eq:backDeltaV}
-\Delta{v_{corr}}& = \frac{\Delta{s_{corr}}}{t_s \cdot n},
-\end{align}
-ahol $\Delta{s_{corr}}$ a mintavételezett és a geometriai pálya végpontjai közötti távolság elõjelesen. Ha a mintavételezett pálya utolsó pontja van távolabb, akkor negatív a távolság, különben pozitív. $n$ pedig azoknak a sebességpontoknak a száma, amiket eltolunk.
-
-A \eqref{backDeltaV} egyenlet egyszerûen belátható, ha felírjuk az eltolásból adódó területkülönbséget.  A $\Delta{s_{corr}}$ útkülönbséget azért kell elõjelesen megadnunk, hogy mindkét esetben használható legyen az algoritmus, akkor is, ha a mintaévtelezett pálya végpontja van távolabb és akkor is ha a geometriai pályáé.
-
-A továbbiakban meghatározzuk azokat a sebességpontokat, amelyeket $\Delta{v_{corr}}$ sebességgel eltolunk. Mivel a megváltozott sebességponthoz tartozó koordinátákat újra ki kell számolnunk, így minél kevesebb pontot szeretnénk eltolni a sebességprofilon. Viszont a sebesség és gyorsulás korlátokat be kell tartanunk, így nem tolhatunk el tetszõlegesen kevés pontot.
-
-Vizsgáljuk külön a két alapesetet $\Delta{s_{corr}}$ elõjele alapján. Kezdjük azzal az esettel amikor $\Delta{s_{corr}}$ negatív, tehát a mintavételezett pálya végpontja van távolabb (\ref{fig:backCheck1}. ábra). Ekkor a módosítandó szakasz kezdõ pontjához tartozó gyorsulásnak pozitívnak kell lennie, hiszen mi csökkenteni fogjuk a soron következõ pont sebességét, és ha a gyorsulás pozitív vagy nulla, akkor csökken a robot gyorsulása a szakasz kezdõpontjában. Ha a gyorsulás negatív lenne a kezdõpontban, akkor könnyedén elõfordulhat olyan eset, hogy a sebességcsökkentés után megszegjük a gyorsulás korlátot. 
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=150mm, keepaspectratio]{figures/back_check.pdf}
-\caption{A módosított mintavételezett sebességprofil ha $\Delta{s_{corr}}$ negatív.} 
-\label{fig:backCheck1}
-\end{figure}
-
-A szakasz végpontjánál pedig negatív gyorsulás szükséges, hiszen a következõ pont gyorsulása meg fog nõni a módosítás hatására, és ha pozitív lenne a gyorsulás, a gyorsulásra vonatkozó korlátunkat könnyedén megszegnénk. 
-
-Tehát a legegyszerûbb esetben a szakasz kezdõpontja a pálya végén található lassító szakasz eleje, mielõtt lassítani kezd a robot és a végpontja a pálya utolsó elõtti pontja. Ennek a szakasznak a pontjait fogjuk a \eqref{backDeltaV}. egyenletbõl adódó $\Delta{v_{corr}}$ sebességgel csökkenteni, és így a robot pontosan a geometriai pálya végpontjában áll meg.
-
-A másik eset, amikor $\Delta{s_{corr}}$ pozitív, tehát a mintavételezett pálya végpontja messzebb van a geometriai pálya végpontjához képest. Ekkor -- mivel meg fogjuk növelni a szakasz sebességét -- pont fordítva kell szakaszt választanunk; a kezdõpontjánál negatív gyorsulás szükséges, a végpontjánál pedig pozitív. Így kerülhetõ el leginkább a gyorsulás korlát megszegése. Ebben az esetben pedig egy ilyen megfelelõ szakasz a pályán található utolsó gyorsító rész.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=150mm, keepaspectratio]{figures/back_check2.pdf}
-\caption{A módosított mintavételezett sebességprofil ha $\Delta{s_{corr}}$ pozitív.} 
-\label{fig:backCheck2}
-\end{figure}
-
-Abban az esetben, ha valamiért az elõbb leírt triviális szakaszok mégsem jók, másik szakaszt kell választanunk. Elsõ lépésként válasszunk ki egy megfelelõ végpontot a keresendõ szakaszhoz. Ha $\Delta{s_{corr}}$ negatív, akkor megfelelõ választás a pálya utolsó elõtti pontja, ha pozitív, akkor pedig a pálya utolsó olyan pontja, ahol a gyorsulás pozitív. Ezután keressünk ehhez a kiválasztott végponthoz egy kezdõpontot, de most már vegyük figyelembe a robot korlátozásait és természetesen azt, hogy az útkülönbség az elõírt $\Delta{s_{corr}}$ legyen. Miután megkaptuk a kezdõpontot is, akkor még ellenõriznünk kell, hogy a végpontnál a robot korlátozásait nem sértjük-e meg. Ezt az elsõ lépésben nem tudtuk megtenni, mivel nem ismertük a végpontot, így $\Delta{v_{corr}}$ értékét sem. Ha a végpont megsérti a korlátokat, új végpontot kell keresnünk és ahhoz új kezdõpontot. Ezt addig kell folytatnunk, amíg a robot korlátozásait betartjuk.
-
-Miután a módosított sebességprofil elkészült a szakasz elejétõl kezdve újra kell számolnunk a mintavételezett pálya koordinátáit. Ez teljesen ugyanúgy történik, ahogyan már egyszer megkaptuk a mintavételezett pályát. Azért volt fontos, hogy a lehetõ legkevesebb sebességpontot toljuk el, hogy a koordináták újraszámlálását is kevesebb pontnál kelljen megtenni.
-
-\begin{figure}[H]
-\centering
-\includegraphics[height=50mm, width=130mm]{figures/carProfile.pdf}
-\caption{A pálya és a mintavételezett sebességprofil autószerû robot esetén} 
-\label{fig:carPath}
-\end{figure}
-
-Habár a fenti iteratív eljárás hosszadalmasnak tûnik, vegyük figyelembe, hogy általában kis távolságot kell kompenzálnunk, amihez kis sebességkülönbség tartozik. Ebbõl adódóan nagy valószínûséggel a triviális szakasz is megfelelõ lesz számunkra. 
-
-Szintén fontos megjegyezni, hogy mivel a tárgyalt három hatás elsõsorban negatív $\Delta{s_{corr}}$ -t eredményezz, így a gyakorlatban ez az eset fordul elõ. A gyakorlatot tekintve még megemlítendõ, hogy a $\Delta{s_{corr}}$ nagyságrendje igencsak csekély a pálya teljes hosszához képest, nehezen elképzelhetõ akárcsak 1\%-ot meghaladó arány a teljes pálya hosszához képest.
+Számomra ez az algoritmus azért elõnyös, mert a celladekompozíciós eljárás hibát kiküszöböli. Tehát két szûk folyosó találkozásánál csak akkor ad megoldást, ha van hely az elfordulásra. Mivel a keresés során két fát épít, így a párhuzamos parkolás esetén is segíti a megoldás megtalálását.

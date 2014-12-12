@@ -94,7 +94,7 @@ void CarPathController::Loop(Config nextPos)
 				p *= -1.0f;
 			}
 			fi = lineFollower.getFi(delta, p);
-			trackError = Config::Distance(paths[pathIndex].path[index], nextPos);
+			trackError = p;
 
 			if(!paths[pathIndex].direction) {
 				fi *= -1.0f;
