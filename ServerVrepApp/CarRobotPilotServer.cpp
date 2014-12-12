@@ -59,6 +59,7 @@ void CarRobotPilotLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnecti
 {
 	bool init = true;
 	SimpleSerial serial("COM5", 115200);
+	std::ofstream posLog("poslog.txt");
 
 	// This is the server loop
 	while(true)
@@ -112,5 +113,7 @@ void CarRobotPilotLoop(CarPathFollowParamsTypedef &followPars, CSimpleInConnecti
 		//Send data to V-Rep Client
 		if(SendRobotData(connection, v, fi, robotPos, rabit_msg.pos, info_msg.values))
 			break;
+
+		posLog << robotPos.p.x << " " << robotPos.p.y << std::endl;
 	}
 }
