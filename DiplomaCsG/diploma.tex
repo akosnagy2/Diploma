@@ -25,11 +25,12 @@
 \usepackage{etoolbox}
 \usepackage{dirtree}
 \usepackage[bottom]{footmisc} %footnote az oldal aljára kényszerítése
+\usepackage[defaultlines=2,all]{nowidow} %fattyúsorok
+\usepackage{algorithm} %algoritmus
+\usepackage{algpseudocode}
 
-%--------
-% URL túllógás
-%--------
-\apptocmd{\thebibliography}{\raggedright}{}{}
+\apptocmd{\thebibliography}{\raggedright}{}{}% URL túllógás
+
 
 %--------------------------------------------------------------------------------------
 % Main variables
