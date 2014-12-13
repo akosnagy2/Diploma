@@ -3,7 +3,7 @@
 %----------------------------------------------------------------------------
 \section{Problémafelvetés}
 %----------------------------------------------------------------------------
-A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát, és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb amikor a robot környezetében akadályok is találhatóak. 
+A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát, és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb, amikor a robot környezetében akadályok is találhatóak. 
 
 Célom azon megközelítések és módszerek áttekintése, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetek, ezeket szimulátoron és valós robotokon is implementáltam, illetve teszteltem. A pályatervezéshez szorosan kapcsoló téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
 
@@ -22,7 +22,7 @@ q &= (x,y,\theta),
 \end{align}
 ahol $q$ a robot konfigurációja, $x,y$ határozza meg a robot pozícióját a síkon és $\theta$ határozza meg a robot orientációját.
 
-Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér} adja meg, amit $C$-vel jelölünk. A konfigurációs tér azon részhalmazát, amely esetében a robot a környezetben található akadályokkal nem ütközik, \emph{szabad (konfigurációs) térnek} nevezünk ($C_{free}$). E halmaz komplementere azokat a konfigurációkat tartalmazza, amelyek esetén a robot ütközne az akadályokkal ($C_{obs} = C \backslash C_{obs}$). A konfigurációs teret \aref{fig:ConfigSpace}. ábrán szemléltetjük.
+Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér} adja meg, amit $C$-vel jelölünk. A konfigurációs tér azon részhalmazát, amely esetében a robot a környezetben található akadályokkal nem ütközik, \emph{szabad (konfigurációs) térnek} nevezzük ($C_{free}$). E halmaz komplementere azokat a konfigurációkat tartalmazza, amelyek esetén a robot ütközne az akadályokkal ($C_{obs} = C \backslash C_{free}$). A konfigurációs teret \aref{fig:ConfigSpace}. ábrán szemléltetjük.
 
 \begin{figure}
 \centering
@@ -33,7 +33,7 @@ Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér}
 
 A korlátozások ismerete alapvetõ fontosságú a pályatervezés és mozgásirányítás során. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál-egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). Dolgozatomban csak kinematikai korlátozásokkal fogok foglalkozni, dinamikai korlátokkal nem.
 
-Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, habár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Az anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciál egyenlettel írható le, amely nem integrálható.
+Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, habár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Az anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciálegyenlettel írható le, amely nem integrálható.
 
 Az általam vizsgált robottípus az \emph{autószerû robot}, egy anholonom rendszer. Viszont léteznek olyan robotok, amelyek nem rendelkeznek anholonom korlátozásokkal (holonom rendszerek), ilyenek például az omnidirekcionális robotok. Egy omnidirekcionális robot képes bármilyen konfigurációból a tér bármely irányába elmozdulni.
 
@@ -70,11 +70,11 @@ A globális tervezõk esetében a konfigurációs tér egészét figyelembe vesszük a te
 
 A reaktív tervezõk esetében a robot alakját körrel szokták közelíteni, ezzel is egyszerûsítve a tervezés folyamatát. Ezzel szemben globális algoritmusok a robot pontos alakját figyelembe veszik, aminek nagy jelentõsége van szûk folyosókat tartalmazó pálya esetén. Az általam bemutatott algoritmusok is figyelembe veszik a robot pontos alakját.
 
-A globális tervezõk esetén megkülönböztetünk mintavételes és kombinatorikus módszereket \cite{LaValle2}. A mintavételes módszerek a konfigurációs teret véletlenszerûen mintavételezik, és ez alapján próbálnak utat keresni a célpontba. Ellenben a kombinatorikus módszerek a környezet pontos geometriai modellje alapján terveznek utat. Ezen algoritmusok elõnye, hogy ha nem létezik megoldás, akkor ezt véges idõn belül képesek eldönteni, ám a mintavételes tervezõk ezt nem tudják véges idõn belül megtenni.
+A globális tervezõk esetén megkülönböztetünk mintavételes és kombinatorikus módszereket \cite{LaValle2}. A mintavételes módszerek a konfigurációs teret véletlenszerûen mintavételezik, és ez alapján próbálnak utat keresni a célpontba, sok-sok iteráción keresztül. Ellenben a kombinatorikus módszerek direkt módon a környezet pontos geometriai modellje alapján terveznek utat. Ezen algoritmusok elõnye, hogy ha nem létezik megoldás, akkor ezt véges idõn belül képesek eldönteni, ám a mintavételes tervezõk ezt nem tudják véges idõn belül megtenni.
 
 %----------------------------------------------------------------------------
 \subsubsection{Irányított rendszer szerinti csoportosítás}
 %----------------------------------------------------------------------------
 A robotok, mint irányított rendszerek esetén megkülönböztetjük az anholonom és holonom rendszereket a pályatervezõk csoportosítása esetén is. Anholonom rendszerek esetén önmagában a robot állapotváltoztatása sem triviális feladat. Azokat az eljárásokat, amelyek képesek egy anholonom rendszert egy kezdõ konfigurációból egy cél konfigurációba eljuttatni az akadályok figyelembe vétele nélkül, \emph{lokális tervezõknek} hívjuk \cite{LaValle2}.
 
-Gyakran már a globális tervezõ figyelembe veszi a robot korlátozásait és ennek megfelelõ geometriai primitíveket használ, de a globális tervezõ által megtervezett pályát közelíthetjük egy lokális tervezõvel is, ha az anholonom robotunk közvetlenül nem tudná lekövetni a globális pályát. Ezt az eljárást, approximációs módszernek nevezik. Egy ilyen algoritmusra látunk példát a következõ fejezetben.
+Gyakran már a globális tervezõ figyelembe veszi a robot korlátozásait, és ennek megfelelõ geometriai primitíveket használ, de a globális tervezõ által megtervezett pályát közelíthetjük egy lokális tervezõvel is, ha az anholonom robotunk közvetlenül nem tudná lekövetni a globális pályát. Ezt az eljárást, approximációs módszernek nevezik. Egy ilyen algoritmusra látunk példát a következõ fejezetben.

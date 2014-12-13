@@ -8,9 +8,9 @@ Az elkészült algoritmusok elméleti szinten és a szimulátorban is a vártnak megfe
 %----------------------------------------------------------------------------
 A robot elkészítése a szakmai gyakorlatom keretében valósult meg. A fejlesztés során a célom egy olyan autószerû mobilrobot készítése volt, amely a környezet ismeretében képes a pályatervezõ algoritmusok futtatására és egy elkészült pálya követésére.
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\includegraphics[width=125mm, keepaspectratio]{figures/robot.pdf}
+\includegraphics[width=140mm, keepaspectratio]{figures/robot.pdf}
 \caption{A robot rendszermodellje} 
 \label{fig:robotParts}
 \end{figure}
@@ -27,7 +27,7 @@ A robot fejlesztése és az algoritmusok valós roboton való végrehajtása közben sz
 \subsection{Helymeghatározás}
 Az eredeti tervekben a robot helymeghatározása, így a pályakövetés visszacsatolása egy kamerás látórendszer feladata lett volna. A kamera képfeldolgozásáért egy a RoboCup versenyre készült látórendszert használtam volna. Ennek a módszernek a pozíció meghatározási pontossági igen jó, de az orientáció meghatározása igen nagy hibával történik. Ezen felül, mivel a program kifejezetten a robotfoci pályához készült, kalibrálása igen nehézkes, és a mért adatok kinyerése is bonyolult lett volna.
 
-Egy késõbbi tervben a tanszéken elkészült helymeghatározó rendszer használata merült fel. Ez a rendszer ultrahangos adó és vevõegységek segítségével végzi a pozíció meghatározását. Az orientáció mérése pedig optikai úton történik, az ultrahangos háromszögelõ eljáráshoz nagyon hasonló módon. A robot hardver tervébe bekerült egy illesztõ áramkör, és egy csatlakozó is, hogy ezzel a rendszerrel együtt lehessen használni. Ez a módszer igen jó pontossággal mûködik, és abszolút helymeghatározásra képes. Hátránya, hogy csak egy korlátozott területen belül képes az objektum érzékelésére. Végül mielõtt a robot mûködésbe lépett volna a rendszer meghibásodott, így ezt a módszert is el kellett vetni.
+Egy késõbbi tervben a tanszéken elkészült helymeghatározó rendszer használata merült fel. Ez a rendszer ultrahangos adó és vevõegységek segítségével végzi a pozíció meghatározását. Az orientáció mérése pedig optikai úton történik, az ultrahangos háromszögelõ eljáráshoz nagyon hasonló módon. A robot hardver tervébe bekerült egy illesztõ áramkör, és egy csatlakozó is, hogy ezzel a rendszerrel együtt lehessen használni. Ez a módszer igen jó pontossággal mûködik, és abszolút helymeghatározásra képes. Hátránya, hogy csak egy korlátozott területen belül képes az objektum érzékelésére. Végül mielõtt a robot mûködésbe lépett volna, a rendszer meghibásodott, és kijavítására nem jutott idõ, illetve ez nem is tartozott a feladataim közé, így ezt a módszert is el kellett vetni.
 
 \begin{figure}[H]
 \centering
@@ -36,11 +36,11 @@ Egy késõbbi tervben a tanszéken elkészült helymeghatározó rendszer használata me
 \label{fig:carReal}
 \end{figure}
 
-\subsection{Odometria}
+\subsection{Dead-reckoning}
 Végsõ megoldásként a rendelkezésre álló inkrementális adó és a giroszkóp adatait feldolgozva dead-reckoning segítségével határoztam meg a robot pozícióját. Ehhez 
-az \eqref{carLikeRobot} egyenletet kell felhasználnunk. A pozíció meghatározásához szükségünk van az autó orientációjára $\theta$, és a sebességére $v_r$. A sebességmérést az inkrementális adó segítségével végeztem el. Az adó felbontása megfelelõ, az ebbõl fakadó hiba $1 \frac{m}{s}$ sebességnél 1\%-os.
+az \eqref{carLikeRobot} egyenletet kell felhasználnunk. A pozíció meghatározásához szükségünk van az autó orientációjára ($\theta$), és a sebességére ($v_r$). A sebességmérést az inkrementális adó segítségével végeztem el. Az adó felbontása megfelelõ, az ebbõl fakadó hiba $1 \frac{m}{s}$ sebességnél 1\%-os.
 
-Mivel a kormányszög mérésére nincs lehetõségünk az orientációt egy giroszkóppal mérjük, A giroszkóp a szögsebesség mérésére képes. A szögsebességbõl egy egyszerû integrálás segítségével számítható az orientáció. Sajnos a giroszkóp IC paraméterei nem megfelelõek, így az általa szolgáltatott információt szûrnünk kell. Ehhez bekapcsoláskor egy egyszerû átlagolással kiszámíthatjuk a driftet, azaz a mért értékek konstans eltolódását. Majd az algoritmus futása közben egy szûrõ algoritmus segítségével közvetlenül az orientációt kapjuk \cite{Madgwick}.
+Mivel a kormányszög mérésére nincs lehetõségünk, az orientációt egy giroszkóppal mérjük, a giroszkóp a szögsebesség mérésére képes. A szögsebességbõl egy egyszerû integrálás segítségével számítható az orientáció. Sajnos a giroszkóp IC paraméterei nem megfelelõek, így az általa szolgáltatott információt szûrnünk kell. Ehhez bekapcsoláskor egy egyszerû átlagolással kiszámíthatjuk a driftet, azaz a mért értékek konstans eltolódását. Majd az algoritmus futása közben egy szûrõ algoritmus segítségével közvetlenül az orientációt kapjuk \cite{Madgwick}.
 
 Mivel a dead-reckoning során integrálás segítségével számítunk pozíciót, így a maradó hiba idõben növekvõ mértékû lesz. Az esetünkben a giroszkóp hibája a jelentõs, de ez az általam használt pályaméretek és követési idõk esetén még elhanyagolható.
 
@@ -53,18 +53,18 @@ A kotyogás a rendszer egy nemlineáris hatása, amit nehéz kiküszöbölni. Ipari esz
 
 Az egyik lehetséges módszer a PI szabályozó hangolása oly módon, hogy az integráló hatást megnöveljük, míg az arányos tagot lecsökkentjük. A módszer behangolása igen idõigényes, és nem is minden esetben érhetõ el vele a várt eredmény. Ezen felül rendelkezik egy egyértelmû hibával, a rendszer válaszának jellege erõsen megváltozik, sok esetben lelassul, ami más problémákat hozhat elõ.
 
-Egy másik módszer az inkrementális adó sebességjelének szûrése. Ezt megtehetjük egy egyszerû alul-áteresztõ szûrõ segítségével, de ez jelentõs holtidõt vihet a rendszerbe, vagy bonyolultabb szûrõalgoritmusokat is használhatunk, például egy Kálmán-szûrõt, de ennek implementálása, és hangolása idõ, és erõforrásigényes feladat.
+Egy másik módszer az inkrementális adó sebességjelének szûrése. Ezt megtehetjük egy egyszerû alul-áteresztõ szûrõ segítségével, de ez jelentõs holtidõt vihet a rendszerbe, vagy bonyolultabb szûrõalgoritmusokat is használhatunk, például egy Kalman-szûrõt, de ennek implementálása és hangolása idõ és erõforrásigényes feladat.
 
 Lehetséges a program módosítása, kiegészítése, például csak nemnegatív beavatkozójel kiadása, vagy alacsony sebességeken más szabályozó paraméterek használata, vagy a nemlinearitás figyelembe vétele, mint ahogy azt tettük a holtsáv kiküszöbölésekor, de a kotyogás egy ezzel ellentétes folyamat, ami megbonyolítja az implementálást.
 
 %----------------------------------------------------------------------------
 \section{Jövõbeli tervek}
 %----------------------------------------------------------------------------
-A jövõben szeretnék egy egységes programkönyvtárat kialakítani, ami megkönnyíteni a különbözõ pályatervezõ algoritmusok implementálást, azok eredményeinek összevetését. Ezen felül a valós roboton egy általános interfész kialakítása, mely bármely általános tervezõalgoritmus számára elérhetõ tenné a használatát, is célom.
+A jövõben szeretnék egy egységes programkönyvtárat kialakítani, ami megkönnyíteni a különbözõ pályatervezõ algoritmusok implementálását, azok eredményeinek összevetését. Ezen felül a valós roboton egy általános interfész kialakítása, mely bármely általános tervezõalgoritmus számára elérhetõvé tenné a használatát, is célom.
 
 A dolgozatom elkészítése során több helyen is modelleket használtam. Ezeket a modelleket szeretném kibõvíteni, finomítani, ahol ezzel jelentõs eredményeket lehet elérni, például az idõparaméterezés során újabb korlátozások figyelembe vétele, vagy dinamikai modell alkalmazása, vagy a tervezés és követés során a kormányszög beállási idejének figyelembe vételével.
 
-Továbbá célom újabb robottípusok és algoritmusok megismerés, implementálása. A robotautó átalakítása, hogy a RobonAUT 2015 versenyen mint safety car mûködjön, és hosszabb távon szeretném, ha a tervezõ algoritmusokat a versenyen is használhatnák.
+Továbbá célom újabb robottípusok és algoritmusok megismerése, implementálása. A robotautó átalakítása, hogy a RobonAUT 2015 versenyen mint safety car mûködjön, és hosszabb távon szeretném, ha a tervezõ algoritmusokat a versenyen is használhatnák.
 
 
 
