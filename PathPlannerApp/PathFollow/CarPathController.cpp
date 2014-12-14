@@ -24,7 +24,7 @@ lineFollower(lf)
 
 	for(auto &ps : paths) {
 		PathShifter shifter(ps, car);
-		frontPath.push_back(shifter.getShiftedPath(0.0f));
+		frontPath.push_back(shifter.getShiftedPath(predict));
 	}
 
 	trackError = 0.0f;
@@ -94,7 +94,7 @@ void CarPathController::Loop(Config nextPos)
 				p *= -1.0f;
 			}
 			fi = lineFollower.getFi(delta, p);
-			trackError = p;
+			trackError = Config::Distance(nextPos, paths[pathIndex].path[index]);
 
 			if(!paths[pathIndex].direction) {
 				fi *= -1.0f;
