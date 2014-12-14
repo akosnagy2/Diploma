@@ -43,7 +43,7 @@ Bebizonyítható \cite{CCSTopologicalProp}, hogy $\tilde{q_I}$ köztes konfiguráció
 Hogy egyszerûsítsük a jelöléseket, a továbbiakban az egyenes szakaszokra $S$, a körívekre pedig a $C$ betûk segítségével hivatkozunk. Ezt felhasználva belátható, hogy a célpontba egy $SCS$, vagy egy $CCS$ pálya segítségével eljuthatunk. Könnyen belátható, hogy ha egy körív ($C$) sugarával a végtelenbe tartunk, akkor a szakasz az egyeneshez tart. Az olyan speciális köríveket, amelyek sugara végtelen is lehet, $C^{*}$-gal jelöljük. Innen a módszer neve, a $C^{*}CS$.
 
 %----------------------------------------------------------------------------
-\section{Globális tervezõ}
+\section{Globális tervezõ}\label{sec:globalPlanner}
 %----------------------------------------------------------------------------
 Ugyan bármilyen globális tervezõ által nyújtott pályát alapul vehetünk, a C*CS lokális tervezõ alapötlete, hogy körívek segítségével egy egyenes szakaszra forduljunk rá. Így sokkal természetesebb megoldásokat eredményez olyan globális pályák használata, melyek egyenes szakaszokból állítják elõ az eredményt.
 
@@ -167,7 +167,7 @@ Olyan lokális tervezõre van szükségünk, mely teljesíti az úgynevezett topológiai
 Egy lokális tervezõ (szakirodalomban \emph{steering method}) Steer($q_0$,$q_1$) teljesíti a topológiai feltételt, ha:
 
 \begin{align}\label{eq:topologicalProp}
-\forall \epsilon > 0, \exists \eta > 0, \forall q_0,q_1 \in \mathcal{C} \\ \notag
+\forall \epsilon > 0, \quad \exists \eta > 0, \quad \forall q_0,q_1 \in \mathcal{C} \\ \notag
 d_{\mathcal{C}}(q_0,q_1) < \eta \Rightarrow d_{\mathcal{C}} \Big( q_{0}, Steer(q_{0},q_{1}) (\sigma) \Big) < \epsilon, \\ \notag
 \forall \sigma \in [q,S],
 \end{align}
@@ -202,55 +202,110 @@ Bár a $c\overline{c}S$ definíció szerint egy megoldást ad, a végrehajtásakor töb
 %----------------------------------------------------------------------------
 \section{Ütközésdetektálás}
 %----------------------------------------------------------------------------
-%TODO megcsin
+Akadályok jelenlétében nem kerülhetõ el a tervezett pálya végrehajthatóságának vizsgálata. Azért is fontos ezt megemlíteni, mert a tervezés során ennek a számítása az egyik leginkább idõigényes folyamat. Általános esetben ez a probléma igen bonyolult, és még inkább idõigényes folyamattá is válhat.
+
+Abban az esetben, ha mind az akadályok, mind a robot teste sokszögekkel leírható, de a tervezett pályával kapcsolatban nincsen semmilyen megkötésünk, csak a mintavételezésre hagyatkozhatunk. Az elkészült pályát fel kell osztani több pontra, és ezeken a helyeken ellenõrizni, hogy a robot teste nem ér-e ki a pályáról vagy lóg-e bele az egyik akadályba. Ilyenkor különös odafigyeléssel kell megválasztanunk a mintavételezõ eljárást, mivel ha túl távoli pontokat ellenõrzünk, lehet, hogy kihagyunk olyan pontokat, amelyek ütköznének. Túlságosan sûrû mintavételezéssel pedig az eljárás mûködése lelassul.
+
+Az általam használt algoritmusoknál nincs szükség mintavételezésre, mivel az elkészült pályák (körívek, és egyenes szakaszok) zárt alakban felírhatók. Az ütközésdetektáláshoz a robot testét a meghatározott pályán kell végigmozgatni, és ellenõrizni, hogy egyik pontjának pályája se keresztezi bármelyik akadály élét\footnote{Ebben az esetben a pálya széle is akadályként tekinthetõ.}.
+
+\subsection*{Egyenes szakaszok}
+Egyenes szakaszok ütközésdetektálását két különbözõ módon oldottam meg. A globális tervezõ esetén csak az akadályok és a lehetséges pályaszakaszok távolságát számítja ki az algoritmus. Elõször is ellenõri, hogy a két szakasz metszi-e egymást. Ha igen, a távolságuk nulla. Ha nem, akkor minden szakasz két végpontját levetíti az ellenõrizni kívánt szakaszra. Ha ez a vetületi pont a szakaszon belül található, akkor ennek és a végpontnak a távolságát vesszük eredményül, ha kívülre esik, akkor a két végpont távolsága az eredmény (\figref{segDist}). Ha a szakaszok távolsága kisebb mint a robot maximális szélességének a fele, akkor az élt törüljük.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=35mm, keepaspectratio]{figures/segDist.pdf}
+\caption{Szakaszok távolságának meghatározása} 
+\label{fig:segDist}
+\end{figure}
+
+Természetesen ez nem vezet pontos eredményre, de \aref{sec:globalPlanner} fejezetben ezt a hibát figyelmen kívül hagyjuk. A másik, pontosabb módszert detektáláshoz a körívek esetén mutatom be.
+
+\subsection*{Körívek}
+Mivel kikötöttük, hogy a robotunk teste is sokszögekkel leírható az ellenõrzéséhez elegendõ a csúcsokat elmozdítani a pályával párhuzamosan. Ezt mind egyenes szakaszok, mind körívek esetén hasonlóan kell megtegyük. Kiválasztunk egy csúcsot, majd egy koordinátatranszformáció segítségével a pálya végpontjait eltoljuk a megfelelõ helyre, azaz kiszámoljuk, hogy a két végpontban a robot azon pontja hol is lesz pontosan. Egyenes szakaszoknál ez a két pont meghatározza az új szakaszt, körív esetén a két új pont és a pálya körének középpontja segítségével kiszámítjuk az új körívet. Amint ezzel készen vagyunk, metszéspontot keresünk az áttranszformált pálya, és az akadályélek között. Ez körív és egyenes esetén egy kicsit komplikáltabb feladat, mivel itt a megoldást egy másodfokú egyenlet határozza meg.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/collDetect.pdf}
+\caption{Hibás ütközésdetektálás, nem elég csak a robot pontjait mozgatni} 
+\label{fig:collDetect}
+\end{figure}
+
+Ha ezt megtettük, még nem vagyok készen, le kell ellenõriznünk a fordított esetet is, amikor az akadályok csúcsait mozgatjuk a pályán, de ellentétes irányban. Erre azért van szükség, mert elképzelhetõ olyan helyzet, hogy a robot sarokpontjai ugyan nem metszenek egyetlen akadályélt se, mégis ütközünk akadállyal. Erre láthatunk egy példát a \figref{collDetect} ábrán.
+
+Ezt úgy tehetjük meg, hogy kiszámítjuk a pálya végpontjából az akadály egyik csúcsába mutató vektort, majd ezt használjuk fel a kezdõpont transzformálásához. Az így keletkezett pontot és a csúcspontot a pályának megfelelõ szakasszal összekötjük, és ellenõrizzük, hogy a robot testének éleivel van-e metszéspontja. Ha egyik esetben se volt metszet, akkor a pálya végrehajtható.
 
 %----------------------------------------------------------------------------
 \section{Eredmények}
 %----------------------------------------------------------------------------
 A feladatom megvalósításához rendelkezésre állt a C*CS algoritmus egy MATLAB scriptben megírt változata, ellenben ez csak demonstrációs célokat szolgált, a feladatot lassan hajtotta végre, valószínûleg az interpretált mûködés következtében, ezért vált szükségessé egy C++ implementáció.
 
+Az így készült programmal nagyságrendileg százszoros gyorsulást sikerült elérnem, és a legbonyolultabb környezetben is egy másodpercen belül sikerült megoldást találnia az algoritmusnak\footnote{Intel Core 2 Duo E8400 @ 3.0GHz, 4GB RAM}. Ez egy igen nagy elõrelépés, így valószínû, hogy egy kisebb teljesítményû beágyazott számítógépen is elfogadható idõn belül végez.
+
 \begin{figure}[H]
 \centering
-\includegraphics[height=60mm, keepaspectratio]{figures/frame3.png}
-\includegraphics[height=60mm, keepaspectratio]{figures/frame6.png}
+\includegraphics[height=65mm, keepaspectratio]{figures/frame3.png}
+\includegraphics[height=65mm, keepaspectratio]{figures/frame6.png}
 \caption{A C*CS algoritmus megoldása különféle környezetekben} 
 \label{fig:ccssolutions}
 \end{figure}
 
-%TODO ezt valahova el kell rakni
-%TODO másféle mintavételezés bevezetése
-A kiszámítás ideje természetesen függ a választott távolságegységtõl és a környezet méretétõl. Az eredmények azt mutatják, hogy a teljes algoritmus futásának ez a leghosszabb része, ami nem meglepõ, mivel a körívek kiszámítása komplex mûvelet, és ezt egy adott pont esetén a robot testének minden csúcsára ki kell számoljuk, hogy ütközést tudjunk detektálni. A mûvelet hatékonyságán több módon lehet javítani, például nagyobb távolságegység megválasztásával. Másik javítási lehetõség, ha elõre elkészítünk egy foglaltsági mátrixot, ami megmondja az adott pont akadályon beül van-e, így ezekre a pontokra nem kell a számítást elvégezni. Mivel az így kapott körívek egy adott kezdõkonfigurációhoz tartoznak, további gyorsításra ad lehetõséget, ha az approximációs lépésben inkább a célkonfiguráció pontját mozgatjuk, így nem kell újra és újra kiszámolni a köríven elérhetõ sokaságot.
-
-%TODO ide kéne pár mérés, hogy ne csak a levegõbe beszéljek
-\subsection{Mérések}
-Pontos méréseket nem végeztünk, de nagyságrendileg százszoros gyorsulást sikerült elérnünk, és a legbonyolultabb környezetben is egy másodpercen belül sikerült megoldást találnia az algoritmusnak\footnote{Intel Core 2 Duo E8400 @ 3.0GHz, 4GB RAM}. Ez egy igen nagy elõrelépés, így valószínû, hogy egy kisebb teljesítményû beágyazott számítógépen is elfogadható idõn belül végez.
-
 \subsection{Fejlesztési lehetõségek}
 A fejlesztés során odafigyeltem, hogy hol lehetne gyorsítani, módosítani a mûködésen. Ahol ez egyszerûen megvalósítható volt, ott ezeket megtettem, de maradtak további fejlesztési lehetõségek is a programban, például számos helyen lehetne a futást párhuzamosítani.
 
-Az esetek nagy többségében a celladekompozíciós eljárással tervezett globális pálya jó eredménnyel szolgál, de néhány speciális esetben -- ilyen például két szûk merõleges folyosó találkozása, nem található megoldás. Részben hasonló probléma mikor a célkonfiguráció és az utolsó szakasz iránya jelentõsen eltér -- ilyen probléma merül fel a párhuzamos parkolás esetén is. Ezek elkerülésére egy másik globális tervezõt kell használnunk.
+A tapasztalatok azt mutatták, hogy az algoritmus futásának jelentõs hányada az ARM számítása. Mivel a körívek kiszámítása, és azok ütközésdetektálása komplex mûvelet, így ez az eredmény nem meglepõ. A kiszámítás ideje természetesen függ a választott távolságegységtõl és a környezet méretétõl. A számítást fel lehet gyorsítani, ha a mintavételezésnél használt távolságot megnöveljük, de ezzel lehetséges megoldásokat hagyhatunk el.
+
+Másik javítási lehetõség, ha elõre elkészítünk egy foglaltsági mátrixot, ami megmondja az adott pont akadályon beül van-e, így ezekre a pontokra nem kell a számítást elvégezni. Mivel az így kapott körívek egy adott kezdõkonfigurációhoz tartoznak, további gyorsításra ad lehetõséget, ha az approximációs lépésben inkább a célkonfiguráció pontját mozgatjuk, így nem kell újra és újra kiszámolni az ARM-ot. Az \textbf{Algoritmus \ref{alg:ccsApprox}} esetén is ez látható. A harmadik sorban rögtön a kezdõ konfigurációra elvégezzük a számítást, és csak akkor ismételjük meg újra, ha a kezdõpontunk is megváltozott (14. sor).
 
 %----------------------------------------------------------------------------
 \section{Új globális tervezõ}
 %----------------------------------------------------------------------------
-A fejlesztés során a fentebb felsorolt problémák miatt a globális tervezõt lecseréltem az RTR nevû algoritmusra. Ez is Kiss Domokos munkája \cite{DomiRTR}, az implementációját Nagy Ákos végezte el \cite{Akos}. Ez egy, a szakirodalomban széles körben használt RRT (Rapidly Exploring Random Trees) módszeren alapuló pályatervezési eljárás.
+Az esetek nagy többségében \aref{sec:globalPlanner} fejezetben használt celladekompozíciós eljárás jó eredménnyel szolgál, de több problémával is rendelkezik. Például könnyen észrevehetõ, hogy az egyszerû ütközésdetektálásnál még maradhatnak olyan élek a gráfban, melyek nem minden esetben végrehajthatóak.
 
-%TODO könnszen észrevehetõ, hogy így még maradnak olyan élek a gráfban, melyek nem minden esetben végrehajthatóak. (ez jelenti a problémát)
+További hibát okoz, hogy nem ellenõrzi az eljárás, hogy van-e hely manõverezésre, pedig ez a topológiai feltételnél látható, hogy ez a végrehajtható pálya megtalálásának feltétele. Ez a probléma jelentkezik két merõleges folyosónál is. Hiába a felhasznált szakaszok távolsága mindkét folyosón nagyobb, mint az autó szélessége, nincs hely a megfordulásra.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=70mm, keepaspectratio]{figures/alley.pdf}
+\includegraphics[width=70mm, keepaspectratio]{figures/paralell.pdf}
+\caption{Hibás globális pályák. A bal oldalon merõleges folyosók problémája, ahol nincs lehetõség elfordulni. Jobb oldalon a párhuzamos parkolás problémája, a piros konfigurációk okozzák a bonyolult pályát.} 
+\label{fig:globalError}
+\end{figure}
+
+Egy másik problémás tulajdonsága az orientációk meghatározásakor jelentkezik. Mivel a kiindulási és célkonfiguráció esetén az elõre meghatározott orientációkat használjuk, a köztes sarokpontoknál pedig a pálya segítségével határozzuk meg, így kialakulhatnak ellentmondásos (egymással szembe mutató) konfigurációk. Ez jelentkezik párhuzamos parkolás esetén is. Ugyan ilyen esetben található megoldás, de a keletkezett útvonal túl bonyolult lesz, így a valóságban ez használhatatlanná válik.
+
+A fejlesztés során a fentebb felsorolt problémák miatt a globális tervezõt lecseréltem az RTR nevû algoritmusra. Ez is Kiss Domokos munkája \cite{DomiRTR}, az implementációját Nagy Ákos végezte el \cite{Akos}. Ez egy, a szakirodalomban széles körben használt RRT (Rapidly Exploring Random Trees) módszeren alapuló pályatervezési eljárás.
 
 \subsection{RRT}
 A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) használnak a konfigurációs tér struktúrájának leírásához \cite{kavraki96prm}. A szakirodalomban egyik leggyakrabban használt ilyen algoritmus a \emph{Rapidly Exploring Random Trees} \cite{LaValle}. Ennek a lényege, hogy a kezdeti konfigurációból egy fát építünk a szabadon bejárható konfigurációs térben. A fa csomópontjaiban konfigurációk találhatóak, és a fa terjesztését úgy irányítjuk, hogy a kívánt célkonfiguráció felé tartson. Ha a fa ténylegesen eléri a célkonfigurációt, akkor az utat a kezdeti konfigurációból a célkonfigurációba már könnyedén megkaphatjuk.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=130mm, keepaspectratio]{figures/RRT.png}
+\includegraphics[width=145mm, keepaspectratio]{figures/RRT.png}
 \caption{Az RRT algoritmus három különbözõ iterációnál \cite{LaValle}.} 
 \label{fig:RRT}
 \end{figure}
 
-\subsection{RTR}
-Az \emph{Rotate-Translate-Rotate} algoritmus a fentebb látott RRT algoritmus egy módosított változata. Elsõdlegesen differenciális robotok számára tervez egyenes szakaszokból és egy helyben fordulásokból álló pályát, de jó alapot szolgáltat a C*CS algoritmushoz is. Nevét a benne használt mozgási primitívekrõl kapta, azaz a $R$, mint fordulás, a $T$ pedig az egyenesen haladást jelöli. Az RRT algoritmustól eltérõen itt az algoritmus két fát épít, egyet a kezdõ, egyet pedig a célkonfigurációból. Másik fontos különbség, hogy ütközés esetén a pályát minden irányba továbbterjeszti, így növelve a megoldás megtalálásának lehetõségét.
+A fák építését három fázisra lehet felbontani. Az elsõ fázisban véletlenszerûen kiválasztunk a szabad konfigurációs térbõl egy pontot ($q_{rand}$). Ezt nevezzük \emph{mintavételezési fázisnak}. Majd végighaladunk a fán, és kiválasztjuk, melyik konfiguráció található legközelebb a mintavételezett ponthoz ($q_{near}$). Ezt a \emph{csomópont kiválasztó szakasznak} nevezzük. Majd végül megpróbáljuk a $q_{rand}$ és $q_{near}$ konfigurációkat összekötni (\emph{összekötési fázis}).
 
-\begin{figure}
+Az utolsó fázisban általában egy elõre meghatározott hosszakig veszünk fel szakaszokat. Anhonolóm rendszerek esetén is lehet használni az RRT algoritmust, ilyenkor az összekötési fázisban egy lokális tervezõt kell használnunk. Természetesen több fát is terjeszthetünk egyszerre, ilyenkor az összes fa esetén végre kell hajtani a fázisokat. A terjesztést addig folytatjuk, mígya fák össze nem kapcsolódnak.
+
+\subsection{RTR}
+Az \emph{Rotate-Translate-Rotate} algoritmus a fentebb látott RRT algoritmus egy módosított változata. Elsõdlegesen differenciális robotok számára tervez egyenes szakaszokból és egy helyben fordulásokból álló pályát, de jó alapot szolgáltat a C*CS algoritmushoz is. Nevét a benne használt mozgási lokális tervezõrõl kapta, azaz a $R$, mint fordulás, a $T$ pedig az egyenesen haladást jelöli. Az eljárás az RRT mindhárom fázisában vezet be változásokat, és mind a kezdõ, mind a célkonfigurációból növesztünk fákat.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=90mm, keepaspectratio]{figures/rtr_rci.png}
+\caption{A kiterjesztés folyamata. \cite{Akos}}
+\label{fig:rtr_rci}
+\end{figure}
+
+\begin{itemize}
+	\item A mintavételezés során nem csak egy konfigurációt választunk, hanem egy pozíciót a térben ($p_G$), és az ehhez tartozó konfigurációs térbeli egyenes bármely pontja felé növesztjük tovább a fákat.
+	\item A kiválasztási fázisban egyszerûbb a dolgunk, mivel csak egy pozícióhoz képest kell figyeljük a távolságokat. Itt figyelembe kell vegyük a szögek távolságát is.
+	\item A kiterjesztés fázisa különbözik leginkább az RRT-ben látottaktól. Itt nem csak a $p_G$ felé terjesztjük a fákat, hanem ellentétes irányban is. Illetve nem csak a pontig, hanem minden esetben addig, míg nem ütközik egy akadályba a robot. Ha a forgás közben ütközik a robot, akkor az ütközési pontból is továbbterjesztünk. Erre látható egy példa a \figref{rtr_rci} ábrán.
+\end{itemize}
+
+\begin{figure}[H]
 \centering
 \includegraphics[width=110mm, keepaspectratio]{figures/rtr_path2.pdf}
 \caption{Az RTR algoritmus; piros a kezdõ, kék a célkonfigurációból indított fa. \cite{Akos}}
