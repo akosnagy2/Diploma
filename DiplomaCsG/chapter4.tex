@@ -20,9 +20,9 @@ Alacsony szinten a robotsebességénél történik meg a sebességszabályozás. Az álta
 \label{fig:PathFollow}
 \end{figure}
 
-A szabályozótervezés elõtt figyelembe kell vegyük a motor és a mechanikából adódó nemlineáris hatásokat, mivel ezek a hatások nagymértékben leronthatják a szabályozási rendszer tulajdonságait. A nemlineáris hatást annak inverzével lehet kiiktatni a rendszerünkbõl, mivel így az együttes hatásuk egy egységnyi erõsítéssé módosul. Az inverz meghatározásához meg kellett mérnem a nemlineáris hatás karakterisztikáját.
+A szabályozótervezés elõtt figyelembe kell vegyük a motor és a mechanikából adódó nemlineáris hatásokat, mivel ezek a hatások nagymértékben leronthatják a szabályozási rendszer tulajdonságait. A nemlineáris hatást annak inverzével lehet kiiktatni a rendszerünkbõl, mivel így az együttes hatásuk egy egységnyi erõsítéssé módosul. Az inverz meghatározásához meg kellett mérnem a nemlineáris hatás karakterisztikáját. Ez látható a \figref{motor_kar} ábrán.
 
-Az ábrán a vízszintes tengelyen a motorvezérlõ által kiadott kitöltési tényezõ, a függõleges tengelyen pedig a robot sebessége látható. Megfigyelhetõ, hogy a leginkább káros hatása a holtsávnak van. Ez a jelenség alacsony sebességeken érvényesül. Ezt a hatást az okozza, hogy a súrlódások következtében a motor nem tud elfordulni, így a kiadott beavatkozójel nem tud érvényre jutni. A karakterisztikán látható még a telítõdés hatása is, azaz hogy magasabb sebességeken már nem érhetõ el olyan mértékû gyorsulás.
+Az ábrán a vízszintes tengelyen a motorvezérlõ által kiadott kitöltési tényezõ, a függõleges tengelyen pedig a robot állandósult sebessége látható. Megfigyelhetõ, hogy a leginkább káros hatása a holtsávnak van. Ez a jelenség alacsony sebességeken érvényesül. Ezt a hatást az okozza, hogy a súrlódások következtében a motor nem tud elfordulni, így a kiadott beavatkozójel nem tud érvényre jutni. A karakterisztikán látható még a telítõdés hatása is, azaz hogy magasabb sebességeken már nem érhetõ el olyan mértékû gyorsulás.
 
 A PI szabályozók esetében gyakran elõforduló probléma az elintegrálódás \cite{Bezi}. Az elintegrálódás a rendszerben lévõ beavatkozószerv telítése miatt lép fel, kiküszöbölése történhet többféleképpen, szabályozó típusától függõen. Esetünkben egy FOXBORO struktúra segítségével elõzzük meg az elintegrálódást.
 
@@ -90,14 +90,14 @@ Mivel egy ilyen vonalkövetõ autó esetén a vonalszenzor mozgására van szükségünk,
 \dot{\theta} &= v_r \frac{\tan \phi}{L},
 \end{align}
 
-ahol a jelölések megegyeznek \aref{eq:carLikeRobot} esetén használtakkal. Fontos megjegyezni, hogy bár az elsõ tengely középpontjára írtuk fel a mozgásegyenletet, a hátsó referenciapont sebességével számolunk. A továbbiakban ezt a sebességet egyszerûen csak $v$-vel jelöljük. \Aref{fig:ferdevonal} ábrán látható modellt tételezzük fel, azaz azt, hogy az a vonal, amit követni kívánunk egyenes. Ebben az esetben meghatározható a vonal és a robot orientációjának különbsége ($\delta$), illetve a vonal és az elsõ tengely középpontjának -- szenzorsor közepének -- elõjeles távolsága ($p$). Ezen feltételezések és a mozgásegyenlet alapján felírhatjuk a következõ következtetéseket \cite{RobonAUTszem}:
+ahol a jelölések megegyeznek \aref{eq:carLikeRobot} esetén használtakkal. Fontos megjegyezni, hogy bár az elsõ tengely középpontjára írtuk fel a mozgásegyenletet, a hátsó referenciapont sebességével számolunk. A továbbiakban ezt a sebességet egyszerûen csak $v$-vel jelöljük. \Aref{fig:ferdevonal} ábrán látható modellt tételezzük fel, azaz azt, hogy az a vonal, amit követni kívánunk, egyenes. Ebben az esetben meghatározható a vonal és a robot orientációjának különbsége ($\delta$), illetve a vonal és az elsõ tengely középpontjának -- szenzorsor közepének -- elõjeles távolsága ($p$). Ezen feltételezések és a mozgásegyenlet alapján felírhatjuk a következõ következtetéseket \cite{RobonAUTszem}:
 
 \begin{align}\label{eq:deltaAndp}
 \dot{\delta} &= -v \frac{\tan \phi}{L} \notag \\
 \dot{p} &= v \cdot \tan \delta - v \cdot \tan \phi - v \cdot \frac{p}{L} \tan \delta \tan \phi
 \end{align}
 
-Látható, hogy ez egy nem lineáris rendszer, de a szabályzótervezéshez ezt linearizálnunk kell. Mivel az a célunk, hogy a robot a vonalon, és azzal párhuzamosan helyezkedjen el, így a munkapont, amely körül a linearizálást elvégezzük a $p = 0$, $\phi = 0$ és a $\delta = 0$. Így a következõ egyenletekkel számolhatunk:
+Látható, hogy ez egy nemlineáris rendszer, de a szabályzótervezéshez ezt linearizálnunk kell. Mivel az a célunk, hogy a robot a vonalon, és azzal párhuzamosan helyezkedjen el, így a munkapont, amely körül a linearizálást elvégezzük a $p = 0$, $\phi = 0$ és a $\delta = 0$. Így a következõ egyenletekkel számolhatunk:
 
 \begin{align}\label{eq:linearizedModel}
 \dot{\delta} &= - \frac{v}{L} \phi \notag \\
@@ -174,4 +174,4 @@ amibõl a következõ kifejezést kapjuk \cite{RobonAUTszem}:
 \end{align}
 
 Vegyük észre, hogy az elõretekintés távolságának megnövelésével a virtuális kormányszög ($\gamma$) megnõ. Mivel a valóságos kormányszög mechanikailag korlátozva van, ez telítést jelent a szabályozásunkban, amit így ki tudunk bõvíteni.
-Természetesen az elõretekintés mértékének túl nagyra választása azt eredményezi, hogy a kanyarokat hajlamos a robot levágni. Mégis jelentõs elõnnyel rendelkezik, mivel így részben kiküszöbölhetõ a kormányszervó nem nulla beállási ideje.
+Természetesen az elõretekintés mértékének túl nagyra választása azt eredményezi, hogy a kanyarokat hajlamos a robot levágni. Mégis jelentõs elõnnyel rendelkezik, mivel így gyengíthetõ a kormányszervó nem nulla beállási idejének hatása.

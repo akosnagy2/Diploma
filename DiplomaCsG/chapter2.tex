@@ -2,7 +2,7 @@
 \chapter{Útvonaltervezés C*CS pályákkal}
 %----------------------------------------------------------------------------
 A C*CS és a $c\overline{c}S$ algoritmus Kiss Domokos munkája \cite{CCSTopologicalProp}. Az algoritmusok elsõdlegesen autószerû robotok számára terveznek pályát, de az így tervezett pálya egy differenciális robot számára is végrehajtható. Feladatom az algoritmus implementálása volt C++ nyelven, majd annak tesztelése szimulációs, illetve valós környezetben.
-A fejezetet az algoritmus ismertetésével kezdem, majd kitérek az implementációs problémákra, és az elért eredményekre is.
+A fejezetet az algoritmus ismertetésével kezdem, majd kitérek az implementációs problémákra és az elért eredményekre is.
 
 %----------------------------------------------------------------------------
 \section{Reeds-Shepp lokális pályák}
@@ -56,11 +56,11 @@ Erre a célra egy celladekompozíción alapuló algoritmust használtam, melynek lény
 	\label{fig:ccs_triang}
 \end{figure}
 
-Miután a felbontás elkészült egy gráfot alkotunk a következõképpen: Kiválogatjuk azokat a háromszögoldalakat, amelyek nem akadályhoz vagy a környezet határához tartoznak. Ezeknek az oldalaknak felezõpontjai fogják a gráf pontjait alkotni. A gráfban két olyan pont között veszünk fel élt ahol azok egy háromszöghöz tartoznak, ezzel biztosítva, hogy ezek a szakaszok ne metsszék egymást. A pontok közé beszúrjuk a kezdõ és célkonfiguráció pontjait, meghatározzuk, hogy ezek melyik cellában helyezkednek el, és összekötjük az ahhoz a cellához tartozó pontokkal.
+Miután a felbontás elkészült, egy gráfot alkotunk a következõképpen: Kiválogatjuk azokat a háromszögoldalakat, amelyek nem akadályhoz vagy a környezet határához tartoznak. Ezeknek az oldalaknak felezõpontjai fogják a gráf csomópontjait alkotni. A gráfban két olyan pont között veszünk fel élt, ahol azok egy háromszöghöz tartoznak, ezzel biztosítva, hogy ezek a szakaszok ne metsszék egymást. A pontok közé beszúrjuk a kezdõ és célkonfiguráció pontjait, meghatározzuk, hogy ezek melyik cellában helyezkednek el, és összekötjük az ahhoz a cellához tartozó csomópontokkal.
 
 Az így elkészített gráfban még vannak olyan élek, amiket a végsõ megoldásban nem alkalmazhatunk, mert vagy egy akadályhoz, vagy a pálya széléhet túl közel találhatóak. Hogy ezeket kiszûrjük, végig kell nézzük, hogy ezeken az autóval végig tudunk-e haladni ütközés nélkül. Az ütközésdetektálásról még késõbb szót ejtek. Fontos megemlíteni, hogy az ellenõrzés során csak az autó szélességét vesszük figyelembe, mivel az a célunk, hogy ezeken a szakaszokon egyenesen haladjon az autó.
 
-A már végleges gráfban (\figref{ccs_graph} ábra) minden élhez a hozzá tartozó szakasz hosszát hozzárendeljük, ezek fogják jelenteni az él súlyát. Végül a gráfban egy keresõalgoritmus segítségével kiválasztjuk a legrövidebb utat. Ha a gráf nem összefüggõ az algoritmus hibával tér vissza, mivel a feladat nem megoldható. A kereséshez én a Dijkstra-algoritmust használtam \cite{BFS}, de bármilyen más algoritmust használhatnánk, mivel a fentebb látott módszerrel alkotott gráf jellemzõen nem lesz nagy méretû, ezért nem lesz jelentõs különbség a futási idõk között.
+A már végleges gráfban (\figref{ccs_graph} ábra) minden élhez a hozzá tartozó szakasz hosszát hozzárendeljük, ezek fogják jelenteni az él súlyát. Végül a gráfban egy keresõalgoritmus segítségével kiválasztjuk a legrövidebb utat. Ha a gráf nem összefüggõ, az algoritmus hibával tér vissza, mivel a feladat nem megoldható. A kereséshez én a Dijkstra-algoritmust használtam \cite{BFS}, de bármilyen más algoritmust használhatnánk, mivel a fentebb látott módszerrel alkotott gráf jellemzõen nem lesz nagy méretû, ezért nem lesz jelentõs különbség a futási idõk között.
 
 \begin{figure}[H]
 	\centering
@@ -69,15 +69,15 @@ A már végleges gráfban (\figref{ccs_graph} ábra) minden élhez a hozzá tartozó sz
 	\label{fig:ccs_graph}
 \end{figure}
 
-A végleges megoldáshoz (\figref{ccs_prepath} ábra) nekünk nem csak pontokra, hanem konfigurációkra van szükségünk, ezért a legrövidebb út pontjaihoz még orientációt kell rendeljünk. Ezt a következõképpen tesszük meg: Az kezdeti és célkonfiguráció pontjainál az elõre meghatározott orientációt alkalmazzuk. Köztes pontok esetén az aktuális és a következõ pont által meghatározott egyenes és x-tengellyel bezárt szög adja az orientációt. Ezt a \eqref{ori} alapján számolhatjuk ki:
+A végleges megoldáshoz (\figref{ccs_prepath} ábra) nekünk nem csak pontokra, hanem konfigurációkra van szükségünk, ezért a legrövidebb út csomópontjaihoz még orientációt kell rendeljünk. Ezt a következõképpen tesszük meg: Az kezdeti és célkonfiguráció pontjainál az elõre meghatározott orientációt alkalmazzuk. Köztes csomópontok esetén az aktuális és a következõ pont által meghatározott egyenes és x-tengellyel bezárt szög adja az orientációt. Ezt a \eqref{ori} alapján számolhatjuk ki:
 
 \begin{align}\label{eq:ori}
 \theta_i = \arctan \left( \frac{y_{i+1} - y_i}{x_{i+1} - x_i} \right),
 \end{align}
 
-ahol $x_i$ és $y_i$ az aktuális pont megfelelõ koordinátái.
+ahol $x_i$ és $y_i$ az aktuális csomópont megfelelõ koordinátái.
 
-A megoldásnak az elõnye, hogy nagyjából a szabad terület közepén alkot pályát, így ha az autó ezt követi, akkor bármilyen irányú manõverezésre lesz lehetõsége. Továbbá ez egy kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Hátránya, hogy a háromszögelés miatt csak sokszögekkel leírható akadályokkal képes dolgozni
+A megoldásnak az elõnye, hogy nagyjából a szabad terület közepén alkot pályát, így ha az autó ezt követi, akkor bármilyen irányú manõverezésre lesz lehetõsége. Továbbá ez egy úgynevezett kombinatorikus eljárás, így véges idõn belül képes megmondani, hogy létezik-e megoldás. Hátránya, hogy a háromszögelés miatt csak sokszögekkel leírható akadályokkal képes dolgozni
 
 \begin{figure}
 	\centering
@@ -89,7 +89,7 @@ A megoldásnak az elõnye, hogy nagyjából a szabad terület közepén alkot pályát, í
 %----------------------------------------------------------------------------
 \section{C*CS approximációs módszer}
 %----------------------------------------------------------------------------
-Az így elkészült globális pályát természetesen a töréspontok miatt nem tudnánk lekövetni egy autóval, ezért közelítenünk kell olyan pályákkal amik már nem okoznak gondot az autó számára sem. Ezt a C*CS approximációs módszer segítségével tesszük meg. A módszer a nevét a benne alkalmazott lokális tervezõrõl kapta, a mûködését az \textbf{Algoritmus \ref{alg:ccsApprox}} mutatja be.
+Az így elkészült globális pályát természetesen a töréspontok miatt nem tudnánk lekövetni egy autóval, ezért közelítenünk kell olyan pályákkal, amelyek már nem okoznak gondot az autó számára sem. Ezt a C*CS approximációs módszer segítségével tesszük meg. A módszer a nevét a benne alkalmazott lokális tervezõrõl kapta, a mûködését az \textbf{Algoritmus \ref{alg:ccsApprox}} mutatja be.
 
 \begin{algorithm}
 \floatname{algorithm}{Algoritmus}
@@ -121,11 +121,11 @@ Az így elkészült globális pályát természetesen a töréspontok miatt nem tudnánk l
 Mielõtt bemutatnám a mûködését, érdemes szót ejteni a jelölésekrõl. A globális tervezõ által elkészített konfigurációs listát $Q$ jelöli, ezen belül az $i$. konfigurációt $q_{Q,i}$. A környezet leírására a $\mathcal{C}_{obs}$ jelölést használtam. $\lambda$ jelöli az elkészült pályát, ahol alsó indexben a \emph{final} a teljes, míg a \emph{local} jelzõ a lokális tervezõ által készített pályára utal. A $q_I$ és $q_G$ a globálisan meghatározott kezdõ- és célkonfiguráció, míg a $q_{IL}$ és $q_{GL}$ a lokálisan közelíteni kívánt pályarészlethez tartozik.
 
 \subsection{Mûködés}
-Mint látható a globális pályát iterálva próbáljuk meg C*CS pályákkal közelíteni. Az elsõ lépésben rögtön a kezdõ és célkonfigurációval kezdve. Ha ez nem sikerül a 17. sorban látott módon, a pályát megfelezzük és a lokális célkonfigurációnak a középsõ töréspontot választjuk. Ezt egészen addig folytatjuk, míg nem találunk megoldást, vagy el nem fogynak az újabb köztes töréspontok. Az elõnye ennek a módszernek, hogy szerencsés esetben akár rögtön az elsõ iterációban is találhatunk pályát, ami jelentõsen felgyorsíthatja a mûködést.
+Mint látható, a globális pályát iterálva próbáljuk meg C*CS pályákkal közelíteni, az elsõ lépésben rögtön a kezdõ és célkonfigurációval kezdve. Ha ez nem sikerül, a 17. sorban látott módon a pályát megfelezzük, és a lokális célkonfigurációnak a középsõ töréspontot választjuk. Ezt egészen addig folytatjuk, míg nem találunk megoldást, vagy el nem fogynak az újabb köztes töréspontok. Az elõnye ennek a módszernek, hogy szerencsés esetben akár rögtön az elsõ iterációban is találhatunk pályát, ami jelentõsen felgyorsíthatja a mûködést.
 
-Egyik fontos tulajdonsága az algoritmusnak, hogy nem kényszeríti az elkészült pályát a globális sarokpontokba, mivel nem igazán fontos számunkra, hogy elérjük õket\footnote{Nem is mindig elõnyös az utolsó egyenes szakasz használata, gondoljuk például arra az esetre, mikor az érintési pont a célkonfiguráció után található, ebben az esetben felesleges tolatások jelennének meg a pályában}. Elég csak a globális pályaszakaszokhoz ''tapadni``, ezért a megtalált pályából ilyenkor elhagyjuk az egyenes szakaszt, és csak a $C^*C$ részletet fûzzük hozzá a végleges pályához. Az újabb szakasz keresését az érintési pontból indítjuk, így ezt be kell szúrjuk a listába.
+Egyik fontos tulajdonsága az algoritmusnak, hogy nem kényszeríti az elkészült pályát a globális sarokpontokba, mivel nem igazán fontos számunkra, hogy elérjük õket\footnote{Nem is mindig elõnyös az utolsó egyenes szakasz használata, gondoljuk például arra az esetre, mikor az érintési pont a célkonfiguráció után található, ebben az esetben felesleges tolatások jelennének meg a pályában}. Elég csak a globális pályaszakaszokhoz ``tapadni'', ezért a megtalált pályából ilyenkor elhagyjuk az egyenes szakaszt, és csak a $C^*C$ részletet fûzzük hozzá a végleges pályához. Az újabb szakasz keresését az érintési pontból indítjuk, így ezt be kell szúrjuk a listába.
 
-Egyetlen kivétel ez alól, mikor a lokális célkonfiguráció $q_{GL}$, az maga a globális célpont $q_G$. Ebben az esetben az utolsó szakaszt mindenképp hozzá kell fûzzük a végleges pályához, hogy elérjük a célpontot\footnote{Fontos megemlíteni, hogy a lokális tervezõ mindig elvégzi a számításokat a teljes $C^*CS$ pályára (ütközésdetektálás, legrövidebb út keresés), az utolsó $S$ szakasz késõbb kerül kitörlésre.}.
+Egyetlen kivétel ez alól, mikor a $q_{GL}$ lokális célkonfiguráció, az maga a globális célpont ($q_G$). Ebben az esetben az utolsó szakaszt mindenképp hozzá kell fûzzük a végleges pályához, hogy elérjük a célpontot\footnote{Fontos megemlíteni, hogy a lokális tervezõ mindig elvégzi a számításokat a teljes $C^*CS$ pályára (ütközésdetektálás, legrövidebb út keresés), az utolsó $S$ szakasz késõbb kerül kitörlésre.}.
 
 \begin{figure}[H]
 \centering
@@ -144,7 +144,7 @@ Az elõzõekben láthattuk, hogy a C*CS végtelen sok megoldást nyújt. Lokális esetb
 \label{fig:ARM}
 \end{figure}
 
-A lokális tervezõ elsõ lépésben összegyûjti azokat a köríveket, amelyeket a robot megadott kezdõkonfigurációból ütközés mentesen el tud érni. Ezeknek a köríveknek a sokaságát \emph{Arc Reachable Manifold}-nak (ARM) nevezzük \cite{ARM}. Az összes ilyen \mbox{$\tilde{q_I}$-ból} az algoritmus megkeresi a célkonfigurációhoz tartozó érintõ körívet (\figref{erintoKor} ábra), és az egyenes szakaszt. Azokat a szegmenseket amelyek ütközés mentesen végrehajthatóak, összegyûjti egy listába, majd ebbõl a listából kikeresi azt, amelyik a legrövidebb az összes közül.
+A lokális tervezõ elsõ lépésben összegyûjti azokat a köríveket, amelyeket a robot megadott kezdõkonfigurációból ütközésmentesen el tud érni. Ezeknek a köríveknek a sokaságát \emph{Arc Reachable Manifold}-nak (ARM) nevezzük \cite{ARM}. Az összes ilyen \mbox{$\tilde{q_I}$-ból} az algoritmus megkeresi a célkonfigurációhoz tartozó érintõ körívet (\figref{erintoKor} ábra), és az egyenes szakaszt. Azokat a szegmenseket, amelyek ütközésmentesen végrehajthatóak, összegyûjti egy listába, majd ebbõl a listából kikeresi azt, amelyik a legrövidebb az összes közül.
 
 Itt érdemes megemlíteni, hogy a végeredmény akkor fog igazán hasonlítani a valósághoz, ha lecsökkentjük a tolatások számát, mivel az emberek nagy többsége nem szeret tolatva közlekedni. Ahhoz, hogy ezt megtegyük, az algoritmus figyelembe vesz egy súlytényezõt, mellyel a tolató szakaszok ``hosszát'' tudjuk megnövelni.
 
@@ -158,7 +158,7 @@ Itt érdemes megemlíteni, hogy a végeredmény akkor fog igazán hasonlítani a valós
 %----------------------------------------------------------------------------
 \section{ \texorpdfstring{\boldmath{$c\overline{c}S$}}{ccS} lokális tervezõ algoritmus }
 %----------------------------------------------------------------------------
-Az approximációs algoritmus nem teljes ebben a formájában, mivel ha nem talál újabb töréspontot, akkor hibával tér vissza. Megtehetnénk, hogy az egyenes szakaszokat feldaraboljuk, de ezzel nem nyernék új megoldásokat, mivel minden esetben ugyan arra az $S$ szakaszra próbálnánk érintõt találni. Ezért az új konfigurációkat a töréspontokban kell elhelyezni. Viszont önmagában ez még nem elég, valahogy biztosítanunk kell azt, hogy az algoritmus konvergáljon a megoldás felé.
+Az approximációs algoritmus nem teljes ebben a formájában, mivel ha nem talál újabb töréspontot, akkor hibával tér vissza. Megtehetnénk, hogy az egyenes szakaszokat feldaraboljuk, de ezzel nem nyernék új megoldásokat, mivel minden esetben ugyanarra az $S$ szakaszra próbálnánk érintõt találni. Ezért az új konfigurációkat a töréspontokban kell elhelyezni. Viszont önmagában ez még nem elég, valahogy biztosítanunk kell azt, hogy az algoritmus konvergáljon a megoldás felé.
 
 \subsection{Topológiai feltétel}
 
@@ -183,7 +183,7 @@ ahol $d_{\mathcal{C}}$ egy bármilyen metrika $\mathcal{C}$ konfigurációs téren d
 
 Ez azt jelenti, hogy ha bármilyen pozitív \mbox{$\epsilon$-hoz} található olyan $\eta$, hogy $q_1$ a $q_0$ -- $\eta$ környezetében van, akkor a lokális tervezõ által generált pálya nem lépi ki a $q_0$ -- $\epsilon$ környezetét. Erre egy segítõ példa a \figref{topProp} ábrán látható.
 
-Más szavakkal tehát, ha a globális pályát közelítjük a $q_0$ konfigurációs pontból, amelynek van egy $\epsilon$ sugarú, ütközésmentes környezete, akkor találhatunk olyan $q_1$ konfigurációt, amelyre a lokális tervezõnk ütközésmentes és végrehajtható pályát eredményez. Ez azt is magával vonja, hogy ha a globális pálya mellett van egy kis szabad terület ahol manõverezésre van lehetõség, akkor a lokális tervezõ talál megoldást.
+Más szavakkal tehát, ha a globális pályát közelítjük a $q_0$ konfigurációs pontból, amelynek van egy $\epsilon$ sugarú, ütközésmentes környezete, akkor találhatunk olyan $q_1$ konfigurációt, amelyre a lokális tervezõnk ütközésmentes és végrehajtható pályát eredményez. Ez azt is magával vonja, hogy ha a globális pálya mellett van egy kis szabad terület, ahol manõverezésre van lehetõség, akkor a lokális tervezõ talál megoldást.
 
 \subsection{ \texorpdfstring{\boldmath{$c\overline{c}S$}}{ccS} }
 Bizonyított, hogy a $c\overline{c}S$ algoritmus teljesíti ezt a feltételt \cite{CCSTopologicalProp}, tehát felhasználható a konfigurációk közelítésekor. Ezek alapján az approximációs algoritmust kiegészíthetjük a következõkkel: Ha nincs új sarokpont a globális pályán, akkor egy egyenes szakasz segítségével elmegyünk a következõ sarokpontig. Ezt megtehetjük, mivel ez biztosan ütközésmentes, csak elhagytuk a pályából. Majd a globális pályába beszúrunk egy konfigurációt, ahol a pont a következõ sarokpont, és az orientáció az aktuális sarokponthoz tartozó szög. Végül ezek között keresünk megoldást, de már az új -- topológiai feltételt biztosító -- lokális tervezõvel. Ha ezek között sincs végrehajtható pálya, akkor a konfigurációs térben ($\mathcal{C}$) távolságot csökkentenünk kell. Ezt az orientációkülönbség megfelezésével megtehetjük.
@@ -209,7 +209,7 @@ Abban az esetben, ha mind az akadályok, mind a robot teste sokszögekkel leírható
 Az általam használt algoritmusoknál nincs szükség mintavételezésre, mivel az elkészült pályák (körívek, és egyenes szakaszok) zárt alakban felírhatók. Az ütközésdetektáláshoz a robot testét a meghatározott pályán kell végigmozgatni, és ellenõrizni, hogy egyik pontjának pályája se keresztezi bármelyik akadály élét\footnote{Ebben az esetben a pálya széle is akadályként tekinthetõ.}.
 
 \subsection*{Egyenes szakaszok}
-Egyenes szakaszok ütközésdetektálását két különbözõ módon oldottam meg. A globális tervezõ esetén csak az akadályok és a lehetséges pályaszakaszok távolságát számítja ki az algoritmus. Elõször is ellenõri, hogy a két szakasz metszi-e egymást. Ha igen, a távolságuk nulla. Ha nem, akkor minden szakasz két végpontját levetíti az ellenõrizni kívánt szakaszra. Ha ez a vetületi pont a szakaszon belül található, akkor ennek és a végpontnak a távolságát vesszük eredményül, ha kívülre esik, akkor a két végpont távolsága az eredmény (\figref{segDist}). Ha a szakaszok távolsága kisebb mint a robot maximális szélességének a fele, akkor az élt törüljük.
+Egyenes szakaszok ütközésdetektálását két különbözõ módon oldottam meg. A globális tervezõ esetén csak az akadályok és a lehetséges pályaszakaszok távolságát számítja ki az algoritmus. Elõször is ellenõri, hogy a két szakasz metszi-e egymást. Ha igen, a távolságuk nulla. Ha nem, akkor minden szakasz két végpontját levetíti az ellenõrizni kívánt szakaszra. Ha ez a vetületi pont a szakaszon belül található, akkor ennek és a végpontnak a távolságát vesszük eredményül, ha kívülre esik, akkor a két végpont távolsága az eredmény (\figref{segDist}). Ha a szakaszok távolsága kisebb mint a robot maximális szélességének a fele, akkor az élt töröljük.
 
 \begin{figure}[H]
 \centering
@@ -221,7 +221,7 @@ Egyenes szakaszok ütközésdetektálását két különbözõ módon oldottam meg. A globál
 Természetesen ez nem vezet pontos eredményre, de \aref{sec:globalPlanner} fejezetben ezt a hibát figyelmen kívül hagyjuk. A másik, pontosabb módszert detektáláshoz a körívek esetén mutatom be.
 
 \subsection*{Körívek}
-Mivel kikötöttük, hogy a robotunk teste is sokszögekkel leírható az ellenõrzéséhez elegendõ a csúcsokat elmozdítani a pályával párhuzamosan. Ezt mind egyenes szakaszok, mind körívek esetén hasonlóan kell megtegyük. Kiválasztunk egy csúcsot, majd egy koordinátatranszformáció segítségével a pálya végpontjait eltoljuk a megfelelõ helyre, azaz kiszámoljuk, hogy a két végpontban a robot azon pontja hol is lesz pontosan. Egyenes szakaszoknál ez a két pont meghatározza az új szakaszt, körív esetén a két új pont és a pálya körének középpontja segítségével kiszámítjuk az új körívet. Amint ezzel készen vagyunk, metszéspontot keresünk az áttranszformált pálya, és az akadályélek között. Ez körív és egyenes esetén egy kicsit komplikáltabb feladat, mivel itt a megoldást egy másodfokú egyenlet határozza meg.
+Mivel kikötöttük, hogy a robotunk teste is sokszögekkel leírható, az ellenõrzéséhez elegendõ a csúcsokat elmozdítani a pályával párhuzamosan. Ezt mind egyenes szakaszok, mind körívek esetén hasonlóan kell megtegyük. Kiválasztunk egy csúcsot, majd egy koordinátatranszformáció segítségével a pálya végpontjait eltoljuk a megfelelõ helyre, azaz kiszámoljuk, hogy a két végpontban a robot azon pontja hol is lesz pontosan. Egyenes szakaszoknál ez a két pont meghatározza az új szakaszt, körív esetén a két új pont és a pálya körének középpontja segítségével kiszámítjuk az új körívet. Amint ezzel készen vagyunk, metszéspontot keresünk az áttranszformált pálya, és az akadályélek között. Ez körív és egyenes esetén egy kicsit komplikáltabb feladat, mivel itt a megoldást egy másodfokú egyenlet határozza meg.
 
 \begin{figure}[H]
 \centering
@@ -261,7 +261,7 @@ Másik javítási lehetõség, ha elõre elkészítünk egy foglaltsági mátrixot, ami meg
 %----------------------------------------------------------------------------
 Az esetek nagy többségében \aref{sec:globalPlanner} fejezetben használt celladekompozíciós eljárás jó eredménnyel szolgál, de több problémával is rendelkezik. Például könnyen észrevehetõ, hogy az egyszerû ütközésdetektálásnál még maradhatnak olyan élek a gráfban, melyek nem minden esetben végrehajthatóak.
 
-További hibát okoz, hogy nem ellenõrzi az eljárás, hogy van-e hely manõverezésre, pedig ez a topológiai feltételnél látható, hogy ez a végrehajtható pálya megtalálásának feltétele. Ez a probléma jelentkezik két merõleges folyosónál is. Hiába a felhasznált szakaszok távolsága mindkét folyosón nagyobb, mint az autó szélessége, nincs hely a megfordulásra.
+További hibát okoz, hogy nem ellenõrzi az eljárás, hogy van-e hely manõverezésre, pedig ez a topológiai feltételnél látható, hogy ez a végrehajtható pálya megtalálásának feltétele. Ez a probléma jelentkezik két merõleges folyosónál is. A felhasznált szakaszok távolsága hiába nagyobb mindkét, mint az autó szélessége, nincs hely a megfordulásra.
 
 \begin{figure}[H]
 \centering
@@ -287,10 +287,10 @@ A globális tervezõk sok esetben topologikus gráfokat (speciális esetben fákat) h
 
 A fák építését három fázisra lehet felbontani. Az elsõ fázisban véletlenszerûen kiválasztunk a szabad konfigurációs térbõl egy pontot ($q_{rand}$). Ezt nevezzük \emph{mintavételezési fázisnak}. Majd végighaladunk a fán, és kiválasztjuk, melyik konfiguráció található legközelebb a mintavételezett ponthoz ($q_{near}$). Ezt a \emph{csomópont kiválasztó szakasznak} nevezzük. Majd végül megpróbáljuk a $q_{rand}$ és $q_{near}$ konfigurációkat összekötni (\emph{összekötési fázis}).
 
-Az utolsó fázisban általában egy elõre meghatározott hosszakig veszünk fel szakaszokat. Anhonolóm rendszerek esetén is lehet használni az RRT algoritmust, ilyenkor az összekötési fázisban egy lokális tervezõt kell használnunk. Természetesen több fát is terjeszthetünk egyszerre, ilyenkor az összes fa esetén végre kell hajtani a fázisokat. A terjesztést addig folytatjuk, mígya fák össze nem kapcsolódnak.
+Az utolsó fázisban általában egy elõre meghatározott hosszig veszünk fel szakaszt. Anhonolóm rendszerek esetén is lehet használni az RRT algoritmust, ilyenkor az összekötési fázisban egy lokális tervezõt kell használnunk. Természetesen több fát is terjeszthetünk egyszerre, ilyenkor az összes fa esetén végre kell hajtani a fázisokat. A terjesztést addig folytatjuk, míg a fák össze nem kapcsolódnak.
 
 \subsection{RTR}
-Az \emph{Rotate-Translate-Rotate} algoritmus a fentebb látott RRT algoritmus egy módosított változata. Elsõdlegesen differenciális robotok számára tervez egyenes szakaszokból és egy helyben fordulásokból álló pályát, de jó alapot szolgáltat a C*CS algoritmushoz is. Nevét a benne használt mozgási lokális tervezõrõl kapta, azaz a $R$, mint fordulás, a $T$ pedig az egyenesen haladást jelöli. Az eljárás az RRT mindhárom fázisában vezet be változásokat, és mind a kezdõ, mind a célkonfigurációból növesztünk fákat.
+A \emph{Rotate-Translate-Rotate} algoritmus a fentebb látott RRT algoritmus egy módosított változata. Elsõdlegesen differenciális robotok számára tervez egyenes szakaszokból és egy helyben fordulásokból álló pályát, de jó alapot szolgáltat a C*CS algoritmushoz is. Nevét a benne használt mozgási lokális tervezõrõl kapta, azaz az $R$, mint fordulást, a $T$ pedig az egyenesen haladást jelöli. Az eljárás az RRT mindhárom fázisában vezet be változásokat, és mind a kezdõ, mind a célkonfigurációból növesztünk fákat.
 
 \begin{figure}[H]
 \centering

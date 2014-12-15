@@ -20,9 +20,9 @@ A pályatervezés során a robot pillanatnyi állapotát a \emph{konfigurációjával} í
 \begin{align}
 q &= (x,y,\theta),
 \end{align}
-ahol $q$ a robot konfigurációja, $x,y$ határozza meg a robot pozícióját a síkon és $\theta$ határozza meg a robot orientációját.
+ahol $q$ a robot konfigurációja, $x,y$ határozza meg a robot pozícióját a síkon, és $\theta$ határozza meg a robot orientációját.
 
-Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér} adja meg, amit $C$-vel jelölünk. A konfigurációs tér azon részhalmazát, amely esetében a robot a környezetben található akadályokkal nem ütközik, \emph{szabad (konfigurációs) térnek} nevezzük ($C_{free}$). E halmaz komplementere azokat a konfigurációkat tartalmazza, amelyek esetén a robot ütközne az akadályokkal ($C_{obs} = C \backslash C_{free}$). A konfigurációs teret \aref{fig:ConfigSpace}. ábrán szemléltetjük.
+Egy lehetséges környezetben a robot összes állapotát a \emph{konfigurációs tér} adja meg, amit $C$-vel jelölünk. A konfigurációs tér azon részhalmazát, amely esetében a robot a környezetben található akadályokkal nem ütközik, \emph{szabad (konfigurációs) térnek} nevezzük ($C_{free}$). E halmaz komplementere azokat a konfigurációkat tartalmazza, amelyek esetén a robot ütközne az akadályokkal ($C_{obs} = C \backslash C_{free}$). A konfigurációs teret \aref{fig:ConfigSpace}. ábrán szemléltetjük.
 
 \begin{figure}
 \centering
@@ -33,7 +33,7 @@ Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér}
 
 A mozgásirányítás és pályatervezés során kifejezetten fontos ismernünk a korlátozásokat, mivel ezek meghatározzák a követhetõ pályákat. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál-egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). Dolgozatomban csak kinematikai korlátozásokkal fogok foglalkozni, dinamikai korlátokkal nem.
 
-Egy autó egy differenciális korlát, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, bár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás, vagy az egy helyben való elfordulás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Ha a korlátozások olyan differenciálegyenlettel írhatóak le, amelyek nem integrálhatóak, akkor a beszélhetünk anholonom korlátozásról.
+Egy autó esetében differenciális korlát, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, bár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás, vagy az egy helyben való elfordulás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Ha a korlátozások olyan differenciálegyenlettel írhatóak le, amelyek nem integrálhatóak, akkor a beszélhetünk anholonom korlátozásról.
 
 Az általam vizsgált robottípus az \emph{autószerû robot}, egy anholonom rendszer. Viszont léteznek olyan robotok, amelyek nem rendelkeznek anholonom korlátozásokkal (holonom rendszerek), ilyenek például az omnidirekcionális robotok. Egy omnidirekcionális robot képes bármilyen konfigurációból a tér bármely irányába elmozdulni.
 

@@ -60,7 +60,7 @@ Lehetséges a program módosítása, kiegészítése, például csak nemnegatív beavatkoz
 %----------------------------------------------------------------------------
 \section{Eredmények}
 %----------------------------------------------------------------------------
-A nehézségek ellenére összeállt egy kész rendszer, és jó eredmények születtek, de további finomításokra szükség van. A kotyogás kiküszöbölése jelenleg alacsony sebességen jelentõsen megnöveli a sebességszabályozó beállási idejét, ezért jelentõs a túlhaladás a pálya végén. A \figref{real_robot_velocity} ábrán látható,  ez a jelenség. Érdemes összehasonlítani a \figref{follow_w0} ábrával.
+A nehézségek ellenére összeállt egy kész rendszer, és jó eredmények születtek, de további finomításokra szükség van. A kotyogás kiküszöbölése jelenleg alacsony sebességen jelentõsen megnöveli a sebességszabályzó beállási idejét, ezért jelentõs a túlhaladás a pálya végén. A \figref{real_robot_velocity} ábrán látható  ez a jelenség. Érdemes összehasonlítani a \figref{follow_w0} ábrával.
 
 \begin{figure}[H]
 \centering
@@ -69,7 +69,7 @@ A nehézségek ellenére összeállt egy kész rendszer, és jó eredmények születtek, d
 \label{fig:real_robot_velocity}
 \end{figure}
 
-Látható, hogy mind elõrehaladás esetén, mind a tolatásnál jelentõs a túlszaladás. Az ábráról leolvasható az is, hogy a sebességet növelve a követés elromlik. Ez a kormányszervó lassú beállása miatt történik. A követésrõl készült videófelvétel is, ami megtalálható a dolgozatom mellékletében. A felvételen látható, hogy bár a szimulátorban nincs jelentõs tévedés, a valóságban a robot elcsúszik a tervezett célponthoz képest. Ez a dead-reckoning hibájából pontosabban az encoder elcsúszásából fakad.
+Látható, hogy mind elõrehaladás esetén, mind a tolatásnál jelentõs a túlszaladás. Alacsony sebességen (200 $\frac{mm}{s}$) a vonalkövetés pontos, a grafikonon a pályával teljes átfedésben van, viszont a sebességet növelve a követés elromlik. Ez a kormányszervó lassú beállása miatt történik. A követésrõl készült videófelvétel is, ami megtalálható a dolgozatom mellékletében. A felvételen látható, hogy bár a szimulátorban nincs jelentõs tévedés, a valóságban a robot elcsúszik a tervezett célponthoz képest. Ez a dead-reckoning hibájából, pontosabban az enkóder elcsúszásából fakad.
 
 %----------------------------------------------------------------------------
 \section{Jövõbeli tervek}
