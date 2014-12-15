@@ -3,9 +3,9 @@
 %----------------------------------------------------------------------------
 \section{Problémafelvetés}
 %----------------------------------------------------------------------------
-A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát, és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A probléma nagyságrendileg nehezebb, amikor a robot környezetében akadályok is találhatóak. 
+A helyváltoztatásra képes, úgynevezett mobil robotok esetében alapvetõ szituáció, hogy a robotnak a feladata végrehajtásához el kell jutnia egy célpontba. Ehhez önmagának kell az adott környezetben megterveznie a pályát, és emberi beavatkozás nélkül kell sikeresen eljutnia a kívánt célpontba. A problémát jelentõs mértékben megnehezíti, ha a robot környezetében akadályok is találhatóak. 
 
-Célom azon megközelítések és módszerek áttekintése, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetek, ezeket szimulátoron és valós robotokon is implementáltam, illetve teszteltem. A pályatervezéshez szorosan kapcsoló téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
+Dolgozatomban bemutatom azon megközelítéseket és módszereket, amelyek megoldást nyújtanak az autonóm pályatervezés kérdésére. Néhány módszert részletesebben is ismertetek, ezeket szimulátoron és valós robotokon is implementáltam, illetve teszteltem. A pályatervezéshez szorosan kapcsoló téma a mozgásirányítás, amivel szintén foglalkoznunk kell, hogy valós környezetben ténylegesen használható eljárásokat kapjunk.
 
 %----------------------------------------------------------------------------
 \section{Pályatervezés elmélete}
@@ -31,22 +31,23 @@ Egy lehetséges környezetben a robot összes állapotát, a \emph{konfigurációs tér}
 \label{fig:ConfigSpace}
 \end{figure}
 
-A korlátozások ismerete alapvetõ fontosságú a pályatervezés és mozgásirányítás során. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál-egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). Dolgozatomban csak kinematikai korlátozásokkal fogok foglalkozni, dinamikai korlátokkal nem.
+A mozgásirányítás és pályatervezés során kifejezetten fontos ismernünk a korlátozásokat, mivel ezek meghatározzák a követhetõ pályákat. A környezetben elhelyezkedõ akadályokat \emph{globális korlátozásoknak} tekintjük, a robothoz kapcsolódó korlátozásokat pedig \emph{lokális korlátozásoknak} \cite{Springer}. A lokális korlátozásokat a robot konfigurációs változóinak differenciál-egyenletével írhatjuk le, ezért gyakran nevezik õket \emph{differenciális korlátozásoknak} is. Differenciális korlátozások vonatkozhatnak sebesség (kinematikai) és gyorsulás mennyiségre is (dinamikai korlát). Dolgozatomban csak kinematikai korlátozásokkal fogok foglalkozni, dinamikai korlátokkal nem.
 
-Egy autó esetén mindenki számára egyértelmû, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, habár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Az anholonom korlátozásról akkor beszélünk, ha a korlátozás olyan differenciálegyenlettel írható le, amely nem integrálható.
+Egy autó egy differenciális korlát, hogy csak bizonyos íveken tudunk mozogni, egy adott konfigurációból nem tudunk a konfigurációs tér bármely irányába elmozdulni, bár a szabad tér bármely konfigurációjába eljuthatunk. Autónál emiatt nem olyan egyszerû például a párhuzamosan parkolás, vagy az egy helyben való elfordulás. Azokat a robotokat, amelyek ehhez hasonló korlátozásokkal rendelkeznek, \emph{anholonom rendszereknek} nevezzük. Ha a korlátozások olyan differenciálegyenlettel írhatóak le, amelyek nem integrálhatóak, akkor a beszélhetünk anholonom korlátozásról.
 
 Az általam vizsgált robottípus az \emph{autószerû robot}, egy anholonom rendszer. Viszont léteznek olyan robotok, amelyek nem rendelkeznek anholonom korlátozásokkal (holonom rendszerek), ilyenek például az omnidirekcionális robotok. Egy omnidirekcionális robot képes bármilyen konfigurációból a tér bármely irányába elmozdulni.
 
 %----------------------------------------------------------------------------
 \subsubsection{Robotmodell}
 %----------------------------------------------------------------------------
-Az általam vizsgált robot típust, az autószerû robotot mindenki jól ismeri és elterjedtsége megkérdõjelezhetetlen, de a kinematikai leírása már kevésbé ismert, ellenben az \figref{carLikeRobotModel} ábra segítségével könnyedén levezethetõ:
+Az általam vizsgált robot típust, az autószerû robot sokak által jól ismert és elterjedtsége megkérdõjelezhetetlen. A mozgásegyenletét az \figref{carLikeRobotModel} ábra segítségével könnyedén levezethetjük:
 
 \begin{align} \label{eq:carLikeRobot}
 \dot{x} &= v_r \cos \theta \notag \\ 
 \dot{y} &= v_r \sin \theta \notag \\ 
 \dot{\theta} &= \frac {v_r} {L} \tan \phi, 
 \end{align}
+
 ahol $L$ az elsõ és hátsó tengelyek távolsága, $\phi$ a kormányszög, $v$ pedig a hátsó tengely középpontjának tangenciális sebessége, amelyet a robot referenciapontjának nevezünk. 
 
 \begin{figure}
