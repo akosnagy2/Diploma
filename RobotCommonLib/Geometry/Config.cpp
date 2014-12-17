@@ -27,3 +27,19 @@ float Config::PointAngularDistance(const Point &p, bool fromConfToPoint)
 	else
 		return angDist2;
 }
+
+Json::Value Config::getJsonValue()
+{
+	Json::Value val;
+	val["x"] = this->p.x;
+	val["y"] = this->p.y;
+	val["phi"] = this->phi;
+	return val;
+}
+
+void Config::setFromJson(Json::Value& value)
+{
+	this->p.x = value["x"].asFloat();
+	this->p.y = value["y"].asFloat();
+	this->phi = value["phi"].asFloat();
+}

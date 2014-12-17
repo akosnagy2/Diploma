@@ -78,9 +78,6 @@
     <ClCompile Include="PathFollow\PathShifter.cpp">
       <Filter>PathFollow</Filter>
     </ClCompile>
-    <ClCompile Include="tiny_obj_loader.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CCS\geometry\Arc.cpp">
       <Filter>CCS\geometry</Filter>
     </ClCompile>
@@ -175,9 +172,6 @@
     </ClInclude>
     <ClInclude Include="PathFollow\PathShifter.h">
       <Filter>PathFollow</Filter>
-    </ClInclude>
-    <ClInclude Include="tiny_obj_loader.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CCS\geometry\Arc.h">
       <Filter>CCS\geometry</Filter>

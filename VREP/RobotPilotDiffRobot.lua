@@ -47,7 +47,7 @@ end
 
 function RobotPilotDiffRobot()
 	objHandle=simGetObjectHandle("diff_robot_ext") -- Handle of the robot
-	start = loadOBJ("c:/BME/Diploma/Src/RobotSolution/Frame/frame" .. envFile ..  ".obj")
+	start = loadOBJ(envPath .. "frame" .. envFile ..  ".obj")
 	dummy = simCreateDummy(0.01)
 	simSetObjectPosition(dummy,sim_handle_parent,{start[1], start[2], 0.002})
 	simSetObjectOrientation(dummy,sim_handle_parent,{0, 0, start[3]})		

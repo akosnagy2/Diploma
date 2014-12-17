@@ -12,6 +12,13 @@ function setRobotSpeed(v, fi)
 		simSetJointTargetVelocity(rightMotor, speed)
 	end
 	
+	if (fi > fiMax) then
+		fi = fiMax
+	else if (fi < -fiMax) then
+		fi = -fiMax
+		end
+	end
+	
 	-- Set steering wheels
 	simSetJointPosition(leftSteer, math.atan(axisDistance  / (-wheelDistance / 2 + axisDistance  / math.tan(fi))))
 	simSetJointPosition(rightSteer, math.atan(axisDistance / (wheelDistance / 2 + axisDistance  / math.tan(fi))))

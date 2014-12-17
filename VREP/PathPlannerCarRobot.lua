@@ -104,7 +104,7 @@ function PathPlannerCarRobot()
 	local portNb = getPort()
 	
 	-- Start Server
-	result=simLaunchExecutable('ServerVrepApp',portNb,1) -- set the last argument to 1 to see the console of the launched server
+	result=simLaunchExecutable('ServerVrepApp',portNb,0) -- set the last argument to 1 to see the console of the launched server
 
 	-- Start Client
 	result2=simLaunchExecutable('PathPlannerApp',"",1) -- set the last argument to 1 to see the console of the launched server

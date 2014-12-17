@@ -54,10 +54,6 @@ Arc::Arc(const Configuration& start, const Point& end, bool shorter) {
     }
 }
 
-double Arc::getRadius() const {
-    return radius;
-}
-
 /**
  * Translate arc with pos as a vector
  * @param pos Relative to absolute frame.

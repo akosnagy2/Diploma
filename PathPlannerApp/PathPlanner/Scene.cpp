@@ -54,6 +54,14 @@ void PathPlanner::Scene::SetRTRParameters(int _maxIteration, float _fixPathProba
 		generator.seed(randSeed);
 }
 
+void PathPlanner::Scene::SetCCSParameters(float _reversePentaltyFactor, float _useIntermediateS, float _insertCount, float _dx)
+{
+	reversePenaltyFactor = _reversePentaltyFactor;
+	useIntermediateS = _useIntermediateS > 0.0f;
+	insertCount = (int) _insertCount;
+	dx = _dx;
+}
+
 bool PathPlanner::Scene::CCSPlanner()
 {
 	return CCSWrapper(*this, pathC);

@@ -24,6 +24,7 @@ public:
 	float getV() { return v; }
 	float getFi() { return fi; }
 	Config getRabbit() { return predictPoint; }
+	float getTrackError() { return trackError; }
 private:
 	std::vector<PathSegment> &paths;
 	std::vector<PathSegment> frontPath;
@@ -33,7 +34,7 @@ private:
 	int index;
 	int pathIndex;
 
-	Config pos;
+	float trackError;
 	Config predictPoint;
 	float v;
 	float fi;

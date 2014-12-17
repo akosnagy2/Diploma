@@ -22,6 +22,7 @@ public:
     void setDirection(bool dir);
     Configuration getStartConfig() const;
     Configuration getEndConfig() const;
+	double getRadius() const;
     
     virtual ~Path() {}
 protected:
@@ -29,6 +30,7 @@ protected:
     Configuration start;
     Configuration end;
     bool dir;
+	double radius;
 };
 
 #endif	/* PATH_H */

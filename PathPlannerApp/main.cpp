@@ -2,7 +2,11 @@
 #include "Geometry\Config.h"
 #include <chrono>
 #include "tiny_obj_loader.h"
+
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/asio.hpp>
+#include <boost/system/error_code.hpp>
+
 #include "CtrlMessage.h"
 #include "PathMessage.h"
 #include "PathProfile\path_profile_top.h"
@@ -13,15 +17,7 @@
 #include "PathFollow/CarPathController.h"
 
 #include "CarLikeRobot.h"
-
-typedef enum
-{
-	DifferentialPathFollow = 2,
-	DifferentialPathPlanner = 4,
-	DifferentialRobotPilot = 8,
-	CarPathFollow = 16,
-	CarPathPlanner = 32,
-} AppTypedef;
+#include "App.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -41,7 +37,7 @@ float pathMaxTangentAccel = 200.0f;
 float pathMaxAngularSpeed = 1.0f;
 
 CarLikeRobot robotData;
-static int robotType;
+static App robotType;
 
 //TODO: nincs checkBack;
 
@@ -142,8 +138,8 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 	parMsg.receive(s);	
 	
 	//PathProfile, PathFollow params
-	robotType = (AppTypedef)(int)parMsg.values[0];
-	if((robotType == AppTypedef::CarPathFollow) || (robotType == AppTypedef::CarPathPlanner)) {
+	robotType.appType = (App::AppTypedef)(int)parMsg.values[0];
+	if(robotType.isCarLikeRobot()) {
 		predictSampleLength = (float)parMsg.values[1];
 		predictDistanceLength = (float)parMsg.values[2];
 		lineW0 = (float) parMsg.values[4];
@@ -152,6 +148,7 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 		wheelDistance = (float) parMsg.values[7];
 		pathMaxSpeed = (float) parMsg.values[8];
 		pathMaxAccel = (float) parMsg.values[9];
+		//pathMaxTangentAccel = pathMaxAccel;
 		robotData.setAxisDistance((float) parMsg.values[10]);
 		robotData.setFiMax((float) parMsg.values[11]);
 		robotData.setWheelDistance(wheelDistance);
@@ -163,7 +160,8 @@ bool LoadParams(tcp::iostream &s, PathPlanner::Scene &sc, string &envFileName)
 		sc.SetRobotMinimumRadius((float)parMsg.values[17]);
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS((float)parMsg.values[18]);
-	} else {
+		sc.SetCCSParameters(parMsg.values[19], parMsg.values[20], parMsg.values[21], parMsg.values[22]);
+	} else { 
 		predictSampleLength = (float)parMsg.values[1];
 		predictDistanceLength = (float)parMsg.values[2];
 		oriPar_P = (float) parMsg.values[3];
@@ -213,10 +211,10 @@ int main()
 		sc.SetRobotWheelBase(wheelDistance);
 		sc.SetPathDeltaS(10.0);
 		sc.SetRTRParameters(50000, 0.0f, 0.7f, 300);
-		robotType = AppTypedef::DifferentialPathPlanner;
+		robotType.appType = App::DifferentialPathPlanner;
 	}
 	
-	if ((robotType == AppTypedef::CarPathPlanner) || (robotType == AppTypedef::DifferentialPathPlanner))
+	if (robotType.isPathPlanner())
 	{
 		PathMessage rtrPath;
 		cout << "PathPlanner Mode" << endl;
@@ -291,7 +289,7 @@ int main()
 		stop = high_resolution_clock::now();
 		cout << "C*CS Planner ended, " <<duration_cast<chrono::microseconds>(stop-start).count() << " us." << endl;
 		
-		if(!success && (robotType == AppTypedef::CarPathPlanner)) 
+		if(!success && robotType.isCarLikeRobot()) 
 			return -1;		
 
 		geoPath = sc.GetPath();	
@@ -310,7 +308,7 @@ int main()
 	//Calc sampled path
 	start = high_resolution_clock::now();
 	cout << "Time Parameterization starting..." << endl;
-	if ((robotType == AppTypedef::CarPathPlanner) || (robotType == AppTypedef::CarPathPlanner))
+	if (robotType.isCarLikeRobot())
 	{
 		setCarLimits(&robotData, pathMaxSpeed, pathMaxAccel, pathMaxTangentAccel, timeStep);
 		profile_top(geoPath, sampPath, true);	
@@ -332,7 +330,7 @@ int main()
 	}
 
 	cout << "Path Follow Controlling starting..." << endl;
-	if ((robotType == AppTypedef::DifferentialPathFollow) || (robotType == AppTypedef::DifferentialPathPlanner))
+	if (robotType.isDifferentialRobot())
 	{
 		//Convert Sampled PathSegments to PathFollow PathSegments
 		vector<PathSegmentTypedef> path_dsp;
@@ -405,6 +403,18 @@ int main()
 	} else {
 		CarLineFollower follower(robotData, lineW0, lineKsi, predictSampleLength);
 		CarPathController pathController(sampPath, robotData, follower, predictSampleLength);
+
+		boost::asio::io_service io;
+		boost::asio::serial_port serial_port(io);
+		boost::system::error_code ec;
+		
+		//serial_port.open("COM3", ec);
+		//if(ec == boost::system::errc::no_such_file_or_directory)
+		//{
+		//	cout << "Could not open serial port" << endl;
+		//}
+		//serial_port.set_option(boost::asio::serial_port::baud_rate(115200));
+		
 		while(s.good()) {
 			CtrlMessage ctrl_out;
 			Config act_pos;
@@ -426,7 +436,7 @@ int main()
 			pathController.Loop(act_pos);
 			rabitPos.pos = pathController.getRabbit();
 
-			//info.values.push_back(speedController.getDistError());
+			info.values.push_back(pathController.getTrackError());
 			//info.values.push_back(speedController.getSumError());
 
 			ctrl_out.ctrl_sig.push_back(pathController.getV());
@@ -434,10 +444,12 @@ int main()
 			ctrl_out.src = 1;
 
 			std::cout << "Target speed: " << pathController.getV() << ", angle: " << pathController.getFi() << endl;
+
 			ctrl_out.send(s);
 			rabitPos.send(s);
 			info.send(s);
 		}
+		serial_port.close();
 	}
 
 	return 0;

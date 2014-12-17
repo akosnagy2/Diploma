@@ -5,8 +5,7 @@
  * Created on 2014. április 8., 15:25
  */
 
-#ifndef LOCALPLANNER_H
-#define	LOCALPLANNER_H
+#pragma once
 
 #include "ARMBuilder.h"
 #include "CCS.h"
@@ -31,6 +30,3 @@ private:
     Configuration& goal;
     double nextDist;
 };
-
-#endif	/* LOCALPLANNER_H */
-

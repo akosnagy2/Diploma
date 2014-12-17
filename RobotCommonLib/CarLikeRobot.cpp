@@ -71,13 +71,10 @@ void CarLikeRobot::modelRobot(float v, float fi)
 		robotSteer = fiMax;
 	else if(robotSteer < -fiMax)
 		robotSteer = -fiMax;
-}
 
-Config CarLikeRobot::getPosition()
-{
+	/* Pozíció számítás */
 	position.phi += 0.5f * robotSpeed * timeStep * tan(robotSteer) / axisDistance;
 	position.p.x += robotSpeed * cos(position.phi) * timeStep;
 	position.p.y += robotSpeed * sin(position.phi) * timeStep;
 	position.phi += 0.5f * robotSpeed * timeStep * tan(robotSteer) / axisDistance;
-	return position;
 }

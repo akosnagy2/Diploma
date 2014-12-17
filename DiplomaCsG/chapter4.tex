@@ -1,0 +1,177 @@
+%----------------------------------------------------------------------------
+\chapter{Pályakövetõ szabályozás}
+%----------------------------------------------------------------------------
+Ebben a fejezetben az elkészült, idõben egyenletesen mintavételezett pálya követésének problémáját, majd az ehhez készült szabályozási algoritmusokat mutatom be.
+
+%----------------------------------------------------------------------------
+\section{Pályakövetés}
+%----------------------------------------------------------------------------
+Autószerû robot esetén a követendõ pályát szegmensekre bontjuk fel. Egy szegmensen belül a robot megállás nélkül halad elõre vagy hátra a pálya mentén. Ebbõl következik, hogy a szegmensek a haladási irányból, és a pálya idõben egyenletesen mintavételezett pontjaiból állnak. Kettõ közt a robotnak nem szükséges semmilyen speciális feladatot végrehajtani, közvetlenül folytatja az útját következõ szegmens végrehajtásával\footnote{Ellentétben a differenciális robottal, amely képes egy helyben való elfordulásra, így akár törtszakaszok követésére is.}. Ilyenkor van lehetõség az irány módosítására. Ebbõl következik, hogy a teljes útvonal szegmensekre bontását irányváltoztatások jelzik, az azonos irányú pályaelemeket, mint például amik a C*CS esetén is keletkezhetnek, egy szakaszba egyesíti az algoritmus.
+
+A pályakövetõ szabályozás alapvetõen két szintre oszlik, ahogyan ez a \figref{PathFollow} ábrán is látható. A felsõbb szinten a pályába kódolt sebesség és pozíció követése a cél, a robot aktuális pozíciója alapján, míg az alsóbb szinten az így számolt sebesség és kormányszög alapjel szabályozása történik. Ez a szabályozás az algoritmusok megvalósításának szintjén is elkülönül, míg az alacsonyabb szintû szabályozást magán a robot vezérlõkártyáján futtathatjuk, addig a magasabb szintû szabályozást egy nagyobb teljesítményû számítógépre kell elhelyeznünk.
+
+\subsection{Sebességszabályozás}
+Alacsony szinten a robotsebességénél történik meg a sebességszabályozás. Az általam használt valós robot négy kerék meghajtású, egyetlen DC motor gondoskodik a robot mozgatásáról. A robot középsõ erõátviteli tengelyére csatlakozik egy inkrementális adó, mely biztosítja a sebességszabályozás számára a visszacsatolást. Ahogyan a feszültségvezérelt egyenáramú motorok esetén gyakran lenni szokott, én is egy módosított PI szabályozót használtam sebességszabályozásra.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=150mm, keepaspectratio]{figures/palyakovetes.pdf}
+\caption{A pályakövetés áttekintõ blokkdiagramja.} 
+\label{fig:PathFollow}
+\end{figure}
+
+A szabályozótervezés elõtt figyelembe kell vegyük a motor és a mechanikából adódó nemlineáris hatásokat, mivel ezek a hatások nagymértékben leronthatják a szabályozási rendszer tulajdonságait. A nemlineáris hatást annak inverzével lehet kiiktatni a rendszerünkbõl, mivel így az együttes hatásuk egy egységnyi erõsítéssé módosul. Az inverz meghatározásához meg kellett mérnem a nemlineáris hatás karakterisztikáját. Ez látható a \figref{motor_kar} ábrán.
+
+Az ábrán a vízszintes tengelyen a motorvezérlõ által kiadott kitöltési tényezõ, a függõleges tengelyen pedig a robot állandósult sebessége látható. Megfigyelhetõ, hogy a leginkább káros hatása a holtsávnak van. Ez a jelenség alacsony sebességeken érvényesül. Ezt a hatást az okozza, hogy a súrlódások következtében a motor nem tud elfordulni, így a kiadott beavatkozójel nem tud érvényre jutni. A karakterisztikán látható még a telítõdés hatása is, azaz hogy magasabb sebességeken már nem érhetõ el olyan mértékû gyorsulás.
+
+A PI szabályozók esetében gyakran elõforduló probléma az elintegrálódás \cite{Bezi}. Az elintegrálódás a rendszerben lévõ beavatkozószerv telítése miatt lép fel, kiküszöbölése történhet többféleképpen, szabályozó típusától függõen. Esetünkben egy FOXBORO struktúra segítségével elõzzük meg az elintegrálódást.
+
+\begin{figure}
+\centering
+\includegraphics[width=125mm, keepaspectratio]{figures/motor_kar.pdf}
+\caption{Motor és mechanika nemlineáris karakterisztikája} 
+\label{fig:motor_kar}
+\end{figure}
+
+A FOXBORO szabályozás esetén egy pozitívan visszacsatolt rendszer segítségével valósítjuk meg a PI szabályozót. A szabályozás hatásvázlata a \figref{foxboro} ábrán látható.
+
+Átviteli függvénye:
+
+\begin{align} \label{eq:foxboro}
+C(s) = k_C \frac{1}{1-\frac{1}{1+sT}} = k_C \left(1 + \frac{1}{sT}\right)
+\end{align}
+
+Azaz a lineáris tartományban pontosan megegyezik egy PI szabályozással.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=100mm, keepaspectratio]{figures/foxboro.png}
+\caption{A FOXBORO szabályozó hatásvázlata \cite{Bezi}} 
+\label{fig:foxboro}
+\end{figure}
+
+\subsection{Referenciapont-választás}
+A sebességszabályozók számára a sebesség alapjelet a pálya biztosítja, hiszen az idõparaméterezés során olyan pálya készült, amely idõben egyenletesen mintavételezett, és így a pályapontok közötti távolságból a robot elõírt sebessége kiszámolható. 
+
+Már csak azt kell eldöntenünk, hogy a pálya melyik pontjához tartozó sebesség alapjelet alkalmazzuk az adott mintavételnél. Ezt hívjuk \emph{referenciapont-választásnak}. Az eljárás elsõ közelítésben igen egyszerû, a pálya pontjai közül a robot pozíciójához legközelebbi pályapontot választjuk referenciapontnak, és így már egyértelmûen adódik a sebesség alapjelünk is.
+
+A fejlesztés egy korai stádiumában felmerült, hogy ezt a referenciapontot ne így határozzam meg, hanem folyamatosan léptessem a pálya mentén. Ezzel kvázi elõírtam, hogy  a robot adott idõpontban a pálya mely pontjában tartózkodjon. Mivel nem biztos, hogy a robot ténylegesen a kívánt pozícióban található, egy külön szabályozó segítéségével korrigáltam a pályába kódolt sebesség alapjelet, hogy a robot elérje a referenciapontot. 
+
+Amennyiben nem ideális modellt használtunk, a megoldás nem mûködött, a rendszer instabillá vált. Késõbb beláttam, hogy a megoldás problémája az volt, hogy nem csak azt írtuk elõ a robot számára, hogy mekkora sebességgel haladjon a pálya mentén, hanem a referenciaponton keresztül azt is, hogy hol tartózkodjon az adott idõpontban. Ez már azért sem lehetséges, mivel, ha a robot a referenciaponthoz képest lemaradásban van (általában ez történik), akkor a sebességalapjel korrekció növelné a sebességet, pedig azt már alapból úgy írtuk elõ, hogy a lehetõ leggyorsabban haladjon a robot a pálya mentén. Tehát az alapjel módosító szabályozóval arra kényszerítenénk a rendszert, hogy szegje meg a saját korlátozásait.
+
+A végleges megoldásnál ezzel szemben a referenciapontot alakítjuk a robothoz, nem pedig fordítva. Ez azt jelenti, hogy nem írjuk elõ, hogy a robot a pályát mennyi idõ alatt járja be, csak azt, hogy a pálya adott pontjában mekkora sebességgel avatkozzunk be.
+
+A pályakövetõ algoritmusnál lényeges szempont a futási idõ, mivel a roboton valós idõben kell mûködnie, ezért a referenciapont meghatározásánál nem megyünk végig a pálya összes pontján. Hogy ezt megtegyük, a legközelebbi pont keresését az elõzõ iterációban használt referenciapontnál kezdjük, és csak egy bizonyos számú pontot vizsgálunk meg. Ha a robot korlátai megfelelõen lettek beállítva, akkor az egymás utáni referenciapontoknak idõben sorban kell következniük. Ezért teljesen felesleges a pálya összes pontját megvizsgálnunk.
+
+\subsection{Túlhaladás problémája}
+A pályakövetés valós roboton való tesztelése során egy érdekes jelenséget tapasztaltunk, miszerint néha a pálya közepén megállt a robot és nem indult tovább. Késõbbi elemzés során kiderült, hogy ez abban az esetben történik, mikor túlhalad egy szegmensen, tehát nem pontosan a szegmens utolsó pontjában áll meg a robot.
+
+A probléma ebben az esetben az, hogy a referenciapont-választás alapján a következõ szegmens legelsõ pontját találja meg, és az ehhez tartozó sebességérték viszont igen alacsony. Míg el nem éri a pálya kezdetét, addig ezt a sebességet tartja a robot. A gondot az alsóbbrendû PI szabályozás beállási ideje, illetve annak lassúsága okozza.
+
+A probléma elkerülését úgy oldottam meg, hogy amíg a pályaszakasz elsõ pontja van legközelebb a robot pozíciójához, addig nem a pályába kódolt sebességet továbbítjuk az alsóbb szintû szabályozónak, hanem a gyorsulás és sebességkorlát alapján növeljük a robot sebességét. A valóságban ez csak köztes szakaszok váltásánál jelentkezik, mivel a pályát eleve a robot kezdõpozíciójából tervezzük. Ezzel szemben két szegmens közt nem garantált a pálya pontos követése, mivel nem pozíciószabályozást használunk.
+
+%----------------------------------------------------------------------------
+\section{Virtuális vonalkövetõ szabályozás}
+%----------------------------------------------------------------------------
+Az orientációszabályozás feladata a kormányszög alapjel biztosítása a pályakövetés során. Erre a célra egy virtuális vonalkövetést valósítottam meg. A vonalkövetõ autók rendszermodelljénél és szabályozásánál azzal a feltételezéssel élünk, hogy az autó elsõ keréktengelye alatt egy keresztirányú, egydimenziós vonalszenzor helyezkedik el. A jelenlegi esetben a pályakövetõ szabályozás elvét egy ehhez hasonló ``virtuális szenzor'' segítségével fogalmaztam meg. Ez a módszer nagyon hasonló a RobonAUT \cite{RobonAUTszem} versenyen is látott vonalkövetõ autók szabályozására, azzal az elõnnyel, hogy itt sokkal pontosabban ismert a ``vonal'' helye és orientációja.
+
+\begin{figure}
+\centering
+\includegraphics[height=75mm, keepaspectratio]{figures/ferdevonal.png}
+\caption{Ferde vonal és robot modellje \cite{RobonAUTszem}} 
+\label{fig:ferdevonal}
+\end{figure}
+
+Mivel egy ilyen vonalkövetõ autó esetén a vonalszenzor mozgására van szükségünk, így módosítani kell a robotunk modelljét \eqref{carLikeRobot}, amit a következõképpen tehetünk meg:
+
+\begin{align}\label{eq:carLikeRobotMod}
+\dot{x} &= v_r \frac{\cos (\theta + \phi)}{\cos \phi} \notag \\
+\dot{y} &= v_r \frac{\sin(\theta + \phi)}{\cos \phi} \notag \\
+\dot{\theta} &= v_r \frac{\tan \phi}{L},
+\end{align}
+
+ahol a jelölések megegyeznek \aref{eq:carLikeRobot} esetén használtakkal. Fontos megjegyezni, hogy bár az elsõ tengely középpontjára írtuk fel a mozgásegyenletet, a hátsó referenciapont sebességével számolunk. A továbbiakban ezt a sebességet egyszerûen csak $v$-vel jelöljük. \Aref{fig:ferdevonal} ábrán látható modellt tételezzük fel, azaz azt, hogy az a vonal, amit követni kívánunk, egyenes. Ebben az esetben meghatározható a vonal és a robot orientációjának különbsége ($\delta$), illetve a vonal és az elsõ tengely középpontjának -- szenzorsor közepének -- elõjeles távolsága ($p$). Ezen feltételezések és a mozgásegyenlet alapján felírhatjuk a következõ következtetéseket \cite{RobonAUTszem}:
+
+\begin{align}\label{eq:deltaAndp}
+\dot{\delta} &= -v \frac{\tan \phi}{L} \notag \\
+\dot{p} &= v \cdot \tan \delta - v \cdot \tan \phi - v \cdot \frac{p}{L} \tan \delta \tan \phi
+\end{align}
+
+Látható, hogy ez egy nemlineáris rendszer, de a szabályzótervezéshez ezt linearizálnunk kell. Mivel az a célunk, hogy a robot a vonalon, és azzal párhuzamosan helyezkedjen el, így a munkapont, amely körül a linearizálást elvégezzük a $p = 0$, $\phi = 0$ és a $\delta = 0$. Így a következõ egyenletekkel számolhatunk:
+
+\begin{align}\label{eq:linearizedModel}
+\dot{\delta} &= - \frac{v}{L} \phi \notag \\
+\dot{p} &= v(\delta - \phi - 0)
+\end{align}
+
+A linearizálás egyszerû, mert a tangens 0 környezetében jól közelíthetõ az argumentumával. Látható, hogy a $\dot{p}$ esetén az utolsó tagot elhanyagoljuk, mivel a két kis szög szorzata annyira kis számot eredményez, hogy ez gond nélkül megtehetõ. Ha ezt kissé más formában írjuk fel, rögtön megkapjuk a linearizált rendszer állapotteres leírását:
+
+\begin{align}\label{eq:stateSpace}
+x &= [\delta \quad p]^{T} \\ \notag
+\dot{x} &= \begin{bmatrix}
+0 & 0 \\
+v & 0
+\end{bmatrix}x + \begin{bmatrix}
+-v/L \\
+-v
+\end{bmatrix} \phi \\ \notag
+p &= [0 \quad 1]x + 0 \cdot \phi
+\end{align}
+
+Ellentétben egy valós vonalkövetõ autóval, esetünkben viszonylag pontosan meg tudjuk határozni a rendszer állapotváltozóit. Így célszerû közvetlenül ezek visszacsatolása, mivel  így szabadon megválaszthatóak a visszacsatolt rendszer pólusai. Ezt érdemes úgy megtenni, hogy minimálisra csökkentsük a túllendülést. Ha a rendszer válaszát kéttárolós lengõtaggal közelítjük, akkor annak átviteli függvénye a következõ:
+
+\begin{align}\label{eq:kettarolosLengo}
+W(s) = \frac{\omega_{0}^{2}}{\omega_{0}^{2} + 2\xi\omega_{0}s+s^{2}},
+\end{align}
+
+ahonnan a pólusok:
+
+\begin{align}\label{eq:polusok}
+s_{1,2} = -\omega_{0}\xi \pm j\omega_{0}\sqrt{1-\xi^{2}},
+\end{align}
+
+ahol $\omega_{0}$ a rendszer csillapítatlan sajátfrekvenciája és $\xi$ a csillapítási tényezõ. Ha túllendülés mentes rendszert szeretnénk, de a lehetõ leggyorsabb beállási idõvel, akkor $\xi = 1$-et kell választanunk. Az $\omega_{0}$ megválasztására nincsen hasonló korlátozásunk, ezt az aktuális pályához tudjuk igazítani.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=140mm, keepaspectratio]{figures/shifted_path.pdf}
+\caption{Kék az eredeti pálya, piros az virtuális szenzorsor számára eltolt pálya} 
+\label{fig:shifted_path}
+\end{figure}
+
+Az algoritmust úgy készítettem el, hogy az inicializálási fázisban a kívánt pólusoknak megfelelõen, az Ackermann-képlet \cite{Lantos} segítségével kiszámítja az erõsítési tényezõket, és késõbb ezt használja fel a szabályozási fázisban. Az eredmények azt mutatták, hogy az így készült szabályozóval a szimulációban a robot trajektóriája a kanyarokat levágta. Ez az eredmény egyáltalán nem meglepõ, mivel a szabályozást úgy írtuk fel, hogy az autó eleje kövesse a pályát, de a pályatervezés során a robot referenciapontjának pályáját terveztük meg. Szerencsére ezt egyszerûen orvosolhatjuk, ha a mintavételezett pálya minden pontját eltoljuk az autó hosszával (\figref{shifted_path} ábra).
+
+%----------------------------------------------------------------------------
+\section{Eredmények}
+%----------------------------------------------------------------------------
+Most pedig tekintsük át a pályakövetés alakulását különbözõ paraméterek esetén. A sebességszabályozásnál láttuk, hogy egy újabb szabályozás bevezetése csak hibát okoz a rendszerünkben, így csak az alacsony szintû PI szabályozó paramétereivel tudjuk módosítani a sebességprofil követésének minõségét.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=140mm, keepaspectratio]{figures/follow_w0.pdf}
+\caption{Pályakövetés szimulált eredményei különbözõ $\omega_0$ paraméterekkel} 
+\label{fig:follow_w0}
+\end{figure}
+
+Az orientációszabályozás esetén az elõírt pólusok értékein kívül a szenzorsor pozíciójával is lehetõségünk van módosítani a szabályozás minõségét. Bár a követendõ pályát, az autó hosszával eltoltuk, az eredmények azt mutatták, hogy hasznos, ha van egy további paraméterünk a követés során, így további elõretekintést adhatunk meg. Intuitívan beláthatjuk, hogy minél elõrébb tekintünk, annál gyorsabban tudunk reagálni, így alacsonyabb beavatkozójel szükséges a szabályozás során.
+
+Ehhez képzeljük el, hogy az elsõ kerekeket egy $d$ távolsággal elõrébb helyezzük. Ebben az esetben a kormányszög és a kerék által bejárt fordulókör sugara közt a következõ összefüggést írhatjuk fel:
+
+\begin{align}
+\tan \phi = \frac{L}{\rho}, \quad \tan \gamma = \frac{L+d}{\rho}
+\end{align}
+
+Emlékeztetõül elõbb az eredeti összefüggés látható. Ebben az esetben $\gamma$ az új kormányszögünk. A két egyenletet egyenlõvé téve:
+
+\begin{align}
+\frac{L}{\tan \phi} = \frac{L + d}{\tan \gamma},
+\end{align}
+
+amibõl a következõ kifejezést kapjuk \cite{RobonAUTszem}:
+
+\begin{align}\label{eq:predict}
+\tan \phi = \tan \phi \cdot \frac{L}{L+d},
+\end{align}
+
+Vegyük észre, hogy az elõretekintés távolságának megnövelésével a virtuális kormányszög ($\gamma$) megnõ. Mivel a valóságos kormányszög mechanikailag korlátozva van, ez telítést jelent a szabályozásunkban, amit így ki tudunk bõvíteni.
+Természetesen az elõretekintés mértékének túl nagyra választása azt eredményezi, hogy a kanyarokat hajlamos a robot levágni. Mégis jelentõs elõnnyel rendelkezik, mivel így gyengíthetõ a kormányszervó nem nulla beállási idejének hatása.

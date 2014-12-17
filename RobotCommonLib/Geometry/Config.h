@@ -1,11 +1,11 @@
 #pragma once
 #include "Point.h"
 #include "Angle.h"
+#include "ISerializable.h"
 
 namespace PathPlanner
 {
-
-	struct Config
+	struct Config : ISerializable
 	{
 		Config()
 		{}
@@ -47,6 +47,9 @@ namespace PathPlanner
 
 		Point p;
 		float phi;
+
+		virtual Json::Value getJsonValue();
+		virtual void setFromJson(Json::Value& value);
 	};
 
 }

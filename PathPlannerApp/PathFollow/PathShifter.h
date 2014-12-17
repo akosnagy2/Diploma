@@ -8,12 +8,12 @@ class PathShifter
 {
 public:
 	PathShifter(PathSegment &pathSegment, CarLikeRobot &car);
-	PathSegment getShiftedPath();
+	PathSegment getShiftedPath(float predict);
 	~PathShifter();
 private:
 	PathSegment &pathSegment;
 	CarLikeRobot &car;
 
-	Config transformPosition(Config &pos);
+	Config transformPosition(Config &pos, float predict);
 };
 

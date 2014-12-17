@@ -29,6 +29,7 @@ float CarLineFollower::getFi(float delta, float p)
 		fi = -M_PI_2 + EPS;
 
 	return atan(robot.getAxisDistance() * 0.001f / L * tan(fi));
+	//return fi;
 }
 
 float CarLineFollower::getFi(float delta, float p, float predictDist)

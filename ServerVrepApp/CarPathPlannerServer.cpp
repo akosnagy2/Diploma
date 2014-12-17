@@ -1,5 +1,6 @@
 #include "CarPathPlannerServer.h"
 #include "CtrlMessage.h"
+#include "App.h"
 
 void CarParsePathFollowPars(deque<float> &parsIn, CarPathFollowParamsTypedef &parsOut)
 {
@@ -30,7 +31,7 @@ void CarParsePathFollowPars(deque<float> &parsIn, CarPathFollowParamsTypedef &pa
 
 void CarParsePathPlannerPars(deque<float> &parsIn, CarPathPlannerParamsTypedef &parsOut)
 {
-	parsOut.app = (AppTypedef)(int)parsIn.front(); parsIn.pop_front();
+	parsOut.app.appType = (App::AppTypedef)(int)parsIn.front(); parsIn.pop_front();
 
 	CarParsePathFollowPars(parsIn, parsOut.PathFollow);
 
@@ -41,6 +42,11 @@ void CarParsePathPlannerPars(deque<float> &parsIn, CarPathPlannerParamsTypedef &
 	parsOut.envFile = parsIn.front(); parsIn.pop_front();
 	parsOut.rMin = parsIn.front(); parsIn.pop_front();
 	parsOut.ds = parsIn.front(); parsIn.pop_front();
+
+	parsOut.reversePenaltyFactor = parsIn.front(); parsIn.pop_front();
+	parsOut.useIntermediateS = parsIn.front(); parsIn.pop_front();
+	parsOut.insertCount = parsIn.front(); parsIn.pop_front();
+	parsOut.dx = parsIn.front(); parsIn.pop_front();
 }
 
 void CarForwardPathPlannerPars(tcp::iostream &client, CarPathPlannerParamsTypedef &pars)
@@ -48,7 +54,7 @@ void CarForwardPathPlannerPars(tcp::iostream &client, CarPathPlannerParamsTypede
 	PackedMessage pathMsg;
 	CarPathFollowParamsTypedef p = pars.PathFollow;
 
-	pathMsg.values.push_back(pars.app);							// robot type
+	pathMsg.values.push_back(pars.app.appType);					// robot type
 	pathMsg.values.push_back(p.PredictLength);					// PredictLength
 	pathMsg.values.push_back(p.DistPar_P);						// distPar_P
 	pathMsg.values.push_back(p.DistPar_D);						// distPar_D
@@ -69,6 +75,11 @@ void CarForwardPathPlannerPars(tcp::iostream &client, CarPathPlannerParamsTypede
 	pathMsg.values.push_back(pars.rMin);
 	pathMsg.values.push_back(pars.ds);
 
+	pathMsg.values.push_back(pars.reversePenaltyFactor);
+	pathMsg.values.push_back(pars.useIntermediateS);
+	pathMsg.values.push_back(pars.insertCount);
+	pathMsg.values.push_back(pars.dx);
+
 	pathMsg.send(client);
 }
 
@@ -85,13 +96,13 @@ int CarPathPlannerServer(deque<float> &pars, CSimpleInConnection &connection, tc
 	//Forward parameters to Client
 	CarForwardPathPlannerPars(client, serverPars);
 
-	if (serverPars.app == AppTypedef::CarPathFollow)
+	if (serverPars.app.isPathFollow())
 	{
 		//Receive, forward path from V-Rep Client
 		ForwardPath(connection, client);
 	}
 
-	if (serverPars.app == AppTypedef::CarPathPlanner)
+	if (serverPars.app.isPathPlanner())
 	{
 		//Receive (sampled) path from PathPlanner
 		path.receive(client);

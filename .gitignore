@@ -14,3 +14,14 @@ Release
 *.pdb
 *.filters
 *.sln
+!Frame/*.obj
+
+# Latex files
+*.aux
+*.log
+*.bbl
+*.thm
+*.toc
+*.blg
+*.out
+*.synctex.gz

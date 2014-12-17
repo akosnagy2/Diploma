@@ -118,7 +118,6 @@ namespace PathPlanner
 		}
 		float GetRobotWidth();
 		void SetRTRParameters(int _maxIteration, float _fixPathProbability, float _roadmapProbability, int randSeed);
-		bool CCSPlanner();
 		bool PrePlanner();
 		bool RTRPlanner();
 		void DrawPrePath();
@@ -127,6 +126,14 @@ namespace PathPlanner
 		void DrawScene(int iteration);
 		void DrawPath();
 		vector<Config> getPrePath() { return prepath; }
+
+		/* C*CS */
+		bool CCSPlanner();
+		void SetCCSParameters(float _reversePentaltyFactor, float _useIntermediateS, float _insertCount, float _dx);
+		float GetReversePenaltyFactor() { return reversePenaltyFactor; }
+		bool IsUseIntermediateS() { return useIntermediateS; }
+		int GetInsertCount() { return insertCount; }
+		float GetDx() { return dx; }
 
 	private:
 		void RTRIteration(bool start);
@@ -187,6 +194,12 @@ namespace PathPlanner
 
 		default_random_engine generator;
 		random_device rd;
+
+		//C*CS
+		float reversePenaltyFactor;
+		bool useIntermediateS;
+		int insertCount;
+		float dx;
 
 		//Path
 		vector<ConfigInterval> pathCI;

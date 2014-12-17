@@ -19,6 +19,11 @@ void Path::setDirection(bool dir) {
     this->dir = dir;
 }
 
+double Path::getRadius() const
+{
+	return radius;
+}
+
 Configuration Path::getStartConfig() const {
     return start;
 }

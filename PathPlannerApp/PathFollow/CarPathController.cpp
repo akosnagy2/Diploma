@@ -7,6 +7,10 @@
 #include <math.h>
 #include "misc.h"
 
+#define ROBOT_MAX_ACCEL		300.0f
+#define ROBOT_MAX_VEL		250.0f
+#define ROBOT_ACCEL_FACTOR	0.75f
+
 CarPathController::CarPathController(std::vector<PathSegment> &paths, CarLikeRobot &car, CarLineFollower &lf, float predict) :
 paths(paths),
 car(car),
@@ -20,9 +24,10 @@ lineFollower(lf)
 
 	for(auto &ps : paths) {
 		PathShifter shifter(ps, car);
-		frontPath.push_back(shifter.getShiftedPath());
+		frontPath.push_back(shifter.getShiftedPath(predict));
 	}
 
+	trackError = 0.0f;
 }
 
 
@@ -65,7 +70,16 @@ void CarPathController::Loop(Config nextPos)
 
 			/* Calculate speed control signal */
 			index = newIndex;
-			v = paths[pathIndex].velocity[index + 1];
+			if(index == 0)
+			{
+				v = abs(v) + ROBOT_MAX_ACCEL * ROBOT_ACCEL_FACTOR * car.getTimeStep();
+				if(v > ROBOT_MAX_VEL)
+					v = ROBOT_MAX_VEL;
+			}
+			else
+			{
+				v = paths[pathIndex].velocity[index + 1];
+			}
 
 			/* Calculate steer control signal */
 			/* Virtual sensor middile position */
@@ -80,6 +94,7 @@ void CarPathController::Loop(Config nextPos)
 				p *= -1.0f;
 			}
 			fi = lineFollower.getFi(delta, p);
+			trackError = Config::Distance(nextPos, paths[pathIndex].path[index]);
 
 			if(!paths[pathIndex].direction) {
 				fi *= -1.0f;
@@ -108,14 +123,14 @@ void CarPathController::Loop(Config nextPos)
 
 Config CarPathController::getSensorCenter(Config carPosition)
 {
+	Config carFrontPos = carPosition;
 	Config intersection;
-	int predictIndex = index;
 	float dist = predict + car.getAxisDistance();
-	predictPoint = frontPath[pathIndex].path[predictIndex];
 
-	while(predictIndex < paths[pathIndex].path.size() - 1 && Config::Distance(carPosition, predictPoint) < dist) {
-		predictPoint = frontPath[pathIndex].path[++predictIndex];
-	}
+	carFrontPos.p.x += dist*cos(carPosition.phi);
+	carFrontPos.p.y += dist*sin(carPosition.phi);
+	int predictIndex = frontPath[pathIndex].getClosestPoint(carFrontPos, index);
+	predictPoint = frontPath[pathIndex].path[predictIndex];
 
 	if(predictIndex == paths[pathIndex].path.size() - 1 && Config::Distance(carPosition, predictPoint) < dist) {
 		float distError = dist - Config::Distance(carPosition, frontPath[pathIndex].path[predictIndex]);

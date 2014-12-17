@@ -15,7 +15,6 @@ class Arc : public Path {
 public:
     Arc(const Configuration& start, const Point& end, bool shorter = true);
     
-    double getRadius() const;
     double getDTheta() const;
     bool getDirection() const;
     Point getCenter() const;
@@ -27,7 +26,6 @@ public:
 
     virtual ~Arc() {}
 private:
-    double radius;
     double dTheta;
 };
 

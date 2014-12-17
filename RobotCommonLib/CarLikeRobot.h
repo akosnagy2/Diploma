@@ -18,8 +18,9 @@ public:
 	float getFiMax() { return fiMax; }
 	float getWheelDistance() { return wheelDistance; }
 	float getWheelDiameter() { return wheelDiameter; }
+	float getTimeStep() { return timeStep; }
 
-	Config getPosition();
+	Config getPosition() { return position; }
 
 	/* Setters */
 	void setAxisDistance(float axisD) { axisDistance = axisD; }
