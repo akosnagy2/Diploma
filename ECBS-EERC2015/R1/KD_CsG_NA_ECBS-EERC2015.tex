@@ -487,10 +487,33 @@ However, a useful planning algorithm has to generate paths in the presence of ob
 
 The second category involves sampling-based roadmap methods, which build a graph in order to capture the topology of $\mathcal{C}_{{free}}$ and use local steering methods to connect the graph nodes. A good survey of sampling-based planning methods can be found in \cite{lavalle06planning_chap5}. The majority of these are based on random sampling of the configuration space. Their popularity arise from the fact that they do not require an explicit representation of $\mathcal{C}_{{obs}}$. These methods proved to be successful in many planning problems, including high-dimensional configuration spaces. For example, the Probabilistic Roadmap Method (PRM)~\cite{kavraki96prm} and the Rapidly exploring Random Trees (RRT)~\cite{lavalle98rrt, lavalle01rrt} algorithms are common sampling based planners. The main idea of it is to incrementally build a search tree starting from the initial configuration in a way that the tree covers the free space rapidly and with gradually increasing resolution. 
 
-\section{RTR and C*CS}
+\section{The RTR+C*CS Path Planner}
 \label{sec:RTR_CCS}
 
-The main idea behind the C*CS local planner it to use circular and straight movements as path primitives. With the help of these primitives we can arrive from a $q_I$ initial configuration to any $q_G$ goal. To simplify the notation we will use the letter C for the circular arcs and S for the straight segments in the sequel. It can be easily show that without taking into account the curvature bound of a car-like robot and assume that $\theta_I \neq 0$ the goal configuration can be reached as follows. With a tangential arc we turn to an intermediate goal $\tilde{q_G}$ which is in the line of the $q_G$. After that only a final straight segment is needed to arrive in the goal.
+Our global path planner (RTR) and steering method (C*CS) have been presented recently \cite{anagy15sami, gcsorvasi15iccc}. The global path designed by RTR consist of translational motion (T) and turning in plane (R). Therefore the path is not feasible for car-like robots, but a good starting point for the steering method, because the path is collision free and the translational primitives are feasible for car-like robots. The global path is approximated by the C*CS local planner, which uses straight segments and circular arcs of lower bounded (but not necessary minimal) radii. The purpose of the approximation is to eliminate in-place turns while avoiding collisions.
+
+\subsection{RTR Global Planner}
+\label{sec:RTR}
+
+The RTR planner is based on the well-known Rapidly exploring Random
+Trees (RRT) algorithm \cite{dkiss14csit}. RTR is similar to a bidirectional RRT  method, because it also builds two tree from the start and goal configuration. However, the phases (sampling, vertex selection and extension) of the RTR planner are different from RRT. 
+
+The first difference to RRT can be found in the sampling step. It returns a guiding position $p_G$ instead of a configuration, which can be treated as a one-dimensional continuous set of configurations, from which any element can
+serve as local goal in the tree extension step.The vertex selection step returns the configuration in the existing tree which has the smallest \emph{position} distance to $p_G$. This step uses a simple Euclidean metric, hence no special configuration space metrics are needed.
+
+The main difference to the RRT method can be found in the tree extension step. It performs some primitive rotate--translate motion pairs, guided by $p_G$. A rotation is applied to reach the orientation pointing to $p_G$, and a consecutive translation is performed in both forward and backward directions until the first collision. If a collision occurs during the rotation, the rotation is tried again in the other turning direction. An example for the resulting RTR-path can be seen in \figurename~\ref{fig:RTR_example}, the two trees are depicted as well by different colors.
+
+\begin{figure}[t]
+	\centering
+		\includegraphics[width=0.5\columnwidth]{.//figures/scenario_RTR.pdf}
+	\caption{A result of the RTR planner through a narrow corridor}
+	\label{fig:RTR_example}
+\end{figure}
+
+\subsection{C*CS Steering Method}
+\label{sec:CCS}
+
+The main idea behind the C*CS local planner it to use circular and straight movements as path primitives \cite{dkiss13aacs, dkiss14iccc}. With the help of these primitives we can arrive from a $q_I$ initial configuration to any $q_G$ goal. To simplify the notation we will use the letter C for the circular arcs and S for the straight segments in the sequel. It can be easily show that without taking into account the curvature bound of a car-like robot and assume that $\theta_I \neq 0$ the goal configuration can be reached as follows. With a tangential arc we turn to an intermediate goal $\tilde{q_G}$ which is in the line of the $q_G$. After that only a final straight segment is needed to arrive in the goal.
 
 \begin{figure}[tb]
 	\centering
