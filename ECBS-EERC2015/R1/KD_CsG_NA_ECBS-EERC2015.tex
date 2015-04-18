@@ -473,21 +473,69 @@ Path planning among obstacles for nonholonomic systems is a widely researched ar
 
 \section{Introduction}
 \label{sec:intro}
+Driving support systems (e.g. parking assistant, collision avoidance) are increasingly widespread nowadays. In some application these intelligent systems plan the path for the vehicle from a start position to the desired goal position. Due to the presence of obstacles this is not an easy task at all. Kinematic constraints of the vehicle are also make path planning difficult. Cars have nonholonomic constraints which cause difficulties in the control of such robots, even in the absence of obstacles. These constraints cause that a car can only move in the direction of its heading (forwards or backwards) and that the turning radius is lower bounded. For this reason parallel parking with a car is relatively difficult.
 
-\cite{anagy15sami}
-\cite{gcsorvasi15iccc}
+From the perspective of motion planning, any robot can be described by its \emph{configuration}. For example, the configuration of a rigid mobile robot moving in a planar workspace $\mathcal{W} \subset \mathbb{R}^2$ can be given by $q = (x, y, \theta)$, a vector of its position and orientation in the configuration space $\mathcal{C}$. The set of not allowed configurations (e.g.\ because of collision with obstacles) is called the configuration space obstacle $\mathcal{C}_{obs}$, its complement is the free space $\mathcal{C}_{free} = \mathcal{C} \setminus \mathcal{C}_{obs}$.
 
+The paper is organized as follows. A brief overview of path planning methods for autonomous robots are given in Section~\ref{sec:related}. In Section~\ref{sec:RTR_CCS}, we shortly discuss our previously developed $RTR$ and $\CCS$ planning methods and show how these can be applied together to obtain feasible paths in narrow environments. Section~\ref{sec:arm} shows our enhanced method for sampling of the configuration space in the $\CCS$ algorithm. In Section~\ref{sec:static}, we present an extension to our path planning methods in order to generate human like paths. We show a planning strategy for environment, where farther obstacles are not known at the beginning in Section~\ref{sec:dynamic}. Conclusions and directions of future work are summarized in Section~\ref{sec:conclusions}.
 \section{Related Work}
 \label{sec:related}
+
+Path planning for nonholonomic robots is not trivial even in absence of obstacles in the environment \cite{laumond98robotmotion}. Algorithms that can solve this task are called local planners or steering methods. In case of specific wheeled robots exact methods exist for computing optimal (e.g.\ shortest length) local paths. These include our investigated car-like robot model \cite{reeds90optimal, giordano06nonholonomic_distance}.
+
+However, a useful planning algorithm has to generate paths in the presence of obstacles while taking into account the kinematic constraints of the vehicle as well. To the best of our knowledge, there is no general \emph{optimal} solution available for this problem. Thus generally, if obstacles are present, one should be satisfied with a \emph{feasible} solution which is not necessarily optimal. The majority of planning algorithms delivering a feasible solution can be grouped into two main categories. The first category consists of techniques that approximate a not necessarily feasible but collision-free initial geometric path by a sequence of feasible local paths obtained by a steering method~\cite{laumond94motionplanner}. In this case firstly a primary geometric path is planned which takes the obstacles and the shape of the robot into account, but does not care about the kinematic constraints. In a second phase, this path is iteratively subdivided and the parts are tried to be connected by a steering method. If the geometric path has a nonzero clearance $\varepsilon$ from the obstacles, and the steering method verifies the so called \emph{topological property}, then the approximation succeeds in finite time \cite{laumond98guidelines}.
+
+The second category involves sampling-based roadmap methods, which build a graph in order to capture the topology of $\mathcal{C}_{{free}}$ and use local steering methods to connect the graph nodes. A good survey of sampling-based planning methods can be found in \cite{lavalle06planning_chap5}. The majority of these are based on random sampling of the configuration space. Their popularity arise from the fact that they do not require an explicit representation of $\mathcal{C}_{{obs}}$. These methods proved to be successful in many planning problems, including high-dimensional configuration spaces. For example, the Probabilistic Roadmap Method (PRM)~\cite{kavraki96prm} and the Rapidly exploring Random Trees (RRT)~\cite{lavalle98rrt, lavalle01rrt} algorithms are common sampling based planners. The main idea of it is to incrementally build a search tree starting from the initial configuration in a way that the tree covers the free space rapidly and with gradually increasing resolution. 
+
+\section{RTR and C*CS}
+\label{sec:RTR_CCS}
+
+The main idea behind the C*CS local planner it to use circular and straight movements as path primitives. With the help of these primitives we can arrive from a $q_I$ initial configuration to any $q_G$ goal. To simplify the notation we will use the letter C for the circular arcs and S for the straight segments in the sequel. It can be easily show that without taking into account the curvature bound of a car-like robot and assume that $\theta_I \neq 0$ the goal configuration can be reached as follows. With a tangential arc we turn to an intermediate goal $\tilde{q_G}$ which is in the line of the $q_G$. After that only a final straight segment is needed to arrive in the goal.
+
+\begin{figure}[tb]
+	\centering
+		\includegraphics[width=0.8\columnwidth]{.//figures/CCS_example.png}
+	\caption{There are many $\CCS$ paths between two configurations}
+	\label{fig:CCS_example}
+\end{figure}
+
+Unfortunately if the radius of the tangential arc is smaller than the minimal turning radius of the car or it is initially parallel to the line of the goal no feasible path can be found. To help that an intermediate $\tilde{q_I}$ configuration has to be reached where a feasible path is given. It is shown that we have infinite possibility to choose one of this configuration. The set of configuration, which is reachable from the initial configuration, is called Arc Reachable Manifold (ARM \cite{minguez09extending})
+
+\section{Improvements in Sampling Phase}
+\label{sec:arm}
+
+Among obstacles infinite possibility is useful, thus there is more possibilities to find a feasible path, and the resulted paths can be more ''prettier`` as well. Although in the implementation we have to use a form of sampling method. Naturally if the sample size is bigger the calculation takes more time, but if only few sample is taken, we can miss the possible solution.
+
+In our early implementation we used a Shukarev-grid based sampling method, but this had more drawbacks. The minimally needed sample size was depended on the actual environment, and a lot of calculation was unnecessary for example in far spaces, or next to the car which is unreachable for an non-holonomic car-like robot.
+
+Our new method is based on the behaviour of these robots, and only the closed environment is sampled. To avoid the unnecessary calculation caused by the unreachable area at the two sides of the robot, we sampled the curvature of the possible circular arcs from $0$ to $\kappa_max$, where $\kappa_max = \frac{1}{r_min}$. Also the distance from the robot is sampled from $0$ to a chosen $d_max$. Our results shows that the $d_max = 2 \dot r_min$ could be a suitable choice. The first step results tangential circles on both side of the robot and the second step results co-centric circles as seen in image \ref{fig:ARM}. The intersections of these circles are the sample points. The extra time needed for the calculation of the intersection is relatively small compared to the whole process.
+
+\begin{figure}[tb]
+	\centering
+		\includegraphics[width=0.99\columnwidth]{.//figures/ARM.png}
+	\caption{Arc Reachable Manifold in an environment with two obstacles}
+	\label{fig:ARM}
+\end{figure}
+
+\section{Improvements of the RTR Global Planner}
+\label{sec:static}
+
+The final path is greatly depends on the global path. Because of the ''random`` nature of the RTR global planner the resulted paths could be very far from a path which is planned by a human driver. To improve the global planner it is necessary to define the [qualities] of a path. We tried to minimize the total path distance, the numbers of segments and the absolute turning angle, and to maximize the distance from the obstacles.
+
+\section{Planning Method for Dynamic Environment}
+\label{sec:dynamic}
+
+
+
+
+
+
 
 
 
 
 \section{Conclusions and Future Work}
 \label{sec:conclusions}
-
-
-
 
 
 % conference papers do not normally have an appendix
