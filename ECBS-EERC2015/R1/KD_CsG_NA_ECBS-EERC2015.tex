@@ -490,7 +490,7 @@ The second category involves sampling-based roadmap methods, which build a graph
 \section{The RTR+C*CS Path Planner}
 \label{sec:RTR_CCS}
 
-Our global path planner (RTR) and steering method (C*CS) have been presented recently \cite{anagy15sami, gcsorvasi15iccc}. The global path designed by RTR consist of translational motion (T) and turning in plane (R). Therefore the path is not feasible for car-like robots, but a good starting point for the steering method, because the path is collision free and the translational primitives are feasible for car-like robots. The global path is approximated by the C*CS local planner, which uses straight segments and circular arcs of lower bounded (but not necessary minimal) radii. The purpose of the approximation is to eliminate in-place turns while avoiding collisions.
+Our global path planner (RTR) and steering method (C*CS) have been presented recently \cite{anagy15sami, gcsorvasi15iccc}. The global path designed by RTR consist of translational motion (T) and turning in plane (R). Therefore the resulted path is not feasible for car-like robots, but a good starting point for the steering method, because the path is collision free. Thus this path can be approximated by the C*CS local planner, which uses straight segments and circular arcs of lower bounded (but not necessary minimal) radii. The purpose of the approximation is to eliminate in-place turns while avoiding collisions, since these are not feasible for car-like robots.
 
 \subsection{RTR Global Planner}
 \label{sec:RTR}
@@ -499,7 +499,7 @@ The RTR planner is based on the well-known Rapidly exploring Random
 Trees (RRT) algorithm \cite{dkiss14csit}. RTR is similar to a bidirectional RRT  method, because it also builds two tree from the start and goal configuration. However, the phases (sampling, vertex selection and extension) of the RTR planner are different from RRT. 
 
 The first difference to RRT can be found in the sampling step. It returns a guiding position $p_G$ instead of a configuration, which can be treated as a one-dimensional continuous set of configurations, from which any element can
-serve as local goal in the tree extension step.The vertex selection step returns the configuration in the existing tree which has the smallest \emph{position} distance to $p_G$. This step uses a simple Euclidean metric, hence no special configuration space metrics are needed.
+serve as local goal in the tree extension step. The vertex selection step returns the configuration in the existing tree which has the smallest \emph{position} distance to $p_G$. This step uses a simple Euclidean metric, hence no special configuration space metrics are needed.
 
 The main difference to the RRT method can be found in the tree extension step. It performs some primitive rotate--translate motion pairs, guided by $p_G$. A rotation is applied to reach the orientation pointing to $p_G$, and a consecutive translation is performed in both forward and backward directions until the first collision. If a collision occurs during the rotation, the rotation is tried again in the other turning direction. An example for the resulting RTR-path can be seen in \figurename~\ref{fig:RTR_example}, the two trees are depicted as well by different colors.
 
@@ -513,7 +513,7 @@ The main difference to the RRT method can be found in the tree extension step. I
 \subsection{C*CS Steering Method}
 \label{sec:CCS}
 
-The main idea behind the C*CS local planner it to use circular and straight movements as path primitives \cite{dkiss13aacs, dkiss14iccc}. With the help of these primitives we can arrive from a $q_I$ initial configuration to any $q_G$ goal. To simplify the notation we will use the letter C for the circular arcs and S for the straight segments in the sequel. It can be easily show that without taking into account the curvature bound of a car-like robot and assume that $\theta_I \neq 0$ the goal configuration can be reached as follows. With a tangential arc we turn to an intermediate goal $\tilde{q_G}$ which is in the line of the $q_G$. After that only a final straight segment is needed to arrive in the goal.
+The main idea behind the $C\text{*}CS$ local planner it to use circular and straight movements as path primitives \cite{dkiss13aacs, dkiss14iccc}. With the help of these primitives we can arrive from a $q_I$ initial configuration to any $q_G$ goal. To simplify the notation we will use the letter $C$ for the circular arcs and $S$ for the straight segments in the sequel. It can be easily show that without taking into account the curvature bound of a car-like robot and assume that $\theta_I \neq 0$ the goal configuration can be reached with a $CS$ pair as follows. With a tangential arc we turn to an intermediate goal $\tilde{q_G}$ which is in the line of the $q_G$ ($C$). After that only a final straight segment is needed to arrive in the goal ($S$).
 
 \begin{figure}[tb]
 	\centering
@@ -522,20 +522,24 @@ The main idea behind the C*CS local planner it to use circular and straight move
 	\label{fig:CCS_example}
 \end{figure}
 
-Unfortunately if the radius of the tangential arc is smaller than the minimal turning radius of the car or it is initially parallel to the line of the goal no feasible path can be found. To help that an intermediate $\tilde{q_I}$ configuration has to be reached where a feasible path is given. It is shown that we have infinite possibility to choose one of this configuration. The set of configuration, which is reachable from the initial configuration, is called Arc Reachable Manifold (ARM \cite{minguez09extending})
+Unfortunately if the radius of the tangential arc is smaller than the minimal turning radius of the car or it is initially parallel to the line of the goal no feasible path can be found. To help that an intermediate $\tilde{q_I}$ configuration has to be reached where a feasible path is given. It is shown that we have infinitely many possibility to choose one of this intermediate configuration.
+
+The set of configurations, which is reachable from the initial configuration, is called Arc Reachable Manifold (ARM \cite{minguez09extending}) Since this set contains both $C$ and $S$ segments we denote this with $C\text{*}$, where it stands for ``a circular arc that can have zero curvature'' thus $C\text{*}CS$ is a shorthand for both $CCS$ and $SCS$ paths.
 
 \section{Improvements in Sampling Phase}
 \label{sec:arm}
 
-Among obstacles infinite possibility is useful, thus there is more possibilities to find a feasible path, and the resulted paths can be more ''prettier`` as well. Although in the implementation we have to use a form of sampling method. Naturally if the sample size is bigger the calculation takes more time, but if only few sample is taken, we can miss the possible solution.
+Among obstacles the property of infinite solutions is useful, thus there is more possibilities to find a feasible path, and there is a freedom to choose one of the ``prettiest'' solution as well. Although in the implementation we have to use a form of sampling method. Naturally if the sample size is bigger, the calculation takes more time, but if only a few sample is taken the possible solution can be missed.
 
-In our early implementation we used a Shukarev-grid based sampling method, but this had more drawbacks. The minimally needed sample size was depended on the actual environment, and a lot of calculation was unnecessary for example in far spaces, or next to the car which is unreachable for an non-holonomic car-like robot.
+In our early implementation we used a Sukharev-grid \cite{lavalle06planning_chap5} based sampling method, but this had more drawbacks. The minimally needed sample size was depended on the actual environment, and a lot of calculation was unnecessary for example in far spaces or at the side of the car which is unreachable for an non-holonomic car-like robot.
 
-Our new method is based on the behaviour of these robots, and only the closed environment is sampled. To avoid the unnecessary calculation caused by the unreachable area at the two sides of the robot, we sampled the curvature of the possible circular arcs from $0$ to $\kappa_max$, where $\kappa_max = \frac{1}{r_min}$. Also the distance from the robot is sampled from $0$ to a chosen $d_max$. Our results shows that the $d_max = 2 \dot r_min$ could be a suitable choice. The first step results tangential circles on both side of the robot and the second step results co-centric circles as seen in image \ref{fig:ARM}. The intersections of these circles are the sample points. The extra time needed for the calculation of the intersection is relatively small compared to the whole process.
+Our new method is based on the behaviour of these robots and only the closed environment is sampled. To avoid the unnecessary calculation caused by the unreachable area at the two sides of the robot, we sampled the curvature of the possible circular arcs from $0$ to $\kappa_{max}$, where $\kappa_{max} = \frac{1}{r_{min}}$. Also the distance from the robot is sampled from $0$ to a chosen $d_{max}$. Our results shows that the $d_{max} = 2 \cdot r_{min}$ could be a suitable choice. The first step results tangential circles on both side of the robot and the second step results co-centric circles. The intersections of these circles are the sample points.
+
+In this way the sample size can be reduced so that the possible solutions are still present. The extra time needed for the calculation of the intersections is relatively small compared to the whole calculation process.
 
 \begin{figure}[tb]
 	\centering
-		\includegraphics[width=0.99\columnwidth]{.//figures/ARM.png}
+		\includegraphics[width=0.90\columnwidth]{.//figures/newARM.pdf}
 	\caption{Arc Reachable Manifold in an environment with two obstacles}
 	\label{fig:ARM}
 \end{figure}
@@ -639,7 +643,19 @@ We compare three difference planning strategy for dynamic environment. The strat
 \section{Improvements of the RTR Global Planner}
 \label{sec:static}
 
-The final path is greatly depends on the global path. Because of the ''random`` nature of the RTR global planner the resulted paths could be very far from a path which is planned by a human driver. To improve the global planner it is necessary to define the [qualities] of a path. We tried to minimize the total path distance, the numbers of segments and the absolute turning angle, and to maximize the distance from the obstacles.
+The final path is greatly depends on the global path since the approximation only changes the non-admissible parts with the help of a steering method. Because of the random nature of the RTR global planner the resulted paths could be far from a path which is planned by a human driver. To improve the global paths, it is necessary to define which properties describe a path and to assign a measure to these properties.  In our paper the following parameters were used:
+
+\begin{itemize}
+	\item Total length of a path
+	\item Number of segments
+	\item Number of cusps
+	\item Absolute turning angle along the path
+	\item Distance to the obstacles
+\end{itemize}
+
+A good path could be characterised with low values in the first for cases and with a high value in the last case.
+
+Since during the RTR planning there is no freedom to direct the growth of the trees along these parameters, thus we had to repeatedly run the planning algorithm with different random seed, calculate each time the above presented parameters and at the end choose the path with the best qualities. To normalize the parameters all values should be divided with the maxima of each.
 
 
 
