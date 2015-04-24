@@ -664,29 +664,68 @@ In the first scene the \emph{Local Re-Planning} strategy gives better run time, 
 %	\label{alg:dynamicSim_Alg}
 %\end{algorithm}
 
-\section{Improvements of the RTR Global Planner}
+\begin{figure}[tb]
+    \centerline{
+    \subfloat[]{\includegraphics[width=0.49\columnwidth]{.//figures/StaticSim/frameFreeCusps.pdf}
+    \label{subfig:frameFreeCusps}}
+    \hfil
+    \subfloat[]{\includegraphics[width=0.49\columnwidth]{.//figures/StaticSim/frameFreeSteering.pdf}
+    \label{subfig:frameFreeSteering}}}
+    \centerline{
+    \subfloat[]{\includegraphics[width=0.49\columnwidth]{.//figures/StaticSim/frameFreeTravel.pdf}
+    \label{subfig:frameFreeTravel}}
+    \hfil
+    \subfloat[]{\includegraphics[width=0.49\columnwidth]{.//figures/StaticSim/frameFreeClearance.pdf}
+    \label{subfig:frameFreeClearance}}}    
+    \caption{Different paths according to different parameters.}
+    \label{fig:staticSimTypes}
+\end{figure}
+
+\section{Improvements of the final path}
 \label{sec:static}
 
-The final path is greatly depends on the global path since the approximation only changes the non-admissible parts with the help of a steering method. Because of the random nature of the RTR global planner the resulted paths could be far from a path which is planned by a human driver. To improve the global paths, it is necessary to define which properties describe a path and to assign a measure to these properties.  In our paper the following parameters were used:
+In some cases the final paths are feasible but overly complicated to perform, because the random nature of the previous algorithms it contains too many short manoeuvres or drives too close to the edge of the obstacles \cite{gcsorvasi15iccc}. Our goal was to create paths which are closer to the one which a human driver would plan.
+
+In our previous work we compared different planning methods, and for this we introduced a way to measure the ``quality'' of the resulted path. In the following the same metric is used to characterise our paths and to define a ``fine'' path:
 
 \begin{itemize}
-	\item Total length of a path
-	\item Number of segments
-	\item Number of cusps
-	\item Absolute turning angle along the path
-	\item Distance to the obstacles
+	\item \emph{No. of cusps}: The number of reversals along the path. 
+	\item \emph{Steering amount}: The absolute integral of the path curvature.
+	\item \emph{Travel time}: The estimated time of driving along the resulting path.
+	\item \emph{Average clearance}: The average clearance from the obstacles along the path.
 \end{itemize}
 
-A good path could be characterised with low values in the first for cases and with a high value in the last case.
+For a passenger could be too many reversals uncomfortable same as if the amount of turning along the path is too high. The travel time is estimated as follows. A travelling speed function with $v_{max} = 5\frac{m}{s}$ and $v_{min} = 1\frac{m}{s}$ is assigned to the path, which is inversely proportional to the actual path curvature. The cusps are penalized with $0.5s$ ``reversing time''. Those paths are better, which requires less time to travel along.
 
-Since during the RTR planning there is no freedom to direct the growth of the trees along these parameters, thus we had to repeatedly run the planning algorithm with different random seed, calculate each time the above presented parameters and at the end choose the path with the best qualities. To normalize the parameters all values should be divided with the maxima of each.
+In addition to the formerly used qualities the average clearance is added as well. To specify the clearance the path is sampled. For each sample point the minimal distance from the obstacles is calculated and summarized. At last the sum is normalized with the length of the path. The purpose of this parameter is to keep the robot keep away from the obstacles as a real driver would do to protect the car.
 
+Examples can be seen in \figurename~\ref{fig:staticSimTypes}. In this scenario the robot starts from the left position facing upwards and the goal position is on the right facing down. In \figurename~\ref{subfig:frameFreeCusps} the number of cusps are minimal. As shown in \figurename~\ref{subfig:frameFreeSteering} the steering amount is minimized, the straighter paths are preferred. In \figurename~\ref{subfig:frameFreeTravel} the resulted path is shorter, but it consumes less time to travel along. At last the path in \figurename~\ref{subfig:frameFreeClearance} is more complicated than the others, but the obstacles are avoided.
 
+In order to tune the final path the planning algorithm was executed several times with different global paths and the above detailed parameters were normalized between the $[0,1]$ interval and multiplied with a weight factor.
+
+\begin{figure}[tb]
+    \centerline{
+    \subfloat[]{\includegraphics[width=0.45\columnwidth]{.//figures/StaticSim/frameM1.pdf}
+    \label{subfig:staticCuspsTravel}}%}
+    \hfil
+	%\centerline{
+    \subfloat[]{\includegraphics[width=0.45\columnwidth]{.//figures/StaticSim/frameM2.pdf}
+    \label{subfig:staticCuspsSteer}}}
+    \caption{Resulted paths in an M-shape environment.}
+    \label{fig:staticMShape}
+\end{figure}
+
+The weight factors can depend on different scenarios and on individual choice as well. In a narrow M-shaped environment, which is shown in \figurename~\ref{fig:staticMShape}, can be difficult to manoeuvre therefore a higher \textit{cusps} weight (lower number of cusps) could be a suitable choice. In \figurename~\ref{subfig:staticCuspsTravel} the weight of \emph{time} and in \figurename~\ref{subfig:staticCuspsSteer} the weight of \textit{steering angle} is increased beside the cusps weight.
+
+In a situation where the planning time is not a serious concern or the ``quality'' of the resulted path is important the above detailed method could be a suitable choice.
 
 
 \section{Conclusions and Future Work}
 \label{sec:conclusions}
 
+We have presented a global geometric path planning method for car-like robots and an analysis about the possible improvements. The RTR path planner with the $C^*CS$ steering-method is capable of designing paths even among obstacles and narrow spaces. The simulation results showed that our planning algorithm can be applied in an unobserved scenarios and the obtained paths are quite ``natural''. Furthermore, it is running time ranges at most a couple of seconds, which makes it feasible for application in real-life situations.
+
+Our future work includes a comprehensive testing on real robot platforms which should verify that these algorithms are well-suited for problems requiring autonomous manoeuvring. A further improvement of the path planner algorithm is in progress, which has the goal of generating paths with continuous curvature.
 
 % conference papers do not normally have an appendix
 
