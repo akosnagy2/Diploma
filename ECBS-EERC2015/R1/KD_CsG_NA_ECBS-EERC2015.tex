@@ -515,27 +515,29 @@ The main difference to the RRT method can be found in the tree extension step. I
 \subsection{C*CS Steering Method}
 \label{sec:CCS}
 
-The main idea behind the $C\text{*}CS$ local planner is to use circular and straight movements as path primitives \cite{dkiss13aacs, dkiss14iccc}. With the help of these primitives we can arrive from a $q_I$ initial configuration to any $q_G$ goal. To simplify the notation we will use the letter $C$ for the circular arcs and $S$ for the straight segments in the sequel. It can be easily show that without taking into account the curvature bound of a car-like robot and assume that $\theta_I \neq 0$ the goal configuration can be reached with a $CS$ pair as follows. With a tangential arc we turn to an intermediate goal $\tilde{q_G}$ which is in the line of the $q_G$ ($C$). After that only a final straight segment is needed to arrive in the goal ($S$).
+The main idea behind the $C\text{*}CS$ local planner is to use circular and straight movements as path primitives \cite{dkiss13aacs, dkiss14iccc}. With the help of these primitives we can arrive from a $q_I$ initial configuration to any $q_G$ goal. To simplify the notation we will use the letter $C$ for the circular arcs and $S$ for the straight segments in the sequel. It can be easily shown that without taking the curvature bound of a car-like robot and assuming that $\theta_I \neq 0$, the goal configuration can be reached with a $CS$ pair as follows. With a tangential arc we turn to an intermediate goal $\tilde{q}_G$ which is in the line of the $q_G$ ($C$). After that only a final straight segment is needed to arrive in the goal ($S$).
+%
+%\begin{figure}[tb]
+%	\centering
+%		\includegraphics[width=0.8\columnwidth]{.//figures/CCS_example.png}
+%	\caption{There are many $\CCS$ paths between two configurations}
+%	\label{fig:CCS_example}
+%\end{figure}
 
-\begin{figure}[tb]
-	\centering
-		\includegraphics[width=0.8\columnwidth]{.//figures/CCS_example.png}
-	\caption{There are many $\CCS$ paths between two configurations}
-	\label{fig:CCS_example}
-\end{figure}
-
-Unfortunately if the radius of the tangential arc is smaller than the minimal turning radius of the car or it is initially parallel to the line of the goal no feasible path can be found. To help that an intermediate $\tilde{q_I}$ configuration has to be reached where a feasible path is given. It is shown that we have infinitely many possibility to choose one of this intermediate configuration.
+Unfortunately if the radius of the tangential arc is smaller than the minimal turning radius of the car or it is initially parallel to the line of the goal no feasible path can be found. This can be eliminated by reaching an intermediate $\tilde{q}_I$ configuration using a preceding $S$ or $C$ segment, from which the following tangential $C$ segment does not violate the turning radius constraint. It is shown that we have infinitely many possibilities to choose such an intermediate configuration.
 
 The set of configurations, which is reachable from the initial configuration, is called Arc Reachable Manifold (ARM \cite{minguez09extending}) Since this set contains both $C$ and $S$ segments we denote this with $C\text{*}$, where it stands for ``a circular arc that can have zero curvature'' thus $C\text{*}CS$ is a shorthand for both $CCS$ and $SCS$ paths.
+
+In our previous work we examined this planning method with thorough tests even compared with other well known methods, and our results show that in most cases the resulting paths are more efficient and have better qualities than the others \cite{gcsorvasi15iccc}. In the following we present other methods to reach better results.
 
 \section{Improvements in Sampling Phase}
 \label{sec:arm}
 
-Among obstacles the property of infinite solutions is useful, thus there is more possibilities to find a feasible path, and there is a freedom to choose one of the ``prettiest'' solution as well. Although in the implementation we have to use a form of sampling method. Naturally if the sample size is bigger, the calculation takes more time, but if only a few sample is taken the possible solution can be missed.
+Among obstacles the property of infinite solutions is useful, because there are more possibilities to find a feasible path, and there is a freedom to choose one of the ``prettiest'' solutions as well. Although in the implementation we have to use a form of sampling method. Naturally if the sample size is bigger, the calculation takes more time, but if only a few samples are taken the possible solution can be missed.
 
-In our early implementation we used a Sukharev-grid \cite{lavalle06planning_chap5} based sampling method, but this had more drawbacks. The minimally needed sample size was depended on the actual environment, and a lot of calculation was unnecessary for example in far spaces or at the side of the car which is unreachable for an non-holonomic car-like robot.
+In our early implementation we used a Sukharev-grid \cite{lavalle06planning_chap5} based sampling method, but this had more drawbacks. The necessary step size was depending on the actual environment, and a lot of calculation was unnecessary for example in far spaces or at the side of the car which is unreachable for a non-holonomic car-like robot.
 
-Our new method is based on the behaviour of these robots and only the closed environment is sampled. To avoid the unnecessary calculation caused by the unreachable area at the two sides of the robot, we sampled the curvature of the possible circular arcs from $0$ to $\kappa_{max}$, where $\kappa_{max} = \frac{1}{r_{min}}$. Also the distance from the robot is sampled from $0$ to a chosen $d_{max}$. Our results shows that the $d_{max} = 2 \cdot r_{min}$ could be a suitable choice. The first step results tangential circles on both side of the robot and the second step results co-centric circles. The intersections of these circles will be the sample points.
+Our new method is based on the behaviour of these robots and only the closed environment is sampled. To avoid the unnecessary calculation caused by the unreachable area at the two sides of the robot, we sampled the curvature of the possible circular arcs from $0$ to $\kappa_{max}$, where $\kappa_{max} = \frac{1}{r_{min}}$. Also the distance from the robot is sampled from $0$ to a chosen $d_{max}$. Our tests show that the $d_{max} = 2 \cdot r_{min}$ could be a suitable choice. The first step results tangential circles on both side of the robot and the second step results co-centric circles. The intersections of these circles will be the sample points.
 
 In this way the sample size can be reduced so that the possible solutions are still present. The extra time needed for the calculation of the intersections is relatively small compared to the whole calculation process.
 
@@ -681,10 +683,9 @@ In the first scene the \emph{Local Re-Planning} strategy gives better run time, 
 \section{Improvements of the final path}
 \label{sec:static}
 
-In some cases the final paths are feasible but overly complicated to perform, because the random nature of the previous algorithms it contains too many short manoeuvres or drives too close to the edge of the obstacles \cite{gcsorvasi15iccc}. Our goal was to create paths which are closer to the one which a human driver would plan.
+In some cases the final paths are feasible but overly complicated to perform, because the random nature of the previous algorithms makes them sometimes contain too many short manoeuvres or drives too close to the edge of the obstacles \cite{gcsorvasi15iccc}. Our goal was to create paths which are closer to the one which a human driver would plan.
 
-In our previous work we compared different planning methods, and for this we introduced a way to measure the ``quality'' of the resulted path. In the following the same metric is used to characterise our paths and to define a ``fine'' path:
-
+In our previous work we compared different planning methods, and for this we introduced a way to measure the ``quality'' of the resulted path. In the sequel we use the same quality measures to improve the resulting paths. This is done by incorporating these already in the planning process. The measures which characterize a ``fine'' path are:
 \begin{itemize}
 	\item \emph{No. of cusps}: The number of reversals along the path. 
 	\item \emph{Steering amount}: The absolute integral of the path curvature.
@@ -692,13 +693,13 @@ In our previous work we compared different planning methods, and for this we int
 	\item \emph{Average clearance}: The average clearance from the obstacles along the path.
 \end{itemize}
 
-For a passenger could be too many reversals uncomfortable same as if the amount of turning along the path is too high. The travel time is estimated as follows. A travelling speed function with $v_{max} = 5\frac{m}{s}$ and $v_{min} = 1\frac{m}{s}$ is assigned to the path, which is inversely proportional to the actual path curvature. The cusps are penalized with $0.5s$ ``reversing time''. Those paths are better, which requires less time to travel along.
+For a passenger, too many reversals could be uncomfortable, as well as a high amount of turning. The travel time is estimated as follows. A travelling speed function with $v_{max} = 5\frac{m}{s}$ and $v_{min} = 1\frac{m}{s}$ is assigned to the path, which is inversely proportional to the actual path curvature. The cusps are penalized with $0.5s$ ``reversing time''. Those paths are better, which requires less time to travel along.
 
-In addition to the formerly used qualities the average clearance is added as well. To specify the clearance the path is sampled. For each sample point the minimal distance from the obstacles is calculated and summarized. At last the sum is normalized with the length of the path. The purpose of this parameter is to keep the robot keep away from the obstacles as a real driver would do to protect the car.
+In addition to the formerly used quality measures the average clearance is added as well. To specify the clearance, the path is sampled. For each sample point the minimal distance from the obstacles is calculated and summarized. Finally, the sum is normalized with the length of the path. The purpose of this parameter is to keep the robot away from the obstacles as a real driver would do to protect the car.
 
-Examples can be seen in \figurename~\ref{fig:staticSimTypes}. In this scenario the robot starts from the left position facing upwards and the goal position is on the right facing down. In \figurename~\ref{subfig:frameFreeCusps} the number of cusps are minimal. As shown in \figurename~\ref{subfig:frameFreeSteering} the steering amount is minimized, the straighter paths are preferred. In \figurename~\ref{subfig:frameFreeTravel} the resulted path is shorter, but it consumes less time to travel along. At last the path in \figurename~\ref{subfig:frameFreeClearance} is more complicated than the others, but the obstacles are avoided.
+Examples can be seen in \figurename~\ref{fig:staticSimTypes}. In this scenario the robot starts from the left position facing upwards and the goal position is on the right facing down. In \figurename~\ref{subfig:frameFreeCusps} the number of cusps are minimal. In \figurename~\ref{subfig:frameFreeSteering} the steering amount is minimized, the straighter paths are preferred. In \figurename~\ref{subfig:frameFreeTravel} the resulted path is longer, but it takes less time to travel along. At last the path in \figurename~\ref{subfig:frameFreeClearance} is more complicated than the others, but the distance to obstacles is higher.
 
-In order to tune the final path the planning algorithm was executed several times with different global paths and the above detailed parameters were normalized between the $[0,1]$ interval and multiplied with a weight factor.
+In order to tune the final path, the planning process is invoked several times for the same query and the quality measures are determined for the resulting candidate paths. The best solution is chosen by minimizing a cost function, which is a weighted sum of the different quality measures. The measures and the weighing factors are normalized to the $[0,1]$ interval. 
 
 \begin{figure}[tb]
     \centerline{
@@ -715,25 +716,22 @@ In order to tune the final path the planning algorithm was executed several time
     \label{fig:staticMShape}
 \end{figure}
 
-The weight factors can depend on different scenarios and on individual choice as well. In a narrow M-shaped environment, which is shown in \figurename~\ref{fig:staticMShape}, can be difficult to manoeuvre therefore the resulted paths have similarities, but even in this scenario the differences can be observed. In \figurename~\ref{subfig:static2SC}, \ref{subfig:static2ST} the steering amount is lowered thus the longer path segments have a low curvature. In \figurename~\ref{subfig:static2SC} the weight of cusps is higher (lower cusps number) and in \figurename~\ref{subfig:static2ST} the travel time is shorter. In \figurename~\ref{subfig:static2CTC} the weight factor of cusps, travel time and clearance is increased so the curvature can be higher but the planner algorithm tries to avoid the obstacles.
+The weight factors can depend on different scenarios and on individual choice as well. In a narrow M-shaped environment, which is shown in \figurename~\ref{fig:staticMShape}, can be difficult to manoeuvre therefore the resulted paths have similarities. But even in this scenario the differences can be observed. In \figurename~\ref{subfig:static2SC}, \ref{subfig:static2ST} the steering amount is lowered thus the longer path segments have a low curvature. In \figurename~\ref{subfig:static2SC} the weight of cusps is higher (lower cusps number) and in \figurename~\ref{subfig:static2ST} the travel time is shorter. In \figurename~\ref{subfig:static2CTC} the weight factor of cusps, travel time and clearance is increased so the steering amount can be higher but the other measures are better.
 
-In a one corridor scenario the differences can be observed easier. In \figurename~\ref{subfig:frame130} the steering amount is low because of the straight middle segment, in \figurename~\ref{subfig:frame146} the cusps number is lowered in order to achieve a simpler path. This path is the best in travel time as well. In \figurename~\ref{subfig:frame153} and \ref{subfig:frame173} the clearance factor is increased. In these situations the car rather uses the larger open spaces to manoeuvre and drives in the middle of the corridor.
+In a one corridor scenario the differences can be observed easier. In \figurename~\ref{subfig:frame130} the steering amount is low because of the straight middle segment, in \figurename~\ref{subfig:frame146} the number of cusps is lowered in order to achieve a simpler path. This path is the best in travel time as well. In \figurename~\ref{subfig:frame153} the clearance factor is increased. In this situation the car rather uses the larger open spaces to manoeuvre and drives in the middle of the corridor.
 
-In a situation where the planning time is not a serious concern e.g. where the resulted path could be reused or the ``quality'' of the resulted path is important the above detailed method could be a suitable choice.
+In a situation where the planning time is not a serious concern e.g. where the resulting path can be reused or the ``quality'' of the resulting path is important the above detailed method can be a suitable choice.
 
 \begin{figure}[tb]
     \centerline{
-    \subfloat[]{\includegraphics[height=0.35\columnwidth]{.//figures/StaticSim/frame130.pdf}
+    \subfloat[]{\includegraphics[height=0.45\columnwidth]{.//figures/StaticSim/frame130.pdf}
     \label{subfig:frame130}}}
     \centerline{
-    \subfloat[]{\includegraphics[height=0.35\columnwidth]{.//figures/StaticSim/frame146.pdf}
+    \subfloat[]{\includegraphics[height=0.45\columnwidth]{.//figures/StaticSim/frame146.pdf}
     \label{subfig:frame146}}}
     \centerline{
-    \subfloat[]{\includegraphics[height=0.35\columnwidth]{.//figures/StaticSim/frame153.pdf}
-    \label{subfig:frame153}}}    
-    \centerline{
-    \subfloat[]{\includegraphics[height=0.35\columnwidth]{.//figures/StaticSim/frame173.pdf}
-    \label{subfig:frame173}}}        
+    \subfloat[]{\includegraphics[height=0.45\columnwidth]{.//figures/StaticSim/frame153.pdf}
+    \label{subfig:frame153}}}      
     \caption{Four different path between a corridor.}
     \label{fig:staticFrame1}
 \end{figure}
@@ -741,7 +739,7 @@ In a situation where the planning time is not a serious concern e.g. where the r
 \section{Conclusions and Future Work}
 \label{sec:conclusions}
 
-We have presented a global geometric path planning method for car-like robots and an analysis about the possible improvements. The RTR path planner with the $C^*CS$ steering-method is capable of designing paths even among obstacles and narrow spaces. The simulation results showed that our planning algorithm can be applied in an unobserved scenarios and the obtained paths are quite ``natural''. Furthermore, it is running time ranges at most a couple of seconds, which makes it feasible for application in real-life situations.
+We have presented a global geometric path planning method for car-like robots and an analysis about the possible improvements. The RTR path planner with the $C^*CS$ steering-method is capable of designing paths even among obstacles and narrow spaces. The simulation results showed that our planning algorithm can be applied in partially unknown or changing environments and the obtained paths are quite ``natural''. Furthermore, its running time ranges at most a couple of seconds, which makes it feasible for application in real-life situations.
 
 Our future work includes a comprehensive testing on real robot platforms which should verify that these algorithms are well-suited for problems requiring autonomous manoeuvring. A further improvement of the path planner algorithm is in progress, which has the goal of generating paths with continuous curvature.
 
