@@ -345,7 +345,7 @@
 % There should be no need to do such things with IEEEtran.cls V1.6 and later.
 % (Unless specifically asked to do so by the journal or conference you plan
 % to submit to, of course. )
-
+\usepackage{flushend}
 
 % Definition of new commands
 \providecommand{\abs}[1]{\lvert#1\rvert}
@@ -455,7 +455,9 @@ Path planning among obstacles for nonholonomic systems is a widely researched ar
 
 % no keywords
 
-
+\begin{keywords}
+keyword
+\end{keywords}
 
 % For peer review papers, you can put extra information on the cover
 % page as needed:
@@ -487,7 +489,7 @@ Path planning for nonholonomic robots is not trivial even in absence of obstacle
 
 However, a useful planning algorithm has to generate paths in the presence of obstacles while taking into account the kinematic constraints of the vehicle as well. To the best of our knowledge, there is no general \emph{optimal} solution available for this problem. Thus generally, if obstacles are present, one should be satisfied with a \emph{feasible} solution which is not necessarily optimal. The majority of planning algorithms delivering a feasible solution can be grouped into two main categories. The first category consists of techniques that approximate a not necessarily feasible but collision-free initial geometric path by a sequence of feasible local paths obtained by a steering method~\cite{laumond94motionplanner}. In this case firstly a primary geometric path is planned which takes the obstacles and the shape of the robot into account, but does not care about the kinematic constraints. In a second phase, this path is iteratively subdivided and the parts are tried to be connected by a steering method. If the geometric path has a nonzero clearance $\varepsilon$ from the obstacles, and the steering method verifies the so called \emph{topological property}, then the approximation succeeds in finite time \cite{laumond98guidelines}.
 
-The second category involves sampling-based roadmap methods, which build a graph in order to capture the topology of $\mathcal{C}_{{free}}$ and use local steering methods to connect the graph nodes. A good survey of sampling-based planning methods can be found in \cite{lavalle06planning_chap5}. The majority of these are based on random sampling of the configuration space. Their popularity arise from the fact that they do not require an explicit representation of $\mathcal{C}_{{obs}}$. These methods proved to be successful in many planning problems, including high-dimensional configuration spaces. For example, the Probabilistic Roadmap Method (PRM)~\cite{kavraki96prm} and the Rapidly exploring Random Trees (RRT)~\cite{lavalle98rrt, lavalle01rrt} algorithms are common sampling based planners. The main idea of RTR method is to incrementally build a search tree starting from the initial configuration in a way that the tree covers the free space rapidly and with gradually increasing resolution. 
+The second category involves sampling-based roadmap methods, which build a graph in order to capture the topology of $\mathcal{C}_{{free}}$ and use local steering methods to connect the graph nodes. A good survey of sampling-based planning methods can be found in \cite{lavalle06planning_chap5}. The majority of these are based on random sampling of the configuration space. Their popularity arise from the fact that they do not require an explicit representation of $\mathcal{C}_{{obs}}$. These methods proved to be successful in many planning problems, including high-dimensional configuration spaces. For example, the Probabilistic Roadmap Method (PRM)~\cite{kavraki96prm} and the Rapidly exploring Random Trees (RRT)~\cite{lavalle98rrt, lavalle01rrt} algorithms are common sampling based planners. The main idea of RRT method is to incrementally build a search tree starting from the initial configuration in a way that the tree covers the free space rapidly and with gradually increasing resolution. 
 
 \section{The RTR+C*CS Path Planner}
 \label{sec:RTR_CCS}
@@ -498,7 +500,7 @@ Our global path planner (RTR) and steering method (C*CS) have been presented rec
 \label{sec:RTR}
 
 The RTR planner is based on the well-known Rapidly exploring Random
-Trees (RRT) algorithm \cite{dkiss14csit}. RTR is similar to a bidirectional RRT  method, because it also builds two tree from the start and goal configuration (\emph{start tree}, \emph{goal tree}). However, the phases (sampling, vertex selection and extension) of the RTR planner are different from RRT. 
+Trees (RRT) algorithm \cite{dkiss14csit}. RTR is similar to a bidirectional RRT  method, because it also builds two trees from the start and goal configuration (\emph{start tree}, \emph{goal tree}). However, the phases (sampling, vertex selection and extension) of the RTR planner are different from RRT. 
 
 The first difference to RRT can be found in the sampling step. It returns a guiding position $p_G$ instead of a configuration, which can be treated as a one-dimensional continuous set of configurations, from which any element can
 serve as local goal in the tree extension step. The vertex selection step returns the configuration in the existing tree which has the smallest \emph{position} distance to $p_G$. This step uses a simple Euclidean metric, hence no special configuration space metrics are needed.
@@ -537,9 +539,25 @@ Among obstacles the property of infinite solutions is useful, because there are 
 
 In our early implementation we used a Sukharev-grid \cite{lavalle06planning_chap5} based sampling method, but this had more drawbacks. The necessary step size was depending on the actual environment, and a lot of calculation was unnecessary for example in far spaces or at the side of the car which is unreachable for a non-holonomic car-like robot.
 
-Our new method is based on the behaviour of these robots and only the closed environment is sampled. To avoid the unnecessary calculation caused by the unreachable area at the two sides of the robot, we sampled the curvature of the possible circular arcs from $0$ to $\kappa_{max}$, where $\kappa_{max} = \frac{1}{r_{min}}$. Also the distance from the robot is sampled from $0$ to a chosen $d_{max}$. Our tests show that the $d_{max} = 2 \cdot r_{min}$ could be a suitable choice. The first step results tangential circles on both side of the robot and the second step results co-centric circles. The intersections of these circles will be the sample points.
+Our new method is based on the behaviour of these robots and only the closed environment is sampled. To avoid the unnecessary calculation caused by the unreachable area at the two sides of the robot, we sampled the curvature of the possible circular arcs from $0$ to $\kappa_{max}$, where $\kappa_{max} = \frac{1}{r_{min}}$. Also the distance from the robot is sampled from $0$ to a chosen $d_{max}$. Our tests show that the $d_{max} = 2 \cdot r_{min}$ could be a suitable choice. The first step results tangential circles on both side of the robot and the second step results co-centric circles. The intersections of these circles will be the sample points. In this way the sample size can be reduced so that the possible solutions are still present.
 
-In this way the sample size can be reduced so that the possible solutions are still present. The extra time needed for the calculation of the intersections is relatively small compared to the whole calculation process.
+In order to compare the two methods we ran the algorithm in different environments, and each time the sample size is set so that the algorithm barely finds a solution therefore the running times can be compared. Three environments are used, one with four narrow corridors where a lot of small segments are used, so the sampling phase called often (\figurename~\ref{fig:frame3}). The second scene is a small environment with few triangles as obstacles (\figurename~\ref{fig:staticSimTypes}), and the last one is similar to a parking lot with a lot of walls (\figurename~\ref{fig:dynamicSim_Phases}).
+
+In \tablename~\ref{table:newArm_RunTimes} we compare the running times of the two sampling method and as we expected the new algorithm is faster in every case, because it ignores many unreachable points. The algorithms were implemented in C++ and tested on a desktop computer with Intel E8400 processor running at $3.0GHz$ and having 4 GB RAM.
+
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\caption{Run Times for Different Sampling Methods}
+\label{table:newArm_RunTimes}
+\begin{tabular}{lcccc}
+\multicolumn{1}{c}{{\bf Scene}} & \multicolumn{2}{c}{{\bf Sukharev-grid}}                        & \multicolumn{2}{c}{{\bf New method}} \\
+                  & Sample size & Run time & Sample size & Run time  \\ \hline
+{\it Corridors}   & 1225        & 7.067s   & 220         & 4.541s    \\
+{\it Triangles}   & 576         & 1.886s   & 40          & 0.102s    \\
+{\it Parking lot} & 1600        & 4.089s   & 84          & 0.831s
+\end{tabular}
+\end{table}
 
 \begin{figure}[tb]
 	\centering
@@ -574,6 +592,26 @@ Consider the following scenario. A 3D laser scanner is located on the top of a c
 
 The most important factors for this simulation scenario are planning time and the quality of the path. The running time of the RTR and C*CS algorithms definitely determine the planning time. In this Section we will focus on planning time and path quality.
 
+\begin{figure}[tb]
+    \centerline{
+    \subfloat[]{\includegraphics[height=0.35\columnwidth]{.//figures/DynamicSim/Local/plannedPath12C.pdf}
+    \label{subfig:dynamicSim_Local_Bad1}}
+    \hfil
+    \subfloat[]{\includegraphics[height=0.35\columnwidth]{.//figures/DynamicSim/Local/plannedPath12N.pdf}
+    \label{subfig:dynamicSim_Local_Bad2}}
+    }
+    \centerline{
+    \subfloat[]{\includegraphics[height=0.45\columnwidth]{.//figures/DynamicSim/Local/plannedPath56C.pdf}
+    \label{subfig:dynamicSim_Local_Good1}}
+    }
+    \centerline{    
+    \subfloat[]{\includegraphics[height=0.45\columnwidth]{.//figures/DynamicSim/Local/plannedPath56N.pdf}
+    \label{subfig:dynamicSim_Local_Good2}}
+    }
+    \caption{Scenes for \emph{Local Re-Planning} strategy. (a,c) The previous, collided path after discovering new obstacle, (b,d) The collision-free path after re-planning.}
+    \label{fig:dynamicSim_Local}
+\end{figure}
+
 We compare three different planning strategies for dynamic environments. The strategies differ in the re-planning method when the path is collided:
 \begin{itemize}
 	\item \emph{Global Re-Planning}: The path is re-planned from the robot current configuration to the goal configuration.
@@ -604,31 +642,11 @@ We compare three different planning strategies for dynamic environments. The str
     \label{fig:dynamicSim_Global}
 \end{figure}
 
-\begin{figure}[tb]
-    \centerline{
-    \subfloat[]{\includegraphics[height=0.35\columnwidth]{.//figures/DynamicSim/Local/plannedPath12C.pdf}
-    \label{subfig:dynamicSim_Local_Bad1}}
-    \hfil
-    \subfloat[]{\includegraphics[height=0.35\columnwidth]{.//figures/DynamicSim/Local/plannedPath12N.pdf}
-    \label{subfig:dynamicSim_Local_Bad2}}
-    }
-    \centerline{
-    \subfloat[]{\includegraphics[height=0.45\columnwidth]{.//figures/DynamicSim/Local/plannedPath56C.pdf}
-    \label{subfig:dynamicSim_Local_Good1}}
-    }
-    \centerline{    
-    \subfloat[]{\includegraphics[height=0.45\columnwidth]{.//figures/DynamicSim/Local/plannedPath56N.pdf}
-    \label{subfig:dynamicSim_Local_Good2}}
-    }
-    \caption{Scenes for \emph{Local Re-Planning} strategy. (a,c) The previous, collided path after discovering new obstacle, (b,d) The collision-free path after re-planning.}
-    \label{fig:dynamicSim_Local}
-\end{figure}
-
 The \emph{Local Re-Planning} strategy is shown in \figurename~\ref{fig:dynamicSim_Local}. In the first situation (\figurename~\ref{subfig:dynamicSim_Local_Bad1}, \ref{subfig:dynamicSim_Local_Bad2}), this method generates a quite complicated path, because the planner tries to connect the new path segment to existing one. In this strategy, there is an extra parameter, which determines the the length of the regenerated path segment. If this parameter set to infinity, the strategy will be \emph{Global Re-Planning} method. In the second scene (\figurename~\ref{subfig:dynamicSim_Local_Good1}, \ref{subfig:dynamicSim_Local_Good2}), the local planning makes a simple, natural solution and does not re-plan unnecessary.
 
 The \emph{Global Re-Planning with Tree Reservation} method generates path to the goal configuration like the \emph{Global Re-Planning} algorithm. The tree reservation is an improvement in the RTR algorithm. After the first run of the global planner, the RTR does not rebuild the entire \emph{goal tree}, instead it uses the tree built in the first iteration. As a disadvantage of this improvement, the planner has to remove the collided nodes and edges from the \emph{goal tree} and it takes time to check the whole tree.
 
-In \tablename~\ref{table:dynamicSim_RunTimes} we compare the running times of the three different re-planning strategies. We have run twenty measurements for every scene with every strategy, and averaged the results. The algorithms were implemented in C++ and tested on a notebook computer with Intel i7-3630QM processor running at $2.4GHz$ and having 8 GB RAM.
+In \tablename~\ref{table:dynamicSim_RunTimes} we compare the running times of the three different re-planning strategies. We have run twenty measurements for every scene, as can be seen in Section~\ref{sec:arm}, with every strategy, and averaged the results. The algorithms were implemented in C++ and tested on a notebook computer with Intel i7-3630QM processor running at $2.4GHz$ and having 8 GB RAM.
 
 In the first scene the \emph{Local Re-Planning} strategy gives better run time, but in the second scene \emph{Global Re-Planning} has lower run time. We see the same result with path quality, so the performance of local or global re-planning strongly depends on the environment. The global strategy with tree reservation has lower run time for the first two scene. Thus in most cases the extra collision check in this method cause small run time growth.
 
@@ -693,28 +711,35 @@ In our previous work we compared different planning methods, and for this we int
 	\item \emph{Average clearance}: The average clearance from the obstacles along the path.
 \end{itemize}
 
-For a passenger, too many reversals could be uncomfortable, as well as a high amount of turning. The travel time is estimated as follows. A travelling speed function with $v_{max} = 5\frac{m}{s}$ and $v_{min} = 1\frac{m}{s}$ is assigned to the path, which is inversely proportional to the actual path curvature. The cusps are penalized with $0.5s$ ``reversing time''. Those paths are better, which requires less time to travel along.
-
-In addition to the formerly used quality measures the average clearance is added as well. To specify the clearance, the path is sampled. For each sample point the minimal distance from the obstacles is calculated and summarized. Finally, the sum is normalized with the length of the path. The purpose of this parameter is to keep the robot away from the obstacles as a real driver would do to protect the car.
-
-Examples can be seen in \figurename~\ref{fig:staticSimTypes}. In this scenario the robot starts from the left position facing upwards and the goal position is on the right facing down. In \figurename~\ref{subfig:frameFreeCusps} the number of cusps are minimal. In \figurename~\ref{subfig:frameFreeSteering} the steering amount is minimized, the straighter paths are preferred. In \figurename~\ref{subfig:frameFreeTravel} the resulted path is longer, but it takes less time to travel along. At last the path in \figurename~\ref{subfig:frameFreeClearance} is more complicated than the others, but the distance to obstacles is higher.
-
-In order to tune the final path, the planning process is invoked several times for the same query and the quality measures are determined for the resulting candidate paths. The best solution is chosen by minimizing a cost function, which is a weighted sum of the different quality measures. The measures and the weighing factors are normalized to the $[0,1]$ interval. 
-
 \begin{figure}[tb]
     \centerline{
-    \subfloat[]{\includegraphics[width=0.40\columnwidth]{.//figures/StaticSim/frame2SC.pdf}
-    \label{subfig:static2SC}}%}
+    \subfloat[]{\includegraphics[width=0.75\columnwidth]{.//figures/StaticSim/frame2SC.pdf}
+    \label{subfig:static2SC}}}
     \hfil
-	%\centerline{
-    \subfloat[]{\includegraphics[width=0.40\columnwidth]{.//figures/StaticSim/frame2ST.pdf}
+	\centerline{
+    \subfloat[]{\includegraphics[width=0.75\columnwidth]{.//figures/StaticSim/frame2ST.pdf}
     \label{subfig:static2ST}}}
     \centerline{
-    \subfloat[]{\includegraphics[width=0.65\columnwidth]{.//figures/StaticSim/frame2CTC.pdf}
+    \subfloat[]{\includegraphics[width=0.75\columnwidth]{.//figures/StaticSim/frame2CTC.pdf}
     \label{subfig:static2CTC}}}
     \caption{Resulted paths in an M-shape environment.}
     \label{fig:staticMShape}
 \end{figure}
+
+For a passenger, too many reversals could be uncomfortable, as well as a high amount of turning. The travel time is estimated as follows. A travelling speed function with $v_{max} = 5\frac{m}{s}$ and $v_{min} = 1\frac{m}{s}$ is assigned to the path, which is inversely proportional to the actual path curvature. The cusps are penalized with $0.5s$ ``reversing time''. Those paths are better, which requires less time to travel along.
+
+In addition to the formerly used quality measures the average clearance is added as well. To specify the clearance, the path is sampled. For each sample point the minimal distance from the obstacles is calculated and summarized. Finally, the sum is normalized with the length of the path. The purpose of this parameter is to keep the robot away from the obstacles as a real driver would do to protect the car.
+
+\begin{figure}[tb]
+	\centering
+		\includegraphics[width=0.75\columnwidth]{.//figures/frame3.pdf}
+	\caption{Example of the four corridor environment}
+	\label{fig:frame3}
+\end{figure}
+
+Examples can be seen in \figurename~\ref{fig:staticSimTypes}. In this scenario the robot starts from the left position facing upwards and the goal position is on the right facing down. In \figurename~\ref{subfig:frameFreeCusps} the number of cusps are minimal. In \figurename~\ref{subfig:frameFreeSteering} the steering amount is minimized, the straighter paths are preferred. In \figurename~\ref{subfig:frameFreeTravel} the resulted path is longer, but it takes less time to travel along. At last the path in \figurename~\ref{subfig:frameFreeClearance} is more complicated than the others, but the distance to obstacles is higher.
+
+In order to tune the final path, the planning process is invoked several times for the same query and the quality measures are determined for the resulting candidate paths. The best solution is chosen by minimizing a cost function, which is a weighted sum of the different quality measures. The measures and the weighing factors are normalized to the $[0,1]$ interval. 
 
 The weight factors can depend on different scenarios and on individual choice as well. In a narrow M-shaped environment, which is shown in \figurename~\ref{fig:staticMShape}, can be difficult to manoeuvre therefore the resulted paths have similarities. But even in this scenario the differences can be observed. In \figurename~\ref{subfig:static2SC}, \ref{subfig:static2ST} the steering amount is lowered thus the longer path segments have a low curvature. In \figurename~\ref{subfig:static2SC} the weight of cusps is higher (lower cusps number) and in \figurename~\ref{subfig:static2ST} the travel time is shorter. In \figurename~\ref{subfig:static2CTC} the weight factor of cusps, travel time and clearance is increased so the steering amount can be higher but the other measures are better.
 
